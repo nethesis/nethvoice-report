@@ -1,2 +1,2 @@
 # nethvoice-report
-This repo contains CDR and Queue reports
+This repo contains Queue and CDR/Costs reports
