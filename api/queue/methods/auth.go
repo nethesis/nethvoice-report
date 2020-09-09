@@ -19,18 +19,19 @@
  *
  * author: Edoardo Spadoni <edoardo.spadoni@nethesis.it>
  */
-
+ 
  package methods
-
+ 
  import (
-	"net/http"
-	"github.com/gin-gonic/gin"
+    "net/http"
+    "github.com/gin-gonic/gin"
 )
-
+ 
 func Login(c *gin.Context) {
-	c.JSON(http.StatusCreated, gin.H{"status": "success"})
+    c.JSON(http.StatusCreated, gin.H{"status": "success"})
 }
-
+ 
 func Logout(c *gin.Context) {
         c.JSON(http.StatusCreated, gin.H{"status": "success"})
 }
+

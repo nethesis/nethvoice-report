@@ -26,7 +26,6 @@
 	"flag"
 	"net/http"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
 	"github.com/nethesis/nethvoice-report/api/queue/configuration"
@@ -43,22 +42,18 @@ func main() {
 	// init routers
 	router := gin.Default()
 
-	// cors
-	corsConf := cors.DefaultConfig()
-	corsConf.AllowOrigins = configuration.Config.Cors.Origins
-	corsConf.AllowHeaders = configuration.Config.Cors.Headers
-	corsConf.AllowMethods = configuration.Config.Cors.Methods
-	router.Use(cors.New(corsConf))
-
 	// define API
 	api := router.Group("/api")
 
 	// define login endpoint
-	api.POST("/login", methods.Login)
-	api.POST("/logout", methods.Logout)
+	api.POST("/login", middleware.InstanceJWT().LoginHandler)
+	api.POST("/logout", middleware.InstanceJWT().LogoutHandler)
+
+	// define refresh endpoint
+	api.GET("/refresh_token", middleware.InstanceJWT().RefreshHandler)
 
 	// define JWT middleware
-	api.Use(middleware.JWT)
+	api.Use(middleware.InstanceJWT().MiddlewareFunc())
 	{
 		queues := api.Group("/queues/:section")
 		{

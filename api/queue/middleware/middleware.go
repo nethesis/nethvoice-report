@@ -23,14 +23,132 @@
  package middleware
 
  import (
+	"time"
+	"fmt"
+
 	"github.com/gin-gonic/gin"
+
+	"github.com/appleboy/gin-jwt/v2"
+
+	"github.com/nethesis/nethvoice-report/api/queue/configuration"
 )
 
-func respondWithError(code int, message string, c *gin.Context) {
-	c.JSON(code, gin.H{"message": message})
-	c.Abort()
+type login struct {
+	Username string `form:"username" json:"username" binding:"required"`
+	Password string `form:"password" json:"password" binding:"required"`
 }
 
-func JWT(c *gin.Context) {
-	c.Next()
+type User struct {
+	UserName  string
+	Queues    []string
+}
+
+var jwtMiddleware *jwt.GinJWTMiddleware
+var identityKey = "id"
+
+func InstanceJWT() *jwt.GinJWTMiddleware{
+	if jwtMiddleware == nil {
+		jwtMiddleware := InitJWT()
+		return jwtMiddleware
+	}
+	return jwtMiddleware
+}
+
+func InitJWT() *jwt.GinJWTMiddleware{
+	// define jwt middleware
+	authMiddleware, errDefine := jwt.New(&jwt.GinJWTMiddleware{
+		Realm:       "queue-report",
+		Key:         []byte(configuration.Config.Secret),
+		Timeout:     time.Hour,
+		MaxRefresh:  time.Hour,
+		IdentityKey: identityKey,
+		PayloadFunc: func(data interface{}) jwt.MapClaims {
+			// read authorization file for the current user // TODO
+			queues := []string{"402", "403"}
+
+			// create claims map
+			if v, ok := data.(*User); ok {
+				return jwt.MapClaims{
+					identityKey: v.UserName,
+					"queues": queues,
+				}
+			}
+
+			// return claims map
+			return jwt.MapClaims{}
+		},
+		IdentityHandler: func(c *gin.Context) interface{} {
+			// handle identity and extract claims
+			claims := jwt.ExtractClaims(c)
+
+			// extract queues
+			queues := make([]string, len(claims["queues"].([]interface{})))
+			for i, v := range claims["queues"].([]interface{}) {
+				queues[i] = fmt.Sprint(v)
+			}
+
+			// create user object
+			user := &User{
+				UserName: claims[identityKey].(string),
+				Queues: queues,
+			}
+
+			// return user
+			return user
+		},
+		Authenticator: func(c *gin.Context) (interface{}, error) {
+			// check login credentials exists
+			var loginVals login
+			if err := c.ShouldBind(&loginVals); err != nil {
+				return "", jwt.ErrMissingLoginValues
+			}
+
+			// set login credentials
+			username := loginVals.Username
+			password := loginVals.Password
+
+			// try PAM authentication // TODO
+			if (username == "admin" && password == "admin") || (username == "test" && password == "test") {
+				return &User{
+					UserName:  username,
+				}, nil
+			}
+
+			// PAM authentication failed
+			return nil, jwt.ErrFailedAuthentication
+		},
+		Authorizator: func(data interface{}, c *gin.Context) bool {
+			// extract data payload and check authorizations // TODO
+			if v, ok := data.(*User); ok && v.UserName == "admin" {
+				return true
+			}
+
+			return false
+		},
+		Unauthorized: func(c *gin.Context, code int, message string) {
+			c.JSON(code, gin.H{
+				"message": message,
+			})
+			return
+		},
+		TokenLookup: "header: Authorization, query: token, cookie: jwt",
+		TokenHeadName: "Bearer",
+		TimeFunc: time.Now,
+	})
+
+	// check middleware errors
+	if errDefine != nil {
+		panic(errDefine)
+	}
+
+	// init middleware
+	errInit := authMiddleware.MiddlewareInit()
+
+	// check error on initialization
+	if errInit != nil {
+		panic(errInit)
+	}
+
+	// return object
+	return authMiddleware
 }

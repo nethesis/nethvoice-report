@@ -35,13 +35,9 @@
 		Name     string `json:"name"`
 		Password string `json:"password"`
 	} `json:"database"`
-	Cors             struct {
-		Headers []string `json:"headers"`
-		Origins []string `json:"origins"`
-		Methods []string `json:"methods"`
-	} `json:"cors"`
 	RedisAddress string `json:"redis_address"`
 	TTLCache int `json:"ttl_cache"`
+	Secret string `json:"secret"`
 }
 
 var Config = Configuration{}
