@@ -20,38 +20,37 @@
  * author: Edoardo Spadoni <edoardo.spadoni@nethesis.it>
  */
 
- package configuration
+ package source
 
  import (
-	"encoding/json"
-	"os"
-)
+	"database/sql"
 
- type Configuration struct {
-	QueueDatabase struct {
-		Host     string `json:"host"`
-		Port     string `json:"port"`
-		User     string `json:"user"`
-		Name     string `json:"name"`
-		Password string `json:"password"`
-	} `json:"queue_database"`
-	RedisAddress string `json:"redis_address"`
-	TTLCache int `json:"ttl_cache"`
-	Secret string `json:"secret"`
-	QueryPath string `json:"query_path"`
+	_ "github.com/go-sql-driver/mysql"
+
+	"github.com/nethesis/nethvoice-report/api/queue/configuration"
+ )
+
+var db *sql.DB
+
+func QueueInstance() *sql.DB {
+	if db == nil {
+		QueueInit()
+	}
+	return db
 }
 
-var Config = Configuration{}
+func QueueInit() *sql.DB {
+	// define uri conection string
+	uri := configuration.Config.QueueDatabase.User + ":" + configuration.Config.QueueDatabase.Password + "@tcp(" + configuration.Config.QueueDatabase.Host + ":" + configuration.Config.QueueDatabase.Port + ")/" + configuration.Config.QueueDatabase.Name
 
-func Init(ConfigFilePtr *string) {
-	// read configuration
-	if _, err := os.Stat(*ConfigFilePtr); err == nil {
-		file, _ := os.Open(*ConfigFilePtr)
-		decoder := json.NewDecoder(file)
-		// check errors or parse JSON
-		err := decoder.Decode(&Config)
-		if err != nil {
-			panic(err)
-		}
+	// connect to database
+	db, err := sql.Open("mysql", uri+"?charset=utf8&parseTime=True")
+
+	// handle error
+	if err != nil {
+		panic(err.Error())
 	}
+
+	// return db object
+	return db
 }

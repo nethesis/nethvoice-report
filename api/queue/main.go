@@ -55,7 +55,7 @@ func main() {
 	// define JWT middleware
 	api.Use(middleware.InstanceJWT().MiddlewareFunc())
 	{
-		queues := api.Group("/queues/:section")
+		queues := api.Group("/queues/:section/:view")
 		{
 			queues.GET("", methods.GetQueueReports)
 		}
