@@ -30,9 +30,11 @@
 	"fmt"
 	"html/template"
 	"encoding/json"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/bdwilliams/go-jsonify/jsonify"
 
 	"github.com/nethesis/nethvoice-report/api/queue/configuration"
 	"github.com/nethesis/nethvoice-report/api/queue/cache"
@@ -87,12 +89,20 @@ func GetQueueReports(c *gin.Context) {
 
 	// data is cached, return immediately
 	if errCache == nil {
-		c.JSON(http.StatusOK, gin.H{"data": data})
+		c.Data(http.StatusOK, "application/json; charset=utf-8", []byte(data))
 		return
 	}
 
 	// data is not cached, find query path
 	queryFile := configuration.Config.QueryPath + "/" + section + "/" + view + "/" + graph + ".sql"
+
+	// check if query file exists
+	if _, errExists := os.Stat(queryFile); os.IsNotExist(errExists) {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "query file does not exists", "status": errExists.Error()})
+                return
+	}
+
+	// parse template
 	q, _ := template.ParseFiles(queryFile)
 
 	// compile query with filter object
@@ -111,6 +121,10 @@ func GetQueueReports(c *gin.Context) {
                 return
 	}
 
+	// parse results
+	jsonResults := jsonify.Jsonify(results)
+	data = fmt.Sprintf("%s", jsonResults)
+
 	// save calculated data to cache
 	errCache = cacheConnection.Set(hash, data, 0).Err()
 	cacheConnection.Expire(hash, time.Duration(configuration.Config.TTLCache)*time.Minute)
@@ -119,6 +133,10 @@ func GetQueueReports(c *gin.Context) {
                 return
 	}
 
+	// close results
+	defer results.Close()
+	defer db.Close()
+
 	// return data
-	c.JSON(http.StatusOK, gin.H{"data": data})
+	c.Data(http.StatusOK, "application/json; charset=utf-8", []byte(data))
 }

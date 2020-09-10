@@ -34,7 +34,7 @@ var db *sql.DB
 
 func QueueInstance() *sql.DB {
 	if db == nil {
-		QueueInit()
+		db = QueueInit()
 	}
 	return db
 }

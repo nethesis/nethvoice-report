@@ -4,6 +4,8 @@ github.com/appleboy/gin-jwt v1.0.1 h1:cbLi6ol8KhWUoCBvLFCGpssiBB2iM9eXWwmI9SDG+W
 github.com/appleboy/gin-jwt/v2 v2.6.4 h1:4YlMh3AjCFnuIRiL27b7TXns7nLx8tU/TiSgh40RRUI=
 github.com/appleboy/gin-jwt/v2 v2.6.4/go.mod h1:CZpq1cRw+kqi0+yD2CwVw7VGXrrx4AqBdeZnwxVmoAs=
 github.com/appleboy/gofight/v2 v2.1.2/go.mod h1:frW+U1QZEdDgixycTj4CygQ48yLTUhplt43+Wczp3rw=
+github.com/bdwilliams/go-jsonify v0.0.0-20141020182238-48749139e742 h1:PnDia1dKFSh7KDMoe9mRkSEFAIX3yN36Kc+zf/hLQVA=
+github.com/bdwilliams/go-jsonify v0.0.0-20141020182238-48749139e742/go.mod h1:0e8SCOOU1qUs2MqeJLnREiTtj09Rd0rkhnyzVVRCW58=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/denisenkom/go-mssqldb v0.0.0-20191124224453-732737034ffd/go.mod h1:xbL0rPBG9cCiLr28tMa8zpbdarY27NDyej4t/EjAShU=
