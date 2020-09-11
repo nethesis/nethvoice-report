@@ -20,24 +20,24 @@
  * author: Edoardo Spadoni <edoardo.spadoni@nethesis.it>
  */
 
- package methods
+package methods
 
- import (
+import (
 	"bytes"
 	"crypto/sha256"
-	"net/http"
-	"time"
+	"encoding/json"
 	"fmt"
 	"html/template"
-	"encoding/json"
+	"net/http"
 	"os"
+	"time"
 
+	"github.com/bdwilliams/go-jsonify/jsonify"
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"github.com/bdwilliams/go-jsonify/jsonify"
 
-	"github.com/nethesis/nethvoice-report/api/queue/configuration"
 	"github.com/nethesis/nethvoice-report/api/queue/cache"
+	"github.com/nethesis/nethvoice-report/api/queue/configuration"
 	"github.com/nethesis/nethvoice-report/api/queue/source"
 )
 
@@ -66,14 +66,14 @@ func GetQueueReports(c *gin.Context) {
 	errJson := json.Unmarshal([]byte(filter), &filterObject)
 	if errJson != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "invalid filter params", "status": errJson.Error()})
-                return
+		return
 	}
 
 	// convert struct to json to preserve item orders
 	filterString, errConvert := json.Marshal(filterObject)
 	if errConvert != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "error in filter conversion to string", "status": errJson.Error()})
-                return
+		return
 	}
 
 	// calculate hash
@@ -99,7 +99,7 @@ func GetQueueReports(c *gin.Context) {
 	// check if query file exists
 	if _, errExists := os.Stat(queryFile); os.IsNotExist(errExists) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "query file does not exists", "status": errExists.Error()})
-                return
+		return
 	}
 
 	// parse template
@@ -118,7 +118,7 @@ func GetQueueReports(c *gin.Context) {
 	results, errQuery := db.Query(queryString.String())
 	if errQuery != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "invalid query execution", "status": errQuery.Error()})
-                return
+		return
 	}
 
 	// parse results
@@ -130,7 +130,7 @@ func GetQueueReports(c *gin.Context) {
 	cacheConnection.Expire(hash, time.Duration(configuration.Config.TTLCache)*time.Minute)
 	if errCache != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "error on saving to cache", "status": errCache.Error()})
-                return
+		return
 	}
 
 	// close results

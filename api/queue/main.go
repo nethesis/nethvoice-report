@@ -20,9 +20,9 @@
  * author: Edoardo Spadoni <edoardo.spadoni@nethesis.it>
  */
 
- package main
+package main
 
- import (
+import (
 	"flag"
 	"net/http"
 

@@ -20,15 +20,15 @@
  * author: Edoardo Spadoni <edoardo.spadoni@nethesis.it>
  */
 
- package middleware
+package middleware
 
- import (
-	"time"
+import (
 	"fmt"
+	"time"
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/appleboy/gin-jwt/v2"
+	jwt "github.com/appleboy/gin-jwt/v2"
 
 	"github.com/nethesis/nethvoice-report/api/queue/configuration"
 )
@@ -39,14 +39,14 @@ type login struct {
 }
 
 type User struct {
-	UserName  string
-	Queues    []string
+	UserName string
+	Queues   []string
 }
 
 var jwtMiddleware *jwt.GinJWTMiddleware
 var identityKey = "id"
 
-func InstanceJWT() *jwt.GinJWTMiddleware{
+func InstanceJWT() *jwt.GinJWTMiddleware {
 	if jwtMiddleware == nil {
 		jwtMiddleware := InitJWT()
 		return jwtMiddleware
@@ -54,7 +54,7 @@ func InstanceJWT() *jwt.GinJWTMiddleware{
 	return jwtMiddleware
 }
 
-func InitJWT() *jwt.GinJWTMiddleware{
+func InitJWT() *jwt.GinJWTMiddleware {
 	// define jwt middleware
 	authMiddleware, errDefine := jwt.New(&jwt.GinJWTMiddleware{
 		Realm:       "queue-report",
@@ -70,7 +70,7 @@ func InitJWT() *jwt.GinJWTMiddleware{
 			if v, ok := data.(*User); ok {
 				return jwt.MapClaims{
 					identityKey: v.UserName,
-					"queues": queues,
+					"queues":    queues,
 				}
 			}
 
@@ -90,7 +90,7 @@ func InitJWT() *jwt.GinJWTMiddleware{
 			// create user object
 			user := &User{
 				UserName: claims[identityKey].(string),
-				Queues: queues,
+				Queues:   queues,
 			}
 
 			// return user
@@ -110,7 +110,7 @@ func InitJWT() *jwt.GinJWTMiddleware{
 			// try PAM authentication // TODO
 			if (username == "admin" && password == "admin") || (username == "test" && password == "test") {
 				return &User{
-					UserName:  username,
+					UserName: username,
 				}, nil
 			}
 
@@ -131,9 +131,9 @@ func InitJWT() *jwt.GinJWTMiddleware{
 			})
 			return
 		},
-		TokenLookup: "header: Authorization, query: token, cookie: jwt",
+		TokenLookup:   "header: Authorization, query: token, cookie: jwt",
 		TokenHeadName: "Bearer",
-		TimeFunc: time.Now,
+		TimeFunc:      time.Now,
 	})
 
 	// check middleware errors

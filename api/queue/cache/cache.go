@@ -20,25 +20,25 @@
  * author: Edoardo Spadoni <edoardo.spadoni@nethesis.it>
  */
 
- package cache
+package cache
 
- import (
+import (
 	"github.com/nethesis/nethvoice-report/api/queue/configuration"
 
 	"github.com/go-redis/redis"
- )
+)
 
- var cacheConnection *redis.Client
+var cacheConnection *redis.Client
 
- func Instance() *redis.Client {
+func Instance() *redis.Client {
 	if cacheConnection == nil {
 		cacheConnection := InitCacheConnection()
 		return cacheConnection
 	}
 	return cacheConnection
- }
+}
 
- func InitCacheConnection() *redis.Client {
+func InitCacheConnection() *redis.Client {
 	// init client
 	cacheConnection = redis.NewClient(&redis.Options{
 		Addr: configuration.Config.RedisAddress,
@@ -46,4 +46,4 @@
 	})
 
 	return cacheConnection
- }
+}

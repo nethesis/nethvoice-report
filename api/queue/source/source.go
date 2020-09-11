@@ -20,15 +20,15 @@
  * author: Edoardo Spadoni <edoardo.spadoni@nethesis.it>
  */
 
- package source
+package source
 
- import (
+import (
 	"database/sql"
 
 	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/nethesis/nethvoice-report/api/queue/configuration"
- )
+)
 
 var db *sql.DB
 
