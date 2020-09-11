@@ -74,7 +74,7 @@ func InitJWT() *jwt.GinJWTMiddleware {
 			username := loginVals.Username
 			password := loginVals.Password
 
-			// try PAM authentication // TODO
+			// try PAM authentication
 			err := methods.PamAuth(username, password)
 			if err == nil {
 				return &User{
