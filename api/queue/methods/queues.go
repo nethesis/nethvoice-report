@@ -32,13 +32,13 @@ import (
 	"os"
 	"time"
 
-	"github.com/bdwilliams/go-jsonify/jsonify"
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 
 	"github.com/nethesis/nethvoice-report/api/queue/cache"
 	"github.com/nethesis/nethvoice-report/api/queue/configuration"
 	"github.com/nethesis/nethvoice-report/api/queue/source"
+	"github.com/nethesis/nethvoice-report/api/queue/utils"
 )
 
 type filterObject struct {
@@ -122,8 +122,7 @@ func GetQueueReports(c *gin.Context) {
 	}
 
 	// parse results
-	jsonResults := jsonify.Jsonify(results)
-	data = fmt.Sprintf("%s", jsonResults)
+	data = utils.ParseResults(results)
 
 	// save calculated data to cache
 	errCache = cacheConnection.Set(hash, data, 0).Err()
@@ -135,7 +134,6 @@ func GetQueueReports(c *gin.Context) {
 
 	// close results
 	defer results.Close()
-	defer db.Close()
 
 	// return data
 	c.Data(http.StatusOK, "application/json; charset=utf-8", []byte(data))
