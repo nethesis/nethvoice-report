@@ -23,9 +23,13 @@
 package methods
 
 import (
+	"errors"
+	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/msteinert/pam"
 )
 
 func Login(c *gin.Context) {
@@ -34,4 +38,39 @@ func Login(c *gin.Context) {
 
 func Logout(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"status": "success"})
+}
+
+func PamAuth(username string, password string) error {
+	t, err := pam.StartFunc("system-auth", username, func(s pam.Style, msg string) (string, error) {
+		switch s {
+		case pam.PromptEchoOff:
+			return password, nil
+		case pam.PromptEchoOn:
+			// fmt.Print(msg + " ") ////
+			// input, err := bufio.NewReader(os.Stdin).ReadString('\n')
+			// if err != nil {
+			return username, nil
+			// } ////
+			// return input[:len(input)-1], nil
+		case pam.ErrorMsg:
+			fmt.Print(msg)
+			return "", nil
+		case pam.TextInfo:
+			fmt.Println(msg)
+			return "", nil
+		}
+		return "", errors.New("Unrecognized message style")
+	})
+	if err != nil {
+		log.Fatalf("Start: %s", err.Error())
+		return err
+	}
+	err = t.Authenticate(0)
+	if err != nil {
+		log.Fatalf("Authenticate: %s", err.Error())
+		return err
+	}
+	fmt.Println("Authentication succeeded!") ////
+	return nil
+
 }

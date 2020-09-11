@@ -31,6 +31,7 @@ import (
 	jwt "github.com/appleboy/gin-jwt/v2"
 
 	"github.com/nethesis/nethvoice-report/api/queue/configuration"
+	"github.com/nethesis/nethvoice-report/api/queue/methods"
 )
 
 type login struct {
@@ -74,7 +75,8 @@ func InitJWT() *jwt.GinJWTMiddleware {
 			password := loginVals.Password
 
 			// try PAM authentication // TODO
-			if (username == "admin" && password == "admin") || (username == "test" && password == "test") {
+			err := methods.PamAuth(username, password)
+			if err == nil {
 				return &User{
 					UserName: username,
 				}, nil
