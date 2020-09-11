@@ -62,6 +62,27 @@ func InitJWT() *jwt.GinJWTMiddleware {
 		Timeout:     time.Hour,
 		MaxRefresh:  time.Hour,
 		IdentityKey: identityKey,
+		Authenticator: func(c *gin.Context) (interface{}, error) {
+			// check login credentials exists
+			var loginVals login
+			if err := c.ShouldBind(&loginVals); err != nil {
+				return "", jwt.ErrMissingLoginValues
+			}
+
+			// set login credentials
+			username := loginVals.Username
+			password := loginVals.Password
+
+			// try PAM authentication // TODO
+			if (username == "admin" && password == "admin") || (username == "test" && password == "test") {
+				return &User{
+					UserName: username,
+				}, nil
+			}
+
+			// PAM authentication failed
+			return nil, jwt.ErrFailedAuthentication
+		},
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
 			// read authorization file for the current user // TODO
 			queues := []string{"402", "403"}
@@ -95,27 +116,6 @@ func InitJWT() *jwt.GinJWTMiddleware {
 
 			// return user
 			return user
-		},
-		Authenticator: func(c *gin.Context) (interface{}, error) {
-			// check login credentials exists
-			var loginVals login
-			if err := c.ShouldBind(&loginVals); err != nil {
-				return "", jwt.ErrMissingLoginValues
-			}
-
-			// set login credentials
-			username := loginVals.Username
-			password := loginVals.Password
-
-			// try PAM authentication // TODO
-			if (username == "admin" && password == "admin") || (username == "test" && password == "test") {
-				return &User{
-					UserName: username,
-				}, nil
-			}
-
-			// PAM authentication failed
-			return nil, jwt.ErrFailedAuthentication
 		},
 		Authorizator: func(data interface{}, c *gin.Context) bool {
 			// extract data payload and check authorizations // TODO
