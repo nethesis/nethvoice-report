@@ -39,9 +39,9 @@ func ParseResults(rows *sql.Rows) string {
 
 	// initialize object based on field count
 	fieldCount := make([]interface{}, len(columns))
-	scanArgs := make([]interface{}, len(fieldCount))
+	fields := make([]interface{}, len(fieldCount))
 	for i := range fieldCount {
-		scanArgs[i] = &fieldCount[i]
+		fields[i] = &fieldCount[i]
 	}
 
 	// add columns names to data
@@ -50,7 +50,7 @@ func ParseResults(rows *sql.Rows) string {
 	// loop rows
 	for rows.Next() {
 		// scan values
-		err = rows.Scan(scanArgs...)
+		err = rows.Scan(fields...)
 		if err != nil {
 			panic(err.Error())
 		}
