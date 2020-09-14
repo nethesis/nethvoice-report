@@ -80,10 +80,9 @@ func ParseResults(rows *sql.Rows) string {
 	return string(dataJSON)
 }
 
-// func ParseUserAuthorizationsFile() (map[string]interface{}, error) { ////
-func ParseUserAuthorizationsFile() (models.UserAuthorizationsList, error) { ////
+func ParseUserAuthorizationsFile() (models.UserAuthorizationsList, error) {
 
-	fmt.Println("PARSING") ////
+	fmt.Println("parsing auth file") ////
 
 	userAuthorizationsList := models.UserAuthorizationsList{} ////
 	file, err := ioutil.ReadFile(configuration.Config.UserAuthorizationsFile)
@@ -96,28 +95,9 @@ func ParseUserAuthorizationsFile() (models.UserAuthorizationsList, error) { ////
 		return userAuthorizationsList, err
 	}
 	return userAuthorizationsList, nil
-
-	//// USING DIRECT ACCESS TO USER AUTH AND map[string]interface{}
-
-	// var userAuthorization map[string]interface{}
-
-	// jsonFile, err := os.Open(configuration.Config.UserAuthorizationsFile)
-	// if err != nil {
-	// 	return userAuthorization, err
-	// }
-
-	// fmt.Println("Successfully Opened user authorization file") ////
-	// defer jsonFile.Close()
-
-	// byteValue, _ := ioutil.ReadAll(jsonFile)
-	// json.Unmarshal([]byte(byteValue), &userAuthorization)
-
-	// fmt.Println(userAuthorization["user_authorization"]) ////
-	// fmt.Println(userAuthorization["2"])                  ////
-	// return userAuthorization, nil
 }
 
-func GetUserAuthorizations(username string) (models.UserAuthorizations, error) { ////
+func GetUserAuthorizations(username string) (models.UserAuthorizations, error) {
 	userAuthorizations := models.UserAuthorizations{}
 	authorizations, err := ParseUserAuthorizationsFile()
 	if err != nil {
@@ -134,26 +114,4 @@ func GetUserAuthorizations(username string) (models.UserAuthorizations, error) {
 	}
 
 	return userAuthorizations, errors.New("Username not found")
-
-	//// USING DIRECT ACCESS TO USER AUTH AND map[string]interface{}
-
-	// userAuthorizations := models.UserAuthorizations{}
-
-	// authorizations, err := ParseUserAuthorizationsFile()
-	// if err != nil {
-	// 	return userAuthorizations, err
-	// }
-
-	// username = "2"                        //// remove
-	// fmt.Println(authorizations[username]) ////
-
-	// ua, ok := authorizations[username].(map[string]interface{})
-	// if !ok {
-	// 	return userAuthorizations, err
-	// }
-
-	// userAuthorizations.Queues = ua["queues"].([]string)
-	// userAuthorizations.Groups = ua["groups"].([]string)
-
-	// return userAuthorizations, nil
 }
