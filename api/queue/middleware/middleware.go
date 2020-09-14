@@ -23,7 +23,9 @@
 package middleware
 
 import (
+	"encoding/json"
 	"fmt"
+	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -32,16 +34,13 @@ import (
 
 	"github.com/nethesis/nethvoice-report/api/queue/configuration"
 	"github.com/nethesis/nethvoice-report/api/queue/methods"
+	"github.com/nethesis/nethvoice-report/api/queue/models"
+	"github.com/nethesis/nethvoice-report/api/queue/utils"
 )
 
 type login struct {
 	Username string `form:"username" json:"username" binding:"required"`
 	Password string `form:"password" json:"password" binding:"required"`
-}
-
-type User struct {
-	UserName string
-	Queues   []string
 }
 
 var jwtMiddleware *jwt.GinJWTMiddleware
@@ -64,6 +63,9 @@ func InitJWT() *jwt.GinJWTMiddleware {
 		MaxRefresh:  time.Hour,
 		IdentityKey: identityKey,
 		Authenticator: func(c *gin.Context) (interface{}, error) {
+
+			fmt.Println("Authenticator") ////
+
 			// check login credentials exists
 			var loginVals login
 			if err := c.ShouldBind(&loginVals); err != nil {
@@ -77,8 +79,8 @@ func InitJWT() *jwt.GinJWTMiddleware {
 			// try PAM authentication
 			err := methods.PamAuth(username, password)
 			if err == nil {
-				return &User{
-					UserName: username,
+				return &models.UserAuthorizations{
+					Username: username,
 				}, nil
 			}
 
@@ -86,14 +88,26 @@ func InitJWT() *jwt.GinJWTMiddleware {
 			return nil, jwt.ErrFailedAuthentication
 		},
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
-			// read authorization file for the current user // TODO
-			queues := []string{"402", "403"}
+
+			fmt.Println("PayloadFunc") ////
+
+			// read authorization file for the current user
 
 			// create claims map
-			if v, ok := data.(*User); ok {
+			if user, ok := data.(*models.UserAuthorizations); ok {
+				userAuthorizations, err := utils.GetUserAuthorizations(user.Username)
+				if err != nil {
+					//// how to log error?
+					fmt.Println(err) ////
+					return jwt.MapClaims{}
+				}
+
+				fmt.Println("userAuthorizations", userAuthorizations) ////
+
 				return jwt.MapClaims{
-					identityKey: v.UserName,
-					"queues":    queues,
+					identityKey: user.Username,
+					"queues":    userAuthorizations.Queues,
+					"groups":    userAuthorizations.Groups,
 				}
 			}
 
@@ -101,6 +115,9 @@ func InitJWT() *jwt.GinJWTMiddleware {
 			return jwt.MapClaims{}
 		},
 		IdentityHandler: func(c *gin.Context) interface{} {
+
+			fmt.Println("IdentityHandler") ////
+
 			// handle identity and extract claims
 			claims := jwt.ExtractClaims(c)
 
@@ -110,21 +127,74 @@ func InitJWT() *jwt.GinJWTMiddleware {
 				queues[i] = fmt.Sprint(v)
 			}
 
+			// extract groups
+			groups := make([]string, len(claims["groups"].([]interface{})))
+			for i, v := range claims["groups"].([]interface{}) {
+				groups[i] = fmt.Sprint(v)
+			}
+
 			// create user object
-			user := &User{
-				UserName: claims[identityKey].(string),
+			user := &models.UserAuthorizations{
+				Username: claims[identityKey].(string),
 				Queues:   queues,
+				Groups:   groups,
 			}
 
 			// return user
 			return user
 		},
 		Authorizator: func(data interface{}, c *gin.Context) bool {
-			// extract data payload and check authorizations // TODO
-			if v, ok := data.(*User); ok && v.UserName == "admin" {
+
+			fmt.Println("Authorizator") ////
+
+			// extract data payload and check authorizations
+			if v, ok := data.(*models.UserAuthorizations); ok {
+				authorizedQueues := v.Queues
+				authorizedGroups := v.Groups
+
+				fmt.Println("authorized queues", authorizedQueues, "authorized groups", authorizedGroups) ////
+
+				filterParam := c.Query("filter")
+
+				fmt.Println("filterParam", filterParam) ////
+
+				// convert to struct
+				var filter models.Filter
+				errJson := json.Unmarshal([]byte(filterParam), &filter)
+				if errJson != nil {
+					c.JSON(http.StatusBadRequest, gin.H{"message": "invalid filter params", "status": errJson.Error()})
+					return false
+				}
+
+				fmt.Println("requested queues", filter.Queues, "requested groups", filter.Groups) ////
+
+				// check queues authorization
+				for _, requestedQueue := range filter.Queues {
+					queueAllowed := false
+					for _, authorizedQueue := range authorizedQueues {
+						if requestedQueue == authorizedQueue {
+							queueAllowed = true
+						}
+					}
+					if !queueAllowed {
+						return false
+					}
+				}
+
+				// check groups authorization
+				for _, requestedGroup := range filter.Groups {
+					groupAllowed := false
+					for _, authorizedGroup := range authorizedGroups {
+						if requestedGroup == authorizedGroup {
+							groupAllowed = true
+						}
+					}
+					if !groupAllowed {
+						return false
+					}
+				}
 				return true
 			}
-
 			return false
 		},
 		Unauthorized: func(c *gin.Context, code int, message string) {

@@ -25,19 +25,9 @@ package methods
 import (
 	"errors"
 	"fmt"
-	"net/http"
 
-	"github.com/gin-gonic/gin"
 	"github.com/msteinert/pam"
 )
-
-func Login(c *gin.Context) {
-	c.JSON(http.StatusCreated, gin.H{"status": "success"})
-}
-
-func Logout(c *gin.Context) {
-	c.JSON(http.StatusCreated, gin.H{"status": "success"})
-}
 
 func PamAuth(username string, password string) error {
 	t, err := pam.StartFunc("system-auth", username, func(s pam.Style, msg string) (string, error) {

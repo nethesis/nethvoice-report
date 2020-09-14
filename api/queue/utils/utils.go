@@ -25,6 +25,12 @@ package utils
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
+	"fmt"
+	"io/ioutil"
+
+	"github.com/nethesis/nethvoice-report/api/queue/configuration"
+	"github.com/nethesis/nethvoice-report/api/queue/models"
 )
 
 func ParseResults(rows *sql.Rows) string {
@@ -72,4 +78,82 @@ func ParseResults(rows *sql.Rows) string {
 
 	// return value
 	return string(dataJSON)
+}
+
+// func ParseUserAuthorizationsFile() (map[string]interface{}, error) { ////
+func ParseUserAuthorizationsFile() (models.UserAuthorizationsList, error) { ////
+
+	fmt.Println("PARSING") ////
+
+	userAuthorizationsList := models.UserAuthorizationsList{} ////
+	file, err := ioutil.ReadFile(configuration.Config.UserAuthorizationsFile)
+	if err != nil {
+		return userAuthorizationsList, err
+	}
+
+	err = json.Unmarshal([]byte(file), &userAuthorizationsList)
+	if err != nil {
+		return userAuthorizationsList, err
+	}
+	return userAuthorizationsList, nil
+
+	//// USING DIRECT ACCESS TO USER AUTH AND map[string]interface{}
+
+	// var userAuthorization map[string]interface{}
+
+	// jsonFile, err := os.Open(configuration.Config.UserAuthorizationsFile)
+	// if err != nil {
+	// 	return userAuthorization, err
+	// }
+
+	// fmt.Println("Successfully Opened user authorization file") ////
+	// defer jsonFile.Close()
+
+	// byteValue, _ := ioutil.ReadAll(jsonFile)
+	// json.Unmarshal([]byte(byteValue), &userAuthorization)
+
+	// fmt.Println(userAuthorization["user_authorization"]) ////
+	// fmt.Println(userAuthorization["2"])                  ////
+	// return userAuthorization, nil
+}
+
+func GetUserAuthorizations(username string) (models.UserAuthorizations, error) { ////
+	userAuthorizations := models.UserAuthorizations{}
+	authorizations, err := ParseUserAuthorizationsFile()
+	if err != nil {
+		return userAuthorizations, err
+	}
+
+	for _, ua := range authorizations.UserAuthorizations {
+		if ua.Username == username {
+			fmt.Println("user found", ua) ////
+			userAuthorizations.Queues = ua.Queues
+			userAuthorizations.Groups = ua.Groups
+			return userAuthorizations, nil
+		}
+	}
+
+	return userAuthorizations, errors.New("Username not found")
+
+	//// USING DIRECT ACCESS TO USER AUTH AND map[string]interface{}
+
+	// userAuthorizations := models.UserAuthorizations{}
+
+	// authorizations, err := ParseUserAuthorizationsFile()
+	// if err != nil {
+	// 	return userAuthorizations, err
+	// }
+
+	// username = "2"                        //// remove
+	// fmt.Println(authorizations[username]) ////
+
+	// ua, ok := authorizations[username].(map[string]interface{})
+	// if !ok {
+	// 	return userAuthorizations, err
+	// }
+
+	// userAuthorizations.Queues = ua["queues"].([]string)
+	// userAuthorizations.Groups = ua["groups"].([]string)
+
+	// return userAuthorizations, nil
 }
