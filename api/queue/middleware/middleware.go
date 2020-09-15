@@ -26,6 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -35,7 +36,6 @@ import (
 	"github.com/nethesis/nethvoice-report/api/queue/configuration"
 	"github.com/nethesis/nethvoice-report/api/queue/methods"
 	"github.com/nethesis/nethvoice-report/api/queue/models"
-	"github.com/nethesis/nethvoice-report/api/queue/utils"
 )
 
 type login struct {
@@ -78,36 +78,35 @@ func InitJWT() *jwt.GinJWTMiddleware {
 
 			// try PAM authentication
 			err := methods.PamAuth(username, password)
-			if err == nil {
-				return &models.UserAuthorization{
-					Username: username,
-				}, nil
+			if err != nil {
+				os.Stderr.WriteString("PAM authentication failed")
+				return nil, jwt.ErrFailedAuthentication
 			}
 
-			// PAM authentication failed
-			return nil, jwt.ErrFailedAuthentication
+			return &models.UserAuthorizations{
+				Username: username,
+			}, nil
+
 		},
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
 
 			fmt.Println("PayloadFunc") ////
 
-			// read authorization file for the current user
-
-			// create claims map
-			if user, ok := data.(*models.UserAuthorization); ok {
-				UserAuthorization, err := utils.GetUserAuthorizations(user.Username)
+			// read authorization file for current user
+			if user, ok := data.(*models.UserAuthorizations); ok {
+				userAuthorization, err := methods.GetUserAuthorizations(user.Username)
 				if err != nil {
-					//// how to log error?
-					fmt.Println(err) ////
+					os.Stderr.WriteString(err.Error())
 					return jwt.MapClaims{}
 				}
 
-				fmt.Println("UserAuthorization", UserAuthorization) ////
+				fmt.Println("userAuthorization", userAuthorization) ////
 
+				// create claims map
 				return jwt.MapClaims{
-					identityKey: user.Username,
-					"queues":    UserAuthorization.Queues,
-					"groups":    UserAuthorization.Groups,
+					identityKey: userAuthorization.Username,
+					"queues":    userAuthorization.Queues,
+					"groups":    userAuthorization.Groups,
 				}
 			}
 
@@ -134,7 +133,7 @@ func InitJWT() *jwt.GinJWTMiddleware {
 			}
 
 			// create user object
-			user := &models.UserAuthorization{
+			user := &models.UserAuthorizations{
 				Username: claims[identityKey].(string),
 				Queues:   queues,
 				Groups:   groups,
@@ -148,7 +147,7 @@ func InitJWT() *jwt.GinJWTMiddleware {
 			fmt.Println("Authorizator") ////
 
 			// extract data payload and check authorizations
-			if v, ok := data.(*models.UserAuthorization); ok {
+			if v, ok := data.(*models.UserAuthorizations); ok {
 				authorizedQueues := v.Queues
 				authorizedGroups := v.Groups
 
@@ -210,7 +209,7 @@ func InitJWT() *jwt.GinJWTMiddleware {
 
 	// check middleware errors
 	if errDefine != nil {
-		panic(errDefine)
+		os.Stderr.WriteString(errDefine.Error())
 	}
 
 	// init middleware
@@ -218,7 +217,8 @@ func InitJWT() *jwt.GinJWTMiddleware {
 
 	// check error on initialization
 	if errInit != nil {
-		panic(errInit)
+		os.Stderr.WriteString(errInit.Error())
+
 	}
 
 	// return object

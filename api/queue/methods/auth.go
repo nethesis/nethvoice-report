@@ -23,34 +23,80 @@
 package methods
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
+	"os"
 
 	"github.com/msteinert/pam"
+	"github.com/nethesis/nethvoice-report/api/queue/configuration"
+	"github.com/nethesis/nethvoice-report/api/queue/models"
 )
 
 func PamAuth(username string, password string) error {
-	t, err := pam.StartFunc("system-auth", username, func(s pam.Style, msg string) (string, error) {
+	// init PAM authentication
+	t, errInit := pam.StartFunc("system-auth", username, func(s pam.Style, msg string) (string, error) {
 		switch s {
 		case pam.PromptEchoOff:
 			return password, nil
 		case pam.PromptEchoOn:
 			return username, nil
-		case pam.ErrorMsg:
-			fmt.Print(msg)
-			return "", nil
-		case pam.TextInfo:
-			fmt.Println(msg)
-			return "", nil
+		default:
+			return "", errors.New("error during PAM authentication")
 		}
-		return "", errors.New("Unrecognized message style")
 	})
-	if err != nil {
-		return err
+
+	// check error
+	if errInit != nil {
+		os.Stderr.WriteString(errInit.Error())
+		return errInit
 	}
-	err = t.Authenticate(0)
-	if err != nil {
-		return err
+
+	// check authentication
+	errAuth := t.Authenticate(0)
+	if errAuth != nil {
+		os.Stderr.WriteString(errAuth.Error())
+		return errAuth
 	}
 	return nil
+}
+
+func ParseUserAuthorizationsFile() ([]models.UserAuthorizations, error) {
+
+	fmt.Println("parsing auth file") ////
+
+	userAuthorizationsList := []models.UserAuthorizations{}
+	file, err := ioutil.ReadFile(configuration.Config.UserAuthorizationsFile)
+	if err != nil {
+		return userAuthorizationsList, err
+	}
+
+	err = json.Unmarshal([]byte(file), &userAuthorizationsList)
+	if err != nil {
+		return userAuthorizationsList, err
+	}
+	return userAuthorizationsList, nil
+}
+
+func GetUserAuthorizations(username string) (models.UserAuthorizations, error) {
+	userAuthorizations := models.UserAuthorizations{}
+	userAuthorizationsList, err := ParseUserAuthorizationsFile()
+	if err != nil {
+		return userAuthorizations, err
+	}
+
+	for _, ua := range userAuthorizationsList {
+		if ua.Username == username {
+			fmt.Println("user found", ua)                                ////
+			fmt.Println("userAuthorizations before", userAuthorizations) ////
+			userAuthorizations.Username = ua.Username
+			userAuthorizations.Queues = ua.Queues
+			userAuthorizations.Groups = ua.Groups
+			fmt.Println("userAuthorizations", userAuthorizations) ////
+			return userAuthorizations, nil
+		}
+	}
+
+	return userAuthorizations, errors.New("Username not found")
 }

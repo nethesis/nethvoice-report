@@ -25,12 +25,7 @@ package utils
 import (
 	"database/sql"
 	"encoding/json"
-	"errors"
-	"fmt"
-	"io/ioutil"
-
-	"github.com/nethesis/nethvoice-report/api/queue/configuration"
-	"github.com/nethesis/nethvoice-report/api/queue/models"
+	"os"
 )
 
 func ParseResults(rows *sql.Rows) string {
@@ -40,7 +35,7 @@ func ParseResults(rows *sql.Rows) string {
 	// extract columns
 	columns, err := rows.Columns()
 	if err != nil {
-		panic(err.Error())
+		os.Stderr.WriteString(err.Error())
 	}
 
 	// initialize object based on field count
@@ -58,7 +53,7 @@ func ParseResults(rows *sql.Rows) string {
 		// scan values
 		err = rows.Scan(fields...)
 		if err != nil {
-			panic(err.Error())
+			os.Stderr.WriteString(err.Error())
 		}
 
 		// compose record
@@ -78,40 +73,4 @@ func ParseResults(rows *sql.Rows) string {
 
 	// return value
 	return string(dataJSON)
-}
-
-func ParseUserAuthorizationsFile() (models.UserAuthorizations, error) {
-
-	fmt.Println("parsing auth file") ////
-
-	UserAuthorizations := models.UserAuthorizations{} ////
-	file, err := ioutil.ReadFile(configuration.Config.UserAuthorizationsFile)
-	if err != nil {
-		return UserAuthorizations, err
-	}
-
-	err = json.Unmarshal([]byte(file), &UserAuthorizations)
-	if err != nil {
-		return UserAuthorizations, err
-	}
-	return UserAuthorizations, nil
-}
-
-func GetUserAuthorizations(username string) (models.UserAuthorization, error) {
-	UserAuthorization := models.UserAuthorization{}
-	authorizations, err := ParseUserAuthorizationsFile()
-	if err != nil {
-		return UserAuthorization, err
-	}
-
-	for _, ua := range authorizations.UserAuthorization {
-		if ua.Username == username {
-			fmt.Println("user found", ua) ////
-			UserAuthorization.Queues = ua.Queues
-			UserAuthorization.Groups = ua.Groups
-			return UserAuthorization, nil
-		}
-	}
-
-	return UserAuthorization, errors.New("Username not found")
 }

@@ -24,6 +24,7 @@ package source
 
 import (
 	"database/sql"
+	"os"
 
 	_ "github.com/go-sql-driver/mysql"
 
@@ -48,7 +49,7 @@ func QueueInit() *sql.DB {
 
 	// handle error
 	if err != nil {
-		panic(err.Error())
+		os.Stderr.WriteString(err.Error())
 	}
 
 	// return db object

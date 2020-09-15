@@ -52,7 +52,7 @@ func Init(ConfigFilePtr *string) {
 		// check errors or parse JSON
 		err := decoder.Decode(&Config)
 		if err != nil {
-			panic(err)
+			os.Stderr.WriteString(err.Error())
 		}
 	}
 }
