@@ -79,7 +79,7 @@ func InitJWT() *jwt.GinJWTMiddleware {
 			// try PAM authentication
 			err := methods.PamAuth(username, password)
 			if err == nil {
-				return &models.UserAuthorizations{
+				return &models.UserAuthorization{
 					Username: username,
 				}, nil
 			}
@@ -94,20 +94,20 @@ func InitJWT() *jwt.GinJWTMiddleware {
 			// read authorization file for the current user
 
 			// create claims map
-			if user, ok := data.(*models.UserAuthorizations); ok {
-				userAuthorizations, err := utils.GetUserAuthorizations(user.Username)
+			if user, ok := data.(*models.UserAuthorization); ok {
+				UserAuthorization, err := utils.GetUserAuthorizations(user.Username)
 				if err != nil {
 					//// how to log error?
 					fmt.Println(err) ////
 					return jwt.MapClaims{}
 				}
 
-				fmt.Println("userAuthorizations", userAuthorizations) ////
+				fmt.Println("UserAuthorization", UserAuthorization) ////
 
 				return jwt.MapClaims{
 					identityKey: user.Username,
-					"queues":    userAuthorizations.Queues,
-					"groups":    userAuthorizations.Groups,
+					"queues":    UserAuthorization.Queues,
+					"groups":    UserAuthorization.Groups,
 				}
 			}
 
@@ -134,7 +134,7 @@ func InitJWT() *jwt.GinJWTMiddleware {
 			}
 
 			// create user object
-			user := &models.UserAuthorizations{
+			user := &models.UserAuthorization{
 				Username: claims[identityKey].(string),
 				Queues:   queues,
 				Groups:   groups,
@@ -148,7 +148,7 @@ func InitJWT() *jwt.GinJWTMiddleware {
 			fmt.Println("Authorizator") ////
 
 			// extract data payload and check authorizations
-			if v, ok := data.(*models.UserAuthorizations); ok {
+			if v, ok := data.(*models.UserAuthorization); ok {
 				authorizedQueues := v.Queues
 				authorizedGroups := v.Groups
 

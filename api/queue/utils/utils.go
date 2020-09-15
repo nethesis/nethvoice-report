@@ -80,38 +80,38 @@ func ParseResults(rows *sql.Rows) string {
 	return string(dataJSON)
 }
 
-func ParseUserAuthorizationsFile() (models.UserAuthorizationsList, error) {
+func ParseUserAuthorizationsFile() (models.UserAuthorizations, error) {
 
 	fmt.Println("parsing auth file") ////
 
-	userAuthorizationsList := models.UserAuthorizationsList{} ////
+	UserAuthorizations := models.UserAuthorizations{} ////
 	file, err := ioutil.ReadFile(configuration.Config.UserAuthorizationsFile)
 	if err != nil {
-		return userAuthorizationsList, err
+		return UserAuthorizations, err
 	}
 
-	err = json.Unmarshal([]byte(file), &userAuthorizationsList)
+	err = json.Unmarshal([]byte(file), &UserAuthorizations)
 	if err != nil {
-		return userAuthorizationsList, err
+		return UserAuthorizations, err
 	}
-	return userAuthorizationsList, nil
+	return UserAuthorizations, nil
 }
 
-func GetUserAuthorizations(username string) (models.UserAuthorizations, error) {
-	userAuthorizations := models.UserAuthorizations{}
+func GetUserAuthorizations(username string) (models.UserAuthorization, error) {
+	UserAuthorization := models.UserAuthorization{}
 	authorizations, err := ParseUserAuthorizationsFile()
 	if err != nil {
-		return userAuthorizations, err
+		return UserAuthorization, err
 	}
 
-	for _, ua := range authorizations.UserAuthorizations {
+	for _, ua := range authorizations.UserAuthorization {
 		if ua.Username == username {
 			fmt.Println("user found", ua) ////
-			userAuthorizations.Queues = ua.Queues
-			userAuthorizations.Groups = ua.Groups
-			return userAuthorizations, nil
+			UserAuthorization.Queues = ua.Queues
+			UserAuthorization.Groups = ua.Groups
+			return UserAuthorization, nil
 		}
 	}
 
-	return userAuthorizations, errors.New("Username not found")
+	return UserAuthorization, errors.New("Username not found")
 }
