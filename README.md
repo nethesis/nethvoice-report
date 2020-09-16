@@ -9,7 +9,7 @@ Access to Nethvoice reports is granted to system users using [PAM](https://githu
 
 - Username and password are validated with PAM
 - User authorizations (granted queues and groups) are read from a file handled by NethCTI (`/opt/nethvoice-report/queue/user_authorizations.json` by default)
-- A JWT token encapsulationg user identity and authorizations is created and returned to client
+- A JWT token encapsulating user identity and authorizations is created and returned to client
 - The client will enclose this token in subsequent report requests
 
 Login requests are handled by `Authenticator` and `PayloadFunc` functions in `middleware.go`

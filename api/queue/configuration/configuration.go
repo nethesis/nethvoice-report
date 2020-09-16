@@ -39,7 +39,7 @@ type Configuration struct {
 	TTLCache               int    `json:"ttl_cache"`
 	Secret                 string `json:"secret"`
 	QueryPath              string `json:"query_path"`
-	UserAuthorizationsFile string `json:"auth_users_file"`
+	UserAuthorizationsFile string `json:"user_auth_file"`
 }
 
 var Config = Configuration{}
