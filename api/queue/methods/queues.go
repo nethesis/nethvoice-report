@@ -37,20 +37,10 @@ import (
 
 	"github.com/nethesis/nethvoice-report/api/queue/cache"
 	"github.com/nethesis/nethvoice-report/api/queue/configuration"
+	"github.com/nethesis/nethvoice-report/api/queue/models"
 	"github.com/nethesis/nethvoice-report/api/queue/source"
 	"github.com/nethesis/nethvoice-report/api/queue/utils"
 )
-
-type filterObject struct {
-	Queue string `json:"queue"`
-	Time  struct {
-		TimeRange string `json:"time_range"`
-		Value     string `json:"value"`
-	} `json:"time"`
-	Name     string `json:"name"`
-	Agent    string `json:"agent"`
-	NullCall bool   `json:"null_call"`
-}
 
 func GetQueueReports(c *gin.Context) {
 	// extract section, view and graph
@@ -59,18 +49,18 @@ func GetQueueReports(c *gin.Context) {
 	graph := c.Query("graph")
 
 	// extract filter
-	filter := c.Query("filter")
+	filterParam := c.Query("filter")
 
 	// convert to struct
-	var filterObject filterObject
-	errJson := json.Unmarshal([]byte(filter), &filterObject)
+	var filter models.Filter
+	errJson := json.Unmarshal([]byte(filterParam), &filter)
 	if errJson != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "invalid filter params", "status": errJson.Error()})
 		return
 	}
 
 	// convert struct to json to preserve item orders
-	filterString, errConvert := json.Marshal(filterObject)
+	filterString, errConvert := json.Marshal(filter)
 	if errConvert != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "error in filter conversion to string", "status": errJson.Error()})
 		return
@@ -107,7 +97,7 @@ func GetQueueReports(c *gin.Context) {
 
 	// compile query with filter object
 	var queryString bytes.Buffer
-	errTpl := q.Execute(&queryString, &filterObject)
+	errTpl := q.Execute(&queryString, &filter)
 	if errTpl != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "invalid query template compiling", "status": errTpl.Error()})
 		return

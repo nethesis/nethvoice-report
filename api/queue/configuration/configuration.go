@@ -35,10 +35,11 @@ type Configuration struct {
 		Name     string `json:"name"`
 		Password string `json:"password"`
 	} `json:"queue_database"`
-	RedisAddress string `json:"redis_address"`
-	TTLCache     int    `json:"ttl_cache"`
-	Secret       string `json:"secret"`
-	QueryPath    string `json:"query_path"`
+	RedisAddress           string `json:"redis_address"`
+	TTLCache               int    `json:"ttl_cache"`
+	Secret                 string `json:"secret"`
+	QueryPath              string `json:"query_path"`
+	UserAuthorizationsFile string `json:"user_auth_file"`
 }
 
 var Config = Configuration{}
@@ -51,7 +52,7 @@ func Init(ConfigFilePtr *string) {
 		// check errors or parse JSON
 		err := decoder.Decode(&Config)
 		if err != nil {
-			panic(err)
+			os.Stderr.WriteString(err.Error())
 		}
 	}
 }

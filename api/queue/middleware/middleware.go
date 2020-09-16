@@ -23,7 +23,10 @@
 package middleware
 
 import (
+	"encoding/json"
 	"fmt"
+	"net/http"
+	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -31,16 +34,13 @@ import (
 	jwt "github.com/appleboy/gin-jwt/v2"
 
 	"github.com/nethesis/nethvoice-report/api/queue/configuration"
+	"github.com/nethesis/nethvoice-report/api/queue/methods"
+	"github.com/nethesis/nethvoice-report/api/queue/models"
 )
 
 type login struct {
 	Username string `form:"username" json:"username" binding:"required"`
 	Password string `form:"password" json:"password" binding:"required"`
-}
-
-type User struct {
-	UserName string
-	Queues   []string
 }
 
 var jwtMiddleware *jwt.GinJWTMiddleware
@@ -73,25 +73,32 @@ func InitJWT() *jwt.GinJWTMiddleware {
 			username := loginVals.Username
 			password := loginVals.Password
 
-			// try PAM authentication // TODO
-			if (username == "admin" && password == "admin") || (username == "test" && password == "test") {
-				return &User{
-					UserName: username,
-				}, nil
+			// try PAM authentication
+			err := methods.PamAuth(username, password)
+			if err != nil {
+				os.Stderr.WriteString("PAM authentication failed")
+				return nil, jwt.ErrFailedAuthentication
 			}
 
-			// PAM authentication failed
-			return nil, jwt.ErrFailedAuthentication
+			return &models.UserAuthorizations{
+				Username: username,
+			}, nil
+
 		},
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
-			// read authorization file for the current user // TODO
-			queues := []string{"402", "403"}
+			// read authorization file for current user
+			if user, ok := data.(*models.UserAuthorizations); ok {
+				userAuthorization, err := methods.GetUserAuthorizations(user.Username)
+				if err != nil {
+					os.Stderr.WriteString(err.Error())
+					return jwt.MapClaims{}
+				}
 
-			// create claims map
-			if v, ok := data.(*User); ok {
+				// create claims map
 				return jwt.MapClaims{
-					identityKey: v.UserName,
-					"queues":    queues,
+					identityKey: userAuthorization.Username,
+					"queues":    userAuthorization.Queues,
+					"groups":    userAuthorization.Groups,
 				}
 			}
 
@@ -108,21 +115,64 @@ func InitJWT() *jwt.GinJWTMiddleware {
 				queues[i] = fmt.Sprint(v)
 			}
 
+			// extract groups
+			groups := make([]string, len(claims["groups"].([]interface{})))
+			for i, v := range claims["groups"].([]interface{}) {
+				groups[i] = fmt.Sprint(v)
+			}
+
 			// create user object
-			user := &User{
-				UserName: claims[identityKey].(string),
+			user := &models.UserAuthorizations{
+				Username: claims[identityKey].(string),
 				Queues:   queues,
+				Groups:   groups,
 			}
 
 			// return user
 			return user
 		},
 		Authorizator: func(data interface{}, c *gin.Context) bool {
-			// extract data payload and check authorizations // TODO
-			if v, ok := data.(*User); ok && v.UserName == "admin" {
+			// extract data payload and check authorizations
+			if v, ok := data.(*models.UserAuthorizations); ok {
+				authorizedQueues := v.Queues
+				authorizedGroups := v.Groups
+				filterParam := c.Query("filter")
+
+				// convert to struct
+				var filter models.Filter
+				errJson := json.Unmarshal([]byte(filterParam), &filter)
+				if errJson != nil {
+					c.JSON(http.StatusBadRequest, gin.H{"message": "invalid filter params", "status": errJson.Error()})
+					return false
+				}
+
+				// check queues authorization
+				for _, requestedQueue := range filter.Queues {
+					queueAllowed := false
+					for _, authorizedQueue := range authorizedQueues {
+						if requestedQueue == authorizedQueue {
+							queueAllowed = true
+						}
+					}
+					if !queueAllowed {
+						return false
+					}
+				}
+
+				// check groups authorization
+				for _, requestedGroup := range filter.Groups {
+					groupAllowed := false
+					for _, authorizedGroup := range authorizedGroups {
+						if requestedGroup == authorizedGroup {
+							groupAllowed = true
+						}
+					}
+					if !groupAllowed {
+						return false
+					}
+				}
 				return true
 			}
-
 			return false
 		},
 		Unauthorized: func(c *gin.Context, code int, message string) {
@@ -138,7 +188,7 @@ func InitJWT() *jwt.GinJWTMiddleware {
 
 	// check middleware errors
 	if errDefine != nil {
-		panic(errDefine)
+		os.Stderr.WriteString(errDefine.Error())
 	}
 
 	// init middleware
@@ -146,7 +196,8 @@ func InitJWT() *jwt.GinJWTMiddleware {
 
 	// check error on initialization
 	if errInit != nil {
-		panic(errInit)
+		os.Stderr.WriteString(errInit.Error())
+
 	}
 
 	// return object

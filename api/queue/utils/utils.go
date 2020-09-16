@@ -25,6 +25,7 @@ package utils
 import (
 	"database/sql"
 	"encoding/json"
+	"os"
 )
 
 func ParseResults(rows *sql.Rows) string {
@@ -34,7 +35,7 @@ func ParseResults(rows *sql.Rows) string {
 	// extract columns
 	columns, err := rows.Columns()
 	if err != nil {
-		panic(err.Error())
+		os.Stderr.WriteString(err.Error())
 	}
 
 	// initialize object based on field count
@@ -52,7 +53,7 @@ func ParseResults(rows *sql.Rows) string {
 		// scan values
 		err = rows.Scan(fields...)
 		if err != nil {
-			panic(err.Error())
+			os.Stderr.WriteString(err.Error())
 		}
 
 		// compose record

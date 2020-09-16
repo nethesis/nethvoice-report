@@ -23,15 +23,73 @@
 package methods
 
 import (
-	"net/http"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"io/ioutil"
+	"os"
 
-	"github.com/gin-gonic/gin"
+	"github.com/msteinert/pam"
+	"github.com/nethesis/nethvoice-report/api/queue/configuration"
+	"github.com/nethesis/nethvoice-report/api/queue/models"
 )
 
-func Login(c *gin.Context) {
-	c.JSON(http.StatusCreated, gin.H{"status": "success"})
+func PamAuth(username string, password string) error {
+	// init PAM authentication
+	t, errInit := pam.StartFunc("system-auth", username, func(s pam.Style, msg string) (string, error) {
+		switch s {
+		case pam.PromptEchoOff:
+			return password, nil
+		case pam.PromptEchoOn:
+			return username, nil
+		default:
+			return "", errors.New("error during PAM authentication")
+		}
+	})
+
+	// check error
+	if errInit != nil {
+		os.Stderr.WriteString(errInit.Error())
+		return errInit
+	}
+
+	// check authentication
+	errAuth := t.Authenticate(0)
+	if errAuth != nil {
+		os.Stderr.WriteString(errAuth.Error())
+		return errAuth
+	}
+	return nil
 }
 
-func Logout(c *gin.Context) {
-	c.JSON(http.StatusCreated, gin.H{"status": "success"})
+func ParseUserAuthorizationsFile() ([]models.UserAuthorizations, error) {
+	userAuthorizationsList := []models.UserAuthorizations{}
+	file, err := ioutil.ReadFile(configuration.Config.UserAuthorizationsFile)
+	if err != nil {
+		return userAuthorizationsList, err
+	}
+
+	err = json.Unmarshal([]byte(file), &userAuthorizationsList)
+	if err != nil {
+		return userAuthorizationsList, err
+	}
+	return userAuthorizationsList, nil
+}
+
+func GetUserAuthorizations(username string) (models.UserAuthorizations, error) {
+	userAuthorizations := models.UserAuthorizations{}
+	userAuthorizationsList, err := ParseUserAuthorizationsFile()
+	if err != nil {
+		return userAuthorizations, err
+	}
+
+	for _, ua := range userAuthorizationsList {
+		if ua.Username == username {
+			userAuthorizations.Username = ua.Username
+			userAuthorizations.Queues = ua.Queues
+			userAuthorizations.Groups = ua.Groups
+			return userAuthorizations, nil
+		}
+	}
+	return userAuthorizations, errors.New("Username not found")
 }
