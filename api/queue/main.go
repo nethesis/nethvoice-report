@@ -59,6 +59,17 @@ func main() {
 		{
 			queues.GET("", methods.GetQueueReports)
 		}
+
+		searches := api.Group("/searches")
+		{
+			searches.GET("", methods.GetSearches)
+			searches.POST("", methods.SetSearches)
+		}
+
+		filters := api.Group("/filters/:section/:view")
+		{
+			filters.GET("", methods.GetDefaultFilter)
+		}
 	}
 
 	// handle missing endpoint

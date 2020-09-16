@@ -25,9 +25,11 @@ package methods
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"os"
+
+	"github.com/gin-gonic/gin"
+	jwt "github.com/appleboy/gin-jwt/v2"
 
 	"github.com/msteinert/pam"
 	"github.com/nethesis/nethvoice-report/api/queue/configuration"
@@ -92,4 +94,12 @@ func GetUserAuthorizations(username string) (models.UserAuthorizations, error) {
 		}
 	}
 	return userAuthorizations, errors.New("Username not found")
+}
+
+func GetClaims (c *gin.Context) jwt.MapClaims{
+	// extract claims from jwt gin context
+	claims := jwt.ExtractClaims(c)
+
+	// return claims
+	return claims
 }

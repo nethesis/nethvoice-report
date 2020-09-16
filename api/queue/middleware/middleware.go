@@ -36,6 +36,7 @@ import (
 	"github.com/nethesis/nethvoice-report/api/queue/configuration"
 	"github.com/nethesis/nethvoice-report/api/queue/methods"
 	"github.com/nethesis/nethvoice-report/api/queue/models"
+	"github.com/nethesis/nethvoice-report/api/queue/utils"
 )
 
 type login struct {
@@ -134,6 +135,11 @@ func InitJWT() *jwt.GinJWTMiddleware {
 		Authorizator: func(data interface{}, c *gin.Context) bool {
 			// extract data payload and check authorizations
 			if v, ok := data.(*models.UserAuthorizations); ok {
+				// exclude authorization for some routes
+				if utils.ExcludedRoute(c.FullPath()) {
+					return true
+				}
+
 				authorizedQueues := v.Queues
 				authorizedGroups := v.Groups
 				filterParam := c.Query("filter")
