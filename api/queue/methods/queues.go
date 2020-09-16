@@ -59,8 +59,6 @@ func GetQueueReports(c *gin.Context) {
 		return
 	}
 
-	filter.Agent = "001264" //// remove
-
 	// convert struct to json to preserve item orders
 	filterString, errConvert := json.Marshal(filter)
 	if errConvert != nil {

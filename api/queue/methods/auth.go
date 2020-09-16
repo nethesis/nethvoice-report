@@ -63,9 +63,6 @@ func PamAuth(username string, password string) error {
 }
 
 func ParseUserAuthorizationsFile() ([]models.UserAuthorizations, error) {
-
-	fmt.Println("parsing auth file") ////
-
 	userAuthorizationsList := []models.UserAuthorizations{}
 	file, err := ioutil.ReadFile(configuration.Config.UserAuthorizationsFile)
 	if err != nil {
@@ -88,15 +85,11 @@ func GetUserAuthorizations(username string) (models.UserAuthorizations, error) {
 
 	for _, ua := range userAuthorizationsList {
 		if ua.Username == username {
-			fmt.Println("user found", ua)                                ////
-			fmt.Println("userAuthorizations before", userAuthorizations) ////
 			userAuthorizations.Username = ua.Username
 			userAuthorizations.Queues = ua.Queues
 			userAuthorizations.Groups = ua.Groups
-			fmt.Println("userAuthorizations", userAuthorizations) ////
 			return userAuthorizations, nil
 		}
 	}
-
 	return userAuthorizations, errors.New("Username not found")
 }

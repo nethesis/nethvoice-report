@@ -63,9 +63,6 @@ func InitJWT() *jwt.GinJWTMiddleware {
 		MaxRefresh:  time.Hour,
 		IdentityKey: identityKey,
 		Authenticator: func(c *gin.Context) (interface{}, error) {
-
-			fmt.Println("Authenticator") ////
-
 			// check login credentials exists
 			var loginVals login
 			if err := c.ShouldBind(&loginVals); err != nil {
@@ -89,9 +86,6 @@ func InitJWT() *jwt.GinJWTMiddleware {
 
 		},
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
-
-			fmt.Println("PayloadFunc") ////
-
 			// read authorization file for current user
 			if user, ok := data.(*models.UserAuthorizations); ok {
 				userAuthorization, err := methods.GetUserAuthorizations(user.Username)
@@ -99,8 +93,6 @@ func InitJWT() *jwt.GinJWTMiddleware {
 					os.Stderr.WriteString(err.Error())
 					return jwt.MapClaims{}
 				}
-
-				fmt.Println("userAuthorization", userAuthorization) ////
 
 				// create claims map
 				return jwt.MapClaims{
@@ -114,9 +106,6 @@ func InitJWT() *jwt.GinJWTMiddleware {
 			return jwt.MapClaims{}
 		},
 		IdentityHandler: func(c *gin.Context) interface{} {
-
-			fmt.Println("IdentityHandler") ////
-
 			// handle identity and extract claims
 			claims := jwt.ExtractClaims(c)
 
@@ -143,19 +132,11 @@ func InitJWT() *jwt.GinJWTMiddleware {
 			return user
 		},
 		Authorizator: func(data interface{}, c *gin.Context) bool {
-
-			fmt.Println("Authorizator") ////
-
 			// extract data payload and check authorizations
 			if v, ok := data.(*models.UserAuthorizations); ok {
 				authorizedQueues := v.Queues
 				authorizedGroups := v.Groups
-
-				fmt.Println("authorized queues", authorizedQueues, "authorized groups", authorizedGroups) ////
-
 				filterParam := c.Query("filter")
-
-				fmt.Println("filterParam", filterParam) ////
 
 				// convert to struct
 				var filter models.Filter
@@ -164,8 +145,6 @@ func InitJWT() *jwt.GinJWTMiddleware {
 					c.JSON(http.StatusBadRequest, gin.H{"message": "invalid filter params", "status": errJson.Error()})
 					return false
 				}
-
-				fmt.Println("requested queues", filter.Queues, "requested groups", filter.Groups) ////
 
 				// check queues authorization
 				for _, requestedQueue := range filter.Queues {
