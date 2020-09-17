@@ -24,9 +24,58 @@
  package methods
 
  import (
+	 "encoding/json"
+	 "io/ioutil"
+	 "os"
+	 "net/http"
+
 	 "github.com/gin-gonic/gin"
+
+	 "github.com/nethesis/nethvoice-report/api/queue/configuration"
+	 "github.com/nethesis/nethvoice-report/api/queue/models"
  )
 
  func GetDefaultFilter(c *gin.Context) {
+	// extract section and view
+	section := c.Param("section")
+	view := c.Param("view")
 
+	// override filter path
+	filterOverrideFile := configuration.Config.QueryPath + "/" + section + "/" + view + "/default_filter.json"
+
+	// define return filter
+	var defaultFilter models.Filter
+
+	// check if override filter exists
+	if _, errExists := os.Stat(filterOverrideFile); os.IsNotExist(errExists) {
+		// override filter NOT exists, return default one
+		defaultFilter = configuration.Config.DefaultFilter
+
+		// return in JSON format
+		c.JSON(http.StatusOK, gin.H{"filter": defaultFilter})
+		return
+	} else {
+		// open json file
+		jsonFile, errRead := os.Open(filterOverrideFile)
+
+		// handle open error
+		if errRead != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"message": "invalid default filter reading", "status": errRead.Error()})
+			return
+		}
+
+		// override filter exists, read it and return
+		byteJSON, _ := ioutil.ReadAll(jsonFile)
+
+		// convert json file to struct
+		errJson := json.Unmarshal(byteJSON, &defaultFilter)
+		if errJson != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"message": "invalid default filter parsing", "status": errJson.Error()})
+			return
+		}
+
+		// return in JSON format
+                c.JSON(http.StatusOK, gin.H{"filter": defaultFilter})
+                return
+	}
  }
