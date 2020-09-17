@@ -1,5 +1,6 @@
 # API
 - `POST` `/api/login`
+
   Used to login (authenticate) the user
   
   **Body request**
@@ -18,6 +19,7 @@
   }
   ```
 - `POST` `/api/logout`
+
   Used to logout the user
   
   **Header request**
@@ -36,6 +38,7 @@
   }
   ```
 - `GET` `/api/refresh_token`
+
   Used to refresh JWT token before expiration
   
   **Header request**
@@ -56,6 +59,7 @@
   }
   ```
 - `GET` `/api/queues/:section/:view`
+
   Used to execute a specific query for a particular section and view
   
   **Header request**
@@ -78,6 +82,7 @@
   ]
   ```
 - `GET` `/api/searches`
+
   Used to retrieve all user's custom searches
   
   **Header request**
@@ -113,6 +118,7 @@
   } 
   ```
 - `GET` `/filters/:section/:view`
+
   Used to retrieve default filter or override filters
   
   **Header request**
