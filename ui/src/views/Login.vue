@@ -6,14 +6,15 @@
           <!-- <sui-image src="static/images/logo.png" /> -->
           <sui-header-content>Log-in to your account</sui-header-content>
         </h2>
-        <sui-form v-on:submit.prevent="doLogin">
+        <sui-form v-on:submit.prevent="doLogin()">
           <sui-segment stacked>
             <sui-form-field>
               <sui-input
-                type="email"
-                placeholder="E-mail address"
+                type="text"
+                placeholder="Username"
                 icon="user"
                 icon-position="left"
+                v-model="username"
               />
             </sui-form-field>
             <sui-form-field>
@@ -22,6 +23,7 @@
                 placeholder="Password"
                 icon="lock"
                 icon-position="left"
+                v-model="password"
               />
             </sui-form-field>
             <sui-button size="large" color="green" fluid>Login</sui-button>
@@ -33,16 +35,58 @@
 </template>
 
 <script>
+
+import LoginService from "../services/login";
+import StorageService from "../services/storage";
+
 export default {
- name: "Login",
- data() {
-   return {}
- },
- methods: {
-   doLogin () {
-     this.$parent.didLogin()
-   }  
- },
+  name: "Login",
+  data() {
+    return {
+      username: "",
+      password: ""
+    }
+  },
+  mixins: [LoginService, StorageService],
+  methods: {
+      doLogin () {
+      this.execLogin(
+        {
+          username: this.username,
+          password: this.password
+        },
+        success => {
+          // extract loggedUser info
+          var loggedUser = success.body;
+          // save to localstorage
+          this.set("loggedUser", loggedUser);
+          // get user info
+          // this.getInfo(loggedUser.id, response => {
+          //   if (response) {
+          //     this.user.info = response;
+          //     this.isLogged = true;
+          //     this.initGraphics();
+          //   } else {
+          //     this.isLogged = false;
+          //   }
+          // });
+          // change route
+          console.log(success)
+          this.isLogged = true;
+          this.$parent.didLogin()
+        },
+        error => {
+          if (error.body.message == "No username found!") {
+            this.errors.username = true;
+          }
+          if (error.body.message == "Password is invalid") {
+            this.errors.password = true;
+          }
+          console.error(error.body.message);
+        }
+      );
+    }  
+  }
 }
 </script>
 

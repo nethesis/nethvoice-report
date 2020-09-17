@@ -5,7 +5,7 @@
     inverted="true"
     vertical="true"
     animation="overlay"
-    visible="true"
+    v-bind:visible="isVisible"
   >
     <sui-menu-item class="report-switch-row">
       <!-- <sui-image :src="`/static/images/logo.png`" spaced="right" size="mini" /> -->
@@ -74,13 +74,6 @@
         <router-link is="sui-menu-item" to="/features">
           Feature Status
         </router-link>
-        <!-- <a
-          is="sui-menu-item"
-          href="https://github.com/Semantic-UI-Vue/Semantic-UI-Vue"
-        >
-          Github
-          <sui-icon name="github" />
-        </a> -->
       </sui-menu-menu>
     </sui-menu-item>
   </sui-menu>
@@ -92,6 +85,15 @@
 // import * as elements from 'semantic-ui-vue/elements';
 // import * as modules from 'semantic-ui-vue/modules';
 // import * as views from 'semantic-ui-vue/views';
+
+  export default {
+    data() {
+      return {
+        isVisible: true,
+        search: ""
+      }
+    }
+  };
 
 // export default {
 //   props: {

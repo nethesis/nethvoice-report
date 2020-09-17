@@ -7,8 +7,12 @@
     <!-- end login view -->
     <!-- logged view -->
     <div v-if="isLogged" >
+      <!-- start leftsidebar -->
       <LeftSidebar/>
       <div class="docs-container">
+        <!-- start leftsidebar -->
+        <TopBar/>
+        <!-- end topbar -->
         <router-view/>
       </div>
     </div>
@@ -20,12 +24,14 @@
 
 import Login from "./views/Login.vue";
 import LeftSidebar from "./components/LeftSidebar.vue";
+import TopBar from "./components/TopBar.vue";
 
 export default {
   name: "app",
   components: {
     Login: Login,
-    LeftSidebar: LeftSidebar
+    LeftSidebar: LeftSidebar,
+    TopBar: TopBar
   },
   data() {
     var isLogged = false;

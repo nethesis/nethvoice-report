@@ -29,7 +29,7 @@
     <sui-table-footer>
       <sui-table-row>
         <sui-table-header-cell colspan="3">
-          <sui-menu v-sui-floated:right pagination>
+          <sui-menu pagination>
             <a is="sui-menu-item" icon>
               <sui-icon name="left chevron" />
             </a>
@@ -49,6 +49,6 @@
 
 <script>
 export default {
-  name: 'TableExample',
+  name: 'StandardTable',
 };
 </script>

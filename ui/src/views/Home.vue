@@ -1,8 +1,5 @@
 <template lang="html">
   <div>
-    <!-- start topbar -->
-    <TopBar/>
-    <!-- end topbar -->
     <!-- start view content -->
     <div class="component-body">
       <StandardTable/>
@@ -12,13 +9,11 @@
 
 <script>
 
-import TopBar from "../components/TopBar.vue";
 import StandardTable from "../components/StandardTable.vue";
 
 export default {
   name: "Home",
   components: {
-    TopBar: TopBar,
     StandardTable: StandardTable
   },
   data () {

@@ -1,58 +1,89 @@
 <template>
   <div class="masthead">
     <sui-container>
-
       <sui-menu floated="right">
         <sui-popup position="bottom center" content="Settings">
           <a
             slot="trigger"
             is="sui-menu-item"
-            icon="github"
-            :href="githubLink"
+            icon="cog"
           />
         </sui-popup>
         <sui-popup position="bottom center" content="Logout">
-          <a slot="trigger" is="sui-menu-item" icon="book" :href="suiLink" />
+          <a slot="trigger" is="sui-menu-item" icon="sign-out" />
         </sui-popup>
       </sui-menu>
-
+      <sui-menu floated="right">
+        <sui-popup
+          position="bottom center"
+          class="labeled icon"
+          v-bind:content="toggleFiltersPopup"
+        >
+          <a
+            slot="trigger"
+            is="sui-menu-item"
+            v-on:click="toggleFilters()"
+            class="filter-button"
+            content="Filters"
+            icon="filter"
+          />
+        </sui-popup>
+      </sui-menu>
       <h1 is="sui-header" class="view-title">
         Home
       </h1>
-
-      <!-- <sui-menu :widths="2" class="component-head-menu">
-        <router-link
-          is="sui-menu-item"
-          :active="!tab"
-          :to="`/${type}/${componentName}`"
+      <sui-form
+        equal-width
+        class="filters-form"
+        v-if="this.showFilters"
         >
-          Definitions
-        </router-link>
-        <router-link
-          is="sui-menu-item"
-          :active="tab === 'api'"
-          :to="`/${type}/${componentName}/api`"
-        >
-          API
-        </router-link>
-      </sui-menu> -->
+        <sui-form-fields>
+          <sui-form-field>
+            <label>From</label>
+            <input placeholder="From" />
+          </sui-form-field>
+          <sui-form-field>
+            <label>To</label>
+            <input type="text" placeholder="To" />
+          </sui-form-field>
+        </sui-form-fields>
+        <sui-form-fields>
+          <sui-form-field>
+            <label>Group by</label>
+            <input type="text" placeholder="Group by" />
+          </sui-form-field>
+          <sui-form-field>
+            <label>Caller</label>
+            <input type="text" placeholder="Caller" />
+          </sui-form-field>
+          <sui-form-field>
+            <label>Queue</label>
+            <input type="text" placeholder="Queue" />
+          </sui-form-field>
+        </sui-form-fields>
+        <sui-button type="submit">Save</sui-button>
+      </sui-form>
     </sui-container>
   </div>
 </template>
 
 <script>
-// import capitalize from 'lodash/capitalize';
 
 export default {
   name: 'TopBar',
-//   props: {
-//     type: String,
-//     componentName: String,
-//     tab: String,
-//   },
   data() {
     return {
-      // currentComponent: this.componentName
+      showFilters: false
+    }
+  },
+  methods: {
+    toggleFilters: function () {
+      this.showFilters = !this.showFilters
+    }
+  },
+  computed: {
+    toggleFiltersPopup: function () {
+      return this.showFilters ? 'Hide filters' : 'Show filters'
     }
   }
 };
@@ -79,6 +110,17 @@ export default {
       margin-top: -2px;
     }
   }
+}
+
+.filter-button {
+  .icon {
+    margin-right: 10px !important;
+  }
+}
+
+.filters-form {
+  text-align: left;
+  margin-top: 30px;
 }
 
 .view-title {
