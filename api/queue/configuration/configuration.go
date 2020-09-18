@@ -25,6 +25,8 @@ package configuration
 import (
 	"encoding/json"
 	"os"
+
+	"github.com/nethesis/nethvoice-report/api/queue/models"
 )
 
 type Configuration struct {
@@ -40,6 +42,7 @@ type Configuration struct {
 	Secret                 string `json:"secret"`
 	QueryPath              string `json:"query_path"`
 	UserAuthorizationsFile string `json:"user_auth_file"`
+	DefaultFilter	       models.Filter `json:"default_filter"`
 }
 
 var Config = Configuration{}

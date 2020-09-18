@@ -62,7 +62,7 @@ func GetQueueReports(c *gin.Context) {
 	// convert struct to json to preserve item orders
 	filterString, errConvert := json.Marshal(filter)
 	if errConvert != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "error in filter conversion to string", "status": errJson.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "error in filter conversion to string", "status": errConvert.Error()})
 		return
 	}
 

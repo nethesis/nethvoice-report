@@ -28,6 +28,8 @@ import (
 	"os"
 )
 
+var excludedRoutes = [...]string{"/api/searches", "/api/filters/:section/:view"}
+
 func ParseResults(rows *sql.Rows) string {
 	// define data to return
 	data := [][]string{}
@@ -73,4 +75,15 @@ func ParseResults(rows *sql.Rows) string {
 
 	// return value
 	return string(dataJSON)
+}
+
+func ExcludedRoute(route string) bool {
+	// loop for all exclued routes
+	for _, r := range excludedRoutes {
+		// check if passing route match
+		if r == route {
+			return true
+		}
+	}
+	return false
 }

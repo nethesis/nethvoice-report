@@ -11,3 +11,10 @@ type Filter struct {
 	Agent    string `json:"agent"`
 	NullCall bool   `json:"null_call"`
 }
+
+type Search struct {
+	Name    string `json:"name"`
+	Section string `json:"section"`
+	View    string `json:"view"`
+	Filter  Filter `json:"filter"`
+}
