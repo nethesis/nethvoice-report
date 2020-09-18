@@ -117,7 +117,7 @@
     ]
   } 
   ```
-- `GET` `/filters/:section/:view`
+- `GET` `/api/filters/:section/:view`
 
   Used to retrieve default filter or override filters
   
