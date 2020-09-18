@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -e
+
+#
+# Clean old versions
+#
+rm -rf dist/*
+
+#
+# Build UI
+#
+pushd ui
+rm -rf dist/
+npm install
+npm run build
+tar cvzf ui.tar.gz -C dist .
+cp ui.tar.gz ../dist/
+popd
+
+#
+# Build API
+#
+pushd api
+unset GOPATH
+GO111MODULE=on
+go build
+cp api ../dist/
+popd
