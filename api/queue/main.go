@@ -26,6 +26,7 @@ import (
 	"flag"
 	"net/http"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
 	"github.com/nethesis/nethvoice-report/api/queue/configuration"
@@ -35,12 +36,15 @@ import (
 
 func main() {
 	// read and init configuration
-	ConfigFilePtr := flag.String("c", "/opt/nethvoice-report/queue/conf.json", "Path to configuration file")
+	ConfigFilePtr := flag.String("c", "/opt/nethvoice-report/conf.json", "Path to configuration file")
 	flag.Parse()
 	configuration.Init(ConfigFilePtr)
 
 	// init routers
 	router := gin.Default()
+
+	// cors
+	router.Use(cors.Default()) //// remove before release
 
 	// define API
 	api := router.Group("/api")
