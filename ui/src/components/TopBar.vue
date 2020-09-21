@@ -2,11 +2,11 @@
 <div class="masthead">
   <sui-container>
     <sui-menu floated="right">
-      <sui-popup position="bottom center" content="Settings">
+      <sui-popup basic position="bottom center" content="Settings">
         <a slot="trigger" is="sui-menu-item" icon="cog" />
       </sui-popup>
       <sui-popup position="bottom center" content="Logout">
-        <a slot="trigger" is="sui-menu-item" icon="sign-out" />
+        <a @click="doLogout()" slot="trigger" is="sui-menu-item" icon="sign-out" />
       </sui-popup>
     </sui-menu>
     <sui-menu floated="right">
@@ -49,8 +49,12 @@
 </template>
 
 <script>
+import LoginService from "../services/login";
+import StorageService from "../services/storage";
+
 export default {
   name: 'TopBar',
+  mixins: [LoginService, StorageService],
   data() {
     return {
       showFilters: false,
@@ -59,13 +63,27 @@ export default {
   },
   watch: {
     $route: function () {
-      console.log(this.$route.meta.name)
       this.title = this.$i18n.t(this.$route.meta.name)
     }
   },
   methods: {
     toggleFilters: function () {
       this.showFilters = !this.showFilters
+    },
+    doLogout() {
+      this.execLogout(() => {
+        // remove from localstorage
+        this.delete("loggedUser");
+
+        console.log(this.$parent)
+
+        // change route
+        this.$parent.didLogout();
+        this.$router.push("/");
+      }, error => {
+        // print error
+        console.error(error.body.message);
+      })
     }
   },
   computed: {

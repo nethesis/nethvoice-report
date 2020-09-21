@@ -12,8 +12,10 @@ var LoginService = {
           {},
           {
             headers: {
-              Bearer:
-                (this.get("loggedUser") && this.get("loggedUser").token) || "",
+              Authorization:
+                "Bearer " +
+                  (this.get("loggedUser") && this.get("loggedUser").token) ||
+                "",
             },
           }
         )
@@ -25,8 +27,10 @@ var LoginService = {
           this.$root.api_scheme + this.$root.api_host + "/api/refresh_token",
           {
             headers: {
-              Bearer:
-                (this.get("loggedUser") && this.get("loggedUser").token) || "",
+              Authorization:
+                "Bearer " +
+                  (this.get("loggedUser") && this.get("loggedUser").token) ||
+                "",
             },
           }
         )

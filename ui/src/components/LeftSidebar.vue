@@ -6,17 +6,17 @@
       <sui-dropdown :text="$t('menu.'+selectedReport)">
         <sui-dropdown-menu>
           <sui-dropdown-item @click="selectReport('queue')">
-            Queue Report
+            {{$t('menu.queue')}}
           </sui-dropdown-item>
           <sui-dropdown-item @click="selectReport('cdr')">
-            CDR Report
+            {{$t('menu.cdr')}}
           </sui-dropdown-item>
         </sui-dropdown-menu>
       </sui-dropdown>
     </div>
   </sui-menu-item>
   <sui-menu-item>
-    <sui-input icon="search" inverted :placeholder="$t('menu.start_typing')+'...'" transparent v-model="search" @keypress.native="openFirst" />
+    <sui-input icon="search" inverted :placeholder="$t('menu.start_typing')+'...'" transparent v-model="search" />
   </sui-menu-item>
 
   <div v-if="selectedReport == 'queue'">
@@ -116,11 +116,6 @@ export default {
     },
     isTag(route) {
       return this.taggedRoutes.indexOf(route) > -1
-    },
-    openFirst(e) {
-      if (e.keyCode === 13 && this.search && this.matchingComponents.length) {
-        this.$router.push(this.matchingComponents[0].href);
-      }
     },
   }
 };

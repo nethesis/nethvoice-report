@@ -197,7 +197,7 @@ const routes = [
     name: "CDRDashboard",
     component: CDRDashboard,
     meta: {
-      name: "menu.cdr",
+      name: "menu.dashboard",
       parent: "",
       tags: [],
     },

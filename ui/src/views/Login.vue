@@ -47,9 +47,7 @@ export default {
           this.set("loggedUser", loggedUser);
 
           // change route
-          this.isLogged = true;
           this.$parent.didLogin();
-
           this.$router.push("/" + this.get("selectedReport"));
         },
         (error) => {
@@ -65,7 +63,7 @@ export default {
           console.error(error.body.message);
         }
       );
-    },
+    }
   },
 };
 </script>

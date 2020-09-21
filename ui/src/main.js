@@ -26,7 +26,7 @@ new Vue({
   router,
   i18n,
   created: function() {
-    this.api_host = "192.168.5.82"; //window.location.host
+    this.api_host = "192.168.5.82:8080"; //window.location.host
     this.api_scheme = "http://"; //window.location.protocol + "//";
     this.currentLocale = langConf.locale;
     this.currentView = "";

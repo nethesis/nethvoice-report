@@ -39,15 +39,15 @@ export default {
   data() {
     // get current logged user
     var loggedUser = this.get("loggedUser") || null
-    var isLogged = true;
+    var isLogged = false;
 
     // refresh token
     if (loggedUser) {
       this.execRefresh(() => { // success
-          isLogged = true;
+          this.isLogged = true;
         },
         () => { // error
-          isLogged = false;
+          this.isLogged = false;
         })
     }
 
@@ -58,6 +58,9 @@ export default {
   methods: {
     didLogin() {
       this.isLogged = true;
+    },
+    didLogout() {
+      this.isLogged = false;
     },
   },
 };
