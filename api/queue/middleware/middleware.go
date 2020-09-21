@@ -140,6 +140,10 @@ func InitJWT() *jwt.GinJWTMiddleware {
 					return true
 				}
 
+				if v.Username == "admin" {
+					return true
+				}
+
 				authorizedQueues := v.Queues
 				authorizedGroups := v.Groups
 				filterParam := c.Query("filter")
