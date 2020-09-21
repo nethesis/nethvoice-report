@@ -20,22 +20,21 @@
  * author: Edoardo Spadoni <edoardo.spadoni@nethesis.it>
  */
 
- package methods
+package methods
 
- import (
-	 "net/http"
-	 "encoding/json"
-	 "strings"
+import (
+	"encoding/json"
+	"net/http"
+	"strings"
 
-	 "github.com/gin-gonic/gin"
-	 guuid "github.com/google/uuid"
+	"github.com/gin-gonic/gin"
+	guuid "github.com/google/uuid"
 
-	 "github.com/nethesis/nethvoice-report/api/queue/cache"
-	 "github.com/nethesis/nethvoice-report/api/queue/models"
+	"github.com/nethesis/nethvoice-report/api/queue/cache"
+	"github.com/nethesis/nethvoice-report/api/queue/models"
+)
 
- )
-
- func GetSearches(c *gin.Context) {
+func GetSearches(c *gin.Context) {
 	// get current user
 	user := GetClaims(c)["id"].(string)
 
@@ -80,11 +79,11 @@
 
 	// return saved searches
 	c.JSON(http.StatusOK, gin.H{"searches": searches})
- }
+}
 
- func SetSearches(c *gin.Context)  {
+func SetSearches(c *gin.Context) {
 	// get current user
-        user := GetClaims(c)["id"].(string)
+	user := GetClaims(c)["id"].(string)
 
 	// bind json body
 	var jsonSearch models.Search
@@ -114,10 +113,10 @@
 	}
 
 	// init cache connection
-        cacheConnection := cache.Instance()
+	cacheConnection := cache.Instance()
 
 	// set custom search to cache
-	errCache := cacheConnection.HSet(user, name + "_" + section + "_" + view, filterString).Err()
+	errCache := cacheConnection.HSet(user, name+"_"+section+"_"+view, filterString).Err()
 
 	// handle cache error
 	if errCache != nil {
@@ -127,4 +126,4 @@
 
 	// return status created
 	c.JSON(http.StatusCreated, gin.H{"message": "search saved successfully"})
- }
+}

@@ -1,4 +1,3 @@
-
 /*
  * Copyright (C) 2020 Nethesis S.r.l.
  * http://www.nethesis.it - info@nethesis.it
@@ -21,21 +20,21 @@
  * author: Edoardo Spadoni <edoardo.spadoni@nethesis.it>
  */
 
- package methods
+package methods
 
- import (
-	 "encoding/json"
-	 "io/ioutil"
-	 "os"
-	 "net/http"
+import (
+	"encoding/json"
+	"io/ioutil"
+	"net/http"
+	"os"
 
-	 "github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin"
 
-	 "github.com/nethesis/nethvoice-report/api/queue/configuration"
-	 "github.com/nethesis/nethvoice-report/api/queue/models"
- )
+	"github.com/nethesis/nethvoice-report/api/queue/configuration"
+	"github.com/nethesis/nethvoice-report/api/queue/models"
+)
 
- func GetDefaultFilter(c *gin.Context) {
+func GetDefaultFilter(c *gin.Context) {
 	// extract section and view
 	section := c.Param("section")
 	view := c.Param("view")
@@ -75,7 +74,7 @@
 		}
 
 		// return in JSON format
-                c.JSON(http.StatusOK, gin.H{"filter": defaultFilter})
-                return
+		c.JSON(http.StatusOK, gin.H{"filter": defaultFilter})
+		return
 	}
- }
+}

@@ -37,12 +37,12 @@ type Configuration struct {
 		Name     string `json:"name"`
 		Password string `json:"password"`
 	} `json:"queue_database"`
-	RedisAddress           string `json:"redis_address"`
-	TTLCache               int    `json:"ttl_cache"`
-	Secret                 string `json:"secret"`
-	QueryPath              string `json:"query_path"`
-	UserAuthorizationsFile string `json:"user_auth_file"`
-	DefaultFilter	       models.Filter `json:"default_filter"`
+	RedisAddress           string        `json:"redis_address"`
+	TTLCache               int           `json:"ttl_cache"`
+	Secret                 string        `json:"secret"`
+	QueryPath              string        `json:"query_path"`
+	UserAuthorizationsFile string        `json:"user_auth_file"`
+	DefaultFilter          models.Filter `json:"default_filter"`
 }
 
 var Config = Configuration{}
