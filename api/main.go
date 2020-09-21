@@ -29,9 +29,9 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
-	"github.com/nethesis/nethvoice-report/api/queue/configuration"
-	"github.com/nethesis/nethvoice-report/api/queue/methods"
-	"github.com/nethesis/nethvoice-report/api/queue/middleware"
+	"github.com/nethesis/nethvoice-report/api/configuration"
+	"github.com/nethesis/nethvoice-report/api/methods"
+	"github.com/nethesis/nethvoice-report/api/middleware"
 )
 
 func main() {

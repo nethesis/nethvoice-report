@@ -28,7 +28,7 @@ import (
 	"path/filepath"
 
 	"github.com/gin-gonic/gin"
-	"github.com/nethesis/nethvoice-report/api/queue/configuration"
+	"github.com/nethesis/nethvoice-report/api/configuration"
 )
 
 // Return the list of queries for the report, organized by section and view

@@ -35,11 +35,11 @@ import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 
-	"github.com/nethesis/nethvoice-report/api/queue/cache"
-	"github.com/nethesis/nethvoice-report/api/queue/configuration"
-	"github.com/nethesis/nethvoice-report/api/queue/models"
-	"github.com/nethesis/nethvoice-report/api/queue/source"
-	"github.com/nethesis/nethvoice-report/api/queue/utils"
+	"github.com/nethesis/nethvoice-report/api/cache"
+	"github.com/nethesis/nethvoice-report/api/configuration"
+	"github.com/nethesis/nethvoice-report/api/models"
+	"github.com/nethesis/nethvoice-report/api/source"
+	"github.com/nethesis/nethvoice-report/api/utils"
 )
 
 func GetQueueReports(c *gin.Context) {
