@@ -43,8 +43,12 @@ func main() {
 	// init routers
 	router := gin.Default()
 
-	// cors
-	router.Use(cors.Default()) //// remove before release
+	// cors //// remove before release
+	// router.Use(cors.Default())
+	corsConf := cors.DefaultConfig()
+	corsConf.AllowHeaders = []string{"Authorization", "Content-Type"}
+	corsConf.AllowAllOrigins = true
+	router.Use(cors.New(corsConf))
 
 	// define API
 	api := router.Group("/api")
@@ -73,6 +77,11 @@ func main() {
 		filters := api.Group("/filters/:section/:view")
 		{
 			filters.GET("", methods.GetDefaultFilter)
+		}
+
+		queryTree := api.Group("/query_tree")
+		{
+			queryTree.GET("", methods.GetQueryTree)
 		}
 	}
 
