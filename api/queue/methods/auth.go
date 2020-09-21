@@ -25,7 +25,6 @@ package methods
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"os"
 
@@ -67,8 +66,6 @@ func PamAuth(username string, password string) error {
 
 func ParseUserAuthorizationsFile() ([]models.UserAuthorizations, error) {
 	userAuthorizationsList := []models.UserAuthorizations{}
-
-	fmt.Println("configuration.Config.UserAuthorizationsFile", configuration.Config.UserAuthorizationsFile) ////
 
 	file, err := ioutil.ReadFile(configuration.Config.UserAuthorizationsFile)
 	if err != nil {
