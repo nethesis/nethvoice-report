@@ -1,79 +1,66 @@
 <template>
-  <div class="masthead">
-    <sui-container>
-      <sui-menu floated="right">
-        <sui-popup position="bottom center" content="Settings">
-          <a
-            slot="trigger"
-            is="sui-menu-item"
-            icon="cog"
-          />
-        </sui-popup>
-        <sui-popup position="bottom center" content="Logout">
-          <a slot="trigger" is="sui-menu-item" icon="sign-out" />
-        </sui-popup>
-      </sui-menu>
-      <sui-menu floated="right">
-        <sui-popup
-          position="bottom center"
-          class="labeled icon"
-          v-bind:content="toggleFiltersPopup"
-        >
-          <a
-            slot="trigger"
-            is="sui-menu-item"
-            v-on:click="toggleFilters()"
-            class="filter-button"
-            content="Filters"
-            icon="filter"
-          />
-        </sui-popup>
-      </sui-menu>
-      <h1 is="sui-header" class="view-title">
-        Home
-      </h1>
-      <sui-form
-        equal-width
-        class="filters-form"
-        v-if="this.showFilters"
-        >
-        <sui-form-fields>
-          <sui-form-field>
-            <label>From</label>
-            <input placeholder="From" />
-          </sui-form-field>
-          <sui-form-field>
-            <label>To</label>
-            <input type="text" placeholder="To" />
-          </sui-form-field>
-        </sui-form-fields>
-        <sui-form-fields>
-          <sui-form-field>
-            <label>Group by</label>
-            <input type="text" placeholder="Group by" />
-          </sui-form-field>
-          <sui-form-field>
-            <label>Caller</label>
-            <input type="text" placeholder="Caller" />
-          </sui-form-field>
-          <sui-form-field>
-            <label>Queue</label>
-            <input type="text" placeholder="Queue" />
-          </sui-form-field>
-        </sui-form-fields>
-        <sui-button type="submit">Save</sui-button>
-      </sui-form>
-    </sui-container>
-  </div>
+<div class="masthead">
+  <sui-container>
+    <sui-menu floated="right">
+      <sui-popup position="bottom center" content="Settings">
+        <a slot="trigger" is="sui-menu-item" icon="cog" />
+      </sui-popup>
+      <sui-popup position="bottom center" content="Logout">
+        <a slot="trigger" is="sui-menu-item" icon="sign-out" />
+      </sui-popup>
+    </sui-menu>
+    <sui-menu floated="right">
+      <sui-popup position="bottom center" class="labeled icon" v-bind:content="toggleFiltersPopup">
+        <a slot="trigger" is="sui-menu-item" v-on:click="toggleFilters()" class="filter-button" content="Filters" icon="filter" />
+      </sui-popup>
+    </sui-menu>
+    <h1 is="sui-header" class="view-title">
+      {{title}}
+    </h1>
+    <sui-form equal-width class="filters-form" v-if="this.showFilters">
+      <sui-form-fields>
+        <sui-form-field>
+          <label>From</label>
+          <input placeholder="From" />
+        </sui-form-field>
+        <sui-form-field>
+          <label>To</label>
+          <input type="text" placeholder="To" />
+        </sui-form-field>
+      </sui-form-fields>
+      <sui-form-fields>
+        <sui-form-field>
+          <label>Group by</label>
+          <input type="text" placeholder="Group by" />
+        </sui-form-field>
+        <sui-form-field>
+          <label>Caller</label>
+          <input type="text" placeholder="Caller" />
+        </sui-form-field>
+        <sui-form-field>
+          <label>Queue</label>
+          <input type="text" placeholder="Queue" />
+        </sui-form-field>
+      </sui-form-fields>
+      <sui-button type="submit">Save</sui-button>
+    </sui-form>
+  </sui-container>
+</div>
 </template>
 
 <script>
-
 export default {
   name: 'TopBar',
   data() {
     return {
-      showFilters: false
+      showFilters: false,
+      title: this.$i18n.t(this.$route.meta.name) || ""
+    }
+  },
+  watch: {
+    $route: function () {
+      console.log(this.$route.meta.name)
+      this.title = this.$i18n.t(this.$route.meta.name)
     }
   },
   methods: {
@@ -94,8 +81,8 @@ export default {
   padding: 14px 0px 15px 0px !important;
   min-height: 65px;
   margin-bottom: 0 !important;
-  border-bottom: 1px solid rgba(34,36,38,.15);
-  box-shadow: 0 1px 2px 0 rgba(34,36,38,.15);
+  border-bottom: 1px solid rgba(34, 36, 38, .15);
+  box-shadow: 0 1px 2px 0 rgba(34, 36, 38, .15);
 
   .ui.container {
     margin-right: 3em !important;

@@ -1,52 +1,66 @@
 <template>
-  <div id="app">
-    <!-- login view -->
-    <div v-if="!isLogged">
-      <Login/>
-    </div>
-    <!-- end login view -->
-    <!-- logged view -->
-    <div v-if="isLogged" >
-      <!-- start leftsidebar -->
-      <LeftSidebar/>
-      <div class="docs-container">
-        <!-- start leftsidebar -->
-        <TopBar/>
-        <!-- end topbar -->
-        <router-view/>
-      </div>
-    </div>
-    <!-- end logged view -->
+<div id="app">
+  <!-- login view -->
+  <div v-if="!isLogged">
+    <Login />
   </div>
+  <!-- end login view -->
+  <!-- logged view -->
+  <div v-if="isLogged">
+    <!-- start leftsidebar -->
+    <LeftSidebar />
+    <div class="docs-container">
+      <!-- start leftsidebar -->
+      <TopBar />
+      <!-- end topbar -->
+      <router-view />
+    </div>
+  </div>
+  <!-- end logged view -->
+</div>
 </template>
 
 <script>
-
 import Login from "./views/Login.vue";
 import LeftSidebar from "./components/LeftSidebar.vue";
 import TopBar from "./components/TopBar.vue";
 
+import LoginService from "./services/login";
+import StorageService from "./services/storage";
+
 export default {
-  name: "app",
+  name: "App",
   components: {
     Login: Login,
     LeftSidebar: LeftSidebar,
-    TopBar: TopBar
+    TopBar: TopBar,
   },
+  mixins: [LoginService, StorageService],
   data() {
-    var isLogged = false;
+    // get current logged user
+    var loggedUser = this.get("loggedUser") || null
+    var isLogged = true;
+
+    // refresh token
+    if (loggedUser) {
+      this.execRefresh(() => { // success
+          isLogged = true;
+        },
+        () => { // error
+          isLogged = false;
+        })
+    }
 
     return {
-      isLogged: isLogged
-    }
+      isLogged: isLogged,
+    };
   },
   methods: {
-    didLogin () {
-      this.isLogged = true
-    }
+    didLogin() {
+      this.isLogged = true;
+    },
   },
-}
-
+};
 </script>
 
 <style lang="scss">
