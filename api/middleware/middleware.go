@@ -33,10 +33,10 @@ import (
 
 	jwt "github.com/appleboy/gin-jwt/v2"
 
-	"github.com/nethesis/nethvoice-report/api/queue/configuration"
-	"github.com/nethesis/nethvoice-report/api/queue/methods"
-	"github.com/nethesis/nethvoice-report/api/queue/models"
-	"github.com/nethesis/nethvoice-report/api/queue/utils"
+	"github.com/nethesis/nethvoice-report/api/configuration"
+	"github.com/nethesis/nethvoice-report/api/methods"
+	"github.com/nethesis/nethvoice-report/api/models"
+	"github.com/nethesis/nethvoice-report/api/utils"
 )
 
 type login struct {

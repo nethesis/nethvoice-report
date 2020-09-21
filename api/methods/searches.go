@@ -30,8 +30,8 @@ import (
 	"github.com/gin-gonic/gin"
 	guuid "github.com/google/uuid"
 
-	"github.com/nethesis/nethvoice-report/api/queue/cache"
-	"github.com/nethesis/nethvoice-report/api/queue/models"
+	"github.com/nethesis/nethvoice-report/api/cache"
+	"github.com/nethesis/nethvoice-report/api/models"
 )
 
 func GetSearches(c *gin.Context) {

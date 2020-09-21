@@ -32,8 +32,8 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/msteinert/pam"
-	"github.com/nethesis/nethvoice-report/api/queue/configuration"
-	"github.com/nethesis/nethvoice-report/api/queue/models"
+	"github.com/nethesis/nethvoice-report/api/configuration"
+	"github.com/nethesis/nethvoice-report/api/models"
 )
 
 func PamAuth(username string, password string) error {

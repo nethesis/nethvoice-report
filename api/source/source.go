@@ -28,7 +28,7 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 
-	"github.com/nethesis/nethvoice-report/api/queue/configuration"
+	"github.com/nethesis/nethvoice-report/api/configuration"
 )
 
 var db *sql.DB

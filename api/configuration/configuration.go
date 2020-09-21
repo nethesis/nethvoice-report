@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"os"
 
-	"github.com/nethesis/nethvoice-report/api/queue/models"
+	"github.com/nethesis/nethvoice-report/api/models"
 )
 
 type Configuration struct {

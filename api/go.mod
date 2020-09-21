@@ -1,4 +1,4 @@
-module github.com/nethesis/nethvoice-report/api/queue
+module github.com/nethesis/nethvoice-report/api
 
 go 1.14
 

@@ -30,8 +30,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/nethesis/nethvoice-report/api/queue/configuration"
-	"github.com/nethesis/nethvoice-report/api/queue/models"
+	"github.com/nethesis/nethvoice-report/api/configuration"
+	"github.com/nethesis/nethvoice-report/api/models"
 )
 
 func GetDefaultFilter(c *gin.Context) {
