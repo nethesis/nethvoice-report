@@ -1,13 +1,17 @@
 package main
 
 import (
+	"flag"
+
+	"github.com/nethesis/nethvoice-report/api/queue/configuration"
 	"github.com/nethesis/nethvoice-report/tasks/cmd"
-	"github.com/nethesis/nethvoice-report/tasks/configuration"
 )
 
 func main() {
 	// read and init configuration
-	configuration.Init()
+	ConfigFilePtr := flag.String("c", "/opt/nethvoice-report/conf.json", "Path to configuration file")
+	flag.Parse()
+	configuration.Init(ConfigFilePtr)
 
 	// initialize CLI
 	cmd.Execute()
