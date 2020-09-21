@@ -84,6 +84,109 @@ func getSearchesFromCache() []models.Search {
 	return searches
 }
 
+func getDefaultFilter(section string, view string, jwtToken string) models.Filter {
+	client := &http.Client{}
+	requestUrl := fmt.Sprintf("%s/filters/%s/%s", configuration.Config.APIEndpoint, section, view)
+
+	fmt.Println("requesting default filer:", requestUrl) ////
+
+	req, err := http.NewRequest("GET", requestUrl, nil)
+	if err != nil {
+		handleError(err)
+	}
+
+	req.Header.Add("Authorization", "Bearer "+jwtToken)
+	resp, err := client.Do(req)
+	if err != nil {
+		handleError(err)
+	}
+	defer resp.Body.Close()
+	// body, err := ioutil.ReadAll(resp.Body) ////
+	// fmt.Println(string(body))              ////
+
+	var result map[string]models.Filter ////
+	json.NewDecoder(resp.Body).Decode(&result)
+
+	// var filter models.Filter ////
+	// json.NewDecoder(resp.Body).Decode(&filter)
+
+	// for k := range result { /////
+	// 	fmt.Println("result keyyyyyy", k)
+	// }
+
+	filter := result["filter"]
+	return filter
+
+	// return models.Filter{} /////
+}
+
+func getQueryTree(jwtToken string) map[string]map[string][]string {
+	client := &http.Client{}
+	requestUrl := configuration.Config.APIEndpoint + "/query_tree"
+
+	fmt.Println("requesting query tree:", requestUrl) ////
+
+	req, err := http.NewRequest("GET", requestUrl, nil)
+	if err != nil {
+		handleError(err)
+	}
+
+	req.Header.Add("Authorization", "Bearer "+jwtToken)
+	resp, err := client.Do(req)
+	if err != nil {
+		handleError(err)
+	}
+	defer resp.Body.Close()
+	// body, err := ioutil.ReadAll(resp.Body) ////
+	// fmt.Println(string(body))              ////
+
+	var result map[string]map[string]map[string][]string
+	json.NewDecoder(resp.Body).Decode(&result)
+
+	for k := range result { /////
+		fmt.Println("result key", k)
+	}
+
+	queryTree := result["query_tree"]
+
+	fmt.Println("query_tree", queryTree) ////
+
+	if queryTree == nil {
+		handleError(errors.New("Error retrieving query tree"))
+	}
+	return queryTree
+}
+
+func executeQuery(queryName string, filter models.Filter, section string, view string, jwtToken string) {
+	client := &http.Client{}
+
+	// encode filter for request URL
+	filterString, err := json.Marshal(filter)
+	if err != nil {
+		handleError(err)
+	}
+
+	filterEncoded := url.QueryEscape(string(filterString))
+	requestUrl := fmt.Sprintf("%s/queues/%s/%s?filter=%s&graph=%s", configuration.Config.APIEndpoint, section, view, filterEncoded, queryName)
+
+	fmt.Println("requesting:", requestUrl) ////
+
+	req, err := http.NewRequest("GET", requestUrl, nil)
+	if err != nil {
+		handleError(err)
+	}
+
+	req.Header.Add("Authorization", "Bearer "+jwtToken)
+	resp, err := client.Do(req)
+	if err != nil {
+		handleError(err)
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body) ////
+	fmt.Println(string(body))              ////
+	fmt.Println("===========")             ////
+}
+
 func executeReportQueries() {
 
 	fmt.Println("Executing report queries") ////
@@ -93,9 +196,30 @@ func executeReportQueries() {
 		handleError(err)
 	}
 
-	// TODO retrieve default filter ////
+	// execute queries with default filters
 
-	// retrieve searches from redis cache
+	queryTree := getQueryTree(jwtToken)
+
+	for section, views := range queryTree {
+		fmt.Println("-- " + section) ////
+
+		for view, queries := range views {
+			fmt.Println("---- " + view) ////
+
+			filter := getDefaultFilter(section, view, jwtToken)
+
+			fmt.Println("filter", filter) ////
+
+			for _, queryName := range queries {
+				fmt.Println("------ " + queryName) ////
+
+				executeQuery(queryName, filter, section, view, jwtToken)
+			}
+		}
+	}
+
+	// execute queries with saved searches
+
 	searches := getSearchesFromCache()
 
 	fmt.Println("searches", searches) ////
@@ -109,35 +233,38 @@ func executeReportQueries() {
 		}
 
 		for _, queryName := range queryNames {
-			client := &http.Client{}
 
-			// encode filter for request URL
-			filterString, err := json.Marshal(search.Filter)
-			if err != nil {
-				handleError(err)
-			}
+			executeQuery(queryName, search.Filter, section, view, jwtToken)
 
-			filterEncoded := url.QueryEscape(string(filterString))
-			requestUrl := fmt.Sprintf("%s/queues/%s/%s?filter=%s&graph=%s", configuration.Config.APIEndpoint, section, view, filterEncoded, queryName)
+			// client := &http.Client{}
 
-			fmt.Println("requesting:", requestUrl) ////
+			// // encode filter for request URL
+			// filterString, err := json.Marshal(search.Filter)
+			// if err != nil {
+			// 	handleError(err)
+			// }
 
-			// execute query
+			// filterEncoded := url.QueryEscape(string(filterString))
+			// requestUrl := fmt.Sprintf("%s/queues/%s/%s?filter=%s&graph=%s", configuration.Config.APIEndpoint, section, view, filterEncoded, queryName)
 
-			req, err := http.NewRequest("GET", requestUrl, nil)
-			if err != nil {
-				handleError(err)
-			}
+			// fmt.Println("requesting:", requestUrl) ////
 
-			req.Header.Add("Authorization", "Bearer "+jwtToken)
-			resp, err := client.Do(req)
-			if err != nil {
-				handleError(err)
-			}
-			defer resp.Body.Close()
-			body, err := ioutil.ReadAll(resp.Body) ////
-			fmt.Println(string(body))              ////
-			fmt.Println("===========")             ////
+			// // execute query
+
+			// req, err := http.NewRequest("GET", requestUrl, nil)
+			// if err != nil {
+			// 	handleError(err)
+			// }
+
+			// req.Header.Add("Authorization", "Bearer "+jwtToken)
+			// resp, err := client.Do(req)
+			// if err != nil {
+			// 	handleError(err)
+			// }
+			// defer resp.Body.Close()
+			// body, err := ioutil.ReadAll(resp.Body) ////
+			// fmt.Println(string(body))              ////
+			// fmt.Println("===========")             ////
 		}
 	}
 }
