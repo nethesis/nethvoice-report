@@ -101,23 +101,10 @@ func getDefaultFilter(section string, view string, jwtToken string) models.Filte
 		handleError(err)
 	}
 	defer resp.Body.Close()
-	// body, err := ioutil.ReadAll(resp.Body) ////
-	// fmt.Println(string(body))              ////
-
 	var result map[string]models.Filter ////
 	json.NewDecoder(resp.Body).Decode(&result)
-
-	// var filter models.Filter ////
-	// json.NewDecoder(resp.Body).Decode(&filter)
-
-	// for k := range result { /////
-	// 	fmt.Println("result keyyyyyy", k)
-	// }
-
 	filter := result["filter"]
 	return filter
-
-	// return models.Filter{} /////
 }
 
 func getQueryTree(jwtToken string) map[string]map[string][]string {
@@ -137,19 +124,9 @@ func getQueryTree(jwtToken string) map[string]map[string][]string {
 		handleError(err)
 	}
 	defer resp.Body.Close()
-	// body, err := ioutil.ReadAll(resp.Body) ////
-	// fmt.Println(string(body))              ////
-
 	var result map[string]map[string]map[string][]string
 	json.NewDecoder(resp.Body).Decode(&result)
-
-	for k := range result { /////
-		fmt.Println("result key", k)
-	}
-
 	queryTree := result["query_tree"]
-
-	fmt.Println("query_tree", queryTree) ////
 
 	if queryTree == nil {
 		handleError(errors.New("Error retrieving query tree"))
@@ -233,43 +210,12 @@ func executeReportQueries() {
 		}
 
 		for _, queryName := range queryNames {
-
 			executeQuery(queryName, search.Filter, section, view, jwtToken)
-
-			// client := &http.Client{}
-
-			// // encode filter for request URL
-			// filterString, err := json.Marshal(search.Filter)
-			// if err != nil {
-			// 	handleError(err)
-			// }
-
-			// filterEncoded := url.QueryEscape(string(filterString))
-			// requestUrl := fmt.Sprintf("%s/queues/%s/%s?filter=%s&graph=%s", configuration.Config.APIEndpoint, section, view, filterEncoded, queryName)
-
-			// fmt.Println("requesting:", requestUrl) ////
-
-			// // execute query
-
-			// req, err := http.NewRequest("GET", requestUrl, nil)
-			// if err != nil {
-			// 	handleError(err)
-			// }
-
-			// req.Header.Add("Authorization", "Bearer "+jwtToken)
-			// resp, err := client.Do(req)
-			// if err != nil {
-			// 	handleError(err)
-			// }
-			// defer resp.Body.Close()
-			// body, err := ioutil.ReadAll(resp.Body) ////
-			// fmt.Println(string(body))              ////
-			// fmt.Println("===========")             ////
 		}
 	}
 }
 
-func getQueryNames(section string, view string) ([]string, error) {
+func getQueryNames(section string, view string) ([]string, error) { //// todo use query tree api?
 	var files []string
 	queryPath := configuration.Config.QueryPath + "/" + section + "/" + view
 	err := filepath.Walk(queryPath, func(path string, info os.FileInfo, err error) error {
