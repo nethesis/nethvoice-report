@@ -1,5 +1,7 @@
 <template>
 <div id="app">
+  <!-- handle popups -->
+  <portal-target name="semantic-ui-vue"></portal-target>
   <!-- login view -->
   <div v-if="!isLogged">
     <Login />
@@ -36,23 +38,23 @@ export default {
     TopBar: TopBar,
   },
   mixins: [LoginService, StorageService],
+  mounted() {
+    // hide body
+    document.body.classList.add('hide');
+
+    // check token validity and refresh
+    this.execRefresh(() => { // success
+        this.isLogged = true;
+        document.body.classList.add('show');
+      },
+      () => { // error
+        this.isLogged = false;
+        document.body.classList.add('show');
+      })
+  },
   data() {
-    // get current logged user
-    var loggedUser = this.get("loggedUser") || null
-    var isLogged = false;
-
-    // refresh token
-    if (loggedUser) {
-      this.execRefresh(() => { // success
-          this.isLogged = true;
-        },
-        () => { // error
-          this.isLogged = false;
-        })
-    }
-
     return {
-      isLogged: isLogged,
+      isLogged: false,
     };
   },
   methods: {
@@ -73,6 +75,14 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+
+.hide {
+  display: none;
+}
+
+.show {
+  display: block;
 }
 
 .docs-container {

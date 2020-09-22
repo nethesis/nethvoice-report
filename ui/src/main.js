@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueResource from "vue-resource";
 import VueI18n from "vue-i18n";
+import PortalVue from "portal-vue";
 
 import App from "./App.vue";
 import router from "./router";
@@ -14,6 +15,7 @@ Vue.config.productionTip = false;
 Vue.use(SuiVue);
 Vue.use(VueResource);
 Vue.use(VueI18n);
+Vue.use(PortalVue);
 
 // configure i18n
 var langConf = languages.initLang();

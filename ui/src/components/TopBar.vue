@@ -2,10 +2,10 @@
 <div class="masthead">
   <sui-container>
     <sui-menu floated="right">
-      <sui-popup basic position="bottom center" content="Settings">
+      <sui-popup basic position="bottom center" :content="$t('menu.settings')">
         <a slot="trigger" is="sui-menu-item" icon="cog" />
       </sui-popup>
-      <sui-popup position="bottom center" content="Logout">
+      <sui-popup position="bottom center" :content="$t('menu.logout')">
         <a @click="doLogout()" slot="trigger" is="sui-menu-item" icon="sign-out" />
       </sui-popup>
     </sui-menu>
@@ -63,7 +63,7 @@ export default {
   },
   watch: {
     $route: function () {
-      this.title = this.$i18n.t(this.$route.meta.name)
+      this.title = (this.$route.meta.section ? (this.$i18n.t("menu." + this.$route.meta.section) + ": ") : "") + this.$i18n.t(this.$route.meta.name)
     }
   },
   methods: {
@@ -74,8 +74,6 @@ export default {
       this.execLogout(() => {
         // remove from localstorage
         this.delete("loggedUser");
-
-        console.log(this.$parent)
 
         // change route
         this.$parent.didLogout();
@@ -88,7 +86,7 @@ export default {
   },
   computed: {
     toggleFiltersPopup: function () {
-      return this.showFilters ? 'Hide filters' : 'Show filters'
+      return this.showFilters ? this.$i18n.t("menu.hide_filters") : this.$i18n.t("menu.show_filters")
     }
   }
 };

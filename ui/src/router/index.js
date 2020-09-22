@@ -37,6 +37,7 @@ const routes = [
     meta: {
       name: "menu.dashboard",
       parent: "",
+      section: "",
       tags: ["dashboard"],
     },
   },
@@ -47,6 +48,7 @@ const routes = [
     meta: {
       name: "data.by_agent",
       parent: "data",
+      section: "data",
       tags: ["agent"],
     },
   },
@@ -57,6 +59,7 @@ const routes = [
     meta: {
       name: "data.by_session",
       parent: "data",
+      section: "data",
       tags: ["session"],
     },
   },
@@ -67,6 +70,7 @@ const routes = [
     meta: {
       name: "data.by_caller",
       parent: "data",
+      section: "data",
       tags: ["caller"],
     },
   },
@@ -77,6 +81,7 @@ const routes = [
     meta: {
       name: "data.by_call",
       parent: "data",
+      section: "data",
       tags: ["call"],
     },
   },
@@ -87,6 +92,7 @@ const routes = [
     meta: {
       name: "data.ivr",
       parent: "data",
+      section: "data",
       tags: ["ivr"],
     },
   },
@@ -97,6 +103,7 @@ const routes = [
     meta: {
       name: "menu.performance",
       parent: "performance",
+      section: "",
       tags: ["performance"],
     },
   },
@@ -107,6 +114,7 @@ const routes = [
     meta: {
       name: "distribution.by_hour",
       parent: "distribution",
+      section: "distribution",
       tags: ["hour"],
     },
   },
@@ -117,6 +125,7 @@ const routes = [
     meta: {
       name: "distribution.by_geo",
       parent: "distribution",
+      section: "distribution",
       tags: ["geo"],
     },
   },
@@ -127,6 +136,7 @@ const routes = [
     meta: {
       name: "graphs.load",
       parent: "graphs",
+      section: "graphs",
       tags: ["load"],
     },
   },
@@ -137,6 +147,7 @@ const routes = [
     meta: {
       name: "graphs.by_hour",
       parent: "graphs",
+      section: "graphs",
       tags: ["hour"],
     },
   },
@@ -147,6 +158,7 @@ const routes = [
     meta: {
       name: "graphs.by_agent",
       parent: "graphs",
+      section: "graphs",
       tags: ["agent"],
     },
   },
@@ -157,6 +169,7 @@ const routes = [
     meta: {
       name: "graphs.by_area",
       parent: "graphs",
+      section: "graphs",
       tags: ["area"],
     },
   },
@@ -167,6 +180,7 @@ const routes = [
     meta: {
       name: "graphs.queue_position",
       parent: "graphs",
+      section: "graphs",
       tags: ["queue", "position"],
     },
   },
@@ -177,6 +191,7 @@ const routes = [
     meta: {
       name: "graphs.average_duration",
       parent: "graphs",
+      section: "graphs",
       tags: ["avg", "average", "duration"],
     },
   },
@@ -187,6 +202,7 @@ const routes = [
     meta: {
       name: "graphs.average_wait",
       parent: "graphs",
+      section: "graphs",
       tags: ["avg", "average", "wait"],
     },
   },

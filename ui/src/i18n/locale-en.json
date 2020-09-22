@@ -8,7 +8,12 @@
       "performance": "Performance",
       "distribution": "Distribution",
       "graphs": "Graphs",
-      "start_typing": "Search for report"
+      "start_typing": "Search for report",
+      "settings": "Settings",
+      "login": "Login",
+      "logout": "Logout",
+      "hide_filters": "Hide filters",
+      "show_filters": "Show filters"
     },
     "data": {
       "by_agent": "By Agent",
@@ -29,6 +34,10 @@
       "queue_position": "Queue position",
       "average_duration": "Average duration",
       "average_wait": "Average wait"
+    },
+    "login": {
+      "invalid_credentials": "Invalid credentials",
+      "invalid_user_pass_try": "Incorrect username or password"
     }
   }
 }

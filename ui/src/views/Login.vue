@@ -4,7 +4,7 @@
     <sui-grid-column>
       <sui-image size="huge" src="logo.png" />
       <sui-divider hidden />
-      <sui-form v-on:submit.prevent="doLogin()">
+      <sui-form v-on:submit.prevent="doLogin()" :error="error">
         <sui-segment stacked>
           <sui-form-field>
             <sui-input type="text" placeholder="Username" icon="user" icon-position="left" v-model="username" />
@@ -12,7 +12,16 @@
           <sui-form-field>
             <sui-input type="password" placeholder="Password" icon="lock" icon-position="left" v-model="password" />
           </sui-form-field>
-          <sui-button size="large" color="green" fluid>Login</sui-button>
+          <sui-message error>
+            <sui-message-header>{{$t('login.invalid_credentials')}}</sui-message-header>
+            <p>
+              {{$t('login.invalid_user_pass_try')}}.
+            </p>
+          </sui-message>
+          <sui-button size="large" color="green" fluid>
+            {{$t('menu.login')}}
+            <sui-loader :active="loading" class="mg-left-20" inline inverted size="tiny" />
+          </sui-button>
         </sui-segment>
       </sui-form>
     </sui-grid-column>
@@ -30,16 +39,22 @@ export default {
     return {
       username: "",
       password: "",
+      error: false,
+      loading: false
     };
   },
   mixins: [LoginService, StorageService],
   methods: {
     doLogin() {
+      this.loading = true;
+
       this.execLogin({
           username: this.username,
           password: this.password,
         },
         (success) => {
+          this.loading = false;
+
           // extract loggedUser info
           var loggedUser = success.body;
 
@@ -48,16 +63,13 @@ export default {
 
           // change route
           this.$parent.didLogin();
-          this.$router.push("/" + this.get("selectedReport"));
+          this.$router.push("/" + (this.get("selectedReport") || 'queue'));
         },
         (error) => {
+          this.loading = false;
+
           // show errors
-          if (error.body.message == "No username found!") {
-            this.errors.username = true;
-          }
-          if (error.body.message == "Password is invalid") {
-            this.errors.password = true;
-          }
+          this.error = true;
 
           // print error
           console.error(error.body.message);
@@ -86,5 +98,9 @@ export default {
 
 .ui.stacked.segment:after {
   display: none;
+}
+
+.mg-left-20 {
+  margin-left: 10px !important;
 }
 </style>
