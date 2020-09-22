@@ -41,7 +41,7 @@ func logDebug(format string, v ...interface{}) {
 }
 
 func logError(err error) {
-	errorMsg := "[ERROR] " + err.Error()
+	errorMsg := "[ERROR]: " + err.Error()
 	debug := os.Getenv("DEBUG") == "1"
 
 	if debug {
@@ -119,7 +119,7 @@ func getDefaultFilter(section string, view string, jwtToken string) (models.Filt
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		return models.Filter{}, errors.Errorf("Error retrieving default filter, status code: %d", resp.StatusCode)
+		return models.Filter{}, errors.Errorf("Error retrieving default filter [STATUS]: %d", resp.StatusCode)
 	}
 
 	var result map[string]models.Filter
@@ -144,7 +144,7 @@ func getQueryTree(jwtToken string) (map[string]map[string][]string, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		return nil, errors.Errorf("Error retrieving query tree, status code: %d", resp.StatusCode)
+		return nil, errors.Errorf("Error retrieving query tree [STATUS]: %d", resp.StatusCode)
 	}
 	var result map[string]map[string]map[string][]string
 	json.NewDecoder(resp.Body).Decode(&result)
@@ -180,7 +180,7 @@ func executeQuery(queryName string, filter models.Filter, section string, view s
 	}
 
 	if resp.StatusCode != 200 {
-		return "", errors.Errorf("Error executing query,  body: %s,  status code: %d", string(body), resp.StatusCode)
+		return "", errors.Errorf("Error executing query [BODY]: %s  [STATUS]: %d", string(body), resp.StatusCode)
 	}
 	return string(body), nil
 }
@@ -201,10 +201,8 @@ func executeReportQueries() {
 	logDebug("\nExecuting queries with default filters")
 
 	for section, views := range queryTree {
-		logDebug("-- section: %s", section)
-
 		for view, queries := range views {
-			logDebug("---- view: %s", view)
+			logDebug("\n[VIEW]: %s/%s", section, view)
 			filter, err := getDefaultFilter(section, view, jwtToken)
 			if err != nil {
 				logError(errors.Wrap(err, fmt.Sprintf("Error retrieving default filter, skipping all queries in %s/%s", section, view)))
@@ -212,11 +210,11 @@ func executeReportQueries() {
 			}
 
 			for _, queryName := range queries {
-				logDebug("------- query: %s,  default filter: %#v", queryName, filter)
+				logDebug("\n    [QUERY]: %s [FILTER]: %#v", queryName, filter)
 				_, err := executeQuery(queryName, filter, section, view, jwtToken)
 
 				if err != nil {
-					logError(errors.Wrap(err, fmt.Sprintf("Error on query %s,  default filter: %#v", queryName, filter)))
+					logError(errors.Wrap(err, fmt.Sprintf("[QUERY]: %s [FILTER]: %#v", queryName, filter)))
 					continue
 				}
 			}
@@ -228,7 +226,7 @@ func executeReportQueries() {
 		fatalError(err)
 	}
 
-	logDebug("\nExecuting queries for %d saved searches", len(searches))
+	logDebug("\n\nExecuting queries for %d saved searches", len(searches))
 
 	for _, search := range searches {
 		section := search.Section
@@ -236,11 +234,11 @@ func executeReportQueries() {
 		queryNames := queryTree[section][view]
 
 		for _, queryName := range queryNames {
-			logDebug("------- query: %s,  saved search: %#v", queryName, search)
+			logDebug("\n    [QUERY]: %s [SEARCH]: %#v", queryName, search)
 			_, err := executeQuery(queryName, search.Filter, section, view, jwtToken)
 
 			if err != nil {
-				logError(errors.Wrap(err, fmt.Sprintf("Error on query %s,  saved search: %#v", queryName, search)))
+				logError(errors.Wrap(err, fmt.Sprintf("[QUERY]: %s [SEARCH]: %#v", queryName, search)))
 				continue
 			}
 		}
