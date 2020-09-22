@@ -87,7 +87,7 @@ func getDefaultFilter(section string, view string, jwtToken string) models.Filte
 	client := &http.Client{}
 	requestUrl := fmt.Sprintf("%s/filters/%s/%s", configuration.Config.APIEndpoint, section, view)
 
-	fmt.Println("requesting default filer:", requestUrl) ////
+	fmt.Println("requesting default filter:", requestUrl) ////
 
 	req, err := http.NewRequest("GET", requestUrl, nil)
 	if err != nil {
