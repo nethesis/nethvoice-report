@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -10,12 +9,14 @@ import (
 	"os"
 	"strings"
 
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 
 	"github.com/nethesis/nethvoice-report/api/queue/cache"
 	"github.com/nethesis/nethvoice-report/api/queue/configuration"
 	"github.com/nethesis/nethvoice-report/api/queue/methods"
 	"github.com/nethesis/nethvoice-report/api/queue/models"
+	"github.com/nethesis/nethvoice-report/tasks/helper"
 )
 
 var queriesCmd = &cobra.Command{
@@ -31,15 +32,34 @@ func init() {
 	RootCmd.AddCommand(queriesCmd)
 }
 
-func handleError(err error) {
-	os.Stderr.WriteString(err.Error())
+func logDebug(format string, v ...interface{}) {
+	debug := os.Getenv("DEBUG") == "1"
+
+	if debug {
+		println(helper.GreenString(format, v...))
+	}
+}
+
+func logError(err error) {
+	errorMsg := "[ERROR] " + err.Error()
+	debug := os.Getenv("DEBUG") == "1"
+
+	if debug {
+		println(helper.RedString(errorMsg))
+	} else {
+		println(errorMsg)
+	}
+}
+
+func fatalError(err error) {
+	logError(err)
 	os.Exit(1)
 }
 
-func getSearchesFromCache() []models.Search {
+func getSearchesFromCache() ([]models.Search, error) {
 	userAuthorizationsList, err := methods.ParseUserAuthorizationsFile()
 	if err != nil {
-		handleError(err)
+		return nil, errors.Wrap(err, "Error parsing auth file")
 	}
 
 	searches := []models.Search{}
@@ -52,7 +72,7 @@ func getSearchesFromCache() []models.Search {
 		// get saved searches for this section and view
 		results, errCache := cacheConnection.HGetAll(username).Result()
 		if errCache != nil {
-			handleError(err)
+			return nil, errors.Wrap(err, "Error reading cache")
 		}
 
 		// iterate over results
@@ -70,7 +90,7 @@ func getSearchesFromCache() []models.Search {
 			// convert filter string to struct
 			errJson := json.Unmarshal([]byte(v), &filter)
 			if errJson != nil {
-				handleError(err)
+				return nil, errors.Wrap(err, "Error unmarshalling filter")
 			}
 
 			// assign filter
@@ -80,127 +100,135 @@ func getSearchesFromCache() []models.Search {
 			searches = append(searches, search)
 		}
 	}
-	return searches
+	return searches, nil
 }
 
-func getDefaultFilter(section string, view string, jwtToken string) models.Filter {
+func getDefaultFilter(section string, view string, jwtToken string) (models.Filter, error) {
 	client := &http.Client{}
 	requestUrl := fmt.Sprintf("%s/filters/%s/%s", configuration.Config.APIEndpoint, section, view)
-
-	fmt.Println("requesting default filter:", requestUrl) ////
-
 	req, err := http.NewRequest("GET", requestUrl, nil)
 	if err != nil {
-		handleError(err)
+		return models.Filter{}, errors.Wrap(err, "Error creating request")
 	}
 
 	req.Header.Add("Authorization", "Bearer "+jwtToken)
 	resp, err := client.Do(req)
 	if err != nil {
-		handleError(err)
+		return models.Filter{}, errors.Wrap(err, "Error retrieving default filter")
 	}
 	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		return models.Filter{}, errors.Errorf("Error retrieving default filter, status code: %d", resp.StatusCode)
+	}
+
 	var result map[string]models.Filter
 	json.NewDecoder(resp.Body).Decode(&result)
 	filter := result["filter"]
-	return filter
+	return filter, nil
 }
 
-func getQueryTree(jwtToken string) map[string]map[string][]string {
+func getQueryTree(jwtToken string) (map[string]map[string][]string, error) {
 	client := &http.Client{}
 	requestUrl := configuration.Config.APIEndpoint + "/query_tree"
-
-	fmt.Println("requesting query tree:", requestUrl) ////
-
 	req, err := http.NewRequest("GET", requestUrl, nil)
 	if err != nil {
-		handleError(err)
+		return nil, errors.Wrap(err, "Error creating request")
 	}
 
 	req.Header.Add("Authorization", "Bearer "+jwtToken)
 	resp, err := client.Do(req)
 	if err != nil {
-		handleError(err)
+		return nil, errors.Wrap(err, "Error retrieving query tree")
 	}
 	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		return nil, errors.Errorf("Error retrieving query tree, status code: %d", resp.StatusCode)
+	}
 	var result map[string]map[string]map[string][]string
 	json.NewDecoder(resp.Body).Decode(&result)
 	queryTree := result["query_tree"]
-
-	if queryTree == nil {
-		handleError(errors.New("Error retrieving query tree"))
-	}
-	return queryTree
+	return queryTree, nil
 }
 
-func executeQuery(queryName string, filter models.Filter, section string, view string, jwtToken string) {
+func executeQuery(queryName string, filter models.Filter, section string, view string, jwtToken string) (string, error) {
 	client := &http.Client{}
 
 	// encode filter for request URL
 	filterString, err := json.Marshal(filter)
 	if err != nil {
-		handleError(err)
+		return "", errors.Wrap(err, "Error marshalling filter")
 	}
 
 	filterEncoded := url.QueryEscape(string(filterString))
 	requestUrl := fmt.Sprintf("%s/queues/%s/%s?filter=%s&graph=%s", configuration.Config.APIEndpoint, section, view, filterEncoded, queryName)
-
-	fmt.Println("requesting:", requestUrl) ////
-
 	req, err := http.NewRequest("GET", requestUrl, nil)
 	if err != nil {
-		handleError(err)
+		return "", errors.Wrap(err, "Error creating request")
 	}
 
 	req.Header.Add("Authorization", "Bearer "+jwtToken)
 	resp, err := client.Do(req)
 	if err != nil {
-		handleError(err)
+		return "", errors.Wrap(err, "Error executing query")
 	}
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body) ////
-	fmt.Println(string(body))              ////
-	fmt.Println("===========")             ////
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", errors.Wrap(err, "Error reading response body")
+	}
+
+	if resp.StatusCode != 200 {
+		return "", errors.Errorf("Error executing query,  body: %s,  status code: %d", string(body), resp.StatusCode)
+	}
+	return string(body), nil
 }
 
 func executeReportQueries() {
-
-	fmt.Println("Executing report queries") ////
 
 	// login
 
 	jwtToken, err := login()
 	if err != nil {
-		handleError(err)
+		fatalError(err)
 	}
 
-	queryTree := getQueryTree(jwtToken)
-
-	// execute queries with default filters
+	queryTree, err := getQueryTree(jwtToken)
+	if err != nil {
+		fatalError(err)
+	}
+	logDebug("\nExecuting queries with default filters")
 
 	for section, views := range queryTree {
-		fmt.Println("-- " + section) ////
+		logDebug("-- section: %s", section)
 
 		for view, queries := range views {
-			fmt.Println("---- " + view) ////
-
-			filter := getDefaultFilter(section, view, jwtToken)
-
-			fmt.Println("filter", filter) ////
+			logDebug("---- view: %s", view)
+			filter, err := getDefaultFilter(section, view, jwtToken)
+			if err != nil {
+				logError(errors.Wrap(err, fmt.Sprintf("Error retrieving default filter, skipping all queries in %s/%s", section, view)))
+				continue
+			}
 
 			for _, queryName := range queries {
-				fmt.Println("------ " + queryName) ////
+				logDebug("------- query: %s,  default filter: %#v", queryName, filter)
+				_, err := executeQuery(queryName, filter, section, view, jwtToken)
 
-				executeQuery(queryName, filter, section, view, jwtToken)
+				if err != nil {
+					logError(errors.Wrap(err, fmt.Sprintf("Error on query %s,  default filter: %#v", queryName, filter)))
+					continue
+				}
 			}
 		}
 	}
 
-	// execute queries with saved searches
+	searches, err := getSearchesFromCache()
+	if err != nil {
+		fatalError(err)
+	}
 
-	searches := getSearchesFromCache()
-
-	fmt.Println("searches", searches) ////
+	logDebug("\nExecuting queries for %d saved searches", len(searches))
 
 	for _, search := range searches {
 		section := search.Section
@@ -208,7 +236,13 @@ func executeReportQueries() {
 		queryNames := queryTree[section][view]
 
 		for _, queryName := range queryNames {
-			executeQuery(queryName, search.Filter, section, view, jwtToken)
+			logDebug("------- query: %s,  saved search: %#v", queryName, search)
+			_, err := executeQuery(queryName, search.Filter, section, view, jwtToken)
+
+			if err != nil {
+				logError(errors.Wrap(err, fmt.Sprintf("Error on query %s,  saved search: %#v", queryName, search)))
+				continue
+			}
 		}
 	}
 }
@@ -219,10 +253,15 @@ func login() (string, error) {
 	loginUrl := configuration.Config.APIEndpoint + "/login"
 	resp, err := http.PostForm(loginUrl, url.Values{"username": {username}, "password": {password}})
 	if err != nil {
-		handleError(err)
+		return "", errors.Wrap(err, "Login error")
 	}
 
 	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		return "", errors.Errorf("Login error, status code: %d", resp.StatusCode)
+	}
+
 	var result map[string]interface{}
 	json.NewDecoder(resp.Body).Decode(&result)
 
