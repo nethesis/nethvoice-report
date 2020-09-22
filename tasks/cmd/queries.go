@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -101,7 +100,7 @@ func getDefaultFilter(section string, view string, jwtToken string) models.Filte
 		handleError(err)
 	}
 	defer resp.Body.Close()
-	var result map[string]models.Filter ////
+	var result map[string]models.Filter
 	json.NewDecoder(resp.Body).Decode(&result)
 	filter := result["filter"]
 	return filter
@@ -168,14 +167,16 @@ func executeReportQueries() {
 
 	fmt.Println("Executing report queries") ////
 
+	// login
+
 	jwtToken, err := login()
 	if err != nil {
 		handleError(err)
 	}
 
-	// execute queries with default filters
-
 	queryTree := getQueryTree(jwtToken)
+
+	// execute queries with default filters
 
 	for section, views := range queryTree {
 		fmt.Println("-- " + section) ////
@@ -204,34 +205,12 @@ func executeReportQueries() {
 	for _, search := range searches {
 		section := search.Section
 		view := search.View
-		queryNames, err := getQueryNames(section, view)
-		if err != nil {
-			handleError(err)
-		}
+		queryNames := queryTree[section][view]
 
 		for _, queryName := range queryNames {
 			executeQuery(queryName, search.Filter, section, view, jwtToken)
 		}
 	}
-}
-
-func getQueryNames(section string, view string) ([]string, error) { //// todo use query tree api?
-	var files []string
-	queryPath := configuration.Config.QueryPath + "/" + section + "/" + view
-	err := filepath.Walk(queryPath, func(path string, info os.FileInfo, err error) error {
-		if filepath.Ext(path) != ".sql" {
-			return nil
-		}
-		fileName := info.Name()
-		// trim .sql extension
-		fileName = fileName[0 : len(fileName)-4]
-		files = append(files, fileName)
-		return nil
-	})
-	if err != nil {
-		return files, err
-	}
-	return files, nil
 }
 
 func login() (string, error) {

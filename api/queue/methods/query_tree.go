@@ -23,7 +23,6 @@
 package methods
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -47,8 +46,6 @@ func GetQueryTree(c *gin.Context) {
 		viewPath := filepath.Dir(path)
 		viewName := filepath.Base(viewPath)
 		sectionName := filepath.Base(filepath.Dir(viewPath))
-
-		fmt.Println("queryName, viewName, section", queryName, viewName, sectionName) ////
 
 		if queryMap[sectionName] == nil {
 			queryMap[sectionName] = make(map[string][]string)
