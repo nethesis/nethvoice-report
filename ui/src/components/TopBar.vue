@@ -11,7 +11,7 @@
     </sui-menu>
     <sui-menu floated="right">
       <sui-popup position="bottom center" class="labeled icon" v-bind:content="toggleFiltersPopup">
-        <a slot="trigger" is="sui-menu-item" v-on:click="toggleFilters()" class="filter-button" content="Filters" icon="filter" />
+        <a slot="trigger" is="sui-menu-item" v-on:click="toggleFilters()" class="filter-button" :active="showFilters" content="Filters" icon="filter" />
       </sui-popup>
     </sui-menu>
     <h1 is="sui-header" class="view-title">
@@ -19,10 +19,6 @@
     </h1>
     <sui-form equal-width class="filters-form" v-if="this.showFilters">
       <sui-form-fields>
-        <sui-form-field>
-          <label>From</label>
-          <input placeholder="From" />
-        </sui-form-field>
         <sui-form-field>
           <label>To</label>
           <input type="text" placeholder="To" />
@@ -57,7 +53,7 @@ export default {
   mixins: [LoginService, StorageService],
   data() {
     return {
-      showFilters: false,
+      showFilters: true,
       title: this.$i18n.t(this.$route.meta.name) || ""
     }
   },

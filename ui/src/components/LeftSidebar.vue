@@ -16,7 +16,8 @@
     </div>
   </sui-menu-item>
   <sui-menu-item>
-    <sui-input icon="search" inverted :placeholder="$t('menu.start_typing')+'...'" transparent v-model="search" />
+    <i @click="clearText()" :class="[search.length > 0 ? 'remove' : 'search', 'icon']"></i>
+    <sui-input inverted :placeholder="$t('menu.start_typing')+'...'" transparent v-model="search" class="block" />
   </sui-menu-item>
 
   <div v-if="selectedReport == 'queue'">
@@ -117,6 +118,9 @@ export default {
     isTag(route) {
       return this.taggedRoutes.indexOf(route) > -1
     },
+    clearText() {
+      this.search = "";
+    }
   }
 };
 </script>
@@ -124,6 +128,14 @@ export default {
 <style lang="scss">
 .menu {
   text-align: left;
+}
+
+.block {
+  display: inline !important;
+}
+
+.icon {
+  cursor: pointer !important;
 }
 
 .report-switch-row {
