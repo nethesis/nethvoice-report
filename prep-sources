@@ -4,7 +4,9 @@
 #
 # Clean old versions
 #
-rm -rf dist/*
+rm -rf dist/ui.tar.gz
+rm -rf dist/api
+rm -rf dist/tasks
 
 #
 # Build UI
@@ -25,4 +27,14 @@ unset GOPATH
 GO111MODULE=on
 go build
 cp api ../dist/
+popd
+
+#
+# Build Tasks
+#
+pushd tasks
+unset GOPATH
+GO111MODULE=on
+go build
+cp tasks ../dist/
 popd
