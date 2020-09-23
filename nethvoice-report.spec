@@ -5,11 +5,11 @@ Summary:	Queue and CDR/Costs reports
 
 License:	GPLv3
 URL:		https://github.com/nethesis/nethvoice-report
-Source0:	dist/ui.tar.gz
-Source1:	dist/api
-Source2:	dist/tasks
-Source3:    	dist/nethvoice-report-api.service
-BuildArch:	noarch
+Source0:	nethvoice-report.tar.gz
+Source1:	dist/ui.tar.gz
+Source2:	dist/api
+Source3:	dist/tasks
+Source4:    	dist/nethvoice-report-api.service
 
 Requires:	nethserver-nethvoice14
 Requires:	redis
@@ -21,7 +21,7 @@ BuildRequires: 	nethserver-devtools
 Queue and CDR/Costs reports
 
 %prep
-%setup
+%setup -q -n nethvoice-report
 
 %build
 %{makedocs}
@@ -43,12 +43,13 @@ rm -rf %{buildroot}
 mkdir -p %{buildroot}/opt/nethvoice-report/ui
 mkdir -p %{buildroot}/opt/nethvoice-report/api
 mkdir -p %{buildroot}/opt/nethvoice-report/tasks
+mkdir -p %{buildroot}/%{_unitdir}
 
-tar xvf %{SOURCE0} -C %{buildroot}/opt/nethvoice-report/ui/
-cp -a %{SOURCE1} %{buildroot}/opt/nethvoice-report/api/
-cp -a %{SOURCE2} %{buildroot}/opt/nethvoice-report/tasks/
+tar xvf %{SOURCE1} -C %{buildroot}/opt/nethvoice-report/ui/
+cp -a %{SOURCE2} %{buildroot}/opt/nethvoice-report/api/
+cp -a %{SOURCE3} %{buildroot}/opt/nethvoice-report/tasks/
 
-cp %{SOURCE3} %{buildroot}/%{_unitdir}
+cp %{SOURCE4} %{buildroot}/%{_unitdir}
 
 %{genfilelist} %{buildroot}  --file /opt/nethvoice-report/api/api 'attr(0755,asterisk,asterisk)' --file /opt/nethvoice-report/tasks/tasks 'attr(0755,asterisk,asterisk)' > %{name}-%{version}-filelist
 cat %{name}-%{version}-filelist
@@ -56,6 +57,7 @@ cat %{name}-%{version}-filelist
 %files -f %{name}-%{version}-filelist
 %defattr(-,root,root)
 %dir %{_nseventsdir}/%{name}-update
+%{_unitdir}/nethvoice-report-api.service
 
 %doc COPYING
 
