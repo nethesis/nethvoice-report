@@ -74,17 +74,29 @@ func InitJWT() *jwt.GinJWTMiddleware {
 			username := loginVals.Username
 			password := loginVals.Password
 
-			// try PAM authentication
-			err := methods.PamAuth(username, password)
-			if err != nil {
-				os.Stderr.WriteString("PAM authentication failed")
-				return nil, jwt.ErrFailedAuthentication
+			// check if login is with API key or User and Password
+			if username == "X" {
+				// try API key authentication
+				if password != configuration.Config.APIKey {
+					os.Stderr.WriteString("API key authentication failed")
+                                        return nil, jwt.ErrFailedAuthentication
+				}
+
+				return &models.UserAuthorizations{
+                                        Username: username,
+                                }, nil
+			} else {
+				// try PAM authentication
+				err := methods.PamAuth(username, password)
+				if err != nil {
+					os.Stderr.WriteString("PAM authentication failed")
+					return nil, jwt.ErrFailedAuthentication
+				}
+
+				return &models.UserAuthorizations{
+					Username: username,
+				}, nil
 			}
-
-			return &models.UserAuthorizations{
-				Username: username,
-			}, nil
-
 		},
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
 			// read authorization file for current user
@@ -140,8 +152,8 @@ func InitJWT() *jwt.GinJWTMiddleware {
 					return true
 				}
 
-				// admin user is always authorized to access all resources (queues, groups, ...)
-				if v.Username == "admin" {
+				// X user (api key auth) is always authorized to access all resources (queues, groups, ...)
+				if v.Username == "X" {
 					return true
 				}
 

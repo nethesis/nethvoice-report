@@ -36,7 +36,7 @@ import (
 
 func main() {
 	// read and init configuration
-	ConfigFilePtr := flag.String("c", "/opt/nethvoice-report/conf.json", "Path to configuration file")
+	ConfigFilePtr := flag.String("c", "/opt/nethvoice-report/api/conf.json", "Path to configuration file")
 	flag.Parse()
 	configuration.Init(ConfigFilePtr)
 
@@ -90,5 +90,5 @@ func main() {
 		c.JSON(http.StatusNotFound, gin.H{"message": "API not found"})
 	})
 
-	router.Run()
+	router.Run(configuration.Config.ListenAddress)
 }
