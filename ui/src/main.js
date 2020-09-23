@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueResource from "vue-resource";
 import VueI18n from "vue-i18n";
 import PortalVue from "portal-vue";
+import VCalendar from 'v-calendar';
 
 import App from "./App.vue";
 import router from "./router";
@@ -16,6 +17,7 @@ Vue.use(SuiVue);
 Vue.use(VueResource);
 Vue.use(VueI18n);
 Vue.use(PortalVue);
+Vue.use(VCalendar);
 
 // configure i18n
 var langConf = languages.initLang();
@@ -28,10 +30,21 @@ new Vue({
   router,
   i18n,
   created: function() {
-    this.api_host = "192.168.5.82:8080"; //window.location.host
-    this.api_scheme = "http://"; //window.location.protocol + "//";
+    this.apiHost = "192.168.5.82:8080"; //window.location.host ////
+    this.apiScheme = "http://"; //window.location.protocol + "//"; ////
     this.currentLocale = langConf.locale;
     this.currentView = "";
+    this.filter = { ////
+      "queues": [],
+      "groups": [],
+      "time": {
+        "time_range": "",
+        "value": ""
+      },
+      "name": "",
+      "Agent": "",
+      "NullCall": false
+    }
   },
   render: (h) => h(App),
 }).$mount("#app");

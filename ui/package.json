@@ -12,6 +12,7 @@
     "portal-vue": "^2.1.7",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-vue": "^0.11.0",
+    "v-calendar": "^1.0.8",
     "vue": "^2.6.11",
     "vue-i18n": "^8.21.1",
     "vue-resource": "^1.5.1",

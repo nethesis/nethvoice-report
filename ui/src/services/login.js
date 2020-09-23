@@ -2,13 +2,13 @@ var LoginService = {
   methods: {
     execLogin(body, success, error) {
       this.$http
-        .post(this.$root.api_scheme + this.$root.api_host + "/api/login", body)
+        .post(this.$root.apiScheme + this.$root.apiHost + "/api/login", body)
         .then(success, error);
     },
     execLogout(success, error) {
       this.$http
         .post(
-          this.$root.api_scheme + this.$root.api_host + "/api/logout",
+          this.$root.apiScheme + this.$root.apiHost + "/api/logout",
           {},
           {
             headers: {
@@ -24,7 +24,7 @@ var LoginService = {
     execRefresh(success, error) {
       this.$http
         .get(
-          this.$root.api_scheme + this.$root.api_host + "/api/refresh_token",
+          this.$root.apiScheme + this.$root.apiHost + "/api/refresh_token",
           {
             headers: {
               Authorization:

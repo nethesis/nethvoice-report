@@ -17,44 +17,28 @@
     <h1 is="sui-header" class="view-title">
       {{title}}
     </h1>
-    <sui-form equal-width class="filters-form" v-if="this.showFilters">
-      <sui-form-fields>
-        <sui-form-field>
-          <label>To</label>
-          <input type="text" placeholder="To" />
-        </sui-form-field>
-      </sui-form-fields>
-      <sui-form-fields>
-        <sui-form-field>
-          <label>Group by</label>
-          <input type="text" placeholder="Group by" />
-        </sui-form-field>
-        <sui-form-field>
-          <label>Caller</label>
-          <input type="text" placeholder="Caller" />
-        </sui-form-field>
-        <sui-form-field>
-          <label>Queue</label>
-          <input type="text" placeholder="Queue" />
-        </sui-form-field>
-      </sui-form-fields>
-      <sui-button type="submit">Save</sui-button>
-    </sui-form>
+    <div v-show="this.showFilters">
+      <Filters />
+    </div>
   </sui-container>
 </div>
 </template>
 
 <script>
+import Filters from "./Filters.vue";
 import LoginService from "../services/login";
 import StorageService from "../services/storage";
 
 export default {
   name: 'TopBar',
+  components: {
+    Filters: Filters,
+  },
   mixins: [LoginService, StorageService],
   data() {
     return {
       showFilters: true,
-      title: this.$i18n.t(this.$route.meta.name) || ""
+      title: this.$i18n.t(this.$route.meta.name) || "" ////
     }
   },
   watch: {
