@@ -29,15 +29,14 @@ use esmith::Build::CreateLinks qw(:all);
 # nethvoice-report-update event
 #
 
-event_actions($event, qw(
+event_actions('nethvoice-report-update', qw(
 	initialize-default-databases 00
 ));
 
-event_templates($event, qw(
+event_templates('nethvoice-report-update', qw(
 	/opt/nethvoice-report/api/conf.json
 ));
 
-event_services($event, qw(
+event_services('nethvoice-report-update', qw(
 	nethvoice-report-api restart
-	nethvoice-report-tasks restart
 ));
