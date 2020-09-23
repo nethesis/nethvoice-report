@@ -25,7 +25,6 @@ package middleware
 import (
 	"encoding/json"
 	"fmt"
-	"net/http"
 	"os"
 	"time"
 
@@ -48,6 +47,9 @@ var jwtMiddleware *jwt.GinJWTMiddleware
 var identityKey = "id"
 
 func InstanceJWT() *jwt.GinJWTMiddleware {
+
+	fmt.Println("InstanceJWT") ////
+
 	if jwtMiddleware == nil {
 		jwtMiddleware := InitJWT()
 		return jwtMiddleware
@@ -79,12 +81,12 @@ func InitJWT() *jwt.GinJWTMiddleware {
 				// try API key authentication
 				if password != configuration.Config.APIKey {
 					os.Stderr.WriteString("API key authentication failed")
-                                        return nil, jwt.ErrFailedAuthentication
+					return nil, jwt.ErrFailedAuthentication
 				}
 
 				return &models.UserAuthorizations{
-                                        Username: username,
-                                }, nil
+					Username: username,
+				}, nil
 			} else {
 				// try PAM authentication
 				err := methods.PamAuth(username, password)
@@ -99,6 +101,9 @@ func InitJWT() *jwt.GinJWTMiddleware {
 			}
 		},
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
+
+			fmt.Println("PayloadFunc func") ////
+
 			// read authorization file for current user
 			if user, ok := data.(*models.UserAuthorizations); ok {
 				userAuthorization, err := methods.GetUserAuthorizations(user.Username)
@@ -119,8 +124,13 @@ func InitJWT() *jwt.GinJWTMiddleware {
 			return jwt.MapClaims{}
 		},
 		IdentityHandler: func(c *gin.Context) interface{} {
+
+			fmt.Println("IdentityHandler func") ////
+
 			// handle identity and extract claims
 			claims := jwt.ExtractClaims(c)
+
+			fmt.Println("extracted claims", claims) ////
 
 			// extract queues
 			queues := make([]string, len(claims["queues"].([]interface{})))
@@ -145,6 +155,9 @@ func InitJWT() *jwt.GinJWTMiddleware {
 			return user
 		},
 		Authorizator: func(data interface{}, c *gin.Context) bool {
+
+			fmt.Println("Authorizator func") ////
+
 			// extract data payload and check authorizations
 			if v, ok := data.(*models.UserAuthorizations); ok {
 				// exclude authorization for some routes
@@ -161,13 +174,17 @@ func InitJWT() *jwt.GinJWTMiddleware {
 				authorizedGroups := v.Groups
 				filterParam := c.Query("filter")
 
+				fmt.Println("converting filter:", filterParam) ////
+
 				// convert to struct
 				var filter models.Filter
 				errJson := json.Unmarshal([]byte(filterParam), &filter)
 				if errJson != nil {
-					c.JSON(http.StatusBadRequest, gin.H{"message": "invalid filter params", "status": errJson.Error()})
+					// c.JSON(http.StatusBadRequest, gin.H{"message": "invalid filter params", "status": errJson.Error()}) ////
 					return false
 				}
+
+				fmt.Println("filter converted") ////
 
 				// check queues authorization
 				for _, requestedQueue := range filter.Queues {
@@ -199,6 +216,9 @@ func InitJWT() *jwt.GinJWTMiddleware {
 			return false
 		},
 		Unauthorized: func(c *gin.Context, code int, message string) {
+
+			fmt.Println("Unauthorized func") ////
+
 			c.JSON(code, gin.H{
 				"message": message,
 			})
