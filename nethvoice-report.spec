@@ -7,10 +7,12 @@ License:	GPLv3
 URL:		https://github.com/nethesis/nethvoice-report
 Source0:	dist/ui.tar.gz
 Source1:	dist/api
-Source2:    dist/nethvoice-report-api.service
+Source2:	dist/tasks
+Source3:    	dist/nethvoice-report-api.service
 BuildArch:	noarch
 
 Requires:	nethserver-nethvoice14
+Requires:	redis
 
 BuildRequires: 	perl
 BuildRequires: 	nethserver-devtools
@@ -40,20 +42,20 @@ rm -rf %{buildroot}
 
 mkdir -p %{buildroot}/opt/nethvoice-report/ui
 mkdir -p %{buildroot}/opt/nethvoice-report/api
+mkdir -p %{buildroot}/opt/nethvoice-report/tasks
 
 tar xvf %{SOURCE0} -C %{buildroot}/opt/nethvoice-report/ui/
 cp -a %{SOURCE1} %{buildroot}/opt/nethvoice-report/api/
+cp -a %{SOURCE2} %{buildroot}/opt/nethvoice-report/tasks/
 
-cp %{SOURCE2} %{buildroot}/%{_unitdir}
+cp %{SOURCE3} %{buildroot}/%{_unitdir}
 
-%{genfilelist} %{buildroot}  --file /etc/sudoers.d/50_nsapi_nethserver_nut 'attr(0440,root,root)' > %{name}-%{version}-filelist
+%{genfilelist} %{buildroot}  --file /opt/nethvoice-report/api/api 'attr(0755,asterisk,asterisk)' --file /opt/nethvoice-report/tasks/tasks 'attr(0755,asterisk,asterisk)' > %{name}-%{version}-filelist
 cat %{name}-%{version}-filelist
 
 %files -f %{name}-%{version}-filelist
 %defattr(-,root,root)
 %dir %{_nseventsdir}/%{name}-update
-%dir %attr(0755, nobody, nobody) /opt/nethvoice-report/api/nethvoice-report-api
-%{_unitdir}/nethvoice-report-api.service
 
 %doc COPYING
 

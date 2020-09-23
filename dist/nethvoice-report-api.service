@@ -4,7 +4,6 @@ After=syslog.target network-online.target systemd-tmpfiles-setup.service
 Documentation=https://github.com/nethesis/nethvoice-report
 
 [Service]
-EnvironmentFile=/opt/nethvoice-report/api/api.env
 ExecStart=/opt/nethvoice-report/api/api
 User=asterisk
 
