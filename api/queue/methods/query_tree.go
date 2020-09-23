@@ -31,15 +31,18 @@ import (
 	"github.com/nethesis/nethvoice-report/api/queue/configuration"
 )
 
+// Return the list of queries for the report, organized by section and view
 func GetQueryTree(c *gin.Context) {
 	queryMap := make(map[string]map[string][]string)
 	queryPath := configuration.Config.QueryPath
 
+	// get all .sql files inside query path, including subdirectories
 	err := filepath.Walk(queryPath, func(path string, info os.FileInfo, err error) error {
 		if filepath.Ext(path) != ".sql" {
 			return nil
 		}
 
+		// get query, view and section names
 		queryName := filepath.Base(path)
 		// remove .sql extension
 		queryName = queryName[0 : len(queryName)-4]
@@ -47,9 +50,12 @@ func GetQueryTree(c *gin.Context) {
 		viewName := filepath.Base(viewPath)
 		sectionName := filepath.Base(filepath.Dir(viewPath))
 
+		// initialize map if needed
 		if queryMap[sectionName] == nil {
 			queryMap[sectionName] = make(map[string][]string)
 		}
+
+		// add query name to the section/view it belongs
 		queryMap[sectionName][viewName] = append(queryMap[sectionName][viewName], queryName)
 		return nil
 	})

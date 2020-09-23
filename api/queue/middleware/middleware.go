@@ -140,6 +140,7 @@ func InitJWT() *jwt.GinJWTMiddleware {
 					return true
 				}
 
+				// admin user is always authorized to access all resources (queues, groups, ...)
 				if v.Username == "admin" {
 					return true
 				}
