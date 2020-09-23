@@ -1,0 +1,43 @@
+{
+  "en": {
+    "menu": {
+      "queue": "Queue report",
+      "cdr": "CDR & Cost report",
+      "dashboard": "Dashboard",
+      "data": "Data",
+      "performance": "Performance",
+      "distribution": "Distribution",
+      "graphs": "Graphs",
+      "start_typing": "Search for report",
+      "settings": "Settings",
+      "login": "Login",
+      "logout": "Logout",
+      "hide_filters": "Hide filters",
+      "show_filters": "Show filters"
+    },
+    "data": {
+      "by_agent": "By Agent",
+      "by_session": "By Session",
+      "by_caller": "By Caller",
+      "by_call": "By Call",
+      "ivr": "IVR"
+    },
+    "distribution": {
+      "by_hour": "Hourly",
+      "by_geo": "Geographic"
+    },
+    "graphs": {
+      "load": "Load",
+      "by_hour": "By Hour",
+      "by_agent": "By Agent",
+      "by_area": "By Area",
+      "queue_position": "Queue position",
+      "average_duration": "Average duration",
+      "average_wait": "Average wait"
+    },
+    "login": {
+      "invalid_credentials": "Invalid credentials",
+      "invalid_user_pass_try": "Incorrect username or password"
+    }
+  }
+}
