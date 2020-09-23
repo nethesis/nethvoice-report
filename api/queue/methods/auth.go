@@ -66,6 +66,7 @@ func PamAuth(username string, password string) error {
 
 func ParseUserAuthorizationsFile() ([]models.UserAuthorizations, error) {
 	userAuthorizationsList := []models.UserAuthorizations{}
+
 	file, err := ioutil.ReadFile(configuration.Config.UserAuthorizationsFile)
 	if err != nil {
 		return userAuthorizationsList, err

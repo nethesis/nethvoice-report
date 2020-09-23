@@ -43,6 +43,11 @@ type Configuration struct {
 	QueryPath              string        `json:"query_path"`
 	UserAuthorizationsFile string        `json:"user_auth_file"`
 	DefaultFilter          models.Filter `json:"default_filter"`
+	Tasks                  struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	} `json:"tasks`
+	APIEndpoint string `json:"api_endpoint"`
 }
 
 var Config = Configuration{}
