@@ -3,6 +3,7 @@ package cmd
 import (
 	"os"
 
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
@@ -16,7 +17,7 @@ var RootCmd = &cobra.Command{
 
 func Execute() {
 	if err := RootCmd.Execute(); err != nil {
-		os.Stderr.WriteString(err.Error())
+		helper.LogError(errors.Wrap(err, "error executing command"))
 		os.Exit(1)
 	}
 }

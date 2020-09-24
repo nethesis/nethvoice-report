@@ -23,7 +23,6 @@
 package methods
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -34,9 +33,6 @@ import (
 
 // Return the list of queries for the report, organized by section and view
 func GetQueryTree(c *gin.Context) {
-
-	fmt.Println("GetQueryTree") ////
-
 	queryMap := make(map[string]map[string][]string)
 	queryPath := configuration.Config.QueryPath
 

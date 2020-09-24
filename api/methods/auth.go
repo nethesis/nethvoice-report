@@ -24,9 +24,9 @@ package methods
 
 import (
 	"encoding/json"
-	"errors"
 	"io/ioutil"
-	"os"
+
+	"github.com/pkg/errors"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
@@ -34,6 +34,7 @@ import (
 	"github.com/msteinert/pam"
 	"github.com/nethesis/nethvoice-report/api/configuration"
 	"github.com/nethesis/nethvoice-report/api/models"
+	"github.com/nethesis/nethvoice-report/api/utils"
 )
 
 func PamAuth(username string, password string) error {
@@ -51,30 +52,29 @@ func PamAuth(username string, password string) error {
 
 	// check error
 	if errInit != nil {
-		os.Stderr.WriteString(errInit.Error())
 		return errInit
 	}
 
 	// check authentication
 	errAuth := t.Authenticate(0)
 	if errAuth != nil {
-		os.Stderr.WriteString(errAuth.Error())
 		return errAuth
 	}
 	return nil
 }
 
 func ParseUserAuthorizationsFile() ([]models.UserAuthorizations, error) {
-	userAuthorizationsList := []models.UserAuthorizations{}
-
 	file, err := ioutil.ReadFile(configuration.Config.UserAuthorizationsFile)
 	if err != nil {
-		return userAuthorizationsList, err
+		utils.LogError(errors.Wrap(err, "error reading user authorizations file"))
+		return []models.UserAuthorizations{}, err
 	}
 
+	userAuthorizationsList := []models.UserAuthorizations{}
 	err = json.Unmarshal([]byte(file), &userAuthorizationsList)
 	if err != nil {
-		return userAuthorizationsList, err
+		utils.LogError(errors.Wrap(err, "error unmarshalling user authorizations file"))
+		return []models.UserAuthorizations{}, err
 	}
 	return userAuthorizationsList, nil
 }
@@ -94,7 +94,7 @@ func GetUserAuthorizations(username string) (models.UserAuthorizations, error) {
 			return userAuthorizations, nil
 		}
 	}
-	return userAuthorizations, errors.New("Username not found")
+	return userAuthorizations, errors.New("username not found in authorizations file")
 }
 
 func GetClaims(c *gin.Context) jwt.MapClaims {

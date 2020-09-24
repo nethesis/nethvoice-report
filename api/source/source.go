@@ -24,11 +24,12 @@ package source
 
 import (
 	"database/sql"
-	"os"
 
 	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/nethesis/nethvoice-report/api/configuration"
+	"github.com/nethesis/nethvoice-report/api/utils"
+	"github.com/pkg/errors"
 )
 
 var db *sql.DB
@@ -41,7 +42,7 @@ func QueueInstance() *sql.DB {
 }
 
 func QueueInit() *sql.DB {
-	// define uri conection string
+	// define uri connection string
 	uri := configuration.Config.QueueDatabase.User + ":" + configuration.Config.QueueDatabase.Password + "@tcp(" + configuration.Config.QueueDatabase.Host + ":" + configuration.Config.QueueDatabase.Port + ")/" + configuration.Config.QueueDatabase.Name
 
 	// connect to database
@@ -49,7 +50,7 @@ func QueueInit() *sql.DB {
 
 	// handle error
 	if err != nil {
-		os.Stderr.WriteString(err.Error())
+		utils.LogError(errors.Wrap(err, "error connecting to database"))
 	}
 
 	// return db object
