@@ -26,6 +26,8 @@ import (
 	"database/sql"
 	"encoding/json"
 	"os"
+
+	"github.com/pkg/errors"
 )
 
 var excludedRoutes = [...]string{"/api/searches", "/api/filters/:section/:view"}
@@ -37,7 +39,7 @@ func ParseResults(rows *sql.Rows) string {
 	// extract columns
 	columns, err := rows.Columns()
 	if err != nil {
-		os.Stderr.WriteString(err.Error())
+		LogError(errors.Wrap(err, "error extracting columns"))
 	}
 
 	// initialize object based on field count
@@ -55,7 +57,7 @@ func ParseResults(rows *sql.Rows) string {
 		// scan values
 		err = rows.Scan(fields...)
 		if err != nil {
-			os.Stderr.WriteString(err.Error())
+			LogError(errors.Wrap(err, "error scanning field values"))
 		}
 
 		// compose record
@@ -86,4 +88,8 @@ func ExcludedRoute(route string) bool {
 		}
 	}
 	return false
+}
+
+func LogError(err error) {
+	os.Stderr.WriteString(err.Error() + "\n")
 }

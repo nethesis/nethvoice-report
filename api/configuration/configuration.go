@@ -26,7 +26,10 @@ import (
 	"encoding/json"
 	"os"
 
+	"github.com/pkg/errors"
+
 	"github.com/nethesis/nethvoice-report/api/models"
+	"github.com/nethesis/nethvoice-report/api/utils"
 )
 
 type Configuration struct {
@@ -37,15 +40,19 @@ type Configuration struct {
 		Name     string `json:"name"`
 		Password string `json:"password"`
 	} `json:"queue_database"`
-	ListenAddress	       string        `json:"listen_address"`
+	ListenAddress          string        `json:"listen_address"`
 	RedisAddress           string        `json:"redis_address"`
 	TTLCache               int           `json:"ttl_cache"`
 	Secret                 string        `json:"secret"`
 	QueryPath              string        `json:"query_path"`
 	UserAuthorizationsFile string        `json:"user_auth_file"`
 	DefaultFilter          models.Filter `json:"default_filter"`
-	APIKey	    string `json:"api_key"`
-	APIEndpoint string `json:"api_endpoint"`
+	APIKey                 string        `json:"api_key"`
+	APIEndpoint            string        `json:"api_endpoint"`
+	Tasks                  struct {      //// replaced by api key?
+		Username string `json:"username"`
+		Password string `json:"password"`
+	} `json:"tasks"`
 }
 
 var Config = Configuration{}
@@ -58,7 +65,7 @@ func Init(ConfigFilePtr *string) {
 		// check errors or parse JSON
 		err := decoder.Decode(&Config)
 		if err != nil {
-			os.Stderr.WriteString(err.Error())
+			utils.LogError(errors.Wrap(err, "error decoding configuration file"))
 		}
 	}
 }

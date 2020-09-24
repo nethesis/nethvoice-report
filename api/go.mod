@@ -11,4 +11,5 @@ require (
 	github.com/google/uuid v1.1.2
 	github.com/jinzhu/gorm v1.9.16
 	github.com/msteinert/pam v0.0.0-20200810204841-913b8f8cdf8b
+	github.com/pkg/errors v0.9.1
 )

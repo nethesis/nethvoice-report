@@ -208,7 +208,7 @@ func executeReportQueries() {
 			// get default filter for current section/view
 			filter, err := getDefaultFilter(section, view, jwtToken)
 			if err != nil {
-				helper.LogError(errors.Wrap(err, fmt.Sprintf("Error retrieving default filter, skipping all queries in %s/%s", section, view)))
+				helper.LogError(errors.Wrap(err, fmt.Sprintf("error retrieving default filter, skipping all queries in %s/%s", section, view)))
 				continue
 			}
 
@@ -265,7 +265,7 @@ func login() (string, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		return "", errors.Errorf("Login error, status code: %d", resp.StatusCode)
+		return "", errors.Errorf("Login error, [STATUS]: %d", resp.StatusCode)
 	}
 
 	// decode response

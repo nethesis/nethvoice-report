@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/fatih/color"
+	"github.com/pkg/errors"
 )
 
 var (
@@ -32,14 +33,14 @@ func LogError(err error) {
 
 	if debug {
 		// message is rendered in red
-		println(RedString(errorMsg))
+		os.Stderr.WriteString(RedString(errorMsg) + "\n")
 	} else {
-		println(errorMsg)
+		os.Stderr.WriteString(errorMsg + "\n")
 	}
 }
 
 // Print an error message to stderr and exit with non-zero status code
 func FatalError(err error) {
-	LogError(err)
+	LogError(errors.Wrap(err, "FATAL"))
 	os.Exit(1)
 }
