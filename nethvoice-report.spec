@@ -9,9 +9,10 @@ Source0:	nethvoice-report.tar.gz
 Source1:	dist/ui.tar.gz
 Source2:	dist/api
 Source3:	dist/tasks
-Source4:    	dist/nethvoice-report-api.service
+Source4:    dist/nethvoice-report-api.service
 
 Requires:	nethserver-nethvoice14
+Requires:   nethserver-collectd
 Requires:	redis
 
 BuildRequires: 	perl
@@ -44,10 +45,14 @@ mkdir -p %{buildroot}/opt/nethvoice-report/ui
 mkdir -p %{buildroot}/opt/nethvoice-report/api
 mkdir -p %{buildroot}/opt/nethvoice-report/tasks
 mkdir -p %{buildroot}/%{_unitdir}
+mkdir -p %{buildroot}/etc/collectd.d/
+mkdir -p %{buildroot}/%{python2_sitelib}
 
 tar xvf %{SOURCE1} -C %{buildroot}/opt/nethvoice-report/ui/
 cp -a %{SOURCE2} %{buildroot}/opt/nethvoice-report/api/
 cp -a %{SOURCE3} %{buildroot}/opt/nethvoice-report/tasks/
+cp collectd/asterisk_stats.py %{buildroot}/%{python2_sitelib}
+cp collectd/asterisk_stats.conf %{buildroot}/etc/collectd.d/
 
 cp %{SOURCE4} %{buildroot}/%{_unitdir}
 

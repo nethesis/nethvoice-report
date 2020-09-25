@@ -39,4 +39,5 @@ event_templates('nethvoice-report-update', qw(
 
 event_services('nethvoice-report-update', qw(
 	nethvoice-report-api restart
+    collectd restart
 ));
