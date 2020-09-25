@@ -2,6 +2,9 @@
 Description=NethVoice Report API unit
 After=syslog.target network-online.target systemd-tmpfiles-setup.service
 Documentation=https://github.com/nethesis/nethvoice-report
+Wants=redis-nethserver-nethvoice.service
+After=redis-rspamd.service
+
 
 [Service]
 ExecStart=/opt/nethvoice-report/api/api
