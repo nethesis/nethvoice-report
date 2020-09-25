@@ -9,7 +9,6 @@ Source0:	nethvoice-report.tar.gz
 Source1:	dist/ui.tar.gz
 Source2:	dist/api
 Source3:	dist/tasks
-Source4:    dist/nethvoice-report-api.service
 
 Requires:	nethserver-nethvoice14
 Requires:   nethserver-collectd
@@ -44,9 +43,9 @@ rm -rf %{buildroot}
 mkdir -p %{buildroot}/opt/nethvoice-report/ui
 mkdir -p %{buildroot}/opt/nethvoice-report/api
 mkdir -p %{buildroot}/opt/nethvoice-report/tasks
-mkdir -p %{buildroot}/%{_unitdir}
 mkdir -p %{buildroot}/etc/collectd.d/
 mkdir -p %{buildroot}/%{python2_sitelib}
+mkdir -p %{buildroot}/var/lib/redis/nethvoice-report
 
 tar xvf %{SOURCE1} -C %{buildroot}/opt/nethvoice-report/ui/
 cp -a %{SOURCE2} %{buildroot}/opt/nethvoice-report/api/
@@ -54,15 +53,13 @@ cp -a %{SOURCE3} %{buildroot}/opt/nethvoice-report/tasks/
 cp collectd/asterisk_stats.py %{buildroot}/%{python2_sitelib}
 cp collectd/asterisk_stats.conf %{buildroot}/etc/collectd.d/
 
-cp %{SOURCE4} %{buildroot}/%{_unitdir}
-
 %{genfilelist} %{buildroot}  --file /opt/nethvoice-report/api/api 'attr(0755,asterisk,asterisk)' --file /opt/nethvoice-report/tasks/tasks 'attr(0755,asterisk,asterisk)' > %{name}-%{version}-filelist
 cat %{name}-%{version}-filelist
 
 %files -f %{name}-%{version}-filelist
 %defattr(-,root,root)
 %dir %{_nseventsdir}/%{name}-update
-%{_unitdir}/nethvoice-report-api.service
+%dir %attr(0755,redis,asterisk) /var/lib/redis/nethvoice-report
 
 %doc COPYING
 
