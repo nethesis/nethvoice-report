@@ -1,5 +1,14 @@
 #!/bin/bash
 
+#
+# Build UI with npm
+# Requires:
+# - libpam0g-dev on Ubuntu
+# - pam-devel on Fedora
+#
+
+# Exit 1 on error
+set -e
 
 #
 # Clean old versions
