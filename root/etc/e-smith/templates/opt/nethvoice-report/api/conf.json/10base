@@ -1,0 +1,34 @@
+{
+    our $password = NethServer::Password::store('report');
+    our $key = NethServer::Password->new('report_api_key',{'length' => 128})->save()->getAscii();
+    our $secret = NethServer::Password->new('report_secret',{'length' => 128})->save()->getAscii();
+
+    $OUT = '';
+}\{
+        "listen_address": "0.0.0.0:8585",
+        "redis_address": "/var/run/redis-nethvoice-report/nethvoice-report.sock",
+        "ttl_cache": 5,
+        "queue_database": \{
+          "host": "localhost",
+          "port": "3306",
+          "user": "report",
+          "password": "{{$password}}",
+          "name": "asteriskcdrdb"
+        \},
+        "secret": "{{$secret}}",
+        "query_path": "/opt/nethvoice-report/api/queries",
+        "user_auth_file": "/opt/nethvoice-report/api/user_authorizations.json",
+        "default_filter": \{
+          "queues": [],
+          "groups": [],
+          "time": \{
+            "time_range": "day",
+            "value": "1"
+          \},
+          "name": "",
+          "agent": "",
+          "null_call": false
+        \},
+        "api_endpoint": "http://localhost:8585/api",
+        "api_key": "{{$key}}"
+\}
