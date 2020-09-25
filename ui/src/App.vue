@@ -39,15 +39,24 @@ export default {
   },
   mixins: [LoginService, StorageService],
   mounted() {
+
+    console.log("mounted!"); ////
+
     // hide body
     document.body.classList.add('hide');
 
     // check token validity and refresh
     this.execRefresh(() => { // success
+      
+        console.log("execRefresh success"); ////
+
         this.isLogged = true;
         document.body.classList.add('show');
       },
       () => { // error
+
+        console.log("execRefresh error, not logged"); ////
+
         this.isLogged = false;
         document.body.classList.add('show');
       })

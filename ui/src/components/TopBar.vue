@@ -43,7 +43,13 @@ export default {
   },
   watch: {
     $route: function () {
-      this.title = (this.$route.meta.section ? (this.$i18n.t("menu." + this.$route.meta.section) + ": ") : "") + this.$i18n.t(this.$route.meta.name)
+      if (this.$route.meta.name == "menu.dashboard") {
+        console.log("setting dashboard title"); ////
+
+        this.title = this.$i18n.t("menu.dashboard");
+      } else {
+        this.title = (this.$route.meta.section ? (this.$i18n.t("menu." + this.$route.meta.section) + ": ") : "") + this.$i18n.t(this.$route.meta.name)
+      }
     }
   },
   methods: {

@@ -30,7 +30,7 @@ new Vue({
   router,
   i18n,
   created: function() {
-    this.apiHost = "192.168.5.82:8080"; //window.location.host ////
+    this.apiEndpoint = "192.168.5.82:8080/api"; //window.location.host ////
     this.apiScheme = "http://"; //window.location.protocol + "//"; ////
     this.currentLocale = langConf.locale;
     this.currentView = "";
@@ -42,9 +42,11 @@ new Vue({
         "value": ""
       },
       "name": "",
-      "Agent": "",
-      "NullCall": false
-    }
+      "agent": "",
+      "nullCall": false
+    };
+
+    console.log("created!"); ////
   },
   render: (h) => h(App),
 }).$mount("#app");

@@ -101,6 +101,6 @@ export default {
 }
 
 .mg-left-20 {
-  margin-left: 10px !important;
+  margin-left: 10px !important; /* //// */
 }
 </style>

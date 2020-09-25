@@ -5,3 +5,7 @@
     padding: 2em 0em 7em;
     width: auto;
 }
+
+.mg-left-xs {
+    margin-left: 0.4rem !important;
+  }
