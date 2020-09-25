@@ -8,7 +8,10 @@
 #
 
 # Exit 1 on error
-set -e
+set -xe
+
+# Prepare dist 
+mkdir dist
 
 #
 # Clean old versions
