@@ -90,6 +90,12 @@ func main() {
 			searches.POST("", methods.SetSearches)
 			searches.DELETE("/:search_id", methods.DeleteSearches)
 		}
+
+		settings := api.Group("/settings")
+		{
+			settings.GET("", methods.GetSettings)
+			settings.PUT("", methods.SetSettings)
+		}
 	}
 
 	// handle missing endpoint

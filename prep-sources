@@ -11,7 +11,7 @@
 set -xe
 
 # Prepare dist 
-mkdir dist
+mkdir -p dist
 
 #
 # Clean old versions
