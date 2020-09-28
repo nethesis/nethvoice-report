@@ -1,5 +1,5 @@
 {
-    our $password = NethServer::Password::store('report');
+    our $password = NethServer::Password::store('nethvoice_report');
     our $key = NethServer::Password->new('report_api_key',{'length' => 128})->save()->getAscii();
     our $secret = NethServer::Password->new('report_secret',{'length' => 128})->save()->getAscii();
 
@@ -11,7 +11,7 @@
         "queue_database": \{
           "host": "localhost",
           "port": "3306",
-          "user": "report",
+          "user": "nethvoice_report",
           "password": "{{$password}}",
           "name": "asteriskcdrdb"
         \},
