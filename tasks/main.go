@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 
-	"github.com/nethesis/nethvoice-report/api/queue/configuration"
+	"github.com/nethesis/nethvoice-report/api/configuration"
 	"github.com/nethesis/nethvoice-report/tasks/cmd"
 )
 
