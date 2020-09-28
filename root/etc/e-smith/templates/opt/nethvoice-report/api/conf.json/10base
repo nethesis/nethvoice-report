@@ -30,5 +30,9 @@
           "null_call": false
         \},
         "api_endpoint": "http://localhost:8585/api",
-        "api_key": "{{$key}}"
+        "api_key": "{{$key}}",
+        "settings": \{
+          "start_hour": "9",
+          "end_hour": "18"
+        \}
 \}
