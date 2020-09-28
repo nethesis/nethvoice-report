@@ -63,15 +63,10 @@ func main() {
 	// define JWT middleware
 	api.Use(middleware.InstanceJWT().MiddlewareFunc())
 	{
-		queues := api.Group("/queues/:section/:view")
-		{
-			queues.GET("", methods.GetQueueReports)
-		}
 
-		searches := api.Group("/searches")
+		authorizations := api.Group("/authorizations")
 		{
-			searches.GET("", methods.GetSearches)
-			searches.POST("", methods.SetSearches)
+			authorizations.GET("", methods.GetAuthorizations)
 		}
 
 		filters := api.Group("/filters/:section/:view")
@@ -82,6 +77,18 @@ func main() {
 		queryTree := api.Group("/query_tree")
 		{
 			queryTree.GET("", methods.GetQueryTree)
+		}
+
+		queues := api.Group("/queues/:section/:view")
+		{
+			queues.GET("", methods.GetQueueReports)
+		}
+
+		searches := api.Group("/searches")
+		{
+			searches.GET("", methods.GetSearches)
+			searches.POST("", methods.SetSearches)
+			searches.DELETE("/:search_id", methods.DeleteSearches)
 		}
 	}
 
