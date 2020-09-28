@@ -3,12 +3,25 @@ package models
 type Filter struct {
 	Queues []string `json:"queues"`
 	Groups []string `json:"groups"`
-	Time   struct {
-		TimeRange string `json:"time_range"`
-		Value     string `json:"value"`
+	Agents []string `json:"agents"`
+	IVRs   []string `json:"ivrs"`
+
+	Reasons      []string `json:"reasons"`
+	Actions      []string `json:"actions"`
+	Results      []string `json:"results"`
+	Choices      []string `json:"choices"`
+	Destinations []string `json:"destinations"`
+	Origins      []string `json:"origins"`
+
+	Time struct {
+		Group    string `json:"group"`
+		Division string `json:"division"`
+		Start    string `json:"start"`
+		End      string `json:"end"`
 	} `json:"time"`
+
 	Caller   string `json:"caller"`
-	Agent    string `json:"agent"`
+	Name     string `json:"name"`
 	NullCall bool   `json:"null_call"`
 }
 
