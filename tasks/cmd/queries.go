@@ -253,12 +253,12 @@ func executeReportQueries() {
 
 // Perform login and retrieve JWT token
 func login() (string, error) {
-	username := configuration.Config.Tasks.Username
-	password := configuration.Config.Tasks.Password
-	loginUrl := configuration.Config.APIEndpoint + "/login"
+	username := "X"
+	password := configuration.Config.APIKey
+	loginURL := configuration.Config.APIEndpoint + "/login"
 
 	// login request
-	resp, err := http.PostForm(loginUrl, url.Values{"username": {username}, "password": {password}})
+	resp, err := http.PostForm(loginURL, url.Values{"username": {username}, "password": {password}})
 	if err != nil {
 		return "", errors.Wrap(err, "Login error")
 	}

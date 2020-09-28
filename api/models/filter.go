@@ -7,7 +7,7 @@ type Filter struct {
 		TimeRange string `json:"time_range"`
 		Value     string `json:"value"`
 	} `json:"time"`
-	Name     string `json:"name"`
+	Caller   string `json:"caller"`
 	Agent    string `json:"agent"`
 	NullCall bool   `json:"null_call"`
 }

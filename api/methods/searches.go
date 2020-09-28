@@ -127,3 +127,27 @@ func SetSearches(c *gin.Context) {
 	// return status created
 	c.JSON(http.StatusCreated, gin.H{"message": "search saved successfully"})
 }
+
+func DeleteSearches(c *gin.Context) {
+	// get current user
+	user := GetClaims(c)["id"].(string)
+
+	// extract search id
+	searchID := c.Param("search_id")
+
+	// init cache connection
+	cacheConnection := cache.Instance()
+
+	// set custom search to cache
+	errCache := cacheConnection.HDel(user, searchID).Err()
+
+	// handle cache error
+	if errCache != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "error on deleting seatch in cache", "status": errCache.Error()})
+		return
+	}
+
+	// return status created
+	c.JSON(http.StatusOK, gin.H{"message": "search deleted successfully"})
+
+}

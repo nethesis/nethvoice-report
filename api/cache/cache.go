@@ -41,8 +41,10 @@ func Instance() *redis.Client {
 func InitCacheConnection() *redis.Client {
 	// init client
 	cacheConnection = redis.NewClient(&redis.Options{
-		Addr: configuration.Config.RedisAddress,
-		DB:   0, // cache database
+		Network:  "unix",
+		Addr:     configuration.Config.RedisAddress,
+		Password: "",
+		DB:       0, // cache database
 	})
 
 	return cacheConnection
