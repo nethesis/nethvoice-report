@@ -1,95 +1,112 @@
 <template>
-  <sui-form equal-width class="filters-form">
-    <sui-form-fields>
-      <sui-form-field>
-        <label>Saved search</label>
-        <sui-dropdown
-          fluid
-          placeholder="Saved search"
-          search
-          selection
-          class="savedSearch"
-          v-model="selectedSearch"
-          :options="savedSearches"
-          @click="hackDropdown"
-        />
-      </sui-form-field>
-    </sui-form-fields>
-    <sui-form-fields>
-      <sui-form-field>
-        <label>Time interval</label>
-        <sui-button-group class="fluid">
+  <div>
+    <sui-form class="filters-form">
+      <sui-form-fields v-if="savedSearches.length">
+        <sui-form-field width="six">
+          <sui-dropdown
+            fluid
+            placeholder="Saved search"
+            search
+            selection
+            v-model="selectedSearch"
+            :options="savedSearches"
+            @click="hackDropdown"
+          />
+        </sui-form-field>
+        <sui-form-field width="six">
           <sui-button
-            :active="selectedTimeType=='yesterday'"
-            @click="selectTime('yesterday')"
-            type="button"
-          >Yesterday</sui-button>
-          <sui-button
-            :active="selectedTimeType=='last_week'"
-            @click="selectTime('last_week')"
-            type="button"
-          >Last week</sui-button>
-          <sui-button
-            :active="selectedTimeType=='last_month'"
-            @click="selectTime('last_month')"
-            type="button"
-          >Last month</sui-button>
-          <!-- <sui-button :active="selectedTimeType=='custom'" @click="selectTime('custom')">Custom</sui-button> //// -->
-        </sui-button-group>
-      </sui-form-field>
-      <sui-form-field>
-        <label>Date start/end</label>
-        <v-date-picker mode="range" v-model="filter.selectedTimeInterval" />
-      </sui-form-field>
-      <sui-form-field>
-        <label>Null call</label>
-        <sui-checkbox label toggle v-model="filter.selectedNullCall" />
-      </sui-form-field>
-    </sui-form-fields>
-    <sui-form-fields>
-      <sui-form-field>
-        <label>Agent</label>
-        <sui-dropdown
-          fluid
-          :options="agents"
-          placeholder="Agent"
-          search
-          selection
-          v-model="filter.selectedAgent"
-        />
-      </sui-form-field>
-      <sui-form-field>
-        <label>Groups</label>
-        <sui-dropdown
-          multiple
-          fluid
-          :options="groups"
-          placeholder="Groups"
-          search
-          selection
-          v-model="filter.selectedGroups"
-        />
-      </sui-form-field>
-      <sui-form-field>
-        <label>Queues</label>
-        <sui-dropdown
-          multiple
-          fluid
-          :options="queues"
-          placeholder="Queues"
-          search
-          selection
-          v-model="filter.selectedQueues"
-        />
-      </sui-form-field>
-    </sui-form-fields>
-    <sui-button primary type="submit" @click="applyFilters()">Apply filters</sui-button>
-    <sui-button type="button" @click.native="showSaveSearchModal(true)">Save search</sui-button>
-    <sui-button
-      type="button"
-      :disabled="!selectedSearch"
-      @click.native="showOverwriteSearchModal(true)"
-    >Overwrite search</sui-button>
+            negative
+            :disabled="!selectedSearch"
+            @click.native="showDeleteSearchModal(true)"
+            >Delete search</sui-button
+          >
+        </sui-form-field>
+      </sui-form-fields>
+      <sui-form-fields>
+        <sui-form-field width="six">
+          <label>Time interval</label>
+          <sui-button-group class="fluid">
+            <sui-button
+              :active="selectedTimeType == 'yesterday'"
+              @click="selectTime('yesterday')"
+              type="button"
+              >Yesterday</sui-button
+            >
+            <sui-button
+              :active="selectedTimeType == 'last_week'"
+              @click="selectTime('last_week')"
+              type="button"
+              >Last week</sui-button
+            >
+            <sui-button
+              :active="selectedTimeType == 'last_month'"
+              @click="selectTime('last_month')"
+              type="button"
+              >Last month</sui-button
+            >
+          </sui-button-group>
+        </sui-form-field>
+        <sui-form-field width="four">
+          <label>Date start/end</label>
+          <v-date-picker mode="range" v-model="filter.selectedTimeInterval" />
+        </sui-form-field>
+      </sui-form-fields>
+      <sui-form-fields>
+        <sui-form-field>
+          <label>Agent</label>
+          <sui-dropdown
+            multiple
+            :options="agents"
+            placeholder="Agent"
+            search
+            selection
+            v-model="filter.selectedAgent"
+          />
+        </sui-form-field>
+        <sui-form-field>
+          <label>Groups</label>
+          <sui-dropdown
+            multiple
+            :options="groups"
+            placeholder="Groups"
+            search
+            selection
+            v-model="filter.selectedGroups"
+          />
+        </sui-form-field>
+        <sui-form-field>
+          <label>Queues</label>
+          <sui-dropdown
+            multiple
+            :options="queues"
+            placeholder="Queues"
+            search
+            selection
+            v-model="filter.selectedQueues"
+          />
+        </sui-form-field>
+      </sui-form-fields>
+      <sui-form-fields>
+        <sui-form-field>
+          <label>Null call</label>
+          <sui-checkbox label toggle v-model="filter.selectedNullCall" />
+        </sui-form-field>
+      </sui-form-fields>
+      <sui-form-fields>
+        <sui-button primary type="submit" @click="applyFilters()"
+          >Apply filters</sui-button
+        >
+        <sui-button type="button" @click.native="showSaveSearchModal(true)"
+          >Save search</sui-button
+        >
+        <sui-button
+          type="button"
+          :disabled="!selectedSearch"
+          @click.native="showOverwriteSearchModal(true)"
+          >Overwrite search</sui-button
+        >
+      </sui-form-fields>
+    </sui-form>
 
     <!-- save search modal -->
     <sui-modal v-model="openSaveSearchModal" size="tiny">
@@ -102,13 +119,15 @@
               <input placeholder="Search name" v-model="newSearchName" />
             </sui-form-field>
             <sui-message error v-show="errorNewSearch">
-              <p>{{errorMessage}}</p>
+              <p>{{ errorMessage }}</p>
             </sui-message>
           </sui-form>
         </sui-modal-description>
       </sui-modal-content>
       <sui-modal-actions>
-        <sui-button @click.native="showSaveSearchModal(false)">Cancel</sui-button>
+        <sui-button @click.native="showSaveSearchModal(false)"
+          >Cancel</sui-button
+        >
         <sui-button
           primary
           @click.native="validateSaveNewSearch()"
@@ -123,16 +142,49 @@
       <sui-modal-header>Overwrite search</sui-modal-header>
       <sui-modal-content>
         <sui-modal-description>
-          <p>You are about to overwrite "{{selectedSearch}}" search</p>
+          <sui-message warning>
+            <i class="exclamation triangle icon"></i>You are about to overwrite
+            "{{ selectedSearch }}" search
+          </sui-message>
           <p>Are you sure?</p>
         </sui-modal-description>
       </sui-modal-content>
       <sui-modal-actions>
-        <sui-button @click.native="showOverwriteSearchModal(false)">Cancel</sui-button>
-        <sui-button primary @click.native="saveSearch(selectedSearch)">Overwrite</sui-button>
+        <sui-button @click.native="showOverwriteSearchModal(false)"
+          >Cancel</sui-button
+        >
+        <sui-button negative @click.native="saveSearch(selectedSearch)"
+          >Overwrite</sui-button
+        >
       </sui-modal-actions>
     </sui-modal>
-  </sui-form>
+
+    <!-- delete search modal -->
+    <sui-modal v-model="openDeleteSearchModal" size="tiny">
+      <sui-modal-header>Delete search</sui-modal-header>
+      <sui-modal-content>
+        <sui-modal-description>
+          <sui-message warning>
+            <i class="exclamation triangle icon"></i>You are about to delete "{{
+              selectedSearch
+            }}" search
+          </sui-message>
+          <p>Are you sure?</p>
+        </sui-modal-description>
+      </sui-modal-content>
+      <sui-modal-actions>
+        <sui-button @click.native="showDeleteSearchModal(false)"
+          >Cancel</sui-button
+        >
+        <sui-button
+          negative
+          @click.native="deleteSelectedSearch()"
+          :loading="loader.deleteSearch"
+          content="Delete"
+        ></sui-button>
+      </sui-modal-actions>
+    </sui-modal>
+  </div>
 </template>
 
 <script>
@@ -172,15 +224,15 @@ export default {
         { value: "Agent 2", text: "Agent 2" },
         { value: "Agent 3", text: "Agent 3" },
       ],
-      // searchesMatchingView: [], ////
-      // searchesNotMatchingView: [],
       openSaveSearchModal: false,
       openOverwriteSearchModal: false,
+      openDeleteSearchModal: false,
       newSearchName: "",
       errorNewSearch: false, ////
       errorMessage: "", ////
       loader: {
         saveSearch: false,
+        deleteSearch: false,
       },
     };
   },
@@ -223,18 +275,21 @@ export default {
   mounted() {
     this.getSavedSearches();
 
-    console.log("this.$route.path", this.$route.path); //// asdf
+    console.log("this.$route.path", this.$route.path); ////
   },
   methods: {
     toggleFilters: function () {
       this.showFilters = !this.showFilters;
     },
-    getSavedSearches() {
+    getSavedSearches(searchToSelect) {
       this.getSearches(
         (success) => {
           const savedSearches = success.body.searches;
-          console.log(savedSearches); ////
           this.mapSavedSearches(savedSearches);
+
+          if (searchToSelect) {
+            this.selectedSearch = searchToSelect; //// test
+          }
         },
         (error) => {
           console.error(error.body.message);
@@ -242,27 +297,14 @@ export default {
       );
     },
     mapSavedSearches(savedSearches) {
-      // let i = 0;
       let searchesMatchingView = [];
       let searchesNotMatchingView = [];
 
       console.log("$route", this.$route); ////
 
       for (const search of savedSearches) {
-        // search.key = i;
         search.value = search.name;
         search.text = search.name;
-        // i++;
-
-        // const regex = new RegExp("^.+/" + search.section + "/" + search.view); ////
-        // const searchMatchesView = regex.test(this.$route.path);
-
-        // console.log(
-        //   "search matches path?",
-        //   search.section,
-        //   search.view,
-        //   searchMatchesView
-        // ); ////
 
         if (
           search.section == this.$route.meta.section &&
@@ -277,7 +319,7 @@ export default {
       if (searchesNotMatchingView.length) {
         // show divider and searches of other views
         const divider = {
-          //// debug switching view
+          //// debug switching views
           value: "-",
           text: "-",
         };
@@ -288,9 +330,6 @@ export default {
         this.savedSearches = searchesMatchingView;
       }
       console.log("savedSearches", this.savedSearches); ////
-
-      // this.searchesMatchingView = searchesMatchingView; ////
-      // this.searchesNotMatchingView = searchesNotMatchingView;
     },
     setFilterValues() {
       // retrieve search object
@@ -298,21 +337,7 @@ export default {
         (s) => s.name === this.selectedSearch
       );
 
-      // let search = this.searchesMatchingView.find( ////
-      //   (s) => s.name === this.selectedSearch
-      // );
-
-      // // look in other searches if needed
-      // if (!search) {
-      //   search = this.searchesNotMatchingView.find(
-      //     (s) => s.name === this.selectedSearch
-      //   );
-      // }
-
       console.log("setFilterValues(), search found", search); ////
-
-      // const filter = search.filter;
-
       console.log("search filter", search.filter); ////
 
       // set filter values
@@ -349,6 +374,7 @@ export default {
       return result;
     },
     applyFilters() {
+      //// move inside event handler?
       this.$root.filter.queues = this.filter.selectedQueues;
       this.$root.filter.groups = this.filter.selectedGroups;
       // this.$root.filter.name = ???; ////
@@ -356,7 +382,9 @@ export default {
       this.$root.filter.nullCall = this.filter.selectedNullCall;
       //// TODO time interval
 
-      console.log("this.$root.filter", this.$root.filter); ////
+      this.$root.$emit("applyFilters", this.filter);
+
+      console.log("applyFilters emitted"); ////
     },
     hackDropdown(e) {
       console.log("hackDropdown"); ////
@@ -401,7 +429,7 @@ export default {
         return;
       }
 
-      if (!/^[a-zA-Z][a-zA-Z0-9 -]+$/.test(this.newSearchName)) {
+      if (!/^[a-zA-Z][a-zA-Z0-9 -,/]+$/.test(this.newSearchName)) {
         this.errorNewSearch = true;
         this.errorMessage =
           "Search name must begin with a letter and contain only letters, spaces, numbers and dashes";
@@ -434,7 +462,7 @@ export default {
           this.loader.saveSearch = false;
           this.showSaveSearchModal(false);
           this.showOverwriteSearchModal(false);
-          this.getSavedSearches();
+          this.getSavedSearches(searchName);
         },
         (error) => {
           this.loader.saveSearch = false;
@@ -444,11 +472,38 @@ export default {
     },
     getCurrentSection() {
       //// move to utils file/service?
-      return this.$route.path; //// asdf
+      return this.$route.meta.section;
     },
     getCurrentView() {
       //// move to utils file/service?
-      return this.$route.path; //// asdf
+      return this.$route.meta.view;
+    },
+    showDeleteSearchModal(value) {
+      this.openDeleteSearchModal = value;
+    },
+    deleteSelectedSearch() {
+      this.loader.deleteSearch = true;
+      const searchId =
+        this.selectedSearch +
+        "_" +
+        this.getCurrentSection() +
+        "_" +
+        this.getCurrentView();
+
+      console.log("deleting", searchId); ////
+
+      this.deleteSearch(
+        searchId,
+        () => {
+          this.loader.deleteSearch = false;
+          this.showDeleteSearchModal(false);
+          this.getSavedSearches();
+        },
+        (error) => {
+          this.loader.deleteSearch = false;
+          console.error(error.body.message);
+        }
+      );
     },
     doLogout() {
       this.execLogout(
@@ -517,9 +572,5 @@ export default {
 
 .component-head-menu {
   margin: 3rem 0rem 0rem !important;
-}
-
-.savedSearch {
-  width: 33% !important ;
 }
 </style>

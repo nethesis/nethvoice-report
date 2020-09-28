@@ -46,7 +46,9 @@ new Vue({
       "nullCall": false
     };
 
-    console.log("created!"); ////
+    this.$root.$on('applyFilters', (newFilter) => {
+      console.log("applyFilters event handler", newFilter); ////
+    });
   },
   render: (h) => h(App),
 }).$mount("#app");

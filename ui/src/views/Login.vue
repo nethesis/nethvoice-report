@@ -57,6 +57,7 @@ export default {
 
           // extract loggedUser info
           var loggedUser = success.body;
+          loggedUser.username = this.username;
 
           // save to localstorage
           this.set("loggedUser", loggedUser);
@@ -101,6 +102,6 @@ export default {
 }
 
 .mg-left-20 {
-  margin-left: 10px !important; /* //// */
+  margin-left: 10px !important;
 }
 </style>

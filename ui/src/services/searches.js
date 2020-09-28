@@ -28,6 +28,20 @@ var SearchesService = {
           }
         )
         .then(success, error);
+    },
+    deleteSearch(searchId, success, error) {
+      this.$http
+        .delete(this.$root.apiScheme + this.$root.apiEndpoint + "/searches/" + searchId,
+          {
+            headers: {
+              Authorization:
+                "Bearer " +
+                (this.get("loggedUser") && this.get("loggedUser").token) ||
+                "",
+            },
+          }
+        )
+        .then(success, error);
     }
   },
 };
