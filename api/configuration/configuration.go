@@ -40,19 +40,16 @@ type Configuration struct {
 		Name     string `json:"name"`
 		Password string `json:"password"`
 	} `json:"queue_database"`
-	ListenAddress          string        `json:"listen_address"`
-	RedisAddress           string        `json:"redis_address"`
-	TTLCache               int           `json:"ttl_cache"`
-	Secret                 string        `json:"secret"`
-	QueryPath              string        `json:"query_path"`
-	UserAuthorizationsFile string        `json:"user_auth_file"`
-	DefaultFilter          models.Filter `json:"default_filter"`
-	APIKey                 string        `json:"api_key"`
-	APIEndpoint            string        `json:"api_endpoint"`
-	Tasks                  struct {      //// replaced by api key?
-		Username string `json:"username"`
-		Password string `json:"password"`
-	} `json:"tasks"`
+	ListenAddress          string          `json:"listen_address"`
+	RedisAddress           string          `json:"redis_address"`
+	TTLCache               int             `json:"ttl_cache"`
+	Secret                 string          `json:"secret"`
+	QueryPath              string          `json:"query_path"`
+	UserAuthorizationsFile string          `json:"user_auth_file"`
+	DefaultFilter          models.Filter   `json:"default_filter"`
+	APIKey                 string          `json:"api_key"`
+	APIEndpoint            string          `json:"api_endpoint"`
+	Settings               models.Settings `json:"settings"`
 }
 
 var Config = Configuration{}
