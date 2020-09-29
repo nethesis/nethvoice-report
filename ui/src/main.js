@@ -29,26 +29,46 @@ const i18n = new VueI18n({
 new Vue({
   router,
   i18n,
-  created: function() {
-    this.apiEndpoint = "192.168.5.82:8080/api"; //window.location.host ////
+  created: function () {
+    this.apiEndpoint = "192.168.5.82:8585/api"; //window.location.host ////
     this.apiScheme = "http://"; //window.location.protocol + "//"; ////
     this.currentLocale = langConf.locale;
     this.currentView = "";
-    this.filter = { ////
-      "queues": [],
-      "groups": [],
-      "time": {
-        "time_range": "",
-        "value": ""
-      },
-      "name": "",
-      "agent": "",
-      "nullCall": false
-    };
+    // this.filter = { ////
+    //   "queues": [],
+    //   "groups": [],
+    //   "agents": [],
+    //   "ivrs": [],
+    //   "reasons": [],
+    //   "actions": [],
+    //   "results": [],
+    //   "choices": [],
+    //   "destinations": [],
+    //   "origins": [],
+    //   "time": {
+    //     "group": "",
+    //     "division": "",
+    //     "start": "",
+    //     "end": "",
+    //   },
+    //   "caller": "",
+    //   "name": "",
+    //   "nullCall": false
+    // };
 
-    this.$root.$on('applyFilters', (newFilter) => {
-      console.log("applyFilters event handler", newFilter); ////
-    });
+    // this.$root.$on('applyFilters', (newFilter) => { ////
+    //   console.log("applyFilters event handler", newFilter); ////
+
+    //   newFilter.agents = ["0721"]; ////
+
+    //   this.execQuery(newFilter, "data", "agent", "graph_call_distribution_per_queue",
+    //     (success) => {
+    //       console.log("success", success); ////
+    //     },
+    //     (error) => {
+    //       console.error(error.body);
+    //     }); ////
+    // });
   },
   render: (h) => h(App),
 }).$mount("#app");

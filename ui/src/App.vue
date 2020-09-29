@@ -46,20 +46,45 @@ export default {
     this.execRefresh(() => {
         this.isLogged = true;
         document.body.classList.add('show');
+
+        console.log("execRefresh success"); ////
       },
       () => { // error
         this.isLogged = false;
-        document.body.classList.add('show');
+        document.body.classList.add('show'); //// redundant navigation
       })
   },
   data() {
     return {
       isLogged: false,
+      // filter: { ////
+      //   "queues": [],
+      //   "groups": [],
+      //   "agents": [],
+      //   "ivrs": [],
+      //   "reasons": [],
+      //   "actions": [],
+      //   "results": [],
+      //   "choices": [],
+      //   "destinations": [],
+      //   "origins": [],
+      //   "time": {
+      //     "group": "",
+      //     "division": "",
+      //     "start": "",
+      //     "end": "",
+      //   },
+      //   "caller": "",
+      //   "name": "",
+      //   "nullCall": false
+      // },
     };
   },
   methods: {
     didLogin() {
       this.isLogged = true;
+
+      console.log("didLogin"); ////
     },
     didLogout() {
       this.isLogged = false;
@@ -103,5 +128,9 @@ export default {
       color: #42b983;
     }
   }
+}
+
+.mg-right-sm {
+  margin-right: 1rem !important;
 }
 </style>

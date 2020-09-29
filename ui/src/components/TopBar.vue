@@ -69,7 +69,7 @@
         >
         <sui-button
           primary
-          @click.native="saveSettings()"
+          @click.native="saveAdminSettings()"
           :loading="loader.saveSettings"
           content="Save"
         ></sui-button>
@@ -84,6 +84,8 @@ import LoginService from "../services/login";
 import StorageService from "../services/storage";
 import VueTimepicker from 'vue2-timepicker'
 import 'vue2-timepicker/dist/VueTimepicker.css'
+import SettingsService from "../services/settings";
+
 
 export default {
   name: "TopBar",
@@ -91,7 +93,7 @@ export default {
     Filters: Filters,
     VueTimepicker,
   },
-  mixins: [LoginService, StorageService],
+  mixins: [LoginService, StorageService, SettingsService],
   data() {
     return {
       showFilters: true,
@@ -106,8 +108,9 @@ export default {
   },
   mounted() {
     //// todo: retrieve office hours
-    this.officeHourStart = "09:00:00" ////
-    this.officeHourEnd = "18:00:00" ////
+    this.getAdminSettings();
+    // this.officeHourStart = "09:00:00" ////
+    // this.officeHourEnd = "18:00:00" ////
   },
   watch: {
     $route: function () {
@@ -139,17 +142,46 @@ export default {
         },
         (error) => {
           // print error
-          console.error(error.body.message);
+          console.error(error.body);
         }
       );
     },
     showSettingsModal(value) {
       this.openSettingsModal = value;
     },
-    saveSettings() {
-      // todo: call save settings api
-      console.log("saveSettings()"); ////
-    }
+    saveAdminSettings() {
+      this.loader.saveSettings = true;
+      this.updateSettings(
+        {
+          start_hour: this.officeHourStart,
+          end_hour: this.officeHourEnd,
+        },
+        () => {
+          this.loader.saveSettings = false;
+          this.showSettingsModal(false);
+          this.getAdminSettings();
+        },
+        (error) => {
+          this.loader.saveSettings = false;
+          console.error(error.body);
+        }
+      );
+    },
+    getAdminSettings() {
+      this.getSettings(
+        (success) => {
+          const settings = success.body.settings;
+
+          // console.log("settings", settings); ////
+
+          this.officeHourStart = settings.start_hour;
+          this.officeHourEnd = settings.end_hour;
+        },
+        (error) => {
+          console.error(error.body);
+        }
+      );
+    },
   },
   computed: {
     toggleFiltersPopup: function () {

@@ -73,7 +73,7 @@ export default {
           this.error = true;
 
           // print error
-          console.error(error.body.message);
+          console.error(error.body);
         }
       );
     }
