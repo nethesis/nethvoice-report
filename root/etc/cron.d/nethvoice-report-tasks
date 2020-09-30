@@ -1,2 +1,5 @@
+# precalculate filter values during night
+49 23 * * *     asterisk /opt/nethvoice-report/tasks/tasks values
+
 # precalculate queries during night
 59 23 * * *	asterisk /opt/nethvoice-report/tasks/tasks queries
