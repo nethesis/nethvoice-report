@@ -2,7 +2,11 @@
   <div class="masthead">
     <sui-container>
       <sui-menu floated="right">
-        <sui-popup v-if="isAdmin" position="bottom center" :content="$t('menu.settings')">
+        <sui-popup
+          v-if="isAdmin"
+          position="bottom center"
+          :content="$t('menu.settings')"
+        >
           <a
             slot="trigger"
             is="sui-menu-item"
@@ -64,9 +68,7 @@
         </sui-modal-description>
       </sui-modal-content>
       <sui-modal-actions>
-        <sui-button @click.native="showSettingsModal(false)"
-          >Cancel</sui-button
-        >
+        <sui-button @click.native="showSettingsModal(false)">Cancel</sui-button>
         <sui-button
           primary
           @click.native="saveAdminSettings()"
@@ -82,10 +84,9 @@
 import Filters from "./Filters.vue";
 import LoginService from "../services/login";
 import StorageService from "../services/storage";
-import VueTimepicker from 'vue2-timepicker'
-import 'vue2-timepicker/dist/VueTimepicker.css'
+import VueTimepicker from "vue2-timepicker";
+import "vue2-timepicker/dist/VueTimepicker.css";
 import SettingsService from "../services/settings";
-
 
 export default {
   name: "TopBar",
@@ -101,13 +102,22 @@ export default {
       openSettingsModal: false,
       officeHourStart: "",
       officeHourEnd: "",
+      isAdmin: false,
       loader: {
-        saveSettings: false
-      }
+        saveSettings: false,
+      },
     };
   },
   mounted() {
-    this.getAdminSettings();
+    if (this.get("loggedUser") && this.get("loggedUser").username == "admin") {
+      this.isAdmin = true;
+    } else {
+      this.isAdmin = false;
+    }
+
+    if (this.isAdmin) {
+      this.getAdminSettings();
+    }
   },
   watch: {
     $route: function () {
@@ -183,16 +193,9 @@ export default {
   computed: {
     toggleFiltersPopup: function () {
       return this.showFilters
-        ? this.$i18n.t("menu.hide_filters") 
+        ? this.$i18n.t("menu.hide_filters")
         : this.$i18n.t("menu.show_filters");
     },
-    isAdmin: function() {
-      if (this.get("loggedUser") && this.get("loggedUser").username == "admin") {
-        return true;
-      } else {
-        return false;
-      }
-    }
   },
 };
 </script>

@@ -48,7 +48,7 @@
         </sui-form-field>
         <sui-form-field width="four">
           <label>Date start/end</label>
-          <v-date-picker mode="range" v-model="filter.selectedTimeInterval" />
+          <v-date-picker mode="range" v-model="filter.time.interval" />
         </sui-form-field>
       </sui-form-fields>
 
@@ -61,7 +61,7 @@
             placeholder="Agent"
             search
             selection
-            v-model="filter.selectedAgents"
+            v-model="filter.agents"
           />
         </sui-form-field>
         <sui-form-field width="four">
@@ -72,7 +72,7 @@
             placeholder="Groups"
             search
             selection
-            v-model="filter.selectedGroups"
+            v-model="filter.groups"
           />
         </sui-form-field>
         <sui-form-field width="four">
@@ -83,7 +83,7 @@
             placeholder="Queues"
             search
             selection
-            v-model="filter.selectedQueues"
+            v-model="filter.queues"
           />
         </sui-form-field>
         <sui-form-field width="four">
@@ -94,7 +94,7 @@
             placeholder="IVRs"
             search
             selection
-            v-model="filter.selectedIvrs"
+            v-model="filter.ivrs"
           />
         </sui-form-field>
       </sui-form-fields>
@@ -108,7 +108,7 @@
             placeholder="Reasons"
             search
             selection
-            v-model="filter.selectedReasons"
+            v-model="filter.reasons"
           />
         </sui-form-field>
         <sui-form-field width="four">
@@ -119,7 +119,7 @@
             placeholder="Actions"
             search
             selection
-            v-model="filter.selectedActions"
+            v-model="filter.actions"
           />
         </sui-form-field>
         <sui-form-field width="four">
@@ -130,7 +130,7 @@
             placeholder="Results"
             search
             selection
-            v-model="filter.selectedResults"
+            v-model="filter.results"
           />
         </sui-form-field>
         <sui-form-field width="four">
@@ -141,7 +141,7 @@
             placeholder="Choices"
             search
             selection
-            v-model="filter.selectedChoices"
+            v-model="filter.choices"
           />
         </sui-form-field>
       </sui-form-fields>
@@ -155,7 +155,7 @@
             placeholder="Destinations"
             search
             selection
-            v-model="filter.selectedDestinations"
+            v-model="filter.destinations"
           />
         </sui-form-field>
         <sui-form-field width="four">
@@ -166,7 +166,7 @@
             placeholder="Origins"
             search
             selection
-            v-model="filter.selectedOrigins"
+            v-model="filter.origins"
           />
         </sui-form-field>
         <sui-form-field width="four">
@@ -176,7 +176,7 @@
             placeholder="Group by time"
             search
             selection
-            v-model="filter.time.selectedGroup"
+            v-model="filter.time.group"
           />
         </sui-form-field>
         <sui-form-field width="four">
@@ -186,7 +186,7 @@
             placeholder="Split by time"
             search
             selection
-            v-model="filter.time.selectedDivision"
+            v-model="filter.time.division"
           />
         </sui-form-field>
       </sui-form-fields>
@@ -199,7 +199,7 @@
             placeholder="Caller"
             search
             selection
-            v-model="filter.selectedCaller"
+            v-model="filter.caller"
           />
         </sui-form-field>
         <sui-form-field width="four">
@@ -209,12 +209,12 @@
             placeholder="Contact name"
             search
             selection
-            v-model="filter.selectedContactName"
+            v-model="filter.contactName"
           />
         </sui-form-field>
         <sui-form-field width="four">
           <label>Null call</label>
-          <sui-checkbox label toggle v-model="filter.selectedNullCall" />
+          <sui-checkbox label toggle v-model="filter.nullCall" />
         </sui-form-field>
       </sui-form-fields>
       <sui-form-fields>
@@ -225,19 +225,9 @@
           @click="applyFilters()"
           >Apply filters</sui-button
         >
-        <sui-button-group>
-          <sui-button type="button" @click.native="showSaveSearchModal(true)"
-            >Save search</sui-button
-          >
-          <!-- <sui-dropdown ////
-            :options="['Overwrite', 'asdf']"
-            selection
-          /> -->
-          <sui-button type="button" @click.native="showOverwriteButton()"
-            ><sui-icon name="caret down"
-          /></sui-button>
-        </sui-button-group>
-
+        <sui-button type="button" @click.native="showSaveSearchModal(true)"
+          >Save search</sui-button
+        >
         <sui-button
           type="button"
           :disabled="!selectedSearch"
@@ -330,36 +320,38 @@
 import LoginService from "../services/login";
 import StorageService from "../services/storage";
 import SearchesService from "../services/searches";
+import UtilService from "../services/utils";
 
 export default {
   name: "Filters",
-  mixins: [LoginService, StorageService, SearchesService],
+  mixins: [LoginService, StorageService, SearchesService, UtilService],
   data() {
     return {
       showFilters: true,
       title: this.$i18n.t(this.$route.meta.name) || "", ////
       selectedSearch: null,
       filter: {
-        selectedQueues: [], //// remove "selected" prefix
-        selectedGroups: [],
-        selectedAgents: [],
-        selectedIvrs: [],
-        selectedReasons: [],
-        selectedActions: [],
-        selectedResults: [],
-        selectedChoices: [],
-        selectedDestinations: [],
-        selectedOrigins: [],
-        selectedTimeInterval: null,
+        queues: [],
+        groups: [],
+        agents: [],
+        ivrs: [],
+        reasons: [],
+        actions: [],
+        results: [],
+        choices: [],
+        destinations: [],
+        origins: [],
         time: {
-          selectedGroup: "",
-          selectedDivision: "",
-          selectedStart: null,
-          selectedEnd: null,
+          group: "",
+          division: "",
+          interval: {
+            start: null,
+            end: null,
+          },
         },
-        selectedCaller: "",
-        selectedContactName: "",
-        selectedNullCall: false,
+        caller: "",
+        contactName: "",
+        nullCall: false,
       },
       selectedTimeType: "",
       savedSearches: [],
@@ -444,7 +436,7 @@ export default {
     };
   },
   watch: {
-    filter:  function () {
+    filter: function () {
       console.log("watch filter", this.filter); ////
     },
     // $route: function () { ////
@@ -457,36 +449,63 @@ export default {
       console.log("watch selectedSearch", this.selectedSearch); ////
       this.setFilterValuesFromSearch();
     },
+    "filter.reasons": function () {
+      console.log("watch filter.reasons", this.filter.reasons); ////
+    },
     "filter.selectedQueues": function () {
       console.log("watch filter.selectedQueues", this.filter.selectedQueues); ////
     },
-    "filter.selectedGroups": function () {
-      console.log("watch filter.selectedGroups", this.filter.selectedGroups); ////
+    "filter.groups": function () {
+      console.log("watch filter.groups", this.filter.groups); ////
     },
     "filter.selectedAgents": function () {
       console.log("watch filter.selectedAgents", this.filter.selectedAgents); ////
     },
-    "filter.selectedNullCall": function () {
-      console.log(
-        "watch filter.selectedNullCall",
-        this.filter.selectedNullCall
-      ); ////
+    "filter.nullCall": function () {
+      console.log("watch filter.nullCall", this.filter.nullCall); ////
     },
-    "filter.selectedTimeInterval": function () {
-      console.log(
-        "watch filter.selectedTimeInterval",
-        this.filter.selectedTimeInterval
-      ); ////
+    "filter.time.interval": function () {
+      console.log("watch filter.time.interval", this.filter.time.interval); ////
 
       this.selectedTimeType = "";
 
-      if (this.filter.selectedTimeInterval.start && this.filter.selectedTimeInterval.end) {
-        if (this.filter.selectedTimeInterval.end.getTime() == this.getToday().getTime()) {
-          if (this.filter.selectedTimeInterval.start.getTime() == this.getYesterday().getTime()) {
+      if (
+        this.filter.time.interval &&
+        this.filter.time.interval.start &&
+        this.filter.time.interval.end
+      ) {
+        console.log("this.filter.time.interval", this.filter.time.interval); ////
+
+        // convert to date object if needed
+        if (typeof this.filter.time.interval.start == "string") {
+          this.filter.time.interval.start = new Date(
+            this.filter.time.interval.start
+          );
+        }
+
+        if (typeof this.filter.time.interval.end == "string") {
+          this.filter.time.interval.end = new Date(
+            this.filter.time.interval.end
+          );
+        }
+
+        if (
+          this.filter.time.interval.end.getTime() == this.getToday().getTime()
+        ) {
+          if (
+            this.filter.time.interval.start.getTime() ==
+            this.getYesterday().getTime()
+          ) {
             this.selectedTimeType = "yesterday";
-          } else if (this.filter.selectedTimeInterval.start.getTime() == this.getLastWeek().getTime()) {
+          } else if (
+            this.filter.time.interval.start.getTime() ==
+            this.getLastWeek().getTime()
+          ) {
             this.selectedTimeType = "lastWeek";
-          } else if (this.filter.selectedTimeInterval.start.getTime() == this.getLastMonth().getTime()) {
+          } else if (
+            this.filter.time.interval.start.getTime() ==
+            this.getLastMonth().getTime()
+          ) {
             this.selectedTimeType = "lastMonth";
           }
         }
@@ -553,7 +572,7 @@ export default {
       } else {
         this.savedSearches = searchesMatchingView;
       }
-      // console.log("savedSearches", this.savedSearches); ////
+      console.log("savedSearches", this.savedSearches); ////
     },
     setFilterValuesFromSearch() {
       // retrieve search object
@@ -565,29 +584,31 @@ export default {
       console.log("search filter", search.filter); ////
 
       // set filter values
-      this.filter.selectedQueues = search.filter.queues;
-      this.filter.selectedGroups = search.filter.groups;
-      this.filter.selectedAgents = search.filter.agents;
-      this.filter.selectedIvrs = search.filter.ivrs;
-      this.filter.selectedReasons = search.filter.reasons;
-      this.filter.selectedActions = search.filter.actions;
-      this.filter.selectedResults = search.filter.results;
-      this.filter.selectedChoices = search.filter.choices;
-      this.filter.selectedDestinations = search.filter.destinations;
-      this.filter.selectedOrigins = search.filter.origins;
+      this.filter = search.filter;
 
-      this.filter.time.selectedGroup = search.filter.time.group;
-      this.filter.time.selectedDivision = search.filter.time.division;
-      this.filter.time.selectedStart = search.filter.time.start;
-      this.filter.time.selectedEnd = search.filter.time.end;
+      // this.filter.selectedQueues = search.filter.queues; ////
+      // this.filter.groups = search.filter.groups;
+      // this.filter.selectedAgents = search.filter.agents;
+      // this.filter.ivrs = search.filter.ivrs;
+      // this.filter.reasons = search.filter.reasons;
+      // this.filter.actions = search.filter.actions;
+      // this.filter.results = search.filter.results;
+      // this.filter.choices = search.filter.choices;
+      // this.filter.destinations = search.filter.destinations;
+      // this.filter.origins = search.filter.origins;
 
-      this.filter.selectedCaller = search.filter.caller;
-      this.filter.selectedContactName = search.filter.name;
-      this.filter.selectedNullCall = search.filter.null_call;
+      // this.filter.time.group = search.filter.time.group;
+      // this.filter.time.division = search.filter.time.division;
+      // this.filter.time.start = search.filter.time.start;
+      // this.filter.time.end = search.filter.time.end;
+
+      // this.filter.caller = search.filter.caller;
+      // this.filter.contactName = search.filter.name;
+      // this.filter.nullCall = search.filter.nullCall;
     },
     getToday() {
       const today = new Date();
-      today.setHours(0,0,0,0);
+      today.setHours(0, 0, 0, 0);
       return today;
     },
     getYesterday() {
@@ -603,17 +624,17 @@ export default {
       this.selectedTimeType = interval;
 
       if (this.selectedTimeType == "yesterday") {
-        this.filter.selectedTimeInterval = {
+        this.filter.time.interval = {
           start: this.getYesterday(),
           end: this.getToday(),
         };
       } else if (this.selectedTimeType == "lastWeek") {
-        this.filter.selectedTimeInterval = {
+        this.filter.time.interval = {
           start: this.getLastWeek(),
           end: this.getToday(),
         };
       } else if (this.selectedTimeType == "lastMonth") {
-        this.filter.selectedTimeInterval = {
+        this.filter.time.interval = {
           start: this.getLastMonth(),
           end: this.getToday(),
         };
@@ -627,7 +648,7 @@ export default {
     applyFilters() {
       this.$root.$emit("applyFilters", this.filter);
 
-      // console.log("applyFilters emitted"); ////
+      console.log("applyFilters emitted", this.filter); ////
     },
     hackDropdown(e) {
       console.log("hackDropdown"); ////
@@ -681,26 +702,28 @@ export default {
       this.saveSearch(this.newSearchName);
     },
     saveSearch(searchName) {
-      console.log("saving", searchName); ////
-
       this.loader.saveSearch = true;
+      let filterToSave = JSON.parse(JSON.stringify(this.filter));
+
+      // convert time interval to string
+      filterToSave.time.interval.start = this.formatDate(
+        this.filter.time.interval.start
+      );
+      filterToSave.time.interval.end = this.formatDate(
+        this.filter.time.interval.end
+      );
+
+      // filterToSave.time.interval.start = this.filter.time.interval.start.toUTCString(); ////
+      // filterToSave.time.interval.end = this.filter.time.interval.end.toUTCString();
+
+      console.log("saving", searchName, filterToSave); ////
+
       this.createSearch(
         {
-          //// TODO add all fields
           name: searchName,
           section: this.$route.meta.section,
           view: this.$route.meta.view,
-          filter: {
-            queues: this.filter.selectedQueues,
-            groups: this.filter.selectedGroups,
-            time: {
-              time_range: "", ////
-              value: "", ////
-            },
-            name: "?", ////
-            agents: this.filter.selectedAgents,
-            null_call: this.filter.selectedNullCall,
-          },
+          filter: filterToSave,
         },
         () => {
           this.loader.saveSearch = false;

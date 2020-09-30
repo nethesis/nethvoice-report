@@ -87,25 +87,30 @@ export default {
       this.applyFilters(filter);
 
       this.$root.$on("applyFilters", (filter) => {
-        let newFilter = { time: {} }; ////
-        newFilter.queues = filter.selectedQueues;
-        newFilter.groups = filter.selectedGroups;
-        newFilter.agents = filter.selectedAgents;
-        newFilter.ivrs = filter.selectedIvrs;
-        newFilter.reasons = filter.selectedReasons;
-        newFilter.action = filter.selectedActions;
-        newFilter.results = filter.selectedResults;
-        newFilter.choices = filter.selectedChoices;
-        newFilter.destinations = filter.selectedDestinations;
-        newFilter.origins = filter.selectedOrigins;
-        newFilter.time.group = filter.time.selectedGroup;
-        newFilter.time.division = filter.time.selectedDivision;
-        newFilter.time.start = filter.time.selectedStart;
-        newFilter.time.end = filter.time.selectedEnd;
-        newFilter.caller = filter.selectedCaller;
-        newFilter.name = filter.selectedContactName;
-        newFilter.null_call = filter.selectedNullCall;
-        this.applyFilters(newFilter);
+
+        // console.log("event: received filter", filter); ////
+
+        // let newFilter = { time: {} }; ////
+        // newFilter.queues = filter.selectedQueues;
+        // newFilter.groups = filter.groups;
+        // newFilter.agents = filter.selectedAgents;
+        // newFilter.ivrs = filter.ivrs;
+        // newFilter.reasons = filter.reasons;
+        // newFilter.action = filter.actions;
+        // newFilter.results = filter.results;
+        // newFilter.choices = filter.choices;
+        // newFilter.destinations = filter.destinations;
+        // newFilter.origins = filter.origins;
+        // newFilter.time.group = filter.time.group;
+        // newFilter.time.division = filter.time.division;
+        // newFilter.time.start = filter.time.start;
+        // newFilter.time.end = filter.time.end;
+        // newFilter.caller = filter.caller;
+        // newFilter.name = filter.contactName;
+        // newFilter.nullCall = filter.nullCall;
+        // this.applyFilters(newFilter);
+
+        this.applyFilters(filter);
       });
     },
     applyFilters(filter) {

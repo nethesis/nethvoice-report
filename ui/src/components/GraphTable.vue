@@ -1,6 +1,6 @@
 <template>
 <sui-form>
-  <sui-table celled class="mg-bottom-md">
+  <sui-table celled selectable class="mg-bottom-md">
     <sui-table-header>
       <sui-table-row>
         <sui-table-header-cell v-for="(column, index) in columns" v-bind:key="index">{{column}}</sui-table-header-cell>
