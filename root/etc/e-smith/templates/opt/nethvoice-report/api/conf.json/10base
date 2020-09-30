@@ -40,7 +40,7 @@
           \},
           "name": "",
           "agent": "",
-          "null_call": false
+          "nullCall": false
         \},
         "api_endpoint": "http://localhost:8585/api",
         "api_key": "{{$key}}",
