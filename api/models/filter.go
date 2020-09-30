@@ -29,7 +29,6 @@ type Filter struct {
 	IVRs   []string `json:"ivrs"`
 
 	Reasons      []string `json:"reasons"`
-	Actions      []string `json:"actions"`
 	Results      []string `json:"results"`
 	Choices      []string `json:"choices"`
 	Destinations []string `json:"destinations"`
