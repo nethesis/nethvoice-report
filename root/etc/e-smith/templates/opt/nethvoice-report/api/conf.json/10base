@@ -17,6 +17,7 @@
         \},
         "secret": "{{$secret}}",
         "query_path": "/opt/nethvoice-report/api/queries",
+	"values_path": "/opt/nethvoice-report/api/values",
         "user_auth_file": "/opt/nethvoice-report/api/user_authorizations.json",
         "default_filter": \{
           "queues": [],

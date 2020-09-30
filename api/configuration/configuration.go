@@ -45,6 +45,7 @@ type Configuration struct {
 	TTLCache               int             `json:"ttl_cache"`
 	Secret                 string          `json:"secret"`
 	QueryPath              string          `json:"query_path"`
+	ValuesPath             string          `json:"values_path"`
 	UserAuthorizationsFile string          `json:"user_auth_file"`
 	DefaultFilter          models.Filter   `json:"default_filter"`
 	APIKey                 string          `json:"api_key"`
