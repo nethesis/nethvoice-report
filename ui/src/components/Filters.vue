@@ -340,7 +340,7 @@ export default {
       title: this.$i18n.t(this.$route.meta.name) || "", ////
       selectedSearch: null,
       filter: {
-        selectedQueues: [],
+        selectedQueues: [], //// remove "selected" prefix
         selectedGroups: [],
         selectedAgents: [],
         selectedIvrs: [],
@@ -625,20 +625,9 @@ export default {
       return result;
     },
     applyFilters() {
-      //// move inside event handler?
-      // this.$root.filter.queues = this.filter.selectedQueues;
-      // this.$root.filter.groups = this.filter.selectedGroups;
-      // // this.$root.filter.name = ???; ////
-      // this.$root.filter.agents = this.filter.selectedAgents;
-      // this.$root.filter.nullCall = this.filter.selectedNullCall;
-      //// TODO time interval
-
       this.$root.$emit("applyFilters", this.filter);
 
-      // console.log("$parent", this.$parent); ////
-      // this.$emit("applyFilters", this.filter); ////
-
-      console.log("applyFilters emitted"); ////
+      // console.log("applyFilters emitted"); ////
     },
     hackDropdown(e) {
       console.log("hackDropdown"); ////

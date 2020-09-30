@@ -1,15 +1,20 @@
 <template lang="html">
-<div>
-  <div>
-    Queue Dashboard
-  </div>
+<div class="masthead">
+  <sui-container>
+    <!-- <div>
+      Queue Dashboard
+    </div> -->
 
-  <!-- <div v-for="graph in graphs" v-bind:key="graph.name">
-    {{ graph.name }}: {{ graph.data }}
-  </div> -->
+    <!-- <div v-for="graph in graphs" v-bind:key="graph.name">
+      {{ graph.name }}: {{ graph.data }}
+    </div> -->
 
-  <GraphTable v-for="graph in graphs" v-bind:key="graph.name" :data="graph.data" />
-  
+    <!-- <div>graphs names: {{graphNames}}</div>
+    <div>graphs: {{graphs.length}}</div> -->
+
+    <GraphTable v-for="graph in graphs" v-bind:key="graph.name" :data="graph.data" />
+    
+  </sui-container>
 </div>
 </template>
 
@@ -59,37 +64,54 @@ export default {
 
       var filter = {
         //// where should it be retrieved? local storage?
-        selectedQueues: [],
-        selectedGroups: [],
-        selectedAgents: [],
-        selectedIvrs: [],
-        selectedReasons: [],
-        selectedActions: [],
-        selectedResults: [],
-        selectedChoices: [],
-        selectedDestinations: [],
-        selectedOrigins: [],
-        selectedTimeInterval: null,
+        queues: [],
+        groups: [],
+        agents: [],
+        ivrs: [],
+        reasons: [],
+        actions: [],
+        results: [],
+        choices: [],
+        destinations: [],
+        origins: [],
         time: {
-          selectedGroup: "",
-          selectedDivision: "",
-          selectedStart: null,
-          selectedEnd: null,
+          group: "",
+          division: "",
+          start: null,
+          end: null,
         },
-        selectedCaller: "",
-        selectedContactName: "",
-        selectedNullCall: false,
+        caller: "",
+        contactName: "",
+        nullCall: false,
       };
       this.applyFilters(filter);
 
       this.$root.$on("applyFilters", (filter) => {
-        this.applyFilters(filter);
+        let newFilter = { time: {} }; ////
+        newFilter.queues = filter.selectedQueues;
+        newFilter.groups = filter.selectedGroups;
+        newFilter.agents = filter.selectedAgents;
+        newFilter.ivrs = filter.selectedIvrs;
+        newFilter.reasons = filter.selectedReasons;
+        newFilter.action = filter.selectedActions;
+        newFilter.results = filter.selectedResults;
+        newFilter.choices = filter.selectedChoices;
+        newFilter.destinations = filter.selectedDestinations;
+        newFilter.origins = filter.selectedOrigins;
+        newFilter.time.group = filter.time.selectedGroup;
+        newFilter.time.division = filter.time.selectedDivision;
+        newFilter.time.start = filter.time.selectedStart;
+        newFilter.time.end = filter.time.selectedEnd;
+        newFilter.caller = filter.selectedCaller;
+        newFilter.name = filter.selectedContactName;
+        newFilter.null_call = filter.selectedNullCall;
+        this.applyFilters(newFilter);
       });
     },
     applyFilters(filter) {
       console.log("[Dashboard.vue] applyFilters", filter); ////
 
-      filter.selectedAgents = ["0721"]; ////
+      filter.agents = ["0721", "0722"]; ////
 
       this.graphs = [];
 
@@ -100,19 +122,15 @@ export default {
           this.$route.meta.view,
           graphName,
           (success) => {
-            console.log("execQuery success", success); ////
+            console.log("execQuery", graphName, success.body); ////
 
-            const result = [
-              ["prefisso", "comune", "siglaprov", "provincia", "regione"],
-              ["0721", "Pesaro", "PU", "PUUU", "Marche"],
-            ]; ////
-
-            // this.graphData[graphName] = result;
+            const result = success.body;
 
             this.graphs.push({ name: graphName, data: result });
           },
           (error) => {
             console.error(error.body);
+            this.graphs.push({ name: graphName, data: null });
           }
         );
       }

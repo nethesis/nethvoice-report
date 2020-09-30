@@ -1,6 +1,6 @@
 <template>
-<div>
-  <sui-table celled>
+<sui-form>
+  <sui-table celled class="mg-bottom-md">
     <sui-table-header>
       <sui-table-row>
         <sui-table-header-cell v-for="(column, index) in columns" v-bind:key="index">{{column}}</sui-table-header-cell>
@@ -13,7 +13,7 @@
       </sui-table-row>
     </sui-table-body>
   </sui-table>
-</div>
+</sui-form>
 </template>
 
 <script>
@@ -27,17 +27,17 @@ export default {
     };
   },
   mounted() {
-    console.log("graph-table data", this.data); ////
+    // console.log("graph-table data", this.data); ////
 
     if (this.data) {
       if (this.data.length) {
         this.columns = this.data[0];
-        console.log("this.columns", this.columns); ////
+        // console.log("this.columns", this.columns); ////
       }
 
       if (this.data.length > 1) {
         this.rows = this.data.slice(1);
-        console.log("this.rows", this.rows); ////
+        // console.log("this.rows", this.rows); ////
       }
     }
   },
@@ -47,4 +47,7 @@ export default {
 </script>
 
 <style lang="scss">
+.mg-bottom-md {
+  margin-bottom: 2rem !important;
+}
 </style>

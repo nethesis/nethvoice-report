@@ -107,10 +107,7 @@ export default {
     };
   },
   mounted() {
-    //// todo: retrieve office hours
     this.getAdminSettings();
-    // this.officeHourStart = "09:00:00" ////
-    // this.officeHourEnd = "18:00:00" ////
   },
   watch: {
     $route: function () {

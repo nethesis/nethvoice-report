@@ -47,7 +47,7 @@ export default {
         this.isLogged = true;
         document.body.classList.add('show');
 
-        console.log("execRefresh success"); ////
+        // console.log("execRefresh success"); ////
       },
       () => { // error
         this.isLogged = false;
@@ -57,27 +57,6 @@ export default {
   data() {
     return {
       isLogged: false,
-      // filter: { ////
-      //   "queues": [],
-      //   "groups": [],
-      //   "agents": [],
-      //   "ivrs": [],
-      //   "reasons": [],
-      //   "actions": [],
-      //   "results": [],
-      //   "choices": [],
-      //   "destinations": [],
-      //   "origins": [],
-      //   "time": {
-      //     "group": "",
-      //     "division": "",
-      //     "start": "",
-      //     "end": "",
-      //   },
-      //   "caller": "",
-      //   "name": "",
-      //   "nullCall": false
-      // },
     };
   },
   methods: {
