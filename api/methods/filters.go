@@ -30,11 +30,16 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/nethesis/nethvoice-report/api/cache"
 	"github.com/nethesis/nethvoice-report/api/configuration"
 	"github.com/nethesis/nethvoice-report/api/models"
+	"github.com/nethesis/nethvoice-report/api/utils"
 )
 
 func GetDefaultFilter(c *gin.Context) {
+	// get current user
+	user := GetClaims(c)["id"].(string)
+
 	// extract section and view
 	section := c.Param("section")
 	view := c.Param("view")
@@ -49,6 +54,34 @@ func GetDefaultFilter(c *gin.Context) {
 	if _, errExists := os.Stat(filterOverrideFile); os.IsNotExist(errExists) {
 		// override filter NOT exists, return default one
 		defaultFilter = configuration.Config.DefaultFilter
+
+		// init cache connection
+		cacheConnection := cache.Instance()
+
+		// read default filter from cache
+		valuesFilterString, errCache := cacheConnection.Get("values_filter").Result()
+
+		// check error for default filter
+		if errCache != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"message": "error reading values for filter from cache", "status": errCache.Error()})
+			return
+		}
+
+		// convert to struct
+		var valuesFilter models.Filter
+		errJson := json.Unmarshal([]byte(valuesFilterString), &valuesFilter)
+		if errJson != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"message": "invalid default filter unmarshal", "status": errJson.Error()})
+			return
+		}
+
+		// read user authorizations
+		auths, _ := GetUserAuthorizations(user)
+
+		// assign defult filter intersection
+		defaultFilter.Queues = utils.Intersect(valuesFilter.Queues, auths.Queues)
+		defaultFilter.Groups = utils.Intersect(valuesFilter.Groups, auths.Groups)
+		defaultFilter.Agents = utils.Intersect(valuesFilter.Agents, auths.Agents)
 
 		// return in JSON format
 		c.JSON(http.StatusOK, gin.H{"filter": defaultFilter})

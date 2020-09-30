@@ -26,8 +26,10 @@ import (
 	"database/sql"
 	"encoding/json"
 	"os"
+	"fmt"
 
 	"github.com/pkg/errors"
+	"github.com/juliangruber/go-intersect"
 )
 
 var excludedRoutes = [...]string{"/api/searches", "/api/filters/:section/:view"}
@@ -92,4 +94,18 @@ func ExcludedRoute(route string) bool {
 
 func LogError(err error) {
 	os.Stderr.WriteString(err.Error() + "\n")
+}
+
+func Intersect(a []string, b []string) []string {
+	// intersect arrays and return []interface{}
+	result := intersect.Simple(a, b).([]interface{})
+
+	// iterate over []interface{}
+	s := make([]string, len(result))
+	for i, v := range result {
+		s[i] = fmt.Sprint(v)
+	}
+
+	// return []string result
+	return s
 }
