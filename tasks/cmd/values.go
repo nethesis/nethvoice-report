@@ -34,7 +34,7 @@
 	 "github.com/spf13/cobra"
 
 	 "github.com/nethesis/nethvoice-report/api/cache"
-	 //"github.com/nethesis/nethvoice-report/api/configuration"
+	 "github.com/nethesis/nethvoice-report/api/configuration"
 	 "github.com/nethesis/nethvoice-report/api/models"
 	 "github.com/nethesis/nethvoice-report/api/source"
 	 "github.com/nethesis/nethvoice-report/tasks/helper"
@@ -58,8 +58,7 @@ func init() {
 // Entry point for "values" command
 func executeReportValues() {
 	// define values path
-	//valuesPath := configuration.Config.Values
-	valuesPath := "/opt/nethvoice-report/api/values"
+	valuesPath := configuration.Config.Values
 
 	// define filter
 	var valuesFilter models.Filter
