@@ -30,9 +30,13 @@
         "default_filter": \{
           "queues": [],
           "groups": [],
-          "time": \{
-            "time_range": "day",
-            "value": "1"
+	  "time": \{
+            "group": "",
+            "division": "",
+            "interval": \{
+                "start": "",
+                "end": ""
+            \}
           \},
           "name": "",
           "agent": "",
