@@ -1,3 +1,6 @@
+# precalculate phonebook numbers during night
+39 23 * * *     asterisk /opt/nethvoice-report/tasks/tasks phonebook
+
 # precalculate filter values during night
 49 23 * * *     asterisk /opt/nethvoice-report/tasks/tasks values
 
