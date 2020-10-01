@@ -40,12 +40,20 @@ type Configuration struct {
 		Name     string `json:"name"`
 		Password string `json:"password"`
 	} `json:"queue_database"`
+	PhonebookDatabase struct {
+                Host     string `json:"host"`
+                Port     string `json:"port"`
+                User     string `json:"user"`
+                Name     string `json:"name"`
+                Password string `json:"password"`
+        } `json:"phonebook_database"`
 	ListenAddress          string          `json:"listen_address"`
 	RedisAddress           string          `json:"redis_address"`
 	TTLCache               int             `json:"ttl_cache"`
 	Secret                 string          `json:"secret"`
 	QueryPath              string          `json:"query_path"`
 	ValuesPath             string          `json:"values_path"`
+	PhonebookPath          string          `json:"phonebook_path"`
 	UserAuthorizationsFile string          `json:"user_auth_file"`
 	DefaultFilter          models.Filter   `json:"default_filter"`
 	APIKey                 string          `json:"api_key"`
