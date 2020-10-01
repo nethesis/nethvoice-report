@@ -37,8 +37,10 @@ type Filter struct {
 	Time struct {
 		Group    string `json:"group"`
 		Division string `json:"division"`
-		Start    string `json:"start"`
-		End      string `json:"end"`
+		Interval struct {
+			Start string `json:"start"`
+			End   string `json:"end"`
+		} `json:"interval"`
 	} `json:"time"`
 
 	Caller   string `json:"caller"`
