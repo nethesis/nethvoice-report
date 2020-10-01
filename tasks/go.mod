@@ -6,7 +6,7 @@ require (
 	github.com/briandowns/spinner v1.11.1
 	github.com/fatih/color v1.9.0
 	github.com/gin-gonic/gin v1.6.3
-	github.com/nethesis/nethvoice-report/api v0.0.0-20200930140103-02c4939a9619
+	github.com/nethesis/nethvoice-report/api v0.0.0-20201001093927-57057844294c
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.0.0
 	github.com/spf13/viper v1.7.1

@@ -74,6 +74,11 @@ func main() {
 			filters.GET("", methods.GetDefaultFilter)
 		}
 
+		phonebook := api.Group("/phonebook")
+		{
+			phonebook.GET("", methods.GetPhonebook)
+		}
+
 		queryTree := api.Group("/query_tree")
 		{
 			queryTree.GET("", methods.GetQueryTree)
