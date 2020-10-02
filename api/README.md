@@ -111,7 +111,7 @@
             },
             "name":"company_name",
             "agent":"agent_name",
-            "null_call":true
+            "nullCall":true
          }
       }
     ]
@@ -142,7 +142,7 @@
       },
       "name":"Edoardo Override",
       "agent":"5555 override",
-      "null_call":true
+      "nullCall":true
     }
   }
   ```

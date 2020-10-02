@@ -1,15 +1,15 @@
 <template lang="html">
 <div>
-  Data agent
+  Data summary
 </div>
 </template>
 
 <script>
 export default {
-  name: 'DataAgent',
+  name: 'DataSummary',
   mounted() {
     this.$root.$on('applyFilters', filter => {
-      console.log("[DataAgent.vue] applyFilters event handler", filter); ////
+      console.log("[DataSummary.vue] applyFilters event handler", filter); ////
     });
   },
   beforeRouteLeave(to, from, next) {

@@ -44,8 +44,8 @@ type Filter struct {
 	} `json:"time"`
 
 	Caller   string `json:"caller"`
-	Name     string `json:"name"`
-	NullCall bool   `json:"null_call"`
+	Name     string `json:"contactName"`
+	NullCall bool   `json:"nullCall"`
 }
 
 type Search struct {

@@ -29,6 +29,8 @@
     <sui-menu-item :active="isActive('data', true)">
       <sui-menu-header>{{$t("menu.data")}}</sui-menu-header>
       <sui-menu-menu>
+        <span v-show="isTag('/queue/data/summary')" class="press-enter dot-small"></span>
+        <router-link size="big" is="sui-menu-item" :active="isActive('/queue/data/summary')" to="/queue/data/summary">{{$t("data.summary")}}</router-link>
         <span v-show="isTag('/queue/data/agent')" class="press-enter dot-small"></span>
         <router-link size="big" is="sui-menu-item" :active="isActive('/queue/data/agent')" to="/queue/data/agent">{{$t("data.by_agent")}}</router-link>
         <span v-show="isTag('/queue/data/session')" class="press-enter dot-small"></span>

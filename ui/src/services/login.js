@@ -2,19 +2,19 @@ var LoginService = {
   methods: {
     execLogin(body, success, error) {
       this.$http
-        .post(this.$root.api_scheme + this.$root.api_host + "/api/login", body)
+        .post(this.$root.apiScheme + this.$root.apiEndpoint + "/login", body)
         .then(success, error);
     },
     execLogout(success, error) {
       this.$http
         .post(
-          this.$root.api_scheme + this.$root.api_host + "/api/logout",
+          this.$root.apiScheme + this.$root.apiEndpoint + "/logout",
           {},
           {
             headers: {
               Authorization:
                 "Bearer " +
-                  (this.get("loggedUser") && this.get("loggedUser").token) ||
+                (this.get("loggedUser") && this.get("loggedUser").token) ||
                 "",
             },
           }
@@ -24,7 +24,7 @@ var LoginService = {
     execRefresh(success, error) {
       this.$http
         .get(
-          this.$root.api_scheme + this.$root.api_host + "/api/refresh_token",
+          this.$root.apiScheme + this.$root.apiEndpoint + "/refresh_token",
           {
             headers: {
               Authorization:

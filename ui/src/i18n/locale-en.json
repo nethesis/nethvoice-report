@@ -16,6 +16,7 @@
       "show_filters": "Show filters"
     },
     "data": {
+      "summary": "Summary",
       "by_agent": "By Agent",
       "by_session": "By Session",
       "by_caller": "By Caller",

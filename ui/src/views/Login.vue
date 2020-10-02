@@ -57,6 +57,7 @@ export default {
 
           // extract loggedUser info
           var loggedUser = success.body;
+          loggedUser.username = this.username;
 
           // save to localstorage
           this.set("loggedUser", loggedUser);
@@ -72,7 +73,7 @@ export default {
           this.error = true;
 
           // print error
-          console.error(error.body.message);
+          console.error(error.body);
         }
       );
     }

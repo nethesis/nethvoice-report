@@ -43,7 +43,7 @@ export default {
     document.body.classList.add('hide');
 
     // check token validity and refresh
-    this.execRefresh(() => { // success
+    this.execRefresh(() => {
         this.isLogged = true;
         document.body.classList.add('show');
       },
@@ -103,5 +103,9 @@ export default {
       color: #42b983;
     }
   }
+}
+
+.mg-right-sm {
+  margin-right: 1rem !important;
 }
 </style>

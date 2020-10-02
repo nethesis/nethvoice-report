@@ -27,9 +27,11 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
-	"html/template"
 	"net/http"
 	"os"
+	"path"
+	"strings"
+	"text/template"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -93,7 +95,7 @@ func GetQueueReports(c *gin.Context) {
 	}
 
 	// parse template
-	q, _ := template.ParseFiles(queryFile)
+	q := template.Must(template.New(path.Base(queryFile)).Funcs(template.FuncMap{"StringsJoin": strings.Join}).ParseFiles(queryFile))
 
 	// compile query with filter object
 	var queryString bytes.Buffer
