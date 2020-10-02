@@ -30,6 +30,8 @@ import CDRDashboard from "../views/cdr/Dashboard.vue";
 Vue.use(VueRouter);
 
 const routes = [
+  { path: "/", redirect: "/queue" },
+
   /* Queue views*/
   {
     path: "/queue",

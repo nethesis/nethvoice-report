@@ -143,7 +143,6 @@ export default {
 
           // change route
           this.$parent.didLogout();
-          this.$router.push("/");
         },
         (error) => {
           // print error
