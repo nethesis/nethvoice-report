@@ -50,7 +50,7 @@
         </sui-form-field>
         <sui-form-field width="four">
           <label>Date start/end</label>
-          <v-date-picker mode="range" v-model="filter.time.interval" />
+          <v-date-picker mode="range" v-model="filter.time.interval" :available-dates='{ start: null, end: new Date() }'/>
         </sui-form-field>
         <sui-form-field width="four">
           <label>Group by time</label>

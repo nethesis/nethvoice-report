@@ -57,11 +57,11 @@
             <sui-form-fields>
               <sui-form-field>
                 <label>Office hour start</label>
-                <vue-timepicker v-model="officeHourStart"></vue-timepicker>
+                <vue-timepicker :minute-interval="5" v-model="officeHourStart"></vue-timepicker>
               </sui-form-field>
               <sui-form-field>
                 <label>Office hour end</label>
-                <vue-timepicker v-model="officeHourEnd"></vue-timepicker>
+                <vue-timepicker :minute-interval="5" v-model="officeHourEnd"></vue-timepicker>
               </sui-form-field>
             </sui-form-fields>
           </sui-form>
