@@ -124,8 +124,8 @@ const routes = [
     meta: {
       name: "menu.performance",
       parent: "performance",
-      section: "",
-      view: "performance",
+      section: "performance",
+      view: "default",
       tags: ["performance"],
     },
   },
