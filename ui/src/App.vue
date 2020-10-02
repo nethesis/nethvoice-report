@@ -46,12 +46,10 @@ export default {
     this.execRefresh(() => {
         this.isLogged = true;
         document.body.classList.add('show');
-
-        // console.log("execRefresh success"); ////
       },
       () => { // error
         this.isLogged = false;
-        document.body.classList.add('show'); //// redundant navigation
+        document.body.classList.add('show');
       })
   },
   data() {
@@ -62,8 +60,6 @@ export default {
   methods: {
     didLogin() {
       this.isLogged = true;
-
-      console.log("didLogin"); ////
     },
     didLogout() {
       this.isLogged = false;

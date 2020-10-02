@@ -1,6 +1,7 @@
 <template>
   <div>
-    <sui-form class="filters-form">
+    <sui-loader v-if="loader.filter" active centered inline />
+    <sui-form v-else class="filters-form">
       <sui-form-fields v-if="savedSearches.length">
         <sui-form-field width="six">
           <sui-dropdown
@@ -22,7 +23,7 @@
         </sui-form-field>
       </sui-form-fields>
 
-      <sui-form-fields>
+      <sui-form-fields v-if="showFilterTime">
         <sui-form-field width="six">
           <label>Time interval</label>
           <sui-button-group class="fluid">
@@ -50,125 +51,6 @@
           <label>Date start/end</label>
           <v-date-picker mode="range" v-model="filter.time.interval" />
         </sui-form-field>
-      </sui-form-fields>
-
-      <sui-form-fields>
-        <sui-form-field width="four">
-          <label>Agent</label>
-          <sui-dropdown
-            multiple
-            :options="agents"
-            placeholder="Agent"
-            search
-            selection
-            v-model="filter.agents"
-          />
-        </sui-form-field>
-        <sui-form-field width="four">
-          <label>Groups</label>
-          <sui-dropdown
-            multiple
-            :options="groups"
-            placeholder="Groups"
-            search
-            selection
-            v-model="filter.groups"
-          />
-        </sui-form-field>
-        <sui-form-field width="four">
-          <label>Queues</label>
-          <sui-dropdown
-            multiple
-            :options="queues"
-            placeholder="Queues"
-            search
-            selection
-            v-model="filter.queues"
-          />
-        </sui-form-field>
-        <sui-form-field width="four">
-          <label>IVRs</label>
-          <sui-dropdown
-            multiple
-            :options="ivrs"
-            placeholder="IVRs"
-            search
-            selection
-            v-model="filter.ivrs"
-          />
-        </sui-form-field>
-      </sui-form-fields>
-
-      <sui-form-fields>
-        <sui-form-field width="four">
-          <label>Reasons</label>
-          <sui-dropdown
-            multiple
-            :options="reasons"
-            placeholder="Reasons"
-            search
-            selection
-            v-model="filter.reasons"
-          />
-        </sui-form-field>
-        <sui-form-field width="four">
-          <label>Actions</label>
-          <sui-dropdown
-            multiple
-            :options="actions"
-            placeholder="Actions"
-            search
-            selection
-            v-model="filter.actions"
-          />
-        </sui-form-field>
-        <sui-form-field width="four">
-          <label>Results</label>
-          <sui-dropdown
-            multiple
-            :options="results"
-            placeholder="Results"
-            search
-            selection
-            v-model="filter.results"
-          />
-        </sui-form-field>
-        <sui-form-field width="four">
-          <label>Choices</label>
-          <sui-dropdown
-            multiple
-            :options="choices"
-            placeholder="Choices"
-            search
-            selection
-            v-model="filter.choices"
-          />
-        </sui-form-field>
-      </sui-form-fields>
-
-      <sui-form-fields>
-        <sui-form-field width="four">
-          <label>Destinations</label>
-          <sui-dropdown
-            multiple
-            :options="destinations"
-            placeholder="Destinations"
-            search
-            selection
-            v-model="filter.destinations"
-          />
-        </sui-form-field>
-        <sui-form-field width="four">
-          <label>Origins</label>
-          <sui-dropdown
-            multiple
-            :options="origins"
-            placeholder="Origins"
-            search
-            selection
-            v-model="filter.origins"
-          />
-        </sui-form-field>
         <sui-form-field width="four">
           <label>Group by time</label>
           <sui-dropdown
@@ -179,7 +61,115 @@
             v-model="filter.time.group"
           />
         </sui-form-field>
-        <sui-form-field width="four">
+      </sui-form-fields>
+
+      <sui-form-fields>
+        <sui-form-field v-if="showFilterAgent" width="four">
+          <label>Agent</label>
+          <sui-dropdown
+            multiple
+            :options="agents"
+            placeholder="Agent"
+            search
+            selection
+            v-model="filter.agents"
+          />
+        </sui-form-field>
+        <sui-form-field v-if="showFilterGroup" width="four">
+          <label>Groups</label>
+          <sui-dropdown
+            multiple
+            :options="groups"
+            placeholder="Groups"
+            search
+            selection
+            v-model="filter.groups"
+          />
+        </sui-form-field>
+        <sui-form-field v-if="showFilterQueue" width="four">
+          <label>Queues</label>
+          <sui-dropdown
+            multiple
+            :options="queues"
+            placeholder="Queues"
+            search
+            selection
+            v-model="filter.queues"
+          />
+        </sui-form-field>
+      </sui-form-fields>
+
+      <sui-form-fields>
+        <sui-form-field v-if="showFilterReason" width="four">
+          <label>Reasons</label>
+          <sui-dropdown
+            multiple
+            :options="reasons"
+            placeholder="Reasons"
+            search
+            selection
+            v-model="filter.reasons"
+          />
+        </sui-form-field>
+        <sui-form-field v-if="showFilterResult" width="four">
+          <label>Results</label>
+          <sui-dropdown
+            multiple
+            :options="results"
+            placeholder="Results"
+            search
+            selection
+            v-model="filter.results"
+          />
+        </sui-form-field>
+        <sui-form-field v-if="showFilterIvr" width="four">
+          <label>IVR</label>
+          <sui-dropdown
+            multiple
+            :options="ivrs"
+            placeholder="IVR"
+            search
+            selection
+            v-model="filter.ivrs"
+          />
+        </sui-form-field>
+        <sui-form-field v-if="showFilterChoice" width="four">
+          <label>IVR choices</label>
+          <sui-dropdown
+            multiple
+            :options="choices"
+            placeholder="IVR choices"
+            search
+            selection
+            v-model="filter.choices"
+          />
+        </sui-form-field>
+      </sui-form-fields>
+
+      <sui-form-fields>
+        <sui-form-field v-if="showFilterOrigin" width="four">
+          <label>Origins</label>
+          <sui-dropdown
+            multiple
+            :options="origins"
+            placeholder="Origins"
+            search
+            selection
+            v-model="filter.origins"
+          />
+        </sui-form-field>
+        <sui-form-field v-if="showFilterDestination" width="four">
+          <label>Destinations</label>
+          <sui-dropdown
+            multiple
+            :options="destinations"
+            placeholder="Destinations"
+            search
+            selection
+            v-model="filter.destinations"
+          />
+        </sui-form-field>
+        <sui-form-field v-if="showFilterTimeSplit" width="four">
           <label>Split by time</label>
           <sui-dropdown
             :options="splitByTimeValues"
@@ -192,27 +182,23 @@
       </sui-form-fields>
 
       <sui-form-fields>
-        <sui-form-field width="four">
+        <sui-form-field v-if="showFilterCaller" width="four">
           <label>Caller</label>
-          <sui-dropdown
-            :options="callers"
-            placeholder="Caller"
-            search
-            selection
-            v-model="filter.caller"
+          <sui-input placeholder="Caller" v-model="filter.caller" />
+        </sui-form-field>
+        <sui-form-field v-if="showFilterContactName" width="four">
+          <label>Contact name / Company</label>
+          <sui-search
+            :searchFields="['title', 'cleanName']"
+            :source="phoneBook"
+            ref="filterContactName"
+            placeholder="Contact name / Company"
+            :fullTextSearch="'exact'"
+            :maxResults="20"
+            class="searchContactName"
           />
         </sui-form-field>
-        <sui-form-field width="four">
-          <label>Contact name</label>
-          <sui-dropdown
-            :options="contactNames"
-            placeholder="Contact name"
-            search
-            selection
-            v-model="filter.contactName"
-          />
-        </sui-form-field>
-        <sui-form-field width="four">
+        <sui-form-field v-if="showFilterNullCall" width="four">
           <label>Null call</label>
           <sui-checkbox label toggle v-model="filter.nullCall" />
         </sui-form-field>
@@ -321,14 +307,23 @@ import LoginService from "../services/login";
 import StorageService from "../services/storage";
 import SearchesService from "../services/searches";
 import UtilService from "../services/utils";
+import SearchService from "../services/searches";
+import PhonebookService from "../services/phonebook";
 
 export default {
   name: "Filters",
-  mixins: [LoginService, StorageService, SearchesService, UtilService],
+  mixins: [
+    LoginService,
+    StorageService,
+    SearchesService,
+    UtilService,
+    SearchService,
+    PhonebookService,
+  ],
   data() {
     return {
       showFilters: true,
-      title: this.$i18n.t(this.$route.meta.name) || "", ////
+      title: this.$i18n.t(this.$route.meta.name) || "", //// i18n
       selectedSearch: null,
       filter: {
         queues: [],
@@ -336,9 +331,9 @@ export default {
         agents: [],
         ivrs: [],
         reasons: [],
-        actions: [],
         results: [],
         choices: [],
+        allChoices: [],
         destinations: [],
         origins: [],
         time: {
@@ -355,67 +350,25 @@ export default {
       },
       selectedTimeType: "",
       savedSearches: [],
-      queues: [
-        { value: "200", text: "200" },
-        { value: "201", text: "201" },
-        { value: "300", text: "300" },
-      ],
-      groups: [
-        { value: "development", text: "Development" },
-        { value: "support", text: "Support" },
-        { value: "marketing", text: "Marketing" },
-      ],
-      agents: [
-        { value: "Agent 1", text: "Agent 1" },
-        { value: "Agent 2", text: "Agent 2" },
-        { value: "Agent 3", text: "Agent 3" },
-      ],
-      ivrs: [
-        { value: "IVR 1", text: "IVR 1" },
-        { value: "IVR 2", text: "IVR 2" },
-        { value: "IVR 3", text: "IVR 3" },
-      ],
-      reasons: [
-        { value: "Reason 1", text: "Reason 1" },
-        { value: "Reason 2", text: "Reason 2" },
-      ],
-      actions: [
-        { value: "Action 1", text: "Action 1" },
-        { value: "Action 2", text: "Action 2" },
-      ],
-      results: [
-        { value: "Results 1", text: "Results 1" },
-        { value: "Results 2", text: "Results 2" },
-      ],
-      choices: [
-        { value: "Choices 1", text: "Choices 1" },
-        { value: "Choices 2", text: "Choices 2" },
-      ],
-      destinations: [
-        { value: "Destinations 1", text: "Destinations 1" },
-        { value: "Destinations 2", text: "Destinations 2" },
-      ],
-      origins: [
-        { value: "Origins 1", text: "Origins 1" },
-        { value: "Origins 2", text: "Origins 2" },
-      ],
-      callers: [
-        { value: "", text: "-" },
-        { value: "Caller 1", text: "Caller 1" },
-        { value: "Caller 2", text: "Caller 2" },
-      ],
-      contactNames: [
-        { value: "", text: "-" },
-        { value: "Contact 1", text: "Contact 1" },
-        { value: "Contact 2", text: "Contact 2" },
-      ],
+      queues: [],
+      groups: [],
+      agents: [],
+      ivrs: [],
+      reasons: [],
+      results: [],
+      choices: [],
+      destinations: [],
+      origins: [],
+      callers: [],
+      contactNames: [],
       openSaveSearchModal: false,
       openOverwriteSearchModal: false,
       openDeleteSearchModal: false,
       newSearchName: "",
-      errorNewSearch: false, ////
-      errorMessage: "", ////
+      errorNewSearch: false,
+      errorMessage: "",
       loader: {
+        filter: false,
         saveSearch: false,
         deleteSearch: false,
       },
@@ -433,21 +386,21 @@ export default {
         { value: "30", text: "30 minutes" },
         { value: "60", text: "1 hour" },
       ],
+      phoneBook: [],
+      queueReportViewFilterMap: null,
     };
   },
   watch: {
     filter: function () {
       console.log("watch filter", this.filter); ////
     },
-    // $route: function () { ////
-    //   console.log("$route", this.$route); ////
-
-    //   this.getSavedSearches();
-    // },
     selectedSearch: function () {
-      //// needed?
       console.log("watch selectedSearch", this.selectedSearch); ////
       this.setFilterValuesFromSearch();
+    },
+    "filter.ivrs": function () {
+      console.log("watch filter.ivrs", this.filter.ivrs); ////
+      this.updateIvrChoices();
     },
     "filter.reasons": function () {
       console.log("watch filter.reasons", this.filter.reasons); ////
@@ -514,15 +467,167 @@ export default {
     selectedTimeType: function () {
       console.log("watch selectedTimeType", this.selectedTimeType); ////
     },
+    "filter.contactName": function () {
+      console.log("watch filter.contactName", this.filter.contactName); ////
+    },
   },
   mounted() {
     this.getSavedSearches();
 
-    // console.log("this.$route.path", this.$route.path); ////
+    //// todo check if filter is present in local storage
+    this.retrieveDefaultFilter();
+    this.retrievePhonebook();
   },
   methods: {
     toggleFilters: function () {
       this.showFilters = !this.showFilters;
+    },
+    retrieveDefaultFilter() {
+      this.getDefaultFilter(
+        this.$route.meta.section,
+        this.$route.meta.view,
+        (success) => {
+          console.log("getDefaultFilter", success.body.filter); ////
+          this.defaultFilter = success.body.filter;
+
+          // queues
+          if (this.defaultFilter.queues) {
+            let queues = this.defaultFilter.queues.map((queue) => {
+              return { value: queue, text: queue };
+            });
+            this.queues = queues.sort(this.sortByProperty("text"));
+          }
+
+          // agents
+          if (this.defaultFilter.agents) {
+            let agents = this.defaultFilter.agents.map((agent) => {
+              return { value: agent, text: agent };
+            });
+            this.agents = agents.sort(this.sortByProperty("text"));
+          }
+
+          // groups
+          if (this.defaultFilter.groups) {
+            let groups = this.defaultFilter.groups.map((group) => {
+              return { value: group, text: group };
+            });
+            this.groups = groups.sort(this.sortByProperty("text"));
+          }
+
+          // ivr
+          if (this.defaultFilter.ivrs) {
+            let ivrs = this.defaultFilter.ivrs.map((ivr) => {
+              const tokens = ivr.split(",");
+              const idIvr = tokens[0];
+              const ivrName = tokens[1];
+              return { value: ivrName, text: ivrName, id: idIvr };
+            });
+            this.ivrs = ivrs.sort(this.sortByProperty("text"));
+          }
+
+          // choices: hide duplicates
+          if (this.defaultFilter.choices) {
+            this.allChoices = [];
+            let choiceSet = new Set();
+            this.defaultFilter.choices.forEach((choice) => {
+              const tokens = choice.split(",");
+              const idIvr = tokens[0];
+              const choiceName = tokens[1];
+              this.allChoices.push({
+                value: choiceName,
+                text: choiceName,
+                idIvr: idIvr,
+              });
+              choiceSet.add(choiceName);
+            });
+
+            let choices = [];
+            choiceSet.forEach((choice) => {
+              choices.push({ value: choice, text: choice });
+            });
+
+            this.choices = choices.sort(this.sortByProperty("text"));
+          }
+
+          // reasons
+          if (this.defaultFilter.reasons) {
+            let reasons = this.defaultFilter.reasons.map((reason) => {
+              return { value: reason, text: reason };
+            });
+            this.reasons = reasons.sort(this.sortByProperty("text"));
+          }
+
+          // results
+          if (this.defaultFilter.results) {
+            let results = this.defaultFilter.results.map((result) => {
+              return { value: result, text: result };
+            });
+            this.results = results.sort(this.sortByProperty("text"));
+          }
+
+          // origins
+          if (this.defaultFilter.origins) {
+            let districtSet = new Set();
+            let provinceSet = new Set();
+            let regionSet = new Set();
+
+            this.defaultFilter.origins.forEach((origin) => {
+              const tokens = origin.split(",");
+              districtSet.add(tokens[0]);
+              provinceSet.add(tokens[1]);
+              regionSet.add(tokens[2]);
+            });
+
+            let districts = [];
+            districtSet.forEach((district) => {
+              districts.push({
+                value: "district_" + district,
+                text: district + " (District)",
+              }); //// i18n
+            });
+
+            let provinces = [];
+            provinceSet.forEach((province) => {
+              provinces.push({
+                value: "province_" + province,
+                text: province + " (Province)",
+              }); //// i18n
+            });
+
+            let regions = [];
+            regionSet.forEach((region) => {
+              regions.push({
+                value: "region_" + region,
+                text: region + " (Region)",
+              }); //// i18n
+            });
+
+            this.origins = districts
+              .concat(provinces)
+              .concat(regions)
+              .sort(this.sortByProperty("text"));
+          }
+
+          // destinations
+          if (this.defaultFilter.destinations) {
+            let destinations = this.defaultFilter.destinations.map(
+              (destination) => {
+                return { value: destination, text: destination };
+              }
+            );
+            this.destinations = destinations.sort(this.sortByProperty("text"));
+          }
+
+          // time
+          this.filter.time = this.defaultFilter.time; //// test with group and division too
+
+          // null call
+          this.filter.nullCall = this.defaultFilter.nullCall;
+        },
+        (error) => {
+          console.error(error.body);
+        }
+      );
     },
     getSavedSearches(searchToSelect) {
       this.getSearches(
@@ -585,26 +690,6 @@ export default {
 
       // set filter values
       this.filter = search.filter;
-
-      // this.filter.selectedQueues = search.filter.queues; ////
-      // this.filter.groups = search.filter.groups;
-      // this.filter.selectedAgents = search.filter.agents;
-      // this.filter.ivrs = search.filter.ivrs;
-      // this.filter.reasons = search.filter.reasons;
-      // this.filter.actions = search.filter.actions;
-      // this.filter.results = search.filter.results;
-      // this.filter.choices = search.filter.choices;
-      // this.filter.destinations = search.filter.destinations;
-      // this.filter.origins = search.filter.origins;
-
-      // this.filter.time.group = search.filter.time.group;
-      // this.filter.time.division = search.filter.time.division;
-      // this.filter.time.start = search.filter.time.start;
-      // this.filter.time.end = search.filter.time.end;
-
-      // this.filter.caller = search.filter.caller;
-      // this.filter.contactName = search.filter.name;
-      // this.filter.nullCall = search.filter.nullCall;
     },
     getToday() {
       const today = new Date();
@@ -646,6 +731,8 @@ export default {
       return result;
     },
     applyFilters() {
+      console.log("searchhhh", this.$refs.filterContactName.$el.textContent); ////
+
       this.$root.$emit("applyFilters", this.filter);
 
       console.log("applyFilters emitted", this.filter); ////
@@ -713,9 +800,6 @@ export default {
         this.filter.time.interval.end
       );
 
-      // filterToSave.time.interval.start = this.filter.time.interval.start.toUTCString(); ////
-      // filterToSave.time.interval.end = this.filter.time.interval.end.toUTCString();
-
       console.log("saving", searchName, filterToSave); ////
 
       this.createSearch(
@@ -772,8 +856,73 @@ export default {
         }
       );
     },
-    showOverwriteButton() {
-      //// asdf
+    updateIvrChoices() {
+      // show only IVR choices related to selected IVRs
+
+      let selectedIvrs = this.filter.ivrs;
+
+      if (this.filter.ivrs.length == 0) {
+        // selecting no IVR is the same as selecting all of them
+        selectedIvrs = this.ivrs.map((ivr) => {
+          return ivr.value;
+        });
+      }
+
+      let relatedChoiceValues = new Set();
+
+      selectedIvrs.forEach((selectedIvr) => {
+        const ivr = this.ivrs.find((i) => {
+          return i.value == selectedIvr;
+        });
+
+        // find related IVR choices
+        let relatedChoices = this.allChoices.filter((choice) => {
+          return choice.idIvr == ivr.id;
+        });
+
+        // add to set to avoid duplicates in choices dropdown
+        relatedChoices.forEach((choice) => {
+          relatedChoiceValues.add(choice.value);
+        });
+      });
+
+      // create array of objects for choices dropdow
+      let choices = Array.from(relatedChoiceValues).map((choiceName) => {
+        return { value: choiceName, text: choiceName };
+      });
+      this.choices = choices.sort(this.sortByProperty("text"));
+
+      console.log("this.choices", this.choices); ////
+    },
+    retrievePhonebook() {
+      this.getPhonebook(
+        (success) => {
+          // console.log("success.body", success.body); ////
+
+          const phoneBook = success.body;
+
+          console.log("phoneBook len", Object.keys(success.body).length); ////
+
+          this.phoneBook = [];
+          for (const [contactName, contactPhones] of Object.entries(
+            phoneBook
+          )) {
+            const cleanName = contactName
+              .replace(/[^a-zA-Z0-9]/g, "")
+              .toLowerCase();
+            this.phoneBook.push({
+              title: contactName,
+              phones: contactPhones,
+              cleanName: cleanName,
+            });
+          }
+
+          console.log("this.phoneBook", this.phoneBook); ////
+        },
+        (error) => {
+          console.error(error.body);
+        }
+      );
     },
     doLogout() {
       this.execLogout(
@@ -793,10 +942,47 @@ export default {
     },
   },
   computed: {
-    toggleFiltersPopup: function () {
-      return this.showFilters
-        ? this.$i18n.t("menu.hide_filters")
-        : this.$i18n.t("menu.show_filters");
+    showFilterTime: function () {
+      return this.isFilterInView("time");
+    },
+    showFilterTimeSplit: function () {
+      return this.isFilterInView("timeSplit");
+    },
+    showFilterAgent: function () {
+      return this.isFilterInView("agent");
+    },
+    showFilterGroup: function () {
+      return this.isFilterInView("group");
+    },
+    showFilterQueue: function () {
+      return this.isFilterInView("queue");
+    },
+    showFilterReason: function () {
+      return this.isFilterInView("reason");
+    },
+    showFilterResult: function () {
+      return this.isFilterInView("result");
+    },
+    showFilterIvr: function () {
+      return this.isFilterInView("ivr");
+    },
+    showFilterChoice: function () {
+      return this.isFilterInView("choice");
+    },
+    showFilterOrigin: function () {
+      return this.isFilterInView("origin");
+    },
+    showFilterDestination: function () {
+      return this.isFilterInView("destination");
+    },
+    showFilterCaller: function () {
+      return this.isFilterInView("caller");
+    },
+    showFilterContactName: function () {
+      return this.isFilterInView("contactName");
+    },
+    showFilterNullCall: function () {
+      return this.isFilterInView("nullCall");
     },
   },
 };
@@ -842,5 +1028,10 @@ export default {
 
 .component-head-menu {
   margin: 3rem 0rem 0rem !important;
+}
+
+.searchContactName > .results {
+  overflow: auto;
+  max-height: 300px;
 }
 </style>

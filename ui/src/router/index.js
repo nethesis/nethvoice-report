@@ -4,6 +4,7 @@ import VueRouter from "vue-router";
 /* Queue views */
 import QueueDashboard from "../views/queue/Dashboard.vue";
 
+import QueueDataSummary from "../views/queue/DataSummary.vue";
 import QueueDataAgent from "../views/queue/DataAgent.vue";
 import QueueDataSession from "../views/queue/DataSession.vue";
 import QueueDataCaller from "../views/queue/DataCaller.vue";
@@ -40,6 +41,18 @@ const routes = [
       section: "dashboard",
       view: "default",
       tags: ["dashboard"],
+    },
+  },
+  {
+    path: "/queue/data/summary",
+    name: "QueueDataSummary",
+    component: QueueDataSummary,
+    meta: {
+      name: "data.summary",
+      parent: "data",
+      section: "data",
+      view: "summary",
+      tags: ["summary"],
     },
   },
   {

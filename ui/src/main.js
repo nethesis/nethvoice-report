@@ -34,41 +34,6 @@ new Vue({
     this.apiScheme = "http://"; //window.location.protocol + "//"; ////
     this.currentLocale = langConf.locale;
     this.currentView = "";
-    // this.filter = { ////
-    //   "queues": [],
-    //   "groups": [],
-    //   "agents": [],
-    //   "ivrs": [],
-    //   "reasons": [],
-    //   "actions": [],
-    //   "results": [],
-    //   "choices": [],
-    //   "destinations": [],
-    //   "origins": [],
-    //   "time": {
-    //     "group": "",
-    //     "division": "",
-    //     "start": "",
-    //     "end": "",
-    //   },
-    //   "caller": "",
-    //   "name": "",
-    //   "nullCall": false
-    // };
-
-    // this.$root.$on('applyFilters', (newFilter) => { ////
-    //   console.log("applyFilters event handler", newFilter); ////
-
-    //   newFilter.agents = ["0721"]; ////
-
-    //   this.execQuery(newFilter, "data", "agent", "graph_call_distribution_per_queue",
-    //     (success) => {
-    //       console.log("success", success); ////
-    //     },
-    //     (error) => {
-    //       console.error(error.body);
-    //     }); ////
-    // });
   },
   render: (h) => h(App),
 }).$mount("#app");

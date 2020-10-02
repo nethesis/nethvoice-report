@@ -38,7 +38,7 @@ export default {
   mounted() {
     console.log("mounted Dashboard"); ////
 
-    this.retrieveQueryTree();
+    this.retrieveQueryTree(); ////
   },
   beforeRouteLeave(to, from, next) {
     this.$root.$off("applyFilters");
@@ -62,54 +62,30 @@ export default {
 
       console.log("graphNames", this.graphNames); ////
 
-      var filter = {
-        //// where should it be retrieved? local storage?
-        queues: [],
-        groups: [],
-        agents: [],
-        ivrs: [],
-        reasons: [],
-        actions: [],
-        results: [],
-        choices: [],
-        destinations: [],
-        origins: [],
-        time: {
-          group: "",
-          division: "",
-          start: null,
-          end: null,
-        },
-        caller: "",
-        contactName: "",
-        nullCall: false,
-      };
-      this.applyFilters(filter);
+      // var filter = { ////
+      //   //// where should it be retrieved? local storage?
+      //   queues: [],
+      //   groups: [],
+      //   agents: [],
+      //   ivrs: [],
+      //   reasons: [],
+      //   results: [],
+      //   choices: [],
+      //   destinations: [],
+      //   origins: [],
+      //   time: {
+      //     group: "",
+      //     division: "",
+      //     start: null,
+      //     end: null,
+      //   },
+      //   caller: "",
+      //   contactName: "",
+      //   nullCall: false,
+      // };
+      // this.applyFilters(filter);
 
       this.$root.$on("applyFilters", (filter) => {
-
-        // console.log("event: received filter", filter); ////
-
-        // let newFilter = { time: {} }; ////
-        // newFilter.queues = filter.selectedQueues;
-        // newFilter.groups = filter.groups;
-        // newFilter.agents = filter.selectedAgents;
-        // newFilter.ivrs = filter.ivrs;
-        // newFilter.reasons = filter.reasons;
-        // newFilter.action = filter.actions;
-        // newFilter.results = filter.results;
-        // newFilter.choices = filter.choices;
-        // newFilter.destinations = filter.destinations;
-        // newFilter.origins = filter.origins;
-        // newFilter.time.group = filter.time.group;
-        // newFilter.time.division = filter.time.division;
-        // newFilter.time.start = filter.time.start;
-        // newFilter.time.end = filter.time.end;
-        // newFilter.caller = filter.caller;
-        // newFilter.name = filter.contactName;
-        // newFilter.nullCall = filter.nullCall;
-        // this.applyFilters(newFilter);
-
         this.applyFilters(filter);
       });
     },
