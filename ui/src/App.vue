@@ -39,6 +39,7 @@ export default {
   },
   mixins: [LoginService, StorageService],
   mounted() {
+    document.title = this.$root.config.APP_NAME;
     // hide body
     document.body.classList.add('hide');
 
