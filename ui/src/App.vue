@@ -1,25 +1,25 @@
 <template>
-<div id="app">
-  <!-- handle popups -->
-  <portal-target name="semantic-ui-vue"></portal-target>
-  <!-- login view -->
-  <div v-if="!isLogged">
-    <Login />
-  </div>
-  <!-- end login view -->
-  <!-- logged view -->
-  <div v-if="isLogged">
-    <!-- start leftsidebar -->
-    <LeftSidebar />
-    <div class="docs-container">
-      <!-- start leftsidebar -->
-      <TopBar />
-      <!-- end topbar -->
-      <router-view />
+  <div id="app">
+    <!-- handle popups -->
+    <portal-target name="semantic-ui-vue"></portal-target>
+    <!-- login view -->
+    <div v-if="!isLogged">
+      <Login />
     </div>
+    <!-- end login view -->
+    <!-- logged view -->
+    <div v-if="isLogged">
+      <!-- start leftsidebar -->
+      <LeftSidebar />
+      <div class="docs-container">
+        <!-- start leftsidebar -->
+        <TopBar />
+        <!-- end topbar -->
+        <router-view />
+      </div>
+    </div>
+    <!-- end logged view -->
   </div>
-  <!-- end logged view -->
-</div>
 </template>
 
 <script>
@@ -41,17 +41,20 @@ export default {
   mounted() {
     document.title = this.$root.config.APP_NAME;
     // hide body
-    document.body.classList.add('hide');
+    document.body.classList.add("hide");
 
     // check token validity and refresh
-    this.execRefresh(() => {
+    this.execRefresh(
+      () => {
         this.isLogged = true;
-        document.body.classList.add('show');
+        document.body.classList.add("show");
       },
-      () => { // error
+      () => {
+        // error
         this.isLogged = false;
-        document.body.classList.add('show');
-      })
+        document.body.classList.add("show");
+      }
+    );
   },
   data() {
     return {
@@ -108,5 +111,9 @@ export default {
 
 .mg-right-sm {
   margin-right: 1rem !important;
+}
+
+.ui.multiple.search.dropdown > input.search {
+  width: 100% !important;
 }
 </style>
