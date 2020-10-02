@@ -467,9 +467,6 @@ export default {
         this.retrieveDefaultFilter();
       }
     },
-    toggleFilters: function () {
-      this.showFilters = !this.showFilters;
-    },
     retrieveDefaultFilter() {
       this.getDefaultFilter(
         this.$route.meta.section,

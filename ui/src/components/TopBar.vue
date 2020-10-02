@@ -57,11 +57,17 @@
             <sui-form-fields>
               <sui-form-field>
                 <label>Office hour start</label>
-                <vue-timepicker :minute-interval="5" v-model="officeHourStart"></vue-timepicker>
+                <vue-timepicker
+                  :minute-interval="5"
+                  v-model="officeHourStart"
+                ></vue-timepicker>
               </sui-form-field>
               <sui-form-field>
                 <label>Office hour end</label>
-                <vue-timepicker :minute-interval="5" v-model="officeHourEnd"></vue-timepicker>
+                <vue-timepicker
+                  :minute-interval="5"
+                  v-model="officeHourEnd"
+                ></vue-timepicker>
               </sui-form-field>
             </sui-form-fields>
           </sui-form>
@@ -109,6 +115,8 @@ export default {
     };
   },
   mounted() {
+    this.retrieveShowFilter();
+
     if (this.get("loggedUser") && this.get("loggedUser").username == "admin") {
       this.isAdmin = true;
     } else {
@@ -132,8 +140,19 @@ export default {
     },
   },
   methods: {
+    retrieveShowFilter() {
+      const showFilters = this.get("showFilters");
+
+      if (showFilters != null) {
+        this.showFilters = showFilters;
+      } else {
+        this.showFilters = true;
+      }
+      this.$forceUpdate();
+    },
     toggleFilters: function () {
       this.showFilters = !this.showFilters;
+      this.set("showFilters", this.showFilters);
     },
     doLogout() {
       this.execLogout(
