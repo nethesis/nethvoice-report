@@ -15,6 +15,7 @@
         </sui-form-field>
         <sui-form-field width="four">
           <sui-button
+            type="button"
             negative
             :disabled="!selectedSearch"
             @click.native="showDeleteSearchModal(true)"

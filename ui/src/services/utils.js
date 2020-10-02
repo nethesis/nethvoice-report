@@ -25,9 +25,13 @@ var UtilService = {
       }
     },
     isFilterInView(filter) {
-      return this.getQueueReportViewFilterMap()[this.$route.meta.section][
-        this.$route.meta.view
-      ].includes(filter);
+      if (this.$route.meta.section && this.$route.meta.view) {
+        return this.getQueueReportViewFilterMap()[this.$route.meta.section][
+          this.$route.meta.view
+        ].includes(filter);
+      } else {
+        return false;
+      }
     },
     getQueueReportViewFilterMap() {
       return {
