@@ -1,7 +1,7 @@
 <template>
   <div>
     <sui-loader v-if="loader.filter" active centered inline />
-    <sui-form v-else class="filters-form">
+    <sui-form v-else class="filters-form" @submit.prevent="applyFilters">
       <sui-form-fields v-if="savedSearches.length">
         <sui-form-field width="six">
           <sui-dropdown
@@ -50,7 +50,11 @@
         </sui-form-field>
         <sui-form-field width="four">
           <label>Date start/end</label>
-          <v-date-picker mode="range" v-model="filter.time.interval" :available-dates='{ start: null, end: new Date() }'/>
+          <v-date-picker
+            mode="range"
+            v-model="filter.time.interval"
+            :available-dates="{ start: null, end: new Date() }"
+          />
         </sui-form-field>
         <sui-form-field width="four">
           <label>Group by time</label>
@@ -205,11 +209,7 @@
         </sui-form-field>
       </sui-form-fields>
       <sui-form-fields>
-        <sui-button
-          primary
-          type="submit"
-          class="mg-right-sm"
-          @click="applyFilters()"
+        <sui-button primary type="submit" class="mg-right-sm"
           >Apply filters</sui-button
         >
         <sui-button type="button" @click.native="showSaveSearchModal(true)"
@@ -443,10 +443,15 @@ export default {
     },
   },
   mounted() {
-    this.getSavedSearches();
+    const filter = this.get("reportFilter");
 
-    //// todo check if filter is present in local storage
-    this.retrieveDefaultFilter();
+    if (filter) {
+      // set selected values in filter
+      this.setFilterSelection(filter);
+    } else {
+      this.retrieveDefaultFilter();
+    }
+    this.getSavedSearches();
     this.retrievePhonebook();
   },
   methods: {
@@ -588,16 +593,23 @@ export default {
             this.destinations = destinations.sort(this.sortByProperty("text"));
           }
 
-          // time
-          this.filter.time = this.defaultFilter.time; //// test with group and division too
+          // save filter to local storage
+          this.set("reportFilter", this.defaultFilter);
 
-          // null call
-          this.filter.nullCall = this.defaultFilter.nullCall;
+          // set selected values in filter
+          this.setFilterSelection(this.defaultFilter);
         },
         (error) => {
           console.error(error.body);
         }
       );
+    },
+    setFilterSelection(filter) {
+      // time
+      this.filter.time = filter.time; //// test with group and division too
+
+      // null call
+      this.filter.nullCall = filter.nullCall;
     },
     getSavedSearches(searchToSelect) {
       this.getSearches(
@@ -695,6 +707,8 @@ export default {
       return result;
     },
     applyFilters() {
+      // save filter to local storage
+      this.set("reportFilter", this.filter);
       this.$root.$emit("applyFilters", this.filter);
     },
     hackDropdown(e) {
@@ -811,8 +825,11 @@ export default {
       );
     },
     updateIvrChoices() {
-      // show only IVR choices related to selected IVRs
+      if (!this.filter.ivrs) {
+        return;
+      }
 
+      // show only IVR choices related to selected IVRs
       let selectedIvrs = this.filter.ivrs;
 
       if (this.filter.ivrs.length == 0) {
