@@ -7,7 +7,6 @@ import VCalendar from 'v-calendar';
 import App from "./App.vue";
 import router from "./router";
 import languages from "./i18n/lang";
-import config from "../public/config/config";
 
 import SuiVue from "semantic-ui-vue";
 import "semantic-ui-css/semantic.min.css";
@@ -35,7 +34,7 @@ new Vue({
     this.apiScheme = "http://"; //window.location.protocol + "//"; ////
     this.currentLocale = langConf.locale;
     this.currentView = "";
-    this.config = config;
+    this.config = window.CONFIG;
   },
   render: (h) => h(App),
 }).$mount("#app");
