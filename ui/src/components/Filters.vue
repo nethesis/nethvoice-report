@@ -73,7 +73,7 @@
           <label>Agent</label>
           <sui-dropdown
             multiple
-            :options="agents"
+            :options="filterValues.agents"
             placeholder="Agent"
             search
             selection
@@ -84,7 +84,7 @@
           <label>Groups</label>
           <sui-dropdown
             multiple
-            :options="groups"
+            :options="filterValues.groups"
             placeholder="Groups"
             search
             selection
@@ -95,7 +95,7 @@
           <label>Queues</label>
           <sui-dropdown
             multiple
-            :options="queues"
+            :options="filterValues.queues"
             placeholder="Queues"
             search
             selection
@@ -109,7 +109,7 @@
           <label>Reasons</label>
           <sui-dropdown
             multiple
-            :options="reasons"
+            :options="filterValues.reasons"
             placeholder="Reasons"
             search
             selection
@@ -120,7 +120,7 @@
           <label>Results</label>
           <sui-dropdown
             multiple
-            :options="results"
+            :options="filterValues.results"
             placeholder="Results"
             search
             selection
@@ -131,7 +131,7 @@
           <label>IVR</label>
           <sui-dropdown
             multiple
-            :options="ivrs"
+            :options="filterValues.ivrs"
             placeholder="IVR"
             search
             selection
@@ -142,7 +142,7 @@
           <label>IVR choices</label>
           <sui-dropdown
             multiple
-            :options="choices"
+            :options="filterValues.choices"
             placeholder="IVR choices"
             search
             selection
@@ -156,7 +156,7 @@
           <label>Origins</label>
           <sui-dropdown
             multiple
-            :options="origins"
+            :options="filterValues.origins"
             placeholder="Origins"
             search
             selection
@@ -167,7 +167,7 @@
           <label>Destinations</label>
           <sui-dropdown
             multiple
-            :options="destinations"
+            :options="filterValues.destinations"
             placeholder="Destinations"
             search
             selection
@@ -349,19 +349,21 @@ export default {
         contactName: "",
         nullCall: false,
       },
+      filterValues: {
+        queues: [],
+        groups: [],
+        agents: [],
+        ivrs: [],
+        reasons: [],
+        results: [],
+        choices: [],
+        destinations: [],
+        origins: [],
+        callers: [],
+        contactNames: [],
+      },
       selectedTimeType: "",
       savedSearches: [],
-      queues: [],
-      groups: [],
-      agents: [],
-      ivrs: [],
-      reasons: [],
-      results: [],
-      choices: [],
-      destinations: [],
-      origins: [],
-      callers: [],
-      contactNames: [],
       openSaveSearchModal: false,
       openOverwriteSearchModal: false,
       openDeleteSearchModal: false,
@@ -443,18 +445,28 @@ export default {
     },
   },
   mounted() {
-    const filter = this.get("reportFilter");
-
-    if (filter) {
-      // set selected values in filter
-      this.setFilterSelection(filter);
-    } else {
-      this.retrieveDefaultFilter();
-    }
+    this.retrieveFilter();
     this.getSavedSearches();
+
+    //// use local storage (with expiry)
     this.retrievePhonebook();
   },
   methods: {
+    retrieveFilter() {
+      const filter = this.get("reportFilter");
+      const filterValues = this.get("reportFilterValues");
+
+      if (
+        filter &&
+        filterValues &&
+        new Date().getTime() > filterValues.expiry
+      ) {
+        // set selected values in filter
+        this.setFilterSelection(filter);
+      } else {
+        this.retrieveDefaultFilter();
+      }
+    },
     toggleFilters: function () {
       this.showFilters = !this.showFilters;
     },
@@ -470,7 +482,7 @@ export default {
             let queues = this.defaultFilter.queues.map((queue) => {
               return { value: queue, text: queue };
             });
-            this.queues = queues.sort(this.sortByProperty("text"));
+            this.filterValues.queues = queues.sort(this.sortByProperty("text"));
           }
 
           // agents
@@ -478,7 +490,7 @@ export default {
             let agents = this.defaultFilter.agents.map((agent) => {
               return { value: agent, text: agent };
             });
-            this.agents = agents.sort(this.sortByProperty("text"));
+            this.filterValues.agents = agents.sort(this.sortByProperty("text"));
           }
 
           // groups
@@ -486,7 +498,7 @@ export default {
             let groups = this.defaultFilter.groups.map((group) => {
               return { value: group, text: group };
             });
-            this.groups = groups.sort(this.sortByProperty("text"));
+            this.filterValues.groups = groups.sort(this.sortByProperty("text"));
           }
 
           // ivr
@@ -497,7 +509,7 @@ export default {
               const ivrName = tokens[1];
               return { value: ivrName, text: ivrName, id: idIvr };
             });
-            this.ivrs = ivrs.sort(this.sortByProperty("text"));
+            this.filterValues.ivrs = ivrs.sort(this.sortByProperty("text"));
           }
 
           // choices: hide duplicates
@@ -521,7 +533,9 @@ export default {
               choices.push({ value: choice, text: choice });
             });
 
-            this.choices = choices.sort(this.sortByProperty("text"));
+            this.filterValues.choices = choices.sort(
+              this.sortByProperty("text")
+            );
           }
 
           // reasons
@@ -529,7 +543,9 @@ export default {
             let reasons = this.defaultFilter.reasons.map((reason) => {
               return { value: reason, text: reason };
             });
-            this.reasons = reasons.sort(this.sortByProperty("text"));
+            this.filterValues.reasons = reasons.sort(
+              this.sortByProperty("text")
+            );
           }
 
           // results
@@ -537,7 +553,9 @@ export default {
             let results = this.defaultFilter.results.map((result) => {
               return { value: result, text: result };
             });
-            this.results = results.sort(this.sortByProperty("text"));
+            this.filterValues.results = results.sort(
+              this.sortByProperty("text")
+            );
           }
 
           // origins
@@ -577,7 +595,7 @@ export default {
               }); //// i18n
             });
 
-            this.origins = districts
+            this.filterValues.origins = districts
               .concat(provinces)
               .concat(regions)
               .sort(this.sortByProperty("text"));
@@ -590,11 +608,17 @@ export default {
                 return { value: destination, text: destination };
               }
             );
-            this.destinations = destinations.sort(this.sortByProperty("text"));
+            this.filterValues.destinations = destinations.sort(
+              this.sortByProperty("text")
+            );
           }
 
-          // save filter to local storage
-          this.set("reportFilter", this.defaultFilter);
+          // save filter values to local storage (with expiry)
+          this.saveToLocalStorageWithExpiry(
+            "reportFilterValues",
+            this.filterValues,
+            8
+          ); // 8 hours
 
           // set selected values in filter
           this.setFilterSelection(this.defaultFilter);
@@ -610,6 +634,9 @@ export default {
 
       // null call
       this.filter.nullCall = filter.nullCall;
+
+      // save filter to local storage
+      this.set("reportFilter", this.filter);
     },
     getSavedSearches(searchToSelect) {
       this.getSearches(
