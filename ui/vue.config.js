@@ -1,4 +1,4 @@
 module.exports = {
   publicPath:
-    process.env.NODE_ENV === "production" ? "/nethvoice-report" : "/",
+    process.env.NODE_ENV === "production" ? "" : "",
 };
