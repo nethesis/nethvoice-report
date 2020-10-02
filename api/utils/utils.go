@@ -25,11 +25,11 @@ package utils
 import (
 	"database/sql"
 	"encoding/json"
-	"os"
 	"fmt"
+	"os"
 
-	"github.com/pkg/errors"
 	"github.com/juliangruber/go-intersect"
+	"github.com/pkg/errors"
 )
 
 var excludedRoutes = [...]string{"/api/searches", "/api/filters/:section/:view"}

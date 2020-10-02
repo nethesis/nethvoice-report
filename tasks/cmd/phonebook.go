@@ -20,22 +20,22 @@
  * author: Edoardo Spadoni <edoardo.spadoni@nethesis.it>
  */
 
- package cmd
+package cmd
 
- import (
-	 "io/ioutil"
-	 "encoding/json"
+import (
+	"encoding/json"
+	"io/ioutil"
 
-	 "github.com/pkg/errors"
-	 "github.com/spf13/cobra"
+	"github.com/pkg/errors"
+	"github.com/spf13/cobra"
 
-	 "github.com/nethesis/nethvoice-report/api/cache"
-	 "github.com/nethesis/nethvoice-report/api/configuration"
-	 "github.com/nethesis/nethvoice-report/api/source"
-	 "github.com/nethesis/nethvoice-report/tasks/helper"
- )
+	"github.com/nethesis/nethvoice-report/api/cache"
+	"github.com/nethesis/nethvoice-report/api/configuration"
+	"github.com/nethesis/nethvoice-report/api/source"
+	"github.com/nethesis/nethvoice-report/tasks/helper"
+)
 
- // define phonebook entry
+// define phonebook entry
 type Entry struct {
 	Homephones []string `json:"homephones"`
 	Workphones []string `json:"workphones"`
@@ -45,8 +45,8 @@ type Entry struct {
 // define phonebook map
 var phonebookMap map[string]Entry
 
- // Define command handled by cobra
- var phonebookCmd = &cobra.Command{
+// Define command handled by cobra
+var phonebookCmd = &cobra.Command{
 	Use:   "phonebook",
 	Short: "Find all numbers in phonebook and save to cache",
 	Args:  cobra.NoArgs,
@@ -77,7 +77,7 @@ func executeReportPhonebook() {
 		helper.FatalError(errors.Wrap(errQuery, "Error in query execution"))
 	}
 
-	// init phonebook map 
+	// init phonebook map
 	phonebookMap = make(map[string]Entry)
 
 	// loop rows
@@ -102,14 +102,14 @@ func executeReportPhonebook() {
 		newWorkphones := append(currentWorkphones, workphone)
 
 		currentCellphones := phonebookMap[name].Cellphones
-                newCellphones := append(currentCellphones, cellphone)
+		newCellphones := append(currentCellphones, cellphone)
 
 		// assign values to struct
 		phonebookMap[name] = Entry{
 			Homephones: newHomephones,
 			Workphones: newWorkphones,
 			Cellphones: newCellphones,
-                }
+		}
 
 		// convert settings to string
 		phonebookString, errConvert := json.Marshal(phonebookMap)

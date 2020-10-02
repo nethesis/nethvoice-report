@@ -1,4 +1,3 @@
-
 /*
  * Copyright (C) 2020 Nethesis S.r.l.
  * http://www.nethesis.it - info@nethesis.it
@@ -21,26 +20,26 @@
  * author: Edoardo Spadoni <edoardo.spadoni@nethesis.it>
  */
 
- package cmd
+package cmd
 
- import (
-	 "io/ioutil"
-	 "fmt"
-	 "os"
-	 "path/filepath"
-	 "encoding/json"
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"os"
+	"path/filepath"
 
-	 "github.com/pkg/errors"
-	 "github.com/spf13/cobra"
+	"github.com/pkg/errors"
+	"github.com/spf13/cobra"
 
-	 "github.com/nethesis/nethvoice-report/api/cache"
-	 "github.com/nethesis/nethvoice-report/api/configuration"
-	 "github.com/nethesis/nethvoice-report/api/models"
-	 "github.com/nethesis/nethvoice-report/api/source"
-	 "github.com/nethesis/nethvoice-report/tasks/helper"
- )
+	"github.com/nethesis/nethvoice-report/api/cache"
+	"github.com/nethesis/nethvoice-report/api/configuration"
+	"github.com/nethesis/nethvoice-report/api/models"
+	"github.com/nethesis/nethvoice-report/api/source"
+	"github.com/nethesis/nethvoice-report/tasks/helper"
+)
 
- // Define command handled by cobra
+// Define command handled by cobra
 var valuesCmd = &cobra.Command{
 	Use:   "values",
 	Short: "Calculate all possibile values to show in filters",

@@ -41,12 +41,12 @@ type Configuration struct {
 		Password string `json:"password"`
 	} `json:"queue_database"`
 	PhonebookDatabase struct {
-                Host     string `json:"host"`
-                Port     string `json:"port"`
-                User     string `json:"user"`
-                Name     string `json:"name"`
-                Password string `json:"password"`
-        } `json:"phonebook_database"`
+		Host     string `json:"host"`
+		Port     string `json:"port"`
+		User     string `json:"user"`
+		Name     string `json:"name"`
+		Password string `json:"password"`
+	} `json:"phonebook_database"`
 	ListenAddress          string          `json:"listen_address"`
 	RedisAddress           string          `json:"redis_address"`
 	TTLCache               int             `json:"ttl_cache"`

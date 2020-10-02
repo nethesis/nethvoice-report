@@ -44,9 +44,9 @@ func QueueInstance() *sql.DB {
 
 func PhonebookInstance() *sql.DB {
 	if dbP == nil {
-                dbP = PhonebookInit()
-        }
-        return dbP
+		dbP = PhonebookInit()
+	}
+	return dbP
 }
 
 func QueueInit() *sql.DB {
@@ -66,17 +66,17 @@ func QueueInit() *sql.DB {
 }
 
 func PhonebookInit() *sql.DB {
-        // define uri connection string
-        uri := configuration.Config.PhonebookDatabase.User + ":" + configuration.Config.PhonebookDatabase.Password + "@tcp(" + configuration.Config.PhonebookDatabase.Host + ":" + configuration.Config.PhonebookDatabase.Port + ")/" + configuration.Config.PhonebookDatabase.Name
+	// define uri connection string
+	uri := configuration.Config.PhonebookDatabase.User + ":" + configuration.Config.PhonebookDatabase.Password + "@tcp(" + configuration.Config.PhonebookDatabase.Host + ":" + configuration.Config.PhonebookDatabase.Port + ")/" + configuration.Config.PhonebookDatabase.Name
 
-        // connect to database
-        db, err := sql.Open("mysql", uri+"?charset=utf8&parseTime=True")
+	// connect to database
+	db, err := sql.Open("mysql", uri+"?charset=utf8&parseTime=True")
 
-        // handle error
-        if err != nil {
-                utils.LogError(errors.Wrap(err, "error connecting to database"))
-        }
+	// handle error
+	if err != nil {
+		utils.LogError(errors.Wrap(err, "error connecting to database"))
+	}
 
-        // return db object
-        return db
+	// return db object
+	return db
 }
