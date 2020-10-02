@@ -10,7 +10,7 @@
 # Exit 1 on error
 set -xe
 
-# Prepare dist 
+# Prepare dist
 mkdir -p dist
 
 #
@@ -26,7 +26,7 @@ rm -rf dist/tasks
 pushd ui
 rm -rf dist/
 npm install
-npm run build
+NODE_ENV=production npm run build
 tar cvzf ui.tar.gz -C dist .
 cp ui.tar.gz ../dist/
 popd
