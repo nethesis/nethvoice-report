@@ -1,9 +1,6 @@
 var QueriesService = {
   methods: {
     execQuery(filter, section, view, graph, success, error) {
-      // console.log("execQuery, filter", filter); ////
-      // console.log("execQuery, url", this.$root.apiScheme + this.$root.apiEndpoint + "/queues" + "/" + section + "/" + view+ "?filter=" + encodeURIComponent(JSON.stringify(filter)) + "&graph=" + graph); ////
-
       this.$http
         .get(
           this.$root.apiScheme + this.$root.apiEndpoint + "/queues/" + section + "/" + view+ "?filter=" + encodeURIComponent(JSON.stringify(filter)) + "&graph=" + graph,

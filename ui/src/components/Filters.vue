@@ -391,35 +391,13 @@ export default {
     };
   },
   watch: {
-    filter: function () {
-      console.log("watch filter", this.filter); ////
-    },
     selectedSearch: function () {
-      console.log("watch selectedSearch", this.selectedSearch); ////
       this.setFilterValuesFromSearch();
     },
     "filter.ivrs": function () {
-      console.log("watch filter.ivrs", this.filter.ivrs); ////
       this.updateIvrChoices();
     },
-    "filter.reasons": function () {
-      console.log("watch filter.reasons", this.filter.reasons); ////
-    },
-    "filter.selectedQueues": function () {
-      console.log("watch filter.selectedQueues", this.filter.selectedQueues); ////
-    },
-    "filter.groups": function () {
-      console.log("watch filter.groups", this.filter.groups); ////
-    },
-    "filter.selectedAgents": function () {
-      console.log("watch filter.selectedAgents", this.filter.selectedAgents); ////
-    },
-    "filter.nullCall": function () {
-      console.log("watch filter.nullCall", this.filter.nullCall); ////
-    },
     "filter.time.interval": function () {
-      console.log("watch filter.time.interval", this.filter.time.interval); ////
-
       this.selectedTimeType = "";
 
       if (
@@ -427,8 +405,6 @@ export default {
         this.filter.time.interval.start &&
         this.filter.time.interval.end
       ) {
-        console.log("this.filter.time.interval", this.filter.time.interval); ////
-
         // convert to date object if needed
         if (typeof this.filter.time.interval.start == "string") {
           this.filter.time.interval.start = new Date(
@@ -464,12 +440,6 @@ export default {
         }
       }
     },
-    selectedTimeType: function () {
-      console.log("watch selectedTimeType", this.selectedTimeType); ////
-    },
-    "filter.contactName": function () {
-      console.log("watch filter.contactName", this.filter.contactName); ////
-    },
   },
   mounted() {
     this.getSavedSearches();
@@ -487,7 +457,6 @@ export default {
         this.$route.meta.section,
         this.$route.meta.view,
         (success) => {
-          console.log("getDefaultFilter", success.body.filter); ////
           this.defaultFilter = success.body.filter;
 
           // queues
@@ -648,8 +617,6 @@ export default {
       let searchesMatchingView = [];
       let searchesNotMatchingView = [];
 
-      // console.log("$route", this.$route); ////
-
       for (const search of savedSearches) {
         search.value = search.name;
         search.text = search.name;
@@ -677,16 +644,12 @@ export default {
       } else {
         this.savedSearches = searchesMatchingView;
       }
-      console.log("savedSearches", this.savedSearches); ////
     },
     setFilterValuesFromSearch() {
       // retrieve search object
       let search = this.savedSearches.find(
         (s) => s.name === this.selectedSearch
       );
-
-      console.log("setFilterValuesFromSearch(), search found", search); ////
-      console.log("search filter", search.filter); ////
 
       // set filter values
       this.filter = search.filter;
@@ -731,15 +694,9 @@ export default {
       return result;
     },
     applyFilters() {
-      console.log("searchhhh", this.$refs.filterContactName.$el.textContent); ////
-
       this.$root.$emit("applyFilters", this.filter);
-
-      console.log("applyFilters emitted", this.filter); ////
     },
     hackDropdown(e) {
-      console.log("hackDropdown"); ////
-
       e.target.parentNode
         .querySelectorAll("div[role=option]")
         .forEach((item) => {
@@ -800,8 +757,6 @@ export default {
         this.filter.time.interval.end
       );
 
-      console.log("saving", searchName, filterToSave); ////
-
       this.createSearch(
         {
           name: searchName,
@@ -840,8 +795,6 @@ export default {
         this.getCurrentSection() +
         "_" +
         this.getCurrentView();
-
-      console.log("deleting", searchId); ////
 
       this.deleteSearch(
         searchId,
@@ -891,19 +844,13 @@ export default {
         return { value: choiceName, text: choiceName };
       });
       this.choices = choices.sort(this.sortByProperty("text"));
-
-      console.log("this.choices", this.choices); ////
     },
     retrievePhonebook() {
       this.getPhonebook(
         (success) => {
-          // console.log("success.body", success.body); ////
-
           const phoneBook = success.body;
-
-          console.log("phoneBook len", Object.keys(success.body).length); ////
-
           this.phoneBook = [];
+
           for (const [contactName, contactPhones] of Object.entries(
             phoneBook
           )) {
@@ -916,8 +863,6 @@ export default {
               cleanName: cleanName,
             });
           }
-
-          console.log("this.phoneBook", this.phoneBook); ////
         },
         (error) => {
           console.error(error.body);

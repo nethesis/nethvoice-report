@@ -27,14 +27,15 @@ var UtilService = {
     isFilterInView(filter) {
       return this.getQueueReportViewFilterMap()[this.$route.meta.section][
         this.$route.meta.view
-      ].includes(filter); ////
+      ].includes(filter);
     },
-    getQueueReportViewFilterMap() { ////
+    getQueueReportViewFilterMap() {
       return {
         "dashboard": {
-          "default": ["time", "queue"], //// verify
+          "default": ["time", "queue"],
         },
         "data": {
+          "summary": ["time", "queue"],
           "agent": ["time", "queue", "agent"],
           "session": ["time", "queue", "reason"],
           "caller": ["time", "queue", "caller", "contactName"],

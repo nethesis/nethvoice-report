@@ -98,7 +98,7 @@ export default {
   data() {
     return {
       showFilters: true,
-      title: this.$i18n.t(this.$route.meta.name) || "", ////
+      title: this.$i18n.t(this.$route.meta.name) || "", //// i18n
       openSettingsModal: false,
       officeHourStart: "",
       officeHourEnd: "",
@@ -122,8 +122,6 @@ export default {
   watch: {
     $route: function () {
       if (this.$route.meta.name == "menu.dashboard") {
-        console.log("setting dashboard title"); ////
-
         this.title = this.$i18n.t("menu.dashboard");
       } else {
         this.title =
@@ -178,9 +176,6 @@ export default {
       this.getSettings(
         (success) => {
           const settings = success.body.settings;
-
-          // console.log("settings", settings); ////
-
           this.officeHourStart = settings.start_hour;
           this.officeHourEnd = settings.end_hour;
         },

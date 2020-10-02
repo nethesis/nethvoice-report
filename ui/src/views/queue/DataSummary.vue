@@ -8,8 +8,6 @@
 export default {
   name: 'DataSummary',
   mounted() {
-    console.log("mounted DataSummary"); ////
-
     this.$root.$on('applyFilters', filter => {
       console.log("[DataSummary.vue] applyFilters event handler", filter); ////
     });

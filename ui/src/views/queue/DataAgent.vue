@@ -8,8 +8,6 @@
 export default {
   name: 'DataAgent',
   mounted() {
-    console.log("mounted DataAgent"); ////
-
     this.$root.$on('applyFilters', filter => {
       console.log("[DataAgent.vue] applyFilters event handler", filter); ////
     });
