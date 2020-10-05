@@ -149,8 +149,8 @@ const routes = [
       name: "distribution.by_geo",
       parent: "distribution",
       section: "distribution",
-      view: "geo",
-      tags: ["geo"],
+      view: "geographic",
+      tags: ["geo", "geographic"],
     },
   },
   {

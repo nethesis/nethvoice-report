@@ -28,8 +28,6 @@ var UtilService = {
       const section = this.$route.meta.section;
       const view = this.$route.meta.view;
 
-      // console.log("isFilterInView, section", section, "view", view); ////
-
       if (section && view) {
         return this.getQueueReportViewFilterMap()[section][view].includes(filter);
       } else {
@@ -54,8 +52,8 @@ var UtilService = {
           "default": ["time", "queue"]
         },
         "distribution": {
-          "hour": ["time", "queue", "timeSplit", "agent", "destination", "ivr"],
-          "geo": ["time", "queue", "origin"],
+          "hourly": ["time", "queue", "timeSplit", "agent", "destination", "ivr"],
+          "geographic": ["time", "queue", "origin"],
         },
         "graphs": {
           "load": ["time", "queue", "origin"], //// verify

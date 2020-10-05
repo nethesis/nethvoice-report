@@ -152,12 +152,12 @@
       </sui-form-fields>
 
       <sui-form-fields>
-        <sui-form-field v-if="showFilterOrigin" width="four">
+        <sui-form-field v-if="showFilterOrigin" width="five">
           <label>Origins</label>
           <sui-dropdown
             multiple
             :options="filterValues.origins"
-            placeholder="Origins"
+            placeholder="Area code, district, province or region"
             search
             selection
             v-model="filter.origins"
@@ -391,6 +391,7 @@ export default {
       ],
       phoneBook: [],
       queueReportViewFilterMap: null,
+      cacheFilterValues: false, //// remove
     };
   },
   watch: {
@@ -457,9 +458,10 @@ export default {
       const filterValues = this.get("reportFilterValues");
 
       if (
+        this.cacheFilterValues &&
         filter &&
         filterValues &&
-        new Date().getTime() > filterValues.expiry
+        new Date().getTime() < filterValues.expiry
       ) {
         // set selected values in filter
         this.setFilterSelection(filter);
@@ -557,15 +559,25 @@ export default {
 
           // origins
           if (this.defaultFilter.origins) {
+            let areaCodeSet = new Set();
             let districtSet = new Set();
             let provinceSet = new Set();
             let regionSet = new Set();
 
             this.defaultFilter.origins.forEach((origin) => {
               const tokens = origin.split(",");
-              districtSet.add(tokens[0]);
-              provinceSet.add(tokens[1]);
-              regionSet.add(tokens[2]);
+              areaCodeSet.add(tokens[0]);
+              districtSet.add(tokens[1]);
+              provinceSet.add(tokens[2]);
+              regionSet.add(tokens[3]);
+            });
+
+            let areaCodes = [];
+            areaCodeSet.forEach((areaCode) => {
+              areaCodes.push({
+                value: "areaCode_" + areaCode,
+                text: areaCode + " (Area code)",
+              }); //// i18n
             });
 
             let districts = [];
@@ -592,7 +604,8 @@ export default {
               }); //// i18n
             });
 
-            this.filterValues.origins = districts
+            this.filterValues.origins = areaCodes
+              .concat(districts)
               .concat(provinces)
               .concat(regions)
               .sort(this.sortByProperty("text"));

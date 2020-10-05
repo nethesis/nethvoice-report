@@ -59,6 +59,7 @@ export default {
   data() {
     return {
       isLogged: false,
+      testdata: "testdata"
     };
   },
   methods: {

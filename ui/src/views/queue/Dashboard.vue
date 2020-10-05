@@ -1,9 +1,7 @@
 <template lang="html">
-<div class="masthead">
-  <sui-container>
-    <GraphTable v-for="graph in graphs" v-bind:key="graph.name" :data="graph.data" />
-  </sui-container>
-</div>
+<sui-container>
+  <GraphTable v-for="graph in graphs" v-bind:key="graph.name" :caption="graph.name" :data="graph.data" />
+</sui-container>
 </template>
 
 <script>
@@ -23,6 +21,8 @@ export default {
     };
   },
   mounted() {
+    console.log("$parent", this.$parent); ////
+
     this.retrieveQueryTree(); ////
   },
   beforeRouteLeave(to, from, next) {
@@ -42,15 +42,25 @@ export default {
       );
     },
     loadGraphs(queryTree) {
+      this.graphs = [];
+
       this.graphNames =
         queryTree[this.$route.meta.section][this.$route.meta.view];
+
+      for (const graphName of this.graphNames) {
+        this.graphs.push({ name: graphName, data: null });
+      }
 
       this.$root.$on("applyFilters", (filter) => {
         this.applyFilters(filter);
       });
     },
     applyFilters(filter) {
-      this.graphs = [];
+      // clear graphs data
+
+      this.graphs.forEach(graph => {
+        graph.data = null;
+      });
 
       for (const graphName of this.graphNames) {
         this.execQuery(
@@ -60,7 +70,15 @@ export default {
           graphName,
           (success) => {
             const result = success.body;
-            this.graphs.push({ name: graphName, data: result });
+
+            // set data to graph
+            let graph = this.graphs.find((graph) => {
+              return graph.name == graphName;
+            });
+
+            setTimeout(() => {
+              graph.data = result;
+            }, Math.floor(Math.random() * 2000)); ////
           },
           (error) => {
             console.error(error.body);
