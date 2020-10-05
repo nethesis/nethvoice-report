@@ -78,10 +78,10 @@
   **Body response**
   ```json
   [
-    [col1, col2, col3],
-    [val1, val2, val3],
+    ["col1", "col2", "col3"],
+    ["val1", "val2", "val3"],
     ...
-    [valX, valY, valZ]
+    ["valX", "valY", "valZ"]
   ]
   ```
 
