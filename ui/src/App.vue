@@ -15,7 +15,9 @@
         <!-- start leftsidebar -->
         <TopBar />
         <!-- end topbar -->
-        <router-view />
+        <div class="mg-3-em">
+          <router-view />
+        </div>
       </div>
     </div>
     <!-- end logged view -->
@@ -116,5 +118,13 @@ export default {
 
 .ui.multiple.search.dropdown > input.search {
   width: 100% !important;
+}
+
+.graph-caption {
+  text-align: left;
+}
+
+.mg-3-em {
+  margin: 3em;
 }
 </style>

@@ -1,8 +1,6 @@
 <template lang="html">
-<div class="masthead">
-  <sui-container>
-    <GraphTable v-for="graph in graphs" v-bind:key="graph.name" :data="graph.data" />
-  </sui-container>
+<div>
+  <GraphTable v-for="graph in graphs" v-bind:key="graph.name" :caption="graph.name" :data="graph.data" />
 </div>
 </template>
 

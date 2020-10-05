@@ -1,8 +1,8 @@
 <template>
-  <sui-form class="mg-md">
+  <sui-form>
     <sui-loader v-show="!data" active centered inline class="loader-height" />
-    <div v-show="data">
-      <h4 is="sui-header">{{ $t("caption." + caption) }}</h4>
+    <div v-show="data" class="mg-bottom-lg">
+      <h4 is="sui-header" class="graph-caption">{{ $t("caption." + caption) }}</h4>
       <sui-table celled selectable>
         <sui-table-header>
           <sui-table-row>
@@ -56,11 +56,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.mg-md {
-  margin: 2rem !important;
-}
-
 .loader-height {
   height: 6rem !important;
+}
+
+.mg-bottom-lg {
+  margin-bottom: 3rem;
 }
 </style>

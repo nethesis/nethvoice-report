@@ -1,7 +1,7 @@
 <template lang="html">
-<sui-container>
+<div>
   <GraphTable v-for="graph in graphs" v-bind:key="graph.name" :caption="graph.name" :data="graph.data" />
-</sui-container>
+</div>
 </template>
 
 <script>
