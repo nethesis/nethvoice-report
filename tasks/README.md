@@ -15,6 +15,7 @@ Available Commands:
   queries     Execute all report queries applying all saved filters
   values      Calculate all possibile values to show in filters
   version     Show NethVoice Tasks support CLI version
+  views       Calculate query views to combine data and columns
 
 Flags:
   -h, --help   help for tasks
