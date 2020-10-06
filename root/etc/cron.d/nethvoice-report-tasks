@@ -1,8 +1,11 @@
+# precalculate views for queries
+00 00 * * *	asterisk /opt/nethvoice-report/tasks/tasks views
+
 # precalculate phonebook numbers during night
-00 00 * * *     asterisk /opt/nethvoice-report/tasks/tasks phonebook
+10 00 * * *     asterisk /opt/nethvoice-report/tasks/tasks phonebook
 
 # precalculate filter values during night
-10 00 * * *     asterisk /opt/nethvoice-report/tasks/tasks values
+20 00 * * *     asterisk /opt/nethvoice-report/tasks/tasks values
 
 # precalculate queries during night
-20 00 * * *	asterisk /opt/nethvoice-report/tasks/tasks queries
+30 00 * * *	asterisk /opt/nethvoice-report/tasks/tasks queries
