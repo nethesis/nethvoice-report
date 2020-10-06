@@ -1,4 +1,9 @@
 var UtilService = {
+  data() {
+    return {
+      filterValuesCacheDuration: false,
+    }
+  },
   methods: {
     formatDate(date) {
       var d = new Date(date),
@@ -66,9 +71,9 @@ var UtilService = {
         }
       }
     },
-    saveToLocalStorageWithExpiry(key, item, ttlHours) {
+    saveToLocalStorageWithExpiry(key, item, ttlMinutes) {
       // save an object to local storage attaching its expiry date
-      item.expiry = new Date().getTime() + ttlHours * 60 * 60 * 1000;
+      item.expiry = new Date().getTime() + ttlMinutes * 60 * 1000;
       this.set(key, item);
     }
   },

@@ -48,6 +48,8 @@ export default {
       });
     },
     applyFilters(filter) {
+      //// copy code from dashboard
+
       this.graphs = [];
 
       for (const graphName of this.graphNames) {

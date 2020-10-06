@@ -69,15 +69,15 @@
       </sui-form-fields>
 
       <sui-form-fields>
-        <sui-form-field v-if="showFilterAgent" width="four">
-          <label>Agent</label>
+        <sui-form-field v-if="showFilterQueue" width="four">
+          <label>Queues</label>
           <sui-dropdown
             multiple
-            :options="filterValues.agents"
-            placeholder="Agent"
+            :options="filterValues.queues"
+            placeholder="Queues"
             search
             selection
-            v-model="filter.agents"
+            v-model="filter.queues"
           />
         </sui-form-field>
         <sui-form-field v-if="showFilterGroup" width="four">
@@ -91,20 +91,17 @@
             v-model="filter.groups"
           />
         </sui-form-field>
-        <sui-form-field v-if="showFilterQueue" width="four">
-          <label>Queues</label>
+        <sui-form-field v-if="showFilterAgent" width="four">
+          <label>Agent</label>
           <sui-dropdown
             multiple
-            :options="filterValues.queues"
-            placeholder="Queues"
+            :options="filterValues.agents"
+            placeholder="Agent"
             search
             selection
-            v-model="filter.queues"
+            v-model="filter.agents"
           />
         </sui-form-field>
-      </sui-form-fields>
-
-      <sui-form-fields>
         <sui-form-field v-if="showFilterReason" width="four">
           <label>Reasons</label>
           <sui-dropdown
@@ -149,10 +146,7 @@
             v-model="filter.choices"
           />
         </sui-form-field>
-      </sui-form-fields>
-
-      <sui-form-fields>
-        <sui-form-field v-if="showFilterOrigin" width="five">
+        <sui-form-field v-if="showFilterOrigin" width="six">
           <label>Origins</label>
           <sui-dropdown
             multiple
@@ -163,7 +157,10 @@
             v-model="filter.origins"
           />
         </sui-form-field>
-        <sui-form-field v-if="showFilterDestination" width="four">
+      </sui-form-fields>
+
+      <sui-form-fields>
+        <sui-form-field v-if="showFilterDestination" width="six">
           <label>Destinations</label>
           <sui-dropdown
             multiple
@@ -184,14 +181,11 @@
             v-model="filter.time.division"
           />
         </sui-form-field>
-      </sui-form-fields>
-
-      <sui-form-fields>
         <sui-form-field v-if="showFilterCaller" width="four">
           <label>Caller</label>
           <sui-input placeholder="Caller" v-model="filter.caller" />
         </sui-form-field>
-        <sui-form-field v-if="showFilterContactName" width="four">
+        <sui-form-field v-if="showFilterContactName" width="six">
           <label>Contact name / Company</label>
           <sui-search
             :searchFields="['title', 'cleanName']"
@@ -208,6 +202,7 @@
           <sui-checkbox label toggle v-model="filter.nullCall" />
         </sui-form-field>
       </sui-form-fields>
+
       <sui-form-fields>
         <sui-button primary type="submit" class="mg-right-sm"
           >Apply filters</sui-button
@@ -324,7 +319,7 @@ export default {
   data() {
     return {
       showFilters: true,
-      title: this.$i18n.t(this.$route.meta.name) || "", //// i18n
+      // title: this.$i18n.t(this.$route.meta.name) || "", //// i18n
       selectedSearch: null,
       filter: {
         queues: [],
@@ -391,7 +386,6 @@ export default {
       ],
       phoneBook: [],
       queueReportViewFilterMap: null,
-      cacheFilterValues: false, //// remove
     };
   },
   watch: {
@@ -458,7 +452,6 @@ export default {
       const filterValues = this.get("reportFilterValues");
 
       if (
-        this.cacheFilterValues &&
         filter &&
         filterValues &&
         new Date().getTime() < filterValues.expiry
@@ -466,6 +459,11 @@ export default {
         // set selected values in filter
         this.setFilterSelection(filter);
       } else {
+        console.log("retrieving default filter:"); ////
+        console.log("filter", filter); ////
+        console.log("filterValues", filterValues); ////
+        console.log("current time", new Date().getTime(), "filterValues.expiry", filterValues.expiry); ////
+
         this.retrieveDefaultFilter();
       }
     },
@@ -627,8 +625,8 @@ export default {
           this.saveToLocalStorageWithExpiry(
             "reportFilterValues",
             this.filterValues,
-            8
-          ); // 8 hours
+            1
+          ); //// TODO use 8 * 60 (i.e. 8 hours)
 
           // set selected values in filter
           this.setFilterSelection(this.defaultFilter);

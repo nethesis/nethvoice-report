@@ -137,8 +137,8 @@ const routes = [
       name: "distribution.by_hour",
       parent: "distribution",
       section: "distribution",
-      view: "hour",
-      tags: ["hour"],
+      view: "hourly",
+      tags: ["hourly"],
     },
   },
   {
@@ -150,7 +150,7 @@ const routes = [
       parent: "distribution",
       section: "distribution",
       view: "geographic",
-      tags: ["geo", "geographic"],
+      tags: ["geographic"],
     },
   },
   {
