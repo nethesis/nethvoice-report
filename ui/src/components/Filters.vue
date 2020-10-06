@@ -2,7 +2,7 @@
   <div>
     <sui-loader v-if="loader.filter" active centered inline />
     <sui-form v-else class="filters-form" @submit.prevent="applyFilters">
-      <sui-form-fields v-if="savedSearches.length">
+      <sui-form-fields v-if="savedSearches.length" class="mg-bottom-md">
         <sui-form-field width="six">
           <sui-dropdown
             placeholder="Saved search"
@@ -441,33 +441,29 @@ export default {
   mounted() {
     this.retrieveFilter();
     this.getSavedSearches();
-
-    //// use local storage (with expiry)
     this.retrievePhonebook();
   },
   methods: {
     retrieveFilter() {
-      const filter = this.get("reportFilter");
-      const filterValues = this.get("reportFilterValues");
+      let filter = this.get("reportFilter");
+      let filterValues = this.get("reportFilterValues");
 
       if (
         filter &&
         filterValues &&
         new Date().getTime() < filterValues.expiry
       ) {
-        // set selected values in filter
+        console.log("reading filter from local storage"); ////
+
+        // get object from local storage item
+        filterValues = filterValues.item;
+
         this.filterValues = filterValues;
+
+        // set selected values in filter
         this.setFilterSelection(filter);
       } else {
-        console.log("retrieving default filter:"); ////
-        console.log("filter", filter); ////
-        console.log("filterValues", filterValues); ////
-        console.log(
-          "current time",
-          new Date().getTime(),
-          "filterValues.expiry",
-          filterValues.expiry
-        ); ////
+        console.log("retrieving default filter from backend:"); ////
 
         this.retrieveDefaultFilter();
       }
@@ -896,28 +892,49 @@ export default {
       this.choices = choices.sort(this.sortByProperty("text"));
     },
     retrievePhonebook() {
-      this.getPhonebook(
-        (success) => {
-          const phoneBook = success.body;
-          this.phoneBook = [];
+      //// use local storage (with expiry)
+      let phoneBook = this.get("reportPhoneBook");
 
-          for (const [contactName, contactPhones] of Object.entries(
-            phoneBook
-          )) {
-            const cleanName = contactName
-              .replace(/[^a-zA-Z0-9]/g, "")
-              .toLowerCase();
-            this.phoneBook.push({
-              title: contactName,
-              phones: contactPhones,
-              cleanName: cleanName,
-            });
+      if (phoneBook && new Date().getTime() < phoneBook.expiry) {
+        console.log("reading phonebook from local storage"); ////
+
+        // get object from local storage item
+        phoneBook = phoneBook.item;
+
+        this.phoneBook = phoneBook;
+      } else {
+        console.log("retrieving phonebook from backend"); ////
+
+        this.getPhonebook(
+          (success) => {
+            const phoneBook = success.body;
+            this.phoneBook = [];
+
+            for (const [contactName, contactPhones] of Object.entries(
+              phoneBook
+            )) {
+              const cleanName = contactName
+                .replace(/[^a-zA-Z0-9]/g, "")
+                .toLowerCase();
+              this.phoneBook.push({
+                title: contactName,
+                phones: contactPhones,
+                cleanName: cleanName,
+              });
+            }
+
+            // save phonebook to local storage (with expiry)
+            this.saveToLocalStorageWithExpiry(
+              "reportPhoneBook",
+              this.phoneBook,
+              1
+            ); //// TODO use 8 * 60 (i.e. 8 hours)
+          },
+          (error) => {
+            console.error(error.body);
           }
-        },
-        (error) => {
-          console.error(error.body);
-        }
-      );
+        );
+      }
     },
     doLogout() {
       this.execLogout(

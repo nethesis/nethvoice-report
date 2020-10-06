@@ -123,8 +123,12 @@ export default {
   text-align: left;
 }
 
+.mg-bottom-md {
+  margin-bottom: 2rem !important;
+}
+
 .mg-bottom-lg {
-  margin-bottom: 3rem;
+  margin-bottom: 3rem !important;
 }
 
 .mg-3-em {

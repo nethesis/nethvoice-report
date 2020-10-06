@@ -73,8 +73,8 @@ var UtilService = {
     },
     saveToLocalStorageWithExpiry(key, item, ttlMinutes) {
       // save an object to local storage attaching its expiry date
-      item.expiry = new Date().getTime() + ttlMinutes * 60 * 1000;
-      this.set(key, item);
+      const expiry = new Date().getTime() + ttlMinutes * 60 * 1000;
+      this.set(key, { item: item, expiry: expiry });
     }
   },
 };
