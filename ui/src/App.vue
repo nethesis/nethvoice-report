@@ -61,7 +61,6 @@ export default {
   data() {
     return {
       isLogged: false,
-      testdata: "testdata"
     };
   },
   methods: {
@@ -120,11 +119,29 @@ export default {
   width: 100% !important;
 }
 
-.graph-caption {
+.chart-caption {
   text-align: left;
+}
+
+.mg-bottom-lg {
+  margin-bottom: 3rem;
 }
 
 .mg-3-em {
   margin: 3em;
+}
+
+.line-chart {
+  max-width: 50%;
+  margin: 3rem auto;
+}
+
+.pie-chart {
+  max-width: 33%;
+  margin: 3rem auto;
+}
+
+.loader-height {
+  height: 6rem !important;
 }
 </style>

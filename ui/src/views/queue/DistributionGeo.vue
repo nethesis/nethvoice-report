@@ -1,23 +1,23 @@
 <template lang="html">
 <div>
-  <GraphTable v-for="graph in graphs" v-bind:key="graph.name" :caption="graph.name" :data="graph.data" />
+  <TableChart v-for="(chart, index) in charts" v-bind:key="index" :caption="chart.name" :data="chart.data" />
 </div>
 </template>
 
 <script>
-import GraphTable from "../../components/GraphTable.vue";
+import TableChart from "../../components/TableChart.vue";
 
 import QueriesService from "../../services/queries";
 import StorageService from "../../services/storage";
 
 export default {
   name: "DistributionGeo",
-  components: { GraphTable: GraphTable },
-  mixins: [GraphTable, StorageService, QueriesService],
+  components: { TableChart: TableChart },
+  mixins: [StorageService, QueriesService],
   data() {
     return {
-      graphNames: [],
-      graphs: [],
+      chartNames: [],
+      charts: [],
     };
   },
   mounted() {
@@ -40,7 +40,7 @@ export default {
       );
     },
     loadGraphs(queryTree) {
-      this.graphNames =
+      this.chartNames =
         queryTree[this.$route.meta.section][this.$route.meta.view];
 
       this.$root.$on("applyFilters", (filter) => {
@@ -50,21 +50,21 @@ export default {
     applyFilters(filter) {
       //// copy code from dashboard
 
-      this.graphs = [];
+      this.charts = [];
 
-      for (const graphName of this.graphNames) {
+      for (const chartName of this.chartNames) {
         this.execQuery(
           filter,
           this.$route.meta.section,
           this.$route.meta.view,
-          graphName,
+          chartName,
           (success) => {
             const result = success.body;
-            this.graphs.push({ name: graphName, data: result });
+            this.charts.push({ name: chartName, data: result });
           },
           (error) => {
             console.error(error.body);
-            this.graphs.push({ name: graphName, data: null });
+            this.charts.push({ name: chartName, data: null });
           }
         );
       }

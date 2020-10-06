@@ -1,29 +1,55 @@
 <template lang="html">
 <div>
-  <GraphTable v-for="graph in graphs" v-bind:key="graph.name" :caption="graph.name" :data="graph.data" />
+  <div v-for="(chart, index) in charts" v-bind:key="index">
+    <sui-loader v-show="!chart.data" active centered inline class="loader-height" />
+    <div v-show="chart.data">
+      <h4 is="sui-header" class="chart-caption">
+        {{ $t("caption." + chart.caption) }}
+      </h4>
+      <!-- table chart -->
+      <div class="mg-bottom-lg">
+        <TableChart v-if="chart.type == 'table'" :caption="chart.caption" :data="chart.data" />
+      </div>
+      <!-- line chart -->
+      <div v-if="chart.type == 'line'" class="line-chart">
+        <line-chart :data="chart.data" :caption="chart.caption"></line-chart>
+      </div>
+      <!-- pie chart -->
+      <div v-if="chart.type == 'pie'" class="pie-chart">
+        <pie-chart :data="chart.data" :caption="chart.caption"></pie-chart>
+      </div>
+    </div>
+  </div>
 </div>
 </template>
 
 <script>
-import GraphTable from "../../components/GraphTable.vue";
+import TableChart from "../../components/TableChart.vue";
+import LineChart from "../../components/LineChart.vue";
+import PieChart from "../../components/PieChart.vue";
 
 import QueriesService from "../../services/queries";
 import StorageService from "../../services/storage";
 
 export default {
   name: "QueueDashboard",
-  components: { GraphTable: GraphTable },
-  mixins: [GraphTable, StorageService, QueriesService],
+  components: { TableChart, LineChart, PieChart },
+  mixins: [StorageService, QueriesService],
   data() {
     return {
-      graphNames: [],
-      graphs: [],
+      queryTree: null,
+      queryNames: [],
+      charts: [],
     };
   },
   mounted() {
     console.log("$parent", this.$parent); ////
 
     this.retrieveQueryTree(); ////
+
+    this.$root.$on("applyFilters", (filter) => {
+      this.applyFilters(filter);
+    });
   },
   beforeRouteLeave(to, from, next) {
     this.$root.$off("applyFilters");
@@ -33,56 +59,63 @@ export default {
     retrieveQueryTree() {
       this.getQueryTree(
         (success) => {
-          const queryTree = success.body.query_tree;
-          this.loadGraphs(queryTree);
+          this.queryTree = success.body.query_tree;
+          this.initCharts();
         },
         (error) => {
           console.error(error.body);
         }
       );
     },
-    loadGraphs(queryTree) {
-      this.graphs = [];
+    initCharts() {
+      this.charts = [];
 
-      this.graphNames =
-        queryTree[this.$route.meta.section][this.$route.meta.view];
+      this.queryNames = this.queryTree[this.$route.meta.section][
+        this.$route.meta.view
+      ];
 
-      for (const graphName of this.graphNames) {
-        this.graphs.push({ name: graphName, data: null });
+      for (const queryName of this.queryNames) {
+        const tokens = queryName.split("_");
+        const position = tokens[0];
+        const type = tokens[1];
+        const caption = tokens[2];
+        this.charts.push({
+          name: queryName,
+          position: position,
+          type: type,
+          caption: caption,
+          data: null,
+        });
       }
-
-      this.$root.$on("applyFilters", (filter) => {
-        this.applyFilters(filter);
-      });
     },
     applyFilters(filter) {
-      // clear graphs data
+      // clear charts data
+      this.initCharts();
 
-      this.graphs.forEach(graph => {
-        graph.data = null;
-      });
+      filter.agents = ["0721", "0722"]; ////
 
-      for (const graphName of this.graphNames) {
+      for (const queryName of this.queryNames) {
         this.execQuery(
           filter,
           this.$route.meta.section,
           this.$route.meta.view,
-          graphName,
+          queryName,
           (success) => {
             const result = success.body;
 
-            // set data to graph
-            let graph = this.graphs.find((graph) => {
-              return graph.name == graphName;
+            console.log("query result", result); ////
+
+            // set data to chart
+            let chart = this.charts.find((chart) => {
+              return chart.name == queryName;
             });
 
             setTimeout(() => {
-              graph.data = result;
-            }, Math.floor(Math.random() * 2000)); ////
+              chart.data = result;
+            }, Math.floor(Math.random() * 1000)); //// remove
           },
           (error) => {
             console.error(error.body);
-            this.graphs.push({ name: graphName, data: null });
           }
         );
       }

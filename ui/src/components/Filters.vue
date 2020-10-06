@@ -319,7 +319,6 @@ export default {
   data() {
     return {
       showFilters: true,
-      // title: this.$i18n.t(this.$route.meta.name) || "", //// i18n
       selectedSearch: null,
       filter: {
         queues: [],
@@ -457,12 +456,18 @@ export default {
         new Date().getTime() < filterValues.expiry
       ) {
         // set selected values in filter
+        this.filterValues = filterValues;
         this.setFilterSelection(filter);
       } else {
         console.log("retrieving default filter:"); ////
         console.log("filter", filter); ////
         console.log("filterValues", filterValues); ////
-        console.log("current time", new Date().getTime(), "filterValues.expiry", filterValues.expiry); ////
+        console.log(
+          "current time",
+          new Date().getTime(),
+          "filterValues.expiry",
+          filterValues.expiry
+        ); ////
 
         this.retrieveDefaultFilter();
       }
@@ -826,14 +831,6 @@ export default {
         }
       );
     },
-    getCurrentSection() {
-      //// move to utils file/service?
-      return this.$route.meta.section;
-    },
-    getCurrentView() {
-      //// move to utils file/service?
-      return this.$route.meta.view;
-    },
     showDeleteSearchModal(value) {
       this.openDeleteSearchModal = value;
     },
@@ -842,9 +839,9 @@ export default {
       const searchId =
         this.selectedSearch +
         "_" +
-        this.getCurrentSection() +
+        this.$route.meta.section +
         "_" +
-        this.getCurrentView();
+        this.$route.meta.view;
 
       this.deleteSearch(
         searchId,
