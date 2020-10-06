@@ -54,7 +54,7 @@ func QueueInit() *sql.DB {
 	uri := configuration.Config.QueueDatabase.User + ":" + configuration.Config.QueueDatabase.Password + "@tcp(" + configuration.Config.QueueDatabase.Host + ":" + configuration.Config.QueueDatabase.Port + ")/" + configuration.Config.QueueDatabase.Name
 
 	// connect to database
-	db, err := sql.Open("mysql", uri+"?charset=utf8&parseTime=True")
+	db, err := sql.Open("mysql", uri+"?charset=utf8&parseTime=True&multiStatements=true")
 
 	// handle error
 	if err != nil {
