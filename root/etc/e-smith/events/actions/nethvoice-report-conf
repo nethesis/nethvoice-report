@@ -27,3 +27,6 @@ password=$(perl -e "use NethServer::Password; print NethServer::Password::store(
 /usr/bin/mysql --defaults-file=/root/.my.cnf -e "GRANT SELECT on phonebook.* to 'nethvoice_report'@'localhost' identified by '$password';"
 /usr/bin/mysql --defaults-file=/root/.my.cnf -e "FLUSH PRIVILEGES"
 
+# grant create view permission
+/usr/bin/mysql --defaults-file=/root/.my.cnf -e "GRANT CREATE VIEW ON asteriskcdrdb.* TO 'nethvoice_report'@'localhost' identified by '$password';"
+
