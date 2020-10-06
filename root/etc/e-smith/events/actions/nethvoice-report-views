@@ -1,8 +1,8 @@
-#!/usr/bin/perl
+#!/bin/bash
 
 #
 # Copyright (C) 2020 Nethesis S.r.l.
-# http://www.nethesis.it - support@nethesis.it
+# http://www.nethesis.it - nethserver@nethesis.it
 #
 # This script is part of NethServer.
 #
@@ -17,30 +17,8 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with NethServer.  If not, see <http://www.gnu.org/licenses/>.
-#
-# author: Edoardo Spadoni <edoardo.spadoni@nethesis.it>
+# along with NethServer.  If not, see COPYING.
 #
 
-use strict;
-use esmith::Build::CreateLinks qw(:all);
-
-#
-# nethvoice-report-update event
-#
-
-event_actions('nethvoice-report-update', qw(
-	initialize-default-databases 00
-	nethvoice-report-conf 50
-	nethvoice-report-views 60
-));
-
-event_templates('nethvoice-report-update', qw(
-	/opt/nethvoice-report/api/conf.json
-));
-
-event_services('nethvoice-report-update', qw(
-	nethvoice-report-api restart
-	collectd restart
-	httpd reload
-));
+# execute task command "views" to create all mysql views
+/opt/nethvoice-report/tasks/tasks views
