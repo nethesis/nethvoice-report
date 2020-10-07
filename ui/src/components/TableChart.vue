@@ -89,6 +89,8 @@ export default {
   },
   methods: {
     parseDoubleHeader() {
+      this.doubleHeader = [];
+
       this.columns.forEach((column) => {
         if (column.includes("$")) {
           const headers = column.split("$");
