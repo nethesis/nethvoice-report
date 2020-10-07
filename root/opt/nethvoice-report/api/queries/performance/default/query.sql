@@ -188,6 +188,6 @@ SELECT p_a_d.period,
        p_a_d.min_duration                             AS duration$min, 
        p_a_d.max_duration                             AS duration$max, 
        p_a_d.avg_duration                             AS duration$avg 
-FROM   performance_attesa_durate_year p_a_d 
+FROM   performance_wait_duration_year p_a_d 
 GROUP  BY p_a_d.period, 
           p_a_d.qname; 
