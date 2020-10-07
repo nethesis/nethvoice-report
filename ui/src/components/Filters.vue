@@ -54,6 +54,7 @@
             mode="range"
             v-model="filter.time.interval"
             :available-dates="{ start: null, end: new Date() }"
+            :masks="{ input: 'YYYY/MM/DD' }"
           />
         </sui-form-field>
         <sui-form-field width="four">
