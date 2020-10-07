@@ -65,6 +65,9 @@ func ParseResults(rows *sql.Rows) string {
 		// compose record
 		record := []string{}
 		for _, value := range fieldCount {
+			if value == nil {
+				value = []uint8{}
+			}
 			value := string(value.([]byte))
 			record = append(record, value)
 		}

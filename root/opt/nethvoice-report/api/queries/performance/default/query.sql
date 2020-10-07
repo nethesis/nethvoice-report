@@ -16,7 +16,7 @@ SELECT p_a_d.period,
                 FROM   performance_total_year 
                 WHERE  period = p_a_d.period 
                        AND qname = p_a_d.qname), 
-           2) )                                       AS percentage, 
+           2) )                                       AS processed$percentage, 
        (SELECT count 
         FROM   performance_good_year 
         WHERE  period = p_a_d.period 
@@ -30,7 +30,7 @@ SELECT p_a_d.period,
                                                          WHERE 
                period = p_a_d.period 
                AND qname = 
-           p_a_d.qname), 2) )                         AS percentage, 
+           p_a_d.qname), 2) )                         AS processed$percentage, 
        Sum((SELECT COALESCE(Sum(count), 0) 
             FROM   performance_failed_year 
             WHERE  period = p_a_d.period 
@@ -83,7 +83,7 @@ SELECT p_a_d.period,
                        performance_total_year 
                                                                     WHERE 
                        period = p_a_d.period 
-                       AND qname = p_a_d.qname), 2) ) AS percentage, 
+                       AND qname = p_a_d.qname), 2) ) AS notProcessed$percentage, 
        (SELECT Sum(count) 
         FROM   performance_failed_year 
         WHERE  period = p_a_d.period 
@@ -97,7 +97,7 @@ SELECT p_a_d.period,
                                                          WHERE 
                period = p_a_d.period 
                AND qname = 
-           p_a_d.qname), 2) )                         AS percentage, 
+           p_a_d.qname), 2) )                         AS notProcessed$percentage, 
        (SELECT Sum(count) 
         FROM   performance_timeout_year 
         WHERE  period = p_a_d.period 
@@ -111,7 +111,7 @@ SELECT p_a_d.period,
                                                          WHERE 
                period = p_a_d.period 
                AND qname = 
-           p_a_d.qname), 2) )                         AS percentage, 
+           p_a_d.qname), 2) )                         AS notProcessed$percentage, 
        (SELECT Sum(count) 
         FROM   performance_exitempty_year 
         WHERE  period = p_a_d.period 
@@ -125,7 +125,7 @@ SELECT p_a_d.period,
                                                          WHERE 
                period = p_a_d.period 
                AND qname = 
-           p_a_d.qname), 2) )                         AS percentage, 
+           p_a_d.qname), 2) )                         AS notProcessed$percentage, 
        (SELECT Sum(count) 
         FROM   performance_exitkey_year 
         WHERE  period = p_a_d.period 
@@ -139,7 +139,7 @@ SELECT p_a_d.period,
                                                          WHERE 
                period = p_a_d.period 
                AND qname = 
-           p_a_d.qname), 2) )                         AS percentage, 
+           p_a_d.qname), 2) )                         AS notProcessed$percentage, 
        (SELECT Sum(count) 
         FROM   performance_full_year 
         WHERE  period = p_a_d.period 
@@ -153,7 +153,7 @@ SELECT p_a_d.period,
                                                          WHERE 
                period = p_a_d.period 
                AND qname = 
-           p_a_d.qname), 2) )                         AS percentage, 
+           p_a_d.qname), 2) )                         AS notProcessed$percentage, 
        (SELECT Sum(count) 
         FROM   performance_joinempty_year 
         WHERE  period = p_a_d.period 
@@ -167,7 +167,7 @@ SELECT p_a_d.period,
                                                          WHERE 
                period = p_a_d.period 
                AND qname = 
-           p_a_d.qname), 2) )                         AS percentage, 
+           p_a_d.qname), 2) )                         AS notProcessed$percentage, 
        (SELECT Sum(count) 
         FROM   performance_null_year 
         WHERE  period = p_a_d.period 
@@ -181,7 +181,7 @@ SELECT p_a_d.period,
                                                          WHERE 
                period = p_a_d.period 
                AND qname = 
-           p_a_d.qname), 2) )                         AS percentage, 
+           p_a_d.qname), 2) )                         AS null$percentage, 
        p_a_d.min_hold                                 AS waiting$min, 
        p_a_d.max_hold                                 AS waiting$max, 
        p_a_d.avg_hold                                 AS waiting$avg, 
