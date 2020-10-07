@@ -123,6 +123,10 @@ export default {
   text-align: left;
 }
 
+.mg-top-md {
+  margin-top: 2rem !important;
+}
+
 .mg-bottom-md {
   margin-bottom: 2rem !important;
 }
@@ -136,7 +140,7 @@ export default {
 }
 
 .line-chart {
-  max-width: 50%;
+  max-width: 33%;
   margin: 3rem auto;
 }
 

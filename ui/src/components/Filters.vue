@@ -68,7 +68,7 @@
         </sui-form-field>
       </sui-form-fields>
 
-      <sui-form-fields>
+      <sui-grid>
         <sui-form-field v-if="showFilterQueue" width="four">
           <label>Queues</label>
           <sui-dropdown
@@ -157,9 +157,9 @@
             v-model="filter.origins"
           />
         </sui-form-field>
-      </sui-form-fields>
+        <!-- </sui-grid>
 
-      <sui-form-fields>
+      <sui-form-fields> -->
         <sui-form-field v-if="showFilterDestination" width="six">
           <label>Destinations</label>
           <sui-dropdown
@@ -201,9 +201,9 @@
           <label>Null call</label>
           <sui-checkbox label toggle v-model="filter.nullCall" />
         </sui-form-field>
-      </sui-form-fields>
+      </sui-grid>
 
-      <sui-form-fields>
+      <sui-form-fields class="mg-top-md">
         <sui-button primary type="submit" class="mg-right-sm"
           >Apply filters</sui-button
         >
@@ -745,7 +745,40 @@ export default {
     applyFilters() {
       // save filter to local storage
       this.set("reportFilter", this.filter);
-      this.$root.$emit("applyFilters", this.filter);
+
+      let filterToApply = JSON.parse(JSON.stringify(this.filter));
+
+      if (
+        this.$refs.filterContactName &&
+        this.$refs.filterContactName.$el &&
+        this.$refs.filterContactName.$el.firstChild &&
+        this.$refs.filterContactName.$el.firstChild.value
+      ) {
+        const contactName = this.$refs.filterContactName.$el.firstChild.value;
+        const contact = this.phoneBook.find((c) => {
+          return c.title == contactName;
+        });
+
+        if (contact) {
+          let phoneNumbers = [];
+
+          for (const [phoneType, phoneList] of Object.entries(contact.phones)) {
+            for (const phoneNumber of phoneList) {
+              if (phoneNumber) {
+                phoneNumbers.push(phoneType + "_" + phoneNumber);
+              }
+            }
+          }
+
+          if (phoneNumbers.length) {
+            filterToApply.phones = phoneNumbers;
+
+            console.log("phoneNumbers", phoneNumbers); ////
+          }
+        }
+      }
+
+      this.$root.$emit("applyFilters", filterToApply);
     },
     hackDropdown(e) {
       e.target.parentNode
