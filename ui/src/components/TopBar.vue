@@ -129,8 +129,8 @@ export default {
   },
   watch: {
     $route: function () {
-      if (this.$route.meta.name == "menu.dashboard") {
-        this.title = this.$i18n.t("menu.dashboard");
+      if (this.$route.meta.name == "menu.dashboard" || this.$route.meta.name == "menu.performance") {
+        this.title = this.$i18n.t(this.$route.meta.name);
       } else {
         this.title =
           (this.$route.meta.section
