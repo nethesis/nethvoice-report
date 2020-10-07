@@ -29,20 +29,20 @@
           <label>Time interval</label>
           <sui-button-group class="fluid">
             <sui-button
-              :active="selectedTimeType == 'yesterday'"
+              :active="filter.time.range == 'yesterday'"
               @click="selectTime('yesterday')"
               type="button"
               >Yesterday</sui-button
             >
             <sui-button
-              :active="selectedTimeType == 'lastWeek'"
-              @click="selectTime('lastWeek')"
+              :active="filter.time.range == 'last_week'"
+              @click="selectTime('last_week')"
               type="button"
               >Last week</sui-button
             >
             <sui-button
-              :active="selectedTimeType == 'lastMonth'"
-              @click="selectTime('lastMonth')"
+              :active="filter.time.range == 'last_month'"
+              @click="selectTime('last_month')"
               type="button"
               >Last month</sui-button
             >
@@ -334,6 +334,7 @@ export default {
         time: {
           group: "",
           division: "",
+          range: null,
           interval: {
             start: null,
             end: null,
@@ -356,7 +357,6 @@ export default {
         callers: [],
         contactNames: [],
       },
-      selectedTimeType: "",
       savedSearches: [],
       openSaveSearchModal: false,
       openOverwriteSearchModal: false,
@@ -394,14 +394,17 @@ export default {
     "filter.ivrs": function () {
       this.updateIvrChoices();
     },
+    "filter.time.range": function () {
+      console.log("watch filter.time.range", this.filter.time.range); ////
+    },
     "filter.time.interval": function () {
-      this.selectedTimeType = "";
-
       if (
         this.filter.time.interval &&
         this.filter.time.interval.start &&
         this.filter.time.interval.end
       ) {
+        this.filter.time.range = "";
+
         // convert to date object if needed
         if (typeof this.filter.time.interval.start == "string") {
           this.filter.time.interval.start = new Date(
@@ -422,17 +425,17 @@ export default {
             this.filter.time.interval.start.getTime() ==
             this.getYesterday().getTime()
           ) {
-            this.selectedTimeType = "yesterday";
+            this.filter.time.range = "yesterday";
           } else if (
             this.filter.time.interval.start.getTime() ==
             this.getLastWeek().getTime()
           ) {
-            this.selectedTimeType = "lastWeek";
+            this.filter.time.range = "last_week";
           } else if (
             this.filter.time.interval.start.getTime() ==
             this.getLastMonth().getTime()
           ) {
-            this.selectedTimeType = "lastMonth";
+            this.filter.time.range = "last_month";
           }
         }
       }
@@ -638,8 +641,15 @@ export default {
       );
     },
     setFilterSelection(filter) {
+
+      console.log("setFilterSelection, range:", filter.time.range); /////
+
       // time
-      this.filter.time = filter.time; //// test with group and division too
+      this.filter.time.group = filter.time.group;
+      this.filter.time.division = filter.time.division;
+      this.filter.time.interval = filter.time.interval;
+      this.filter.time.range = filter.time.range;
+      this.selectTime(filter.time.range);
 
       // null call
       this.filter.nullCall = filter.nullCall;
@@ -654,7 +664,7 @@ export default {
           this.mapSavedSearches(savedSearches);
 
           if (searchToSelect) {
-            this.selectedSearch = searchToSelect; //// test
+            this.selectedSearch = searchToSelect;
           }
         },
         (error) => {
@@ -717,20 +727,20 @@ export default {
     getLastMonth() {
       return this.addDays(this.getToday(), -30);
     },
-    selectTime(interval) {
-      this.selectedTimeType = interval;
+    selectTime(range) {
+      this.filter.time.range = range;
 
-      if (this.selectedTimeType == "yesterday") {
+      if (range == "yesterday") {
         this.filter.time.interval = {
           start: this.getYesterday(),
           end: this.getToday(),
         };
-      } else if (this.selectedTimeType == "lastWeek") {
+      } else if (range == "last_week") {
         this.filter.time.interval = {
           start: this.getLastWeek(),
           end: this.getToday(),
         };
-      } else if (this.selectedTimeType == "lastMonth") {
+      } else if (range == "last_month") {
         this.filter.time.interval = {
           start: this.getLastMonth(),
           end: this.getToday(),

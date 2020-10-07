@@ -13,7 +13,7 @@ Available Commands:
   help        Help about any command
   phonebook   Find all numbers in phonebook and save to cache
   queries     Execute all report queries applying all saved filters
-  values      Calculate all possibile values to show in filters
+  values      Calculate all possible values to show in filters
   version     Show NethVoice Tasks support CLI version
   views       Calculate query views to combine data and columns
 

@@ -31,7 +31,7 @@ export default {
         datasets: [
           {
             label: this.$i18n.t("caption." + this.caption),
-            backgroundColor: ["rgb(111, 180, 232)", "rgb(244,110,110)", "rgb(132,173,132)", "rgb(232, 180, 111)"], ////
+            backgroundColor: ["rgb(111, 180, 232)", "rgb(154,202,238)", "rgb(197,225,245)", "rgb(125,187,234)", "rgb(168,210,241)", "rgb(197,225,245)"], ////
             borderColor: "rgb(33, 133, 208)", ////
             data: this.values.map(v => parseInt(v)),
           },

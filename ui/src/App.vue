@@ -140,12 +140,12 @@ export default {
 }
 
 .line-chart {
-  max-width: 33%;
+  max-width: 60%;
   margin: 3rem auto;
 }
 
 .pie-chart {
-  max-width: 33%;
+  max-width: 40%;
   margin: 3rem auto;
 }
 

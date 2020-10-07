@@ -42,7 +42,7 @@ import (
 // Define command handled by cobra
 var valuesCmd = &cobra.Command{
 	Use:   "values",
-	Short: "Calculate all possibile values to show in filters",
+	Short: "Calculate all possible values to show in filters",
 	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
 		executeReportValues()
