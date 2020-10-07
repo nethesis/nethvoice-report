@@ -1,5 +1,6 @@
 SELECT p_a_d.period, 
-       p_a_d.qname, 
+       p_a_d.qname AS queueName,
+       p_a_d.qdescr AS queueDescription,
        (SELECT total 
         FROM   performance_total_year 
         WHERE  period = p_a_d.period 
