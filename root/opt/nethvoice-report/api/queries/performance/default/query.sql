@@ -1,19 +1,19 @@
 SELECT p_a_d.period, 
        p_a_d.qname, 
        (SELECT total 
-        FROM   performance_totali_year 
+        FROM   performance_total_year 
         WHERE  period = p_a_d.period 
                AND qname = p_a_d.qname)               AS incoming, 
        (SELECT count 
-        FROM   performance_evase_year 
+        FROM   performance_processed_year 
         WHERE  period = p_a_d.period 
                AND qname = p_a_d.qname)               AS processed$tot, 
        ( Round((SELECT count 
-                FROM   performance_evase_year 
+                FROM   performance_processed_year 
                 WHERE  period = p_a_d.period 
                        AND qname = p_a_d.qname) * 100 / 
                (SELECT total 
-                FROM   performance_totali_year 
+                FROM   performance_total_year 
                 WHERE  period = p_a_d.period 
                        AND qname = p_a_d.qname), 
            2) )                                       AS percentage, 
@@ -26,13 +26,13 @@ SELECT p_a_d.period,
                 WHERE  period = p_a_d.period 
                        AND qname = p_a_d.qname) * 100 / (SELECT total 
                                                          FROM 
-               performance_totali_year 
+               performance_total_year 
                                                          WHERE 
                period = p_a_d.period 
                AND qname = 
            p_a_d.qname), 2) )                         AS percentage, 
        Sum((SELECT COALESCE(Sum(count), 0) 
-            FROM   performance_fallite_year 
+            FROM   performance_failed_year 
             WHERE  period = p_a_d.period 
                    AND qname = p_a_d.qname) 
            + (SELECT COALESCE(Sum(count), 0) 
@@ -56,7 +56,7 @@ SELECT p_a_d.period,
               WHERE  period = p_a_d.period 
                      AND qname = p_a_d.qname))        AS notProcessed$tot, 
        ( Round(( Sum((SELECT COALESCE(Sum(count), 0) 
-                      FROM   performance_fallite_year 
+                      FROM   performance_failed_year 
                       WHERE  period = p_a_d.period 
                              AND qname = p_a_d.qname) 
                      + (SELECT COALESCE(Sum(count), 0) 
@@ -80,20 +80,20 @@ SELECT p_a_d.period,
                         WHERE  period = p_a_d.period 
                                AND qname = p_a_d.qname)) ) * 100 / (SELECT total 
                                                                     FROM 
-                       performance_totali_year 
+                       performance_total_year 
                                                                     WHERE 
                        period = p_a_d.period 
                        AND qname = p_a_d.qname), 2) ) AS percentage, 
        (SELECT Sum(count) 
-        FROM   performance_fallite_year 
+        FROM   performance_failed_year 
         WHERE  period = p_a_d.period 
-               AND qname = p_a_d.qname)               AS notProcessed$fallite, 
+               AND qname = p_a_d.qname)               AS notProcessed$failed, 
        ( Round((SELECT Sum(count) 
-                FROM   performance_fallite_year 
+                FROM   performance_failed_year 
                 WHERE  period = p_a_d.period 
                        AND qname = p_a_d.qname) * 100 / (SELECT total 
                                                          FROM 
-               performance_totali_year 
+               performance_total_year 
                                                          WHERE 
                period = p_a_d.period 
                AND qname = 
@@ -107,7 +107,7 @@ SELECT p_a_d.period,
                 WHERE  period = p_a_d.period 
                        AND qname = p_a_d.qname) * 100 / (SELECT total 
                                                          FROM 
-               performance_totali_year 
+               performance_total_year 
                                                          WHERE 
                period = p_a_d.period 
                AND qname = 
@@ -121,7 +121,7 @@ SELECT p_a_d.period,
                 WHERE  period = p_a_d.period 
                        AND qname = p_a_d.qname) * 100 / (SELECT total 
                                                          FROM 
-               performance_totali_year 
+               performance_total_year 
                                                          WHERE 
                period = p_a_d.period 
                AND qname = 
@@ -135,7 +135,7 @@ SELECT p_a_d.period,
                 WHERE  period = p_a_d.period 
                        AND qname = p_a_d.qname) * 100 / (SELECT total 
                                                          FROM 
-               performance_totali_year 
+               performance_total_year 
                                                          WHERE 
                period = p_a_d.period 
                AND qname = 
@@ -149,7 +149,7 @@ SELECT p_a_d.period,
                 WHERE  period = p_a_d.period 
                        AND qname = p_a_d.qname) * 100 / (SELECT total 
                                                          FROM 
-               performance_totali_year 
+               performance_total_year 
                                                          WHERE 
                period = p_a_d.period 
                AND qname = 
@@ -163,21 +163,21 @@ SELECT p_a_d.period,
                 WHERE  period = p_a_d.period 
                        AND qname = p_a_d.qname) * 100 / (SELECT total 
                                                          FROM 
-               performance_totali_year 
+               performance_total_year 
                                                          WHERE 
                period = p_a_d.period 
                AND qname = 
            p_a_d.qname), 2) )                         AS percentage, 
        (SELECT Sum(count) 
-        FROM   performance_nulle_year 
+        FROM   performance_null_year 
         WHERE  period = p_a_d.period 
                AND qname = p_a_d.qname)               AS null$tot, 
        ( Round((SELECT Sum(count) 
-                FROM   performance_nulle_year 
+                FROM   performance_null_year 
                 WHERE  period = p_a_d.period 
                        AND qname = p_a_d.qname) * 100 / (SELECT total 
                                                          FROM 
-               performance_totali_year 
+               performance_total_year 
                                                          WHERE 
                period = p_a_d.period 
                AND qname = 

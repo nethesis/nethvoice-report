@@ -1,18 +1,18 @@
-DROP TABLE IF EXISTS performance_totali_year;
-DROP TABLE IF EXISTS performance_totali_month;
-DROP TABLE IF EXISTS performance_totali_week;
-DROP TABLE IF EXISTS performance_totali_day;
+DROP TABLE IF EXISTS performance_total_year;
+DROP TABLE IF EXISTS performance_total_month;
+DROP TABLE IF EXISTS performance_total_week;
+DROP TABLE IF EXISTS performance_total_day;
 
-CREATE TABLE performance_totali_year AS SELECT p_a_d.period,p_a_d.qname,Sum((SELECT COALESCE(Sum(count), 0) 
-            FROM   performance_evase_year 
+CREATE TABLE performance_total_year AS SELECT p_a_d.period,p_a_d.qname,Sum((SELECT COALESCE(Sum(count), 0) 
+            FROM   performance_processed_year 
             WHERE  period = p_a_d.period 
                    AND qname = p_a_d.qname) 
            + (SELECT COALESCE(Sum(count), 0) 
-              FROM   performance_nulle_year 
+              FROM   performance_null_year 
               WHERE  period = p_a_d.period 
                      AND qname = p_a_d.qname) 
            + (SELECT COALESCE(Sum(count), 0) 
-              FROM   performance_fallite_year 
+              FROM   performance_failed_year 
               WHERE  period = p_a_d.period 
                      AND qname = p_a_d.qname) 
            + (SELECT COALESCE(Sum(count), 0) 
@@ -35,20 +35,20 @@ CREATE TABLE performance_totali_year AS SELECT p_a_d.period,p_a_d.qname,Sum((SEL
               FROM   performance_joinempty_year 
               WHERE  period = p_a_d.period 
                      AND qname = p_a_d.qname)) AS total 
-FROM   performance_attesa_durate_year p_a_d 
+FROM   performance_wait_duration_year p_a_d 
 GROUP  BY p_a_d.period, 
           p_a_d.qname; 
 
-CREATE TABLE performance_totali_month AS SELECT p_a_d.period,p_a_d.qname,Sum((SELECT COALESCE(Sum(count), 0)
-            FROM   performance_evase_month
+CREATE TABLE performance_total_month AS SELECT p_a_d.period,p_a_d.qname,Sum((SELECT COALESCE(Sum(count), 0)
+            FROM   performance_processed_month
             WHERE  period = p_a_d.period
                    AND qname = p_a_d.qname)
            + (SELECT COALESCE(Sum(count), 0)
-              FROM   performance_nulle_month
+              FROM   performance_null_month
               WHERE  period = p_a_d.period
                      AND qname = p_a_d.qname)
            + (SELECT COALESCE(Sum(count), 0)
-              FROM   performance_fallite_month
+              FROM   performance_failed_month
               WHERE  period = p_a_d.period
                      AND qname = p_a_d.qname)
            + (SELECT COALESCE(Sum(count), 0)
@@ -71,20 +71,20 @@ CREATE TABLE performance_totali_month AS SELECT p_a_d.period,p_a_d.qname,Sum((SE
               FROM   performance_joinempty_month
               WHERE  period = p_a_d.period 
                      AND qname = p_a_d.qname)) AS total
-FROM   performance_attesa_durate_month p_a_d
+FROM   performance_wait_duration_month p_a_d
 GROUP  BY p_a_d.period,
           p_a_d.qname;
 
-CREATE TABLE performance_totali_week AS SELECT p_a_d.period,p_a_d.qname,Sum((SELECT COALESCE(Sum(count), 0)
-            FROM   performance_evase_week
+CREATE TABLE performance_total_week AS SELECT p_a_d.period,p_a_d.qname,Sum((SELECT COALESCE(Sum(count), 0)
+            FROM   performance_processed_week
             WHERE  period = p_a_d.period
                    AND qname = p_a_d.qname)
            + (SELECT COALESCE(Sum(count), 0)
-              FROM   performance_nulle_week
+              FROM   performance_null_week
               WHERE  period = p_a_d.period
                      AND qname = p_a_d.qname)
            + (SELECT COALESCE(Sum(count), 0)
-              FROM   performance_fallite_week
+              FROM   performance_failed_week
               WHERE  period = p_a_d.period
                      AND qname = p_a_d.qname)
            + (SELECT COALESCE(Sum(count), 0)
@@ -107,20 +107,20 @@ CREATE TABLE performance_totali_week AS SELECT p_a_d.period,p_a_d.qname,Sum((SEL
               FROM   performance_joinempty_week
               WHERE  period = p_a_d.period
                      AND qname = p_a_d.qname)) AS total
-FROM   performance_attesa_durate_week p_a_d
+FROM   performance_wait_duration_week p_a_d
 GROUP  BY p_a_d.period,
           p_a_d.qname;
 
-CREATE TABLE performance_totali_day AS SELECT p_a_d.period,p_a_d.qname,Sum((SELECT COALESCE(Sum(count), 0)
-            FROM   performance_evase_day
+CREATE TABLE performance_total_day AS SELECT p_a_d.period,p_a_d.qname,Sum((SELECT COALESCE(Sum(count), 0)
+            FROM   performance_processed_day
             WHERE  period = p_a_d.period
                    AND qname = p_a_d.qname)
            + (SELECT COALESCE(Sum(count), 0)
-              FROM   performance_nulle_day
+              FROM   performance_null_day
               WHERE  period = p_a_d.period
                      AND qname = p_a_d.qname)
            + (SELECT COALESCE(Sum(count), 0)
-              FROM   performance_fallite_day
+              FROM   performance_failed_day
               WHERE  period = p_a_d.period
                      AND qname = p_a_d.qname)
            + (SELECT COALESCE(Sum(count), 0)
@@ -143,7 +143,7 @@ CREATE TABLE performance_totali_day AS SELECT p_a_d.period,p_a_d.qname,Sum((SELE
               FROM   performance_joinempty_day
               WHERE  period = p_a_d.period
                      AND qname = p_a_d.qname)) AS total
-FROM   performance_attesa_durate_day p_a_d
+FROM   performance_wait_duration_day p_a_d
 GROUP  BY p_a_d.period,
           p_a_d.qname;
 
