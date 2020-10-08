@@ -1,23 +1,23 @@
 <template lang="html">
-<div>
-  <div v-for="(chart, index) in charts" v-bind:key="index">
-    <h4 is="sui-header" class="chart-caption">
-      ({{chart.position}}) {{ $t("caption." + chart.caption) }}
+<div class="chart-container">
+  <div v-for="(chart, index) in charts" v-bind:key="index" :class="{'table-chart': chart.type == 'table', 'line-chart': chart.type == 'line', 'pie-chart': chart.type == 'pie'}">
+    <h4 is="sui-header">
+      {{ $t("caption." + chart.caption) }}
     </h4>
     <div v-show="!chart.data">
       <sui-loader active centered inline class="loader-height" />
     </div>
     <div v-show="chart.data">
       <!-- table chart -->
-      <div class="mg-bottom-lg">
-        <TableChart v-if="chart.type == 'table'" :caption="chart.caption" :data="chart.data" />
+      <div v-if="chart.type == 'table'">
+        <TableChart :caption="chart.caption" :data="chart.data" />
       </div>
       <!-- line chart -->
-      <div v-if="chart.type == 'line'" class="line-chart">
+      <div v-if="chart.type == 'line'">
         <line-chart :data="chart.data" :caption="chart.caption"></line-chart>
       </div>
       <!-- pie chart -->
-      <div v-if="chart.type == 'pie'" class="pie-chart">
+      <div v-if="chart.type == 'pie'">
         <pie-chart :data="chart.data" :caption="chart.caption"></pie-chart>
       </div>
     </div>

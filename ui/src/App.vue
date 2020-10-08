@@ -119,10 +119,6 @@ export default {
   width: 100% !important;
 }
 
-.chart-caption {
-  text-align: left;
-}
-
 .mg-top-md {
   margin-top: 2rem !important;
 }
@@ -131,25 +127,32 @@ export default {
   margin-bottom: 2rem !important;
 }
 
-.mg-bottom-lg {
-  margin-bottom: 3rem !important;
-}
-
 .mg-3-em {
   margin: 3em;
 }
 
+.table-chart {
+  width: 95%;
+  margin: 2rem auto;
+}
+
 .line-chart {
-  max-width: 60%;
-  margin: 3rem auto;
+  width: 95%;
+  margin: 2rem auto;
 }
 
 .pie-chart {
-  max-width: 40%;
-  margin: 3rem auto;
+  width: 35%;
+  margin: 2rem;
 }
 
 .loader-height {
   height: 6rem !important;
+}
+
+.chart-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 </style>
