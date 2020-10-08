@@ -2,7 +2,7 @@
 <div>
   <div v-for="(chart, index) in charts" v-bind:key="index">
     <h4 is="sui-header" class="chart-caption">
-      {{ $t("caption." + chart.caption) }}
+      ({{chart.position}}) {{ $t("caption." + chart.caption) }}
     </h4>
     <div v-show="!chart.data">
       <sui-loader active centered inline class="loader-height" />
@@ -32,11 +32,12 @@ import PieChart from "../../components/PieChart.vue";
 
 import QueriesService from "../../services/queries";
 import StorageService from "../../services/storage";
+import UtilService from "../../services/utils";
 
 export default {
   name: "QueueDashboard",
   components: { TableChart, LineChart, PieChart },
-  mixins: [StorageService, QueriesService],
+  mixins: [StorageService, QueriesService, UtilService],
   data() {
     return {
       queryTree: null,
@@ -70,7 +71,7 @@ export default {
       );
     },
     initCharts() {
-      this.charts = [];
+      let charts = [];
 
       this.queryNames = this.queryTree[this.$route.meta.section][
         this.$route.meta.view
@@ -78,10 +79,10 @@ export default {
 
       for (const queryName of this.queryNames) {
         const tokens = queryName.split("_");
-        const position = tokens[0];
+        const position = parseInt(tokens[0]);
         const type = tokens[1];
         const caption = tokens[2];
-        this.charts.push({
+        charts.push({
           name: queryName,
           position: position,
           type: type,
@@ -89,6 +90,7 @@ export default {
           data: null,
         });
       }
+      this.charts = charts.sort(this.sortByProperty("position"));
     },
     applyFilters(filter) {
       // clear charts data
@@ -96,18 +98,14 @@ export default {
 
       filter.agents = ["0721", "0722"]; ////
 
-      for (const queryName of this.queryNames) {
+      for (let chart of this.charts) {
         this.execQuery(
           filter,
           this.$route.meta.section,
           this.$route.meta.view,
-          queryName,
+          chart.name,
           (success) => {
             const result = success.body;
-            // set data to chart
-            let chart = this.charts.find((chart) => {
-              return chart.name == queryName;
-            });
             chart.data = result;
           },
           (error) => {
