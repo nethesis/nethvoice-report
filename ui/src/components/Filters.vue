@@ -329,7 +329,6 @@ export default {
         reasons: [],
         results: [],
         choices: [],
-        allChoices: [],
         destinations: [],
         origins: [],
         time: {
@@ -353,6 +352,7 @@ export default {
         reasons: [],
         results: [],
         choices: [],
+        allChoices: [],
         destinations: [],
         origins: [],
         callers: [],
@@ -516,13 +516,13 @@ export default {
 
           // choices: hide duplicates
           if (this.defaultFilter.choices) {
-            this.allChoices = [];
+            this.filterValues.allChoices = [];
             let choiceSet = new Set();
             this.defaultFilter.choices.forEach((choice) => {
               const tokens = choice.split(",");
               const idIvr = tokens[0];
               const choiceName = tokens[1];
-              this.allChoices.push({
+              this.filterValues.allChoices.push({
                 value: choiceName,
                 text: choiceName,
                 idIvr: idIvr,
@@ -906,7 +906,7 @@ export default {
 
       if (this.filter.ivrs.length == 0) {
         // selecting no IVR is the same as selecting all of them
-        selectedIvrs = this.ivrs.map((ivr) => {
+        selectedIvrs = this.filterValues.ivrs.map((ivr) => {
           return ivr.value;
         });
       }
@@ -914,12 +914,12 @@ export default {
       let relatedChoiceValues = new Set();
 
       selectedIvrs.forEach((selectedIvr) => {
-        const ivr = this.ivrs.find((i) => {
+        const ivr = this.filterValues.ivrs.find((i) => {
           return i.value == selectedIvr;
         });
 
         // find related IVR choices
-        let relatedChoices = this.allChoices.filter((choice) => {
+        let relatedChoices = this.filterValues.allChoices.filter((choice) => {
           return choice.idIvr == ivr.id;
         });
 
@@ -933,7 +933,7 @@ export default {
       let choices = Array.from(relatedChoiceValues).map((choiceName) => {
         return { value: choiceName, text: choiceName };
       });
-      this.choices = choices.sort(this.sortByProperty("text"));
+      this.filterValues.choices = choices.sort(this.sortByProperty("text"));
     },
     retrievePhonebook() {
       //// use local storage (with expiry)
