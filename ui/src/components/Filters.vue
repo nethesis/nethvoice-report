@@ -371,7 +371,6 @@ export default {
         deleteSearch: false,
       },
       groupByTimeValues: [
-        { value: "", text: "-" },
         { value: "day", text: "Day" },
         { value: "week", text: "Week" },
         { value: "month", text: "Month" },

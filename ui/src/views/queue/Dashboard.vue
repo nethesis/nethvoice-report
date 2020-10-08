@@ -1,11 +1,13 @@
 <template lang="html">
 <div>
   <div v-for="(chart, index) in charts" v-bind:key="index">
-    <sui-loader v-show="!chart.data" active centered inline class="loader-height" />
+    <h4 is="sui-header" class="chart-caption">
+      {{ $t("caption." + chart.caption) }}
+    </h4>
+    <div v-show="!chart.data">
+      <sui-loader active centered inline class="loader-height" />
+    </div>
     <div v-show="chart.data">
-      <h4 is="sui-header" class="chart-caption">
-        {{ $t("caption." + chart.caption) }}
-      </h4>
       <!-- table chart -->
       <div class="mg-bottom-lg">
         <TableChart v-if="chart.type == 'table'" :caption="chart.caption" :data="chart.data" />
@@ -102,17 +104,11 @@ export default {
           queryName,
           (success) => {
             const result = success.body;
-
-            console.log("query result", result); ////
-
             // set data to chart
             let chart = this.charts.find((chart) => {
               return chart.name == queryName;
             });
-
-            setTimeout(() => {
-              chart.data = result;
-            }, Math.floor(Math.random() * 1000)); //// remove
+            chart.data = result;
           },
           (error) => {
             console.error(error.body);
