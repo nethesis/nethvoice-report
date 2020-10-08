@@ -3,24 +3,28 @@ import { Line } from "vue-chartjs";
 
 export default {
   extends: Line,
-    props: ["caption", "data"],
+  props: ["caption", "data"],
   data() {
     return {
       labels: [],
       values: [],
+      colors: [
+        "#2185d0",
+        "#134f7c",
+        "#79b5e2",
+        "#061a29",
+        "#d2e6f5",
+        "#0d3553",
+        "#a6ceec",
+        "#4d9dd9",
+        "#1a6aa6",
+      ],
     };
   },
   watch: {
     data: function () {
-      if (this.data) {
-        if (this.data.length > 1) {
-          this.labels = this.data[1];
-        }
-
-        if (this.data.length > 2) {
-          this.values = this.data[2];
-          this.renderLineChart();
-        }
+      if (this.data && this.data.length > 1) {
+        this.parseData();
       }
     },
   },
@@ -28,16 +32,49 @@ export default {
     renderLineChart() {
       const chartData = {
         labels: this.labels,
-        datasets: [
-          {
-            label: this.$i18n.t("caption." + this.caption),
-            backgroundColor: "rgb(111, 180, 232)", ////
-            borderColor: "rgb(33, 133, 208)", ////
-            data: this.values.map(v => parseFloat(v)),
-          },
-        ],
+        datasets: this.datasets,
       };
       this.renderChart(chartData, this.options);
+    },
+    parseData() {
+      // remove first element (query columns)
+      const rows = this.data.filter((_, i) => i !== 0);
+      this.labels = [];
+      this.datasets = [];
+      let currentDataset = null;
+      let labelsProcessed = false;
+
+      rows.forEach((row, index) => {
+        const datasetName = row[0];
+        const label = row[1];
+        const value = parseFloat(row[2]);
+
+        if (currentDataset != null && datasetName == currentDataset.label) {
+          // add data to dataset
+          currentDataset.data.push(value);
+
+          if (!labelsProcessed) {
+            this.labels.push(label);
+          }
+        } else {
+          // new dataset
+
+          if (currentDataset != null && !labelsProcessed) {
+            labelsProcessed = true;
+          }
+
+          const color = this.colors[index % this.colors.length];
+          currentDataset = {
+            label: datasetName,
+            data: [value],
+            borderColor: color,
+            backgroundColor: color,
+            fill: false,
+          };
+          this.datasets.push(currentDataset);
+        }
+      });
+      this.renderLineChart();
     },
   },
 };
