@@ -75,7 +75,69 @@ var UtilService = {
       // save an object to local storage attaching its expiry date
       const expiry = new Date().getTime() + ttlMinutes * 60 * 1000;
       this.set(key, { item: item, expiry: expiry });
-    }
+    },
+    formatValue(value, format) {
+      switch (format) {
+        case "num":
+          return this.formatNumber(value);
+        case "seconds":
+          return this.formatTime(value);
+        case "percent":
+          return this.formatPercentage(value);
+        case "label":
+          return this.$i18n.t(value) + " (i18n)"; ////
+        case "yearDate":
+          // no formatting needed
+          return value;
+        case "monthDate":
+          return value + " (monthDate)"; ////
+        case "weekDate":
+          return value + " (weekDate)"; ////
+        case "dayDate":
+          return value + " (dayDate)"; ////
+      }
+    },
+    formatNumber(value) {
+      const num = parseFloat(value);
+
+      if (isNaN(num)) {
+        return "-";
+      }
+      return num.toLocaleString();
+    },
+    formatPercentage(value) {
+      const numFormatted = this.formatNumber(value);
+
+      if (!numFormatted || numFormatted == "-") {
+        return "-";
+      } else {
+        return numFormatted + " %";
+      }
+    },
+    formatTime: function (value) {
+      if (!value || value.length == 0) {
+        return '-'
+      }
+
+      var ret = "";
+      let hours = parseInt(Math.floor(value / 3600));
+      let minutes = parseInt(Math.floor((value - hours * 3600) / 60));
+      let seconds = parseInt((value - (hours * 3600 + minutes * 60)) % 60);
+
+      let dHours = hours > 9 ? hours : "0" + hours;
+      let dMins = minutes > 9 ? minutes : "0" + minutes;
+      let dSecs = seconds > 9 ? seconds : "0" + seconds;
+
+      ret = dSecs + "s";
+      if (minutes) {
+        ret = dMins + "m " + ret;
+      }
+      if (hours) {
+        ret = dHours + "h " + ret;
+      }
+
+      return ret + " (" + value + ")";
+    },
   },
 };
 export default UtilService;

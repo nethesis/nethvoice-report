@@ -448,8 +448,6 @@ export default {
 
     // views request to apply filter on loading
     this.$root.$on("requestApplyFilter", () => {
-      console.log("requestApplyFilter received, applying filter"); ////
-
       this.applyFilters();
     });
   },

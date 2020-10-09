@@ -43,6 +43,8 @@
     "caption": {
       "test-total-calls-for-queue": "Total calls for queue",
       "test-hourly-distribution": "Hourly distribution"
-    }
+    },
+    "total": "Total",
+    "queueName": "Queue name"
   }
 }

@@ -6,7 +6,7 @@
         <sui-table-header-cell
           v-for="(column, index) in columns"
           v-bind:key="index"
-          >{{ column }}</sui-table-header-cell
+          >{{ $t(column) }}</sui-table-header-cell
         >
       </sui-table-row>
     </sui-table-header>
@@ -20,7 +20,7 @@
           v-bind:key="index"
           :rowspan="header.subHeaders == null ? '2' : '1'"
           :colspan="header.subHeaders ? header.subHeaders.length : '1'"
-          >{{ header.name }}</sui-table-header-cell
+          >{{ $t(header.name) }}</sui-table-header-cell
         >
       </sui-table-row>
       <!-- sub-header -->
@@ -28,7 +28,7 @@
         <sui-table-header-cell
           v-for="(header, index) in subHeaders"
           v-bind:key="index"
-          >{{ header }}</sui-table-header-cell
+          >{{ $t(header) }}</sui-table-header-cell
         >
       </sui-table-row>
     </sui-table-header>
@@ -44,9 +44,12 @@
 </template>
 
 <script>
+import UtilService from "../services/utils";
+
 export default {
   name: "TableChart",
   props: ["caption", "data"],
+  mixins: [UtilService],
   data() {
     return {
       columns: [],
@@ -57,22 +60,29 @@ export default {
   },
   watch: {
     data: function () {
-      if (this.data) {
-        if (this.data.length) {
-          // table has double header if at least one column header contains "$" character
-          this.hasDoubleHeader = this.data[0].some((h) => {
-            return h.includes("$");
-          });
-          this.columns = this.data[0];
-
-          if (this.hasDoubleHeader) {
-            this.parseDoubleHeader();
-          }
-        }
+      if (this.data && this.data.length) {
+        // table has double header if at least one column header contains "$" character
+        this.hasDoubleHeader = this.data[0].some((h) => {
+          return h.includes("$");
+        });
+        this.columns = this.data[0];
 
         if (this.data.length > 1) {
           this.rows = this.data.slice(1);
+        } else {
+          this.rows = [];
         }
+        this.formatData();
+
+        if (this.hasDoubleHeader) {
+          this.parseDoubleHeader();
+        } else {
+          this.doubleHeader = [];
+        }
+      } else {
+        this.columns = [];
+        this.rows = [];
+        this.doubleHeader = [];
       }
     },
   },
@@ -116,6 +126,30 @@ export default {
           this.doubleHeader.push({ name: column, subHeaders: null });
         }
       });
+    },
+    formatData() {
+      console.log("formatData(), this.columns", this.columns); ////
+      const context = this;
+
+      // change columns and rows arrays while iterating on them
+      this.columns.forEach(function (column, colIndex) {
+        if (column.includes("£")) {
+          const tokens = column.split("£");
+          const columnName = tokens[0];
+          const format = tokens[1];
+
+          // remove format from column name
+          this[colIndex] = columnName; //// uppercase?
+
+          // format cell value in all data rows
+          context.rows.forEach(function (row, rowIndex) {
+            this[rowIndex][colIndex] = context.formatValue(
+              this[rowIndex][colIndex],
+              format
+            );
+          }, context.rows);
+        }
+      }, this.columns);
     },
   },
 };
