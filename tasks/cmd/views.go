@@ -20,7 +20,7 @@
  * author: Edoardo Spadoni <edoardo.spadoni@nethesis.it>
  */
 
- package cmd
+package cmd
 
 import (
 	"io/ioutil"

@@ -53,7 +53,7 @@ type Configuration struct {
 	Secret                 string          `json:"secret"`
 	QueryPath              string          `json:"query_path"`
 	ValuesPath             string          `json:"values_path"`
-	ViewsPath	       string	       `json:"views_path"`
+	ViewsPath              string          `json:"views_path"`
 	PhonebookPath          string          `json:"phonebook_path"`
 	UserAuthorizationsFile string          `json:"user_auth_file"`
 	DefaultFilter          models.Filter   `json:"default_filter"`
