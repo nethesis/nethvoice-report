@@ -53,7 +53,12 @@ cp -a %{SOURCE3} %{buildroot}/opt/nethvoice-report/tasks/
 cp collectd/asterisk_stats.py %{buildroot}/%{python2_sitelib}
 cp collectd/asterisk_stats.conf %{buildroot}/etc/collectd.d/
 
-%{genfilelist} %{buildroot} --dir /var/lib/redis/nethvoice-report 'attr(0755,redis,asterisk)'  --file /opt/nethvoice-report/api/api 'attr(0755,asterisk,asterisk)' --file /opt/nethvoice-report/tasks/tasks 'attr(0755,asterisk,asterisk)' > %{name}-%{version}-filelist
+%{genfilelist} %{buildroot} \
+    --dir /var/lib/redis/nethvoice-report 'attr(0755,redis,asterisk)' \
+    --file /opt/nethvoice-report/api/user_authorizations.json 'attr(0664,asterisk,asterisk)' \
+    --file /opt/nethvoice-report/api/api 'attr(0755,asterisk,asterisk)' \
+    --file /opt/nethvoice-report/tasks/tasks 'attr(0755,asterisk,asterisk)' \
+    > %{name}-%{version}-filelist
 cat %{name}-%{version}-filelist
 
 %files -f %{name}-%{version}-filelist
