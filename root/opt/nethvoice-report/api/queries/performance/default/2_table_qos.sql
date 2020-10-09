@@ -1,7 +1,7 @@
-SELECT response_time,
+SELECT responseTime,
        answer£num,
        percentage£percent
-FROM   (SELECT "total"                           AS response_time,
+FROM   (SELECT "total"                           AS responseTime,
                 (SELECT SUM(count)
                         FROM   performance_qos_total
                         WHERE  TRUE {{ if and .Time.Interval.Start .Time.Interval.End }}
@@ -13,7 +13,7 @@ FROM   (SELECT "total"                           AS response_time,
                         {{ end }}) AS answer£num,
                 100 as percentage£percent
         UNION
-        SELECT "5sec"                           AS response_time,
+        SELECT "5sec"                           AS responseTime,
                (SELECT Sum(count) AS count
                 FROM   performance_qos_total_5
                 WHERE  true
@@ -46,7 +46,7 @@ FROM   (SELECT "total"                           AS response_time,
                {{ end }}),
                    2) )                         AS percentage£percent
         UNION
-        SELECT "10sec"                          AS response_time,
+        SELECT "10sec"                          AS responseTime,
                (SELECT Sum(count) AS count
                 FROM   performance_qos_total_10
                 WHERE  true
@@ -79,7 +79,7 @@ FROM   (SELECT "total"                           AS response_time,
                {{ end }}),
                    2) )                         AS percentage£percent
         UNION
-        SELECT "15sec"                          AS response_time,
+        SELECT "15sec"                          AS responseTime,
                (SELECT Sum(count) AS count
                 FROM   performance_qos_total_15
                 WHERE  true
@@ -112,7 +112,7 @@ FROM   (SELECT "total"                           AS response_time,
                {{ end }}),
                    2) )                         AS percentage£percent
         UNION
-        SELECT "20sec"                          AS response_time,
+        SELECT "20sec"                          AS responseTime,
                (SELECT Sum(count) AS count
                 FROM   performance_qos_total_20
                 WHERE  true
@@ -145,7 +145,7 @@ FROM   (SELECT "total"                           AS response_time,
                {{ end }}),
                    2) )                         AS percentage£percent
         UNION
-        SELECT "25sec"                          AS response_time,
+        SELECT "25sec"                          AS responseTime,
                (SELECT Sum(count) AS count
                 FROM   performance_qos_total_25
                 WHERE  true
@@ -178,7 +178,7 @@ FROM   (SELECT "total"                           AS response_time,
                {{ end }}),
                    2) )                         AS percentage£percent
         UNION
-        SELECT "30sec"                          AS response_time,
+        SELECT "30sec"                          AS responseTime,
                (SELECT Sum(count) AS count
                 FROM   performance_qos_total_30
                 WHERE  true
@@ -211,7 +211,7 @@ FROM   (SELECT "total"                           AS response_time,
                {{ end }}),
                    2) )                         AS percentage£percent
         UNION
-        SELECT "45sec"                          AS response_time,
+        SELECT "45sec"                          AS responseTime,
                (SELECT Sum(count) AS count
                 FROM   performance_qos_total_45
                 WHERE  true
@@ -244,7 +244,7 @@ FROM   (SELECT "total"                           AS response_time,
                {{ end }}),
                    2) )                         AS percentage£percent
         UNION
-        SELECT "60sec"                          AS response_time,
+        SELECT "60sec"                          AS responseTime,
                (SELECT Sum(count) AS count
                 FROM   performance_qos_total_60
                 WHERE  true
@@ -277,7 +277,7 @@ FROM   (SELECT "total"                           AS response_time,
                {{ end }}),
                    2) )                         AS percentage£percent
         UNION
-        SELECT "75sec"                          AS response_time,
+        SELECT "75sec"                          AS responseTime,
                (SELECT Sum(count) AS count
                 FROM   performance_qos_total_75
                 WHERE  true
@@ -310,7 +310,7 @@ FROM   (SELECT "total"                           AS response_time,
                {{ end }}),
                    2) )                         AS percentage£percent
         UNION
-        SELECT "90sec"                          AS response_time,
+        SELECT "90sec"                          AS responseTime,
                (SELECT Sum(count) AS count
                 FROM   performance_qos_total_90
                 WHERE  true
@@ -341,4 +341,4 @@ FROM   (SELECT "total"                           AS response_time,
                {{ if gt (len .Queues) 0 }}
                AND qname in ({{ StringsJoin .Queues "," }})
                {{ end }}),
-                   2) )                         AS percentage£percent) AS response_times;
+                   2) )                         AS percentage£percent) AS responseTimes;
