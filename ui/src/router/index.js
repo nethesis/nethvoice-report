@@ -25,7 +25,7 @@ import QueueGraphsAvgDuration from "../views/queue/GraphsAvgDuration.vue";
 import QueueGraphsAvgWait from "../views/queue/GraphsAvgWait.vue";
 
 /* CDR views */
-import CDRDashboard from "../views/cdr/Dashboard.vue";
+import CDRDashboard from "../views/cdr/CDRDashboard.vue";
 
 Vue.use(VueRouter);
 

@@ -25,6 +25,16 @@
       </sui-form-fields>
 
       <sui-form-fields v-if="showFilterTime">
+        <sui-form-field width="four">
+          <label>Group by</label>
+          <sui-dropdown
+            :options="groupByTimeValues"
+            placeholder="Group by time"
+            search
+            selection
+            v-model="filter.time.group"
+          />
+        </sui-form-field>
         <sui-form-field width="six">
           <label>Time interval</label>
           <sui-button-group class="fluid">
@@ -55,16 +65,6 @@
             v-model="filter.time.interval"
             :available-dates="{ start: null, end: new Date() }"
             :masks="{ input: 'YYYY/MM/DD' }"
-          />
-        </sui-form-field>
-        <sui-form-field width="four">
-          <label>Group by time</label>
-          <sui-dropdown
-            :options="groupByTimeValues"
-            placeholder="Group by time"
-            search
-            selection
-            v-model="filter.time.group"
           />
         </sui-form-field>
       </sui-form-fields>
@@ -465,6 +465,10 @@ export default {
 
         // set selected values in filter
         this.setFilterSelection(filter);
+
+        setTimeout(() => {
+          this.applyFilters(); ////
+        }, 1000); ////
       } else {
         console.log("retrieving default filter from backend:"); ////
 
@@ -634,6 +638,10 @@ export default {
 
           // set selected values in filter
           this.setFilterSelection(this.defaultFilter);
+
+          setTimeout(() => {
+            this.applyFilters(); ////
+          }, 1000); ////
         },
         (error) => {
           console.error(error.body);
@@ -641,7 +649,6 @@ export default {
       );
     },
     setFilterSelection(filter) {
-
       console.log("setFilterSelection, range:", filter.time.range); /////
 
       // time
