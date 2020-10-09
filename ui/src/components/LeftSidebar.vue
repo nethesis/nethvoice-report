@@ -99,7 +99,11 @@ export default {
     search: function (val) {
       if (val.length >= 3) {
         this.taggedRoutes = this.$router.options.routes.filter(function (r) {
-          return JSON.stringify(r.meta.tags).includes(val)
+          if (r.meta && r.meta.tags) {
+            return JSON.stringify(r.meta.tags).includes(val);
+          } else {
+            return false;
+          }
         }).map(function (r) {
           return r.path
         })

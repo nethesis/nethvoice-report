@@ -1,7 +1,5 @@
-var Config = {
-  APP_NAME: "<YOUR_APP_NAME>",
-  HELP_URL: "<YOUR_HELP_URL>",
-  COMPANY_NAME: "<YOUR_COMPANY_NAME>",
+window.CONFIG = {
+  APP_NAME: "NethVoice Reports",
+  HELP_URL: "https://nethvoice.docs.nethesis.it/it/v14/",
+  COMPANY_NAME: "Nethesis",
 };
-
-export default Config;

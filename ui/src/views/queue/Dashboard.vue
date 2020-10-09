@@ -1,29 +1,58 @@
 <template lang="html">
-<div class="masthead">
-  <sui-container>
-    <GraphTable v-for="graph in graphs" v-bind:key="graph.name" :data="graph.data" />
-  </sui-container>
+<div class="chart-container">
+  <div v-for="(chart, index) in charts" v-bind:key="index" :class="{'table-chart': chart.type == 'table', 'line-chart': chart.type == 'line', 'pie-chart': chart.type == 'pie'}">
+    <h4 is="sui-header">
+      {{ $t("caption." + chart.caption) }}
+    </h4>
+    <div v-show="!chart.data">
+      <sui-loader active centered inline class="loader-height" />
+    </div>
+    <div v-show="chart.data">
+      <!-- table chart -->
+      <div v-if="chart.type == 'table'">
+        <TableChart :caption="chart.caption" :data="chart.data" />
+      </div>
+      <!-- line chart -->
+      <div v-if="chart.type == 'line'">
+        <line-chart :data="chart.data" :caption="chart.caption"></line-chart>
+      </div>
+      <!-- pie chart -->
+      <div v-if="chart.type == 'pie'">
+        <pie-chart :data="chart.data" :caption="chart.caption"></pie-chart>
+      </div>
+    </div>
+  </div>
 </div>
 </template>
 
 <script>
-import GraphTable from "../../components/GraphTable.vue";
+import TableChart from "../../components/TableChart.vue";
+import LineChart from "../../components/LineChart.vue";
+import PieChart from "../../components/PieChart.vue";
 
 import QueriesService from "../../services/queries";
 import StorageService from "../../services/storage";
+import UtilService from "../../services/utils";
 
 export default {
   name: "QueueDashboard",
-  components: { GraphTable: GraphTable },
-  mixins: [GraphTable, StorageService, QueriesService],
+  components: { TableChart, LineChart, PieChart },
+  mixins: [StorageService, QueriesService, UtilService],
   data() {
     return {
-      graphNames: [],
-      graphs: [],
+      queryTree: null,
+      queryNames: [],
+      charts: [],
     };
   },
   mounted() {
+    console.log("$parent", this.$parent); ////
+
     this.retrieveQueryTree(); ////
+
+    this.$root.$on("applyFilters", (filter) => {
+      this.applyFilters(filter);
+    });
   },
   beforeRouteLeave(to, from, next) {
     this.$root.$off("applyFilters");
@@ -33,38 +62,54 @@ export default {
     retrieveQueryTree() {
       this.getQueryTree(
         (success) => {
-          const queryTree = success.body.query_tree;
-          this.loadGraphs(queryTree);
+          this.queryTree = success.body.query_tree;
+          this.initCharts();
         },
         (error) => {
           console.error(error.body);
         }
       );
     },
-    loadGraphs(queryTree) {
-      this.graphNames =
-        queryTree[this.$route.meta.section][this.$route.meta.view];
+    initCharts() {
+      let charts = [];
 
-      this.$root.$on("applyFilters", (filter) => {
-        this.applyFilters(filter);
-      });
+      this.queryNames = this.queryTree[this.$route.meta.section][
+        this.$route.meta.view
+      ];
+
+      for (const queryName of this.queryNames) {
+        const tokens = queryName.split("_");
+        const position = parseInt(tokens[0]);
+        const type = tokens[1];
+        const caption = tokens[2];
+        charts.push({
+          name: queryName,
+          position: position,
+          type: type,
+          caption: caption,
+          data: null,
+        });
+      }
+      this.charts = charts.sort(this.sortByProperty("position"));
     },
     applyFilters(filter) {
-      this.graphs = [];
+      // clear charts data
+      this.initCharts();
 
-      for (const graphName of this.graphNames) {
+      filter.agents = ["0721", "0722"]; ////
+
+      for (let chart of this.charts) {
         this.execQuery(
           filter,
           this.$route.meta.section,
           this.$route.meta.view,
-          graphName,
+          chart.name,
           (success) => {
             const result = success.body;
-            this.graphs.push({ name: graphName, data: result });
+            chart.data = result;
           },
           (error) => {
             console.error(error.body);
-            this.graphs.push({ name: graphName, data: null });
           }
         );
       }

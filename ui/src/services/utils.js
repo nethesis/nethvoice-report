@@ -1,4 +1,9 @@
 var UtilService = {
+  data() {
+    return {
+      filterValuesCacheDuration: false,
+    }
+  },
   methods: {
     formatDate(date) {
       var d = new Date(date),
@@ -25,9 +30,14 @@ var UtilService = {
       }
     },
     isFilterInView(filter) {
-      return this.getQueueReportViewFilterMap()[this.$route.meta.section][
-        this.$route.meta.view
-      ].includes(filter);
+      const section = this.$route.meta.section;
+      const view = this.$route.meta.view;
+
+      if (section && view) {
+        return this.getQueueReportViewFilterMap()[section][view].includes(filter);
+      } else {
+        return false;
+      }
     },
     getQueueReportViewFilterMap() {
       return {
@@ -44,10 +54,28 @@ var UtilService = {
           "ivr": ["time", "ivr", "choice"]
         },
         "performance": {
-          //// ...
+          "default": ["time", "queue"]
         },
+        "distribution": {
+          "hourly": ["time", "queue", "timeSplit", "agent", "destination", "ivr"],
+          "geographic": ["time", "queue", "origin"],
+        },
+        "graphs": {
+          "load": ["time", "queue", "origin"], //// verify
+          "hour": ["time", "queue", "agent", "destination", "ivr", "choice"],
+          "agent": ["time", "queue", "agent"],
+          "area": ["time", "queue", "origin"],
+          "queue_position": ["time", "queue", "timeSplit"],
+          "avg_duration": ["time", "queue", "timeSplit"],
+          "avg_wait": ["time", "queue", "timeSplit"]
+        }
       }
     },
+    saveToLocalStorageWithExpiry(key, item, ttlMinutes) {
+      // save an object to local storage attaching its expiry date
+      const expiry = new Date().getTime() + ttlMinutes * 60 * 1000;
+      this.set(key, { item: item, expiry: expiry });
+    }
   },
 };
 export default UtilService;

@@ -1,25 +1,27 @@
 <template>
-<div id="app">
-  <!-- handle popups -->
-  <portal-target name="semantic-ui-vue"></portal-target>
-  <!-- login view -->
-  <div v-if="!isLogged">
-    <Login />
-  </div>
-  <!-- end login view -->
-  <!-- logged view -->
-  <div v-if="isLogged">
-    <!-- start leftsidebar -->
-    <LeftSidebar />
-    <div class="docs-container">
-      <!-- start leftsidebar -->
-      <TopBar />
-      <!-- end topbar -->
-      <router-view />
+  <div id="app">
+    <!-- handle popups -->
+    <portal-target name="semantic-ui-vue"></portal-target>
+    <!-- login view -->
+    <div v-if="!isLogged">
+      <Login />
     </div>
+    <!-- end login view -->
+    <!-- logged view -->
+    <div v-if="isLogged">
+      <!-- start leftsidebar -->
+      <LeftSidebar />
+      <div class="docs-container">
+        <!-- start leftsidebar -->
+        <TopBar />
+        <!-- end topbar -->
+        <div class="mg-3-em">
+          <router-view />
+        </div>
+      </div>
+    </div>
+    <!-- end logged view -->
   </div>
-  <!-- end logged view -->
-</div>
 </template>
 
 <script>
@@ -39,18 +41,22 @@ export default {
   },
   mixins: [LoginService, StorageService],
   mounted() {
+    document.title = this.$root.config.APP_NAME;
     // hide body
-    document.body.classList.add('hide');
+    document.body.classList.add("hide");
 
     // check token validity and refresh
-    this.execRefresh(() => {
+    this.execRefresh(
+      () => {
         this.isLogged = true;
-        document.body.classList.add('show');
+        document.body.classList.add("show");
       },
-      () => { // error
+      () => {
+        // error
         this.isLogged = false;
-        document.body.classList.add('show');
-      })
+        document.body.classList.add("show");
+      }
+    );
   },
   data() {
     return {
@@ -107,5 +113,46 @@ export default {
 
 .mg-right-sm {
   margin-right: 1rem !important;
+}
+
+.ui.multiple.search.dropdown > input.search {
+  width: 100% !important;
+}
+
+.mg-top-md {
+  margin-top: 2rem !important;
+}
+
+.mg-bottom-md {
+  margin-bottom: 2rem !important;
+}
+
+.mg-3-em {
+  margin: 3em;
+}
+
+.table-chart {
+  width: 95%;
+  margin: 2rem auto;
+}
+
+.line-chart {
+  width: 95%;
+  margin: 2rem auto;
+}
+
+.pie-chart {
+  width: 35%;
+  margin: 2rem;
+}
+
+.loader-height {
+  height: 6rem !important;
+}
+
+.chart-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 </style>

@@ -64,7 +64,6 @@ export default {
 
           // change route
           this.$parent.didLogin();
-          this.$router.push("/" + (this.get("selectedReport") || 'queue'));
         },
         (error) => {
           this.loading = false;

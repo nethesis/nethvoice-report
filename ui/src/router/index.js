@@ -25,11 +25,13 @@ import QueueGraphsAvgDuration from "../views/queue/GraphsAvgDuration.vue";
 import QueueGraphsAvgWait from "../views/queue/GraphsAvgWait.vue";
 
 /* CDR views */
-import CDRDashboard from "../views/cdr/Dashboard.vue";
+import CDRDashboard from "../views/cdr/CDRDashboard.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
+  { path: "/", redirect: "/queue" },
+
   /* Queue views*/
   {
     path: "/queue",
@@ -122,8 +124,8 @@ const routes = [
     meta: {
       name: "menu.performance",
       parent: "performance",
-      section: "",
-      view: "performance",
+      section: "performance",
+      view: "default",
       tags: ["performance"],
     },
   },
@@ -135,8 +137,8 @@ const routes = [
       name: "distribution.by_hour",
       parent: "distribution",
       section: "distribution",
-      view: "hour",
-      tags: ["hour"],
+      view: "hourly",
+      tags: ["hourly"],
     },
   },
   {
@@ -147,8 +149,8 @@ const routes = [
       name: "distribution.by_geo",
       parent: "distribution",
       section: "distribution",
-      view: "geo",
-      tags: ["geo"],
+      view: "geographic",
+      tags: ["geographic"],
     },
   },
   {

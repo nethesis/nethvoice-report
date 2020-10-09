@@ -1,8 +1,8 @@
 <template>
   <div>
     <sui-loader v-if="loader.filter" active centered inline />
-    <sui-form v-else class="filters-form">
-      <sui-form-fields v-if="savedSearches.length">
+    <sui-form v-else class="filters-form" @submit.prevent="applyFilters">
+      <sui-form-fields v-if="savedSearches.length" class="mg-bottom-md">
         <sui-form-field width="six">
           <sui-dropdown
             placeholder="Saved search"
@@ -15,6 +15,7 @@
         </sui-form-field>
         <sui-form-field width="four">
           <sui-button
+            type="button"
             negative
             :disabled="!selectedSearch"
             @click.native="showDeleteSearchModal(true)"
@@ -24,35 +25,8 @@
       </sui-form-fields>
 
       <sui-form-fields v-if="showFilterTime">
-        <sui-form-field width="six">
-          <label>Time interval</label>
-          <sui-button-group class="fluid">
-            <sui-button
-              :active="selectedTimeType == 'yesterday'"
-              @click="selectTime('yesterday')"
-              type="button"
-              >Yesterday</sui-button
-            >
-            <sui-button
-              :active="selectedTimeType == 'lastWeek'"
-              @click="selectTime('lastWeek')"
-              type="button"
-              >Last week</sui-button
-            >
-            <sui-button
-              :active="selectedTimeType == 'lastMonth'"
-              @click="selectTime('lastMonth')"
-              type="button"
-              >Last month</sui-button
-            >
-          </sui-button-group>
-        </sui-form-field>
         <sui-form-field width="four">
-          <label>Date start/end</label>
-          <v-date-picker mode="range" v-model="filter.time.interval" />
-        </sui-form-field>
-        <sui-form-field width="four">
-          <label>Group by time</label>
+          <label>Group by</label>
           <sui-dropdown
             :options="groupByTimeValues"
             placeholder="Group by time"
@@ -61,50 +35,79 @@
             v-model="filter.time.group"
           />
         </sui-form-field>
+        <sui-form-field width="six">
+          <label>Time interval</label>
+          <sui-button-group class="fluid">
+            <sui-button
+              :active="filter.time.range == 'yesterday'"
+              @click="selectTime('yesterday')"
+              type="button"
+              >Yesterday</sui-button
+            >
+            <sui-button
+              :active="filter.time.range == 'last_week'"
+              @click="selectTime('last_week')"
+              type="button"
+              >Last week</sui-button
+            >
+            <sui-button
+              :active="filter.time.range == 'last_month'"
+              @click="selectTime('last_month')"
+              type="button"
+              >Last month</sui-button
+            >
+          </sui-button-group>
+        </sui-form-field>
+        <sui-form-field width="four">
+          <label>Date start/end</label>
+          <v-date-picker
+            mode="range"
+            v-model="filter.time.interval"
+            :available-dates="{ start: null, end: new Date() }"
+            :masks="{ input: 'YYYY/MM/DD' }"
+          />
+        </sui-form-field>
       </sui-form-fields>
 
-      <sui-form-fields>
-        <sui-form-field v-if="showFilterAgent" width="four">
-          <label>Agent</label>
-          <sui-dropdown
-            multiple
-            :options="agents"
-            placeholder="Agent"
-            search
-            selection
-            v-model="filter.agents"
-          />
-        </sui-form-field>
-        <sui-form-field v-if="showFilterGroup" width="four">
-          <label>Groups</label>
-          <sui-dropdown
-            multiple
-            :options="groups"
-            placeholder="Groups"
-            search
-            selection
-            v-model="filter.groups"
-          />
-        </sui-form-field>
+      <sui-grid>
         <sui-form-field v-if="showFilterQueue" width="four">
           <label>Queues</label>
           <sui-dropdown
             multiple
-            :options="queues"
+            :options="filterValues.queues"
             placeholder="Queues"
             search
             selection
             v-model="filter.queues"
           />
         </sui-form-field>
-      </sui-form-fields>
-
-      <sui-form-fields>
+        <sui-form-field v-if="showFilterGroup" width="four">
+          <label>Groups</label>
+          <sui-dropdown
+            multiple
+            :options="filterValues.groups"
+            placeholder="Groups"
+            search
+            selection
+            v-model="filter.groups"
+          />
+        </sui-form-field>
+        <sui-form-field v-if="showFilterAgent" width="four">
+          <label>Agent</label>
+          <sui-dropdown
+            multiple
+            :options="filterValues.agents"
+            placeholder="Agent"
+            search
+            selection
+            v-model="filter.agents"
+          />
+        </sui-form-field>
         <sui-form-field v-if="showFilterReason" width="four">
           <label>Reasons</label>
           <sui-dropdown
             multiple
-            :options="reasons"
+            :options="filterValues.reasons"
             placeholder="Reasons"
             search
             selection
@@ -115,7 +118,7 @@
           <label>Results</label>
           <sui-dropdown
             multiple
-            :options="results"
+            :options="filterValues.results"
             placeholder="Results"
             search
             selection
@@ -126,7 +129,7 @@
           <label>IVR</label>
           <sui-dropdown
             multiple
-            :options="ivrs"
+            :options="filterValues.ivrs"
             placeholder="IVR"
             search
             selection
@@ -137,32 +140,32 @@
           <label>IVR choices</label>
           <sui-dropdown
             multiple
-            :options="choices"
+            :options="filterValues.choices"
             placeholder="IVR choices"
             search
             selection
             v-model="filter.choices"
           />
         </sui-form-field>
-      </sui-form-fields>
-
-      <sui-form-fields>
-        <sui-form-field v-if="showFilterOrigin" width="four">
+        <sui-form-field v-if="showFilterOrigin" width="six">
           <label>Origins</label>
           <sui-dropdown
             multiple
-            :options="origins"
-            placeholder="Origins"
+            :options="filterValues.origins"
+            placeholder="Area code, district, province or region"
             search
             selection
             v-model="filter.origins"
           />
         </sui-form-field>
-        <sui-form-field v-if="showFilterDestination" width="four">
+        <!-- </sui-grid>
+
+      <sui-form-fields> -->
+        <sui-form-field v-if="showFilterDestination" width="six">
           <label>Destinations</label>
           <sui-dropdown
             multiple
-            :options="destinations"
+            :options="filterValues.destinations"
             placeholder="Destinations"
             search
             selection
@@ -179,14 +182,11 @@
             v-model="filter.time.division"
           />
         </sui-form-field>
-      </sui-form-fields>
-
-      <sui-form-fields>
         <sui-form-field v-if="showFilterCaller" width="four">
           <label>Caller</label>
           <sui-input placeholder="Caller" v-model="filter.caller" />
         </sui-form-field>
-        <sui-form-field v-if="showFilterContactName" width="four">
+        <sui-form-field v-if="showFilterContactName" width="six">
           <label>Contact name / Company</label>
           <sui-search
             :searchFields="['title', 'cleanName']"
@@ -202,13 +202,10 @@
           <label>Null call</label>
           <sui-checkbox label toggle v-model="filter.nullCall" />
         </sui-form-field>
-      </sui-form-fields>
-      <sui-form-fields>
-        <sui-button
-          primary
-          type="submit"
-          class="mg-right-sm"
-          @click="applyFilters()"
+      </sui-grid>
+
+      <sui-form-fields class="mg-top-md">
+        <sui-button primary type="submit" class="mg-right-sm"
           >Apply filters</sui-button
         >
         <sui-button type="button" @click.native="showSaveSearchModal(true)"
@@ -323,9 +320,31 @@ export default {
   data() {
     return {
       showFilters: true,
-      title: this.$i18n.t(this.$route.meta.name) || "", //// i18n
       selectedSearch: null,
       filter: {
+        queues: [],
+        groups: [],
+        agents: [],
+        ivrs: [],
+        reasons: [],
+        results: [],
+        choices: [],
+        destinations: [],
+        origins: [],
+        time: {
+          group: "",
+          division: "",
+          range: null,
+          interval: {
+            start: null,
+            end: null,
+          },
+        },
+        caller: "",
+        contactName: "",
+        nullCall: false,
+      },
+      filterValues: {
         queues: [],
         groups: [],
         agents: [],
@@ -336,31 +355,10 @@ export default {
         allChoices: [],
         destinations: [],
         origins: [],
-        time: {
-          group: "",
-          division: "",
-          interval: {
-            start: null,
-            end: null,
-          },
-        },
-        caller: "",
-        contactName: "",
-        nullCall: false,
+        callers: [],
+        contactNames: [],
       },
-      selectedTimeType: "",
       savedSearches: [],
-      queues: [],
-      groups: [],
-      agents: [],
-      ivrs: [],
-      reasons: [],
-      results: [],
-      choices: [],
-      destinations: [],
-      origins: [],
-      callers: [],
-      contactNames: [],
       openSaveSearchModal: false,
       openOverwriteSearchModal: false,
       openDeleteSearchModal: false,
@@ -373,7 +371,6 @@ export default {
         deleteSearch: false,
       },
       groupByTimeValues: [
-        { value: "", text: "-" },
         { value: "day", text: "Day" },
         { value: "week", text: "Week" },
         { value: "month", text: "Month" },
@@ -397,14 +394,17 @@ export default {
     "filter.ivrs": function () {
       this.updateIvrChoices();
     },
+    "filter.time.range": function () {
+      console.log("watch filter.time.range", this.filter.time.range); ////
+    },
     "filter.time.interval": function () {
-      this.selectedTimeType = "";
-
       if (
         this.filter.time.interval &&
         this.filter.time.interval.start &&
         this.filter.time.interval.end
       ) {
+        this.filter.time.range = "";
+
         // convert to date object if needed
         if (typeof this.filter.time.interval.start == "string") {
           this.filter.time.interval.start = new Date(
@@ -425,32 +425,55 @@ export default {
             this.filter.time.interval.start.getTime() ==
             this.getYesterday().getTime()
           ) {
-            this.selectedTimeType = "yesterday";
+            this.filter.time.range = "yesterday";
           } else if (
             this.filter.time.interval.start.getTime() ==
             this.getLastWeek().getTime()
           ) {
-            this.selectedTimeType = "lastWeek";
+            this.filter.time.range = "last_week";
           } else if (
             this.filter.time.interval.start.getTime() ==
             this.getLastMonth().getTime()
           ) {
-            this.selectedTimeType = "lastMonth";
+            this.filter.time.range = "last_month";
           }
         }
       }
     },
   },
   mounted() {
+    this.retrieveFilter();
     this.getSavedSearches();
-
-    //// todo check if filter is present in local storage
-    this.retrieveDefaultFilter();
     this.retrievePhonebook();
   },
   methods: {
-    toggleFilters: function () {
-      this.showFilters = !this.showFilters;
+    retrieveFilter() {
+      let filter = this.get("reportFilter");
+      let filterValues = this.get("reportFilterValues");
+
+      if (
+        filter &&
+        filterValues &&
+        new Date().getTime() < filterValues.expiry
+      ) {
+        console.log("reading filter from local storage"); ////
+
+        // get object from local storage item
+        filterValues = filterValues.item;
+
+        this.filterValues = filterValues;
+
+        // set selected values in filter
+        this.setFilterSelection(filter);
+
+        setTimeout(() => {
+          this.applyFilters(); ////
+        }, 1000); ////
+      } else {
+        console.log("retrieving default filter from backend:"); ////
+
+        this.retrieveDefaultFilter();
+      }
     },
     retrieveDefaultFilter() {
       this.getDefaultFilter(
@@ -464,7 +487,7 @@ export default {
             let queues = this.defaultFilter.queues.map((queue) => {
               return { value: queue, text: queue };
             });
-            this.queues = queues.sort(this.sortByProperty("text"));
+            this.filterValues.queues = queues.sort(this.sortByProperty("text"));
           }
 
           // agents
@@ -472,7 +495,7 @@ export default {
             let agents = this.defaultFilter.agents.map((agent) => {
               return { value: agent, text: agent };
             });
-            this.agents = agents.sort(this.sortByProperty("text"));
+            this.filterValues.agents = agents.sort(this.sortByProperty("text"));
           }
 
           // groups
@@ -480,7 +503,7 @@ export default {
             let groups = this.defaultFilter.groups.map((group) => {
               return { value: group, text: group };
             });
-            this.groups = groups.sort(this.sortByProperty("text"));
+            this.filterValues.groups = groups.sort(this.sortByProperty("text"));
           }
 
           // ivr
@@ -491,18 +514,18 @@ export default {
               const ivrName = tokens[1];
               return { value: ivrName, text: ivrName, id: idIvr };
             });
-            this.ivrs = ivrs.sort(this.sortByProperty("text"));
+            this.filterValues.ivrs = ivrs.sort(this.sortByProperty("text"));
           }
 
           // choices: hide duplicates
           if (this.defaultFilter.choices) {
-            this.allChoices = [];
+            this.filterValues.allChoices = [];
             let choiceSet = new Set();
             this.defaultFilter.choices.forEach((choice) => {
               const tokens = choice.split(",");
               const idIvr = tokens[0];
               const choiceName = tokens[1];
-              this.allChoices.push({
+              this.filterValues.allChoices.push({
                 value: choiceName,
                 text: choiceName,
                 idIvr: idIvr,
@@ -515,7 +538,9 @@ export default {
               choices.push({ value: choice, text: choice });
             });
 
-            this.choices = choices.sort(this.sortByProperty("text"));
+            this.filterValues.choices = choices.sort(
+              this.sortByProperty("text")
+            );
           }
 
           // reasons
@@ -523,7 +548,9 @@ export default {
             let reasons = this.defaultFilter.reasons.map((reason) => {
               return { value: reason, text: reason };
             });
-            this.reasons = reasons.sort(this.sortByProperty("text"));
+            this.filterValues.reasons = reasons.sort(
+              this.sortByProperty("text")
+            );
           }
 
           // results
@@ -531,20 +558,32 @@ export default {
             let results = this.defaultFilter.results.map((result) => {
               return { value: result, text: result };
             });
-            this.results = results.sort(this.sortByProperty("text"));
+            this.filterValues.results = results.sort(
+              this.sortByProperty("text")
+            );
           }
 
           // origins
           if (this.defaultFilter.origins) {
+            let areaCodeSet = new Set();
             let districtSet = new Set();
             let provinceSet = new Set();
             let regionSet = new Set();
 
             this.defaultFilter.origins.forEach((origin) => {
               const tokens = origin.split(",");
-              districtSet.add(tokens[0]);
-              provinceSet.add(tokens[1]);
-              regionSet.add(tokens[2]);
+              areaCodeSet.add(tokens[0]);
+              districtSet.add(tokens[1]);
+              provinceSet.add(tokens[2]);
+              regionSet.add(tokens[3]);
+            });
+
+            let areaCodes = [];
+            areaCodeSet.forEach((areaCode) => {
+              areaCodes.push({
+                value: "areaCode_" + areaCode,
+                text: areaCode + " (Area code)",
+              }); //// i18n
             });
 
             let districts = [];
@@ -571,7 +610,8 @@ export default {
               }); //// i18n
             });
 
-            this.origins = districts
+            this.filterValues.origins = areaCodes
+              .concat(districts)
               .concat(provinces)
               .concat(regions)
               .sort(this.sortByProperty("text"));
@@ -584,19 +624,45 @@ export default {
                 return { value: destination, text: destination };
               }
             );
-            this.destinations = destinations.sort(this.sortByProperty("text"));
+            this.filterValues.destinations = destinations.sort(
+              this.sortByProperty("text")
+            );
           }
 
-          // time
-          this.filter.time = this.defaultFilter.time; //// test with group and division too
+          // save filter values to local storage (with expiry)
+          this.saveToLocalStorageWithExpiry(
+            "reportFilterValues",
+            this.filterValues,
+            1
+          ); //// TODO use 8 * 60 (i.e. 8 hours)
 
-          // null call
-          this.filter.nullCall = this.defaultFilter.nullCall;
+          // set selected values in filter
+          this.setFilterSelection(this.defaultFilter);
+
+          setTimeout(() => {
+            this.applyFilters(); ////
+          }, 1000); ////
         },
         (error) => {
           console.error(error.body);
         }
       );
+    },
+    setFilterSelection(filter) {
+      console.log("setFilterSelection, range:", filter.time.range); /////
+
+      // time
+      this.filter.time.group = filter.time.group;
+      this.filter.time.division = filter.time.division;
+      this.filter.time.interval = filter.time.interval;
+      this.filter.time.range = filter.time.range;
+      this.selectTime(filter.time.range);
+
+      // null call
+      this.filter.nullCall = filter.nullCall;
+
+      // save filter to local storage
+      this.set("reportFilter", this.filter);
     },
     getSavedSearches(searchToSelect) {
       this.getSearches(
@@ -605,7 +671,7 @@ export default {
           this.mapSavedSearches(savedSearches);
 
           if (searchToSelect) {
-            this.selectedSearch = searchToSelect; //// test
+            this.selectedSearch = searchToSelect;
           }
         },
         (error) => {
@@ -668,20 +734,20 @@ export default {
     getLastMonth() {
       return this.addDays(this.getToday(), -30);
     },
-    selectTime(interval) {
-      this.selectedTimeType = interval;
+    selectTime(range) {
+      this.filter.time.range = range;
 
-      if (this.selectedTimeType == "yesterday") {
+      if (range == "yesterday") {
         this.filter.time.interval = {
           start: this.getYesterday(),
           end: this.getToday(),
         };
-      } else if (this.selectedTimeType == "lastWeek") {
+      } else if (range == "last_week") {
         this.filter.time.interval = {
           start: this.getLastWeek(),
           end: this.getToday(),
         };
-      } else if (this.selectedTimeType == "lastMonth") {
+      } else if (range == "last_month") {
         this.filter.time.interval = {
           start: this.getLastMonth(),
           end: this.getToday(),
@@ -694,7 +760,42 @@ export default {
       return result;
     },
     applyFilters() {
-      this.$root.$emit("applyFilters", this.filter);
+      // save filter to local storage
+      this.set("reportFilter", this.filter);
+
+      let filterToApply = JSON.parse(JSON.stringify(this.filter));
+
+      if (
+        this.$refs.filterContactName &&
+        this.$refs.filterContactName.$el &&
+        this.$refs.filterContactName.$el.firstChild &&
+        this.$refs.filterContactName.$el.firstChild.value
+      ) {
+        const contactName = this.$refs.filterContactName.$el.firstChild.value;
+        const contact = this.phoneBook.find((c) => {
+          return c.title == contactName;
+        });
+
+        if (contact) {
+          let phoneNumbers = [];
+
+          for (const [phoneType, phoneList] of Object.entries(contact.phones)) {
+            for (const phoneNumber of phoneList) {
+              if (phoneNumber) {
+                phoneNumbers.push(phoneType + "_" + phoneNumber);
+              }
+            }
+          }
+
+          if (phoneNumbers.length) {
+            filterToApply.phones = phoneNumbers;
+
+            console.log("phoneNumbers", phoneNumbers); ////
+          }
+        }
+      }
+
+      this.$root.$emit("applyFilters", filterToApply);
     },
     hackDropdown(e) {
       e.target.parentNode
@@ -776,14 +877,6 @@ export default {
         }
       );
     },
-    getCurrentSection() {
-      //// move to utils file/service?
-      return this.$route.meta.section;
-    },
-    getCurrentView() {
-      //// move to utils file/service?
-      return this.$route.meta.view;
-    },
     showDeleteSearchModal(value) {
       this.openDeleteSearchModal = value;
     },
@@ -792,9 +885,9 @@ export default {
       const searchId =
         this.selectedSearch +
         "_" +
-        this.getCurrentSection() +
+        this.$route.meta.section +
         "_" +
-        this.getCurrentView();
+        this.$route.meta.view;
 
       this.deleteSearch(
         searchId,
@@ -810,13 +903,16 @@ export default {
       );
     },
     updateIvrChoices() {
-      // show only IVR choices related to selected IVRs
+      if (!this.filter.ivrs) {
+        return;
+      }
 
+      // show only IVR choices related to selected IVRs
       let selectedIvrs = this.filter.ivrs;
 
       if (this.filter.ivrs.length == 0) {
         // selecting no IVR is the same as selecting all of them
-        selectedIvrs = this.ivrs.map((ivr) => {
+        selectedIvrs = this.filterValues.ivrs.map((ivr) => {
           return ivr.value;
         });
       }
@@ -824,12 +920,12 @@ export default {
       let relatedChoiceValues = new Set();
 
       selectedIvrs.forEach((selectedIvr) => {
-        const ivr = this.ivrs.find((i) => {
+        const ivr = this.filterValues.ivrs.find((i) => {
           return i.value == selectedIvr;
         });
 
         // find related IVR choices
-        let relatedChoices = this.allChoices.filter((choice) => {
+        let relatedChoices = this.filterValues.allChoices.filter((choice) => {
           return choice.idIvr == ivr.id;
         });
 
@@ -843,31 +939,52 @@ export default {
       let choices = Array.from(relatedChoiceValues).map((choiceName) => {
         return { value: choiceName, text: choiceName };
       });
-      this.choices = choices.sort(this.sortByProperty("text"));
+      this.filterValues.choices = choices.sort(this.sortByProperty("text"));
     },
     retrievePhonebook() {
-      this.getPhonebook(
-        (success) => {
-          const phoneBook = success.body;
-          this.phoneBook = [];
+      //// use local storage (with expiry)
+      let phoneBook = this.get("reportPhoneBook");
 
-          for (const [contactName, contactPhones] of Object.entries(
-            phoneBook
-          )) {
-            const cleanName = contactName
-              .replace(/[^a-zA-Z0-9]/g, "")
-              .toLowerCase();
-            this.phoneBook.push({
-              title: contactName,
-              phones: contactPhones,
-              cleanName: cleanName,
-            });
+      if (phoneBook && new Date().getTime() < phoneBook.expiry) {
+        console.log("reading phonebook from local storage"); ////
+
+        // get object from local storage item
+        phoneBook = phoneBook.item;
+
+        this.phoneBook = phoneBook;
+      } else {
+        console.log("retrieving phonebook from backend"); ////
+
+        this.getPhonebook(
+          (success) => {
+            const phoneBook = success.body;
+            this.phoneBook = [];
+
+            for (const [contactName, contactPhones] of Object.entries(
+              phoneBook
+            )) {
+              const cleanName = contactName
+                .replace(/[^a-zA-Z0-9]/g, "")
+                .toLowerCase();
+              this.phoneBook.push({
+                title: contactName,
+                phones: contactPhones,
+                cleanName: cleanName,
+              });
+            }
+
+            // save phonebook to local storage (with expiry)
+            this.saveToLocalStorageWithExpiry(
+              "reportPhoneBook",
+              this.phoneBook,
+              1
+            ); //// TODO use 8 * 60 (i.e. 8 hours)
+          },
+          (error) => {
+            console.error(error.body);
           }
-        },
-        (error) => {
-          console.error(error.body);
-        }
-      );
+        );
+      }
     },
     doLogout() {
       this.execLogout(
