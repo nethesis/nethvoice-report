@@ -123,7 +123,7 @@ const routes = [
     component: QueuePerformance,
     meta: {
       name: "menu.performance",
-      parent: "performance",
+      parent: "",
       section: "performance",
       view: "default",
       tags: ["performance"],

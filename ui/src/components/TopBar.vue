@@ -129,7 +129,7 @@ export default {
   },
   watch: {
     $route: function () {
-      if (this.$route.meta.name == "menu.dashboard" || this.$route.meta.name == "menu.performance") {
+      if (this.$route.meta.parent == "") {
         this.title = this.$i18n.t(this.$route.meta.name);
       } else {
         this.title =
@@ -240,11 +240,6 @@ export default {
   .icon {
     margin-right: 10px !important;
   }
-}
-
-.filters-form {
-  text-align: left;
-  margin-top: 30px;
 }
 
 .view-title {

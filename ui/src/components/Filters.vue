@@ -633,7 +633,7 @@ export default {
           this.saveToLocalStorageWithExpiry(
             "reportFilterValues",
             this.filterValues,
-            1
+            8 * 60
           ); //// TODO use 8 * 60 (i.e. 8 hours)
 
           // set selected values in filter
@@ -1073,12 +1073,6 @@ export default {
   }
 }
 
-.filter-button {
-  .icon {
-    margin-right: 10px !important;
-  }
-}
-
 .filters-form {
   text-align: left;
   margin-top: 30px;
@@ -1095,5 +1089,10 @@ export default {
 .searchContactName > .results {
   overflow: auto;
   max-height: 300px;
+}
+
+.filters-form .ui.grid {
+  margin-top: 1rem;
+  margin-bottom: 0;
 }
 </style>

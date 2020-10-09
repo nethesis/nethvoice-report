@@ -3,11 +3,34 @@ import { Pie } from "vue-chartjs";
 
 export default {
   extends: Pie,
-  props: ["caption", "data"],
+  props: {
+    caption: {
+      type: String,
+    },
+    data: {
+      type: Array,
+    },
+    styles: {
+      type: Object,
+      default: function () {
+        return {
+          height: `20rem`,
+          position: 'relative'
+        }
+      },
+    },
+  },
   data() {
     return {
       labels: [],
       values: [],
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        legend: {
+          position: "right",
+        },
+      },
     };
   },
   watch: {

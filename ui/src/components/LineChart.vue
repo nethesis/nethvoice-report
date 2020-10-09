@@ -27,6 +27,9 @@ export default {
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        legend: {
+          position: 'right',
+        }
       },
       colors: [
         "#2185d0",
