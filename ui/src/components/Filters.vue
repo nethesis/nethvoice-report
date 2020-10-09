@@ -445,6 +445,13 @@ export default {
     this.retrieveFilter();
     this.getSavedSearches();
     this.retrievePhonebook();
+
+    // views request to apply filter on loading
+    this.$root.$on("requestApplyFilter", () => {
+      console.log("requestApplyFilter received, applying filter"); ////
+
+      this.applyFilters();
+    });
   },
   methods: {
     retrieveFilter() {
@@ -466,9 +473,9 @@ export default {
         // set selected values in filter
         this.setFilterSelection(filter);
 
-        setTimeout(() => {
-          this.applyFilters(); ////
-        }, 1000); ////
+        // setTimeout(() => {
+        //   this.applyFilters(); ////
+        // }, 1000); ////
       } else {
         console.log("retrieving default filter from backend:"); ////
 
@@ -633,15 +640,15 @@ export default {
           this.saveToLocalStorageWithExpiry(
             "reportFilterValues",
             this.filterValues,
-            8 * 60
+            1
           ); //// TODO use 8 * 60 (i.e. 8 hours)
 
           // set selected values in filter
           this.setFilterSelection(this.defaultFilter);
 
-          setTimeout(() => {
-            this.applyFilters(); ////
-          }, 1000); ////
+          // setTimeout(() => {
+          //   this.applyFilters(); ////
+          // }, 1000); ////
         },
         (error) => {
           console.error(error.body);
@@ -649,8 +656,6 @@ export default {
       );
     },
     setFilterSelection(filter) {
-      console.log("setFilterSelection, range:", filter.time.range); /////
-
       // time
       this.filter.time.group = filter.time.group;
       this.filter.time.division = filter.time.division;
@@ -789,8 +794,6 @@ export default {
 
           if (phoneNumbers.length) {
             filterToApply.phones = phoneNumbers;
-
-            console.log("phoneNumbers", phoneNumbers); ////
           }
         }
       }

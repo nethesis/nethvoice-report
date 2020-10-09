@@ -2,30 +2,10 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 
 /* Queue views */
-import QueueDashboard from "../views/queue/Dashboard.vue";
-
-import QueueDataSummary from "../views/queue/DataSummary.vue";
-import QueueDataAgent from "../views/queue/DataAgent.vue";
-import QueueDataSession from "../views/queue/DataSession.vue";
-import QueueDataCaller from "../views/queue/DataCaller.vue";
-import QueueDataCall from "../views/queue/DataCall.vue";
-import QueueDataIVR from "../views/queue/DataIVR.vue";
-
-import QueuePerformance from "../views/queue/Performance.vue";
-
-import QueueDistributionHour from "../views/queue/DistributionHour.vue";
-import QueueDistributionGeo from "../views/queue/DistributionGeo.vue";
-
-import QueueGraphsLoad from "../views/queue/GraphsLoad.vue";
-import QueueGraphsHour from "../views/queue/GraphsHour.vue";
-import QueueGraphsAgent from "../views/queue/GraphsAgent.vue";
-import QueueGraphsArea from "../views/queue/GraphsArea.vue";
-import QueueGraphsQueuePosition from "../views/queue/GraphsQueuePosition.vue";
-import QueueGraphsAvgDuration from "../views/queue/GraphsAvgDuration.vue";
-import QueueGraphsAvgWait from "../views/queue/GraphsAvgWait.vue";
+import QueueView from "../views/QueueView.vue";
 
 /* CDR views */
-import CDRDashboard from "../views/cdr/CDRDashboard.vue";
+import CdrView from "../views/CdrView.vue";
 
 Vue.use(VueRouter);
 
@@ -36,7 +16,7 @@ const routes = [
   {
     path: "/queue",
     name: "QueueDashboard",
-    component: QueueDashboard,
+    component: QueueView,
     meta: {
       name: "menu.dashboard",
       parent: "",
@@ -48,7 +28,7 @@ const routes = [
   {
     path: "/queue/data/summary",
     name: "QueueDataSummary",
-    component: QueueDataSummary,
+    component: QueueView,
     meta: {
       name: "data.summary",
       parent: "data",
@@ -60,7 +40,7 @@ const routes = [
   {
     path: "/queue/data/agent",
     name: "QueueDataAgent",
-    component: QueueDataAgent,
+    component: QueueView,
     meta: {
       name: "data.by_agent",
       parent: "data",
@@ -72,7 +52,7 @@ const routes = [
   {
     path: "/queue/data/session",
     name: "QueueDataSession",
-    component: QueueDataSession,
+    component: QueueView,
     meta: {
       name: "data.by_session",
       parent: "data",
@@ -84,7 +64,7 @@ const routes = [
   {
     path: "/queue/data/caller",
     name: "QueueDataCaller",
-    component: QueueDataCaller,
+    component: QueueView,
     meta: {
       name: "data.by_caller",
       parent: "data",
@@ -96,7 +76,7 @@ const routes = [
   {
     path: "/queue/data/call",
     name: "QueueDataCall",
-    component: QueueDataCall,
+    component: QueueView,
     meta: {
       name: "data.by_call",
       parent: "data",
@@ -108,7 +88,7 @@ const routes = [
   {
     path: "/queue/data/ivr",
     name: "QueueDataIVR",
-    component: QueueDataIVR,
+    component: QueueView,
     meta: {
       name: "data.ivr",
       parent: "data",
@@ -120,7 +100,7 @@ const routes = [
   {
     path: "/queue/performance",
     name: "QueuePerformance",
-    component: QueuePerformance,
+    component: QueueView,
     meta: {
       name: "menu.performance",
       parent: "",
@@ -132,7 +112,7 @@ const routes = [
   {
     path: "/queue/distribution/hour",
     name: "QueueDistributionHour",
-    component: QueueDistributionHour,
+    component: QueueView,
     meta: {
       name: "distribution.by_hour",
       parent: "distribution",
@@ -144,7 +124,7 @@ const routes = [
   {
     path: "/queue/distribution/geo",
     name: "QueueDistributionGeo",
-    component: QueueDistributionGeo,
+    component: QueueView,
     meta: {
       name: "distribution.by_geo",
       parent: "distribution",
@@ -156,7 +136,7 @@ const routes = [
   {
     path: "/queue/graphs/load",
     name: "QueueGraphsLoad",
-    component: QueueGraphsLoad,
+    component: QueueView,
     meta: {
       name: "graphs.load",
       parent: "graphs",
@@ -168,7 +148,7 @@ const routes = [
   {
     path: "/queue/graphs/hour",
     name: "QueueGraphsHour",
-    component: QueueGraphsHour,
+    component: QueueView,
     meta: {
       name: "graphs.by_hour",
       parent: "graphs",
@@ -180,7 +160,7 @@ const routes = [
   {
     path: "/queue/graphs/agent",
     name: "QueueGraphsAgent",
-    component: QueueGraphsAgent,
+    component: QueueView,
     meta: {
       name: "graphs.by_agent",
       parent: "graphs",
@@ -192,7 +172,7 @@ const routes = [
   {
     path: "/queue/graphs/area",
     name: "QueueGraphsArea",
-    component: QueueGraphsArea,
+    component: QueueView,
     meta: {
       name: "graphs.by_area",
       parent: "graphs",
@@ -204,7 +184,7 @@ const routes = [
   {
     path: "/queue/graphs/queue_position",
     name: "QueueGraphsQueuePosition",
-    component: QueueGraphsQueuePosition,
+    component: QueueView,
     meta: {
       name: "graphs.queue_position",
       parent: "graphs",
@@ -216,7 +196,7 @@ const routes = [
   {
     path: "/queue/graphs/avg_duration",
     name: "QueueGraphsAvgDuration",
-    component: QueueGraphsAvgDuration,
+    component: QueueView,
     meta: {
       name: "graphs.average_duration",
       parent: "graphs",
@@ -228,7 +208,7 @@ const routes = [
   {
     path: "/queue/graphs/avg_wait",
     name: "QueueGraphsAvgWait",
-    component: QueueGraphsAvgWait,
+    component: QueueView,
     meta: {
       name: "graphs.average_wait",
       parent: "graphs",
@@ -241,11 +221,13 @@ const routes = [
   /* CDR views*/
   {
     path: "/cdr",
-    name: "CDRDashboard",
-    component: CDRDashboard,
+    name: "CdrDashboard",
+    component: CdrView,
     meta: {
       name: "menu.dashboard",
       parent: "",
+      section: "dashboard",
+      view: "default",
       tags: [],
     },
   },

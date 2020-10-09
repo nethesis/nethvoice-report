@@ -26,13 +26,13 @@
 </template>
 
 <script>
-import TableChart from "../../components/TableChart.vue";
-import LineChart from "../../components/LineChart.vue";
-import PieChart from "../../components/PieChart.vue";
+import TableChart from "../components/TableChart.vue";
+import LineChart from "../components/LineChart.vue";
+import PieChart from "../components/PieChart.vue";
 
-import QueriesService from "../../services/queries";
-import StorageService from "../../services/storage";
-import UtilService from "../../services/utils";
+import QueriesService from "../services/queries";
+import StorageService from "../services/storage";
+import UtilService from "../services/utils";
 
 export default {
   name: "QueueDashboard",
@@ -46,17 +46,16 @@ export default {
     };
   },
   mounted() {
-    console.log("$parent", this.$parent); ////
-
-    this.retrieveQueryTree(); ////
+    this.retrieveQueryTree();
 
     this.$root.$on("applyFilters", (filter) => {
       this.applyFilters(filter);
     });
   },
-  beforeRouteLeave(to, from, next) {
-    this.$root.$off("applyFilters");
-    next();
+  watch: {
+    $route: function () {
+      this.initCharts();
+    },
   },
   methods: {
     retrieveQueryTree() {
@@ -91,11 +90,9 @@ export default {
         });
       }
       this.charts = charts.sort(this.sortByProperty("position"));
+      this.$root.$emit("requestApplyFilter");
     },
     applyFilters(filter) {
-      // clear charts data
-      this.initCharts();
-
       filter.agents = ["0721", "0722"]; ////
 
       for (let chart of this.charts) {

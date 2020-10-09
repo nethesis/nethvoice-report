@@ -1,11 +1,11 @@
 <template lang="html">
 <div>
-  Graphs Area
+  CDR View
 </div>
 </template>
 
 <script>
 export default {
-  name: 'GraphsArea',
+  name: 'CdrView',
 };
 </script>
