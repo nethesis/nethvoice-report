@@ -39,6 +39,10 @@
           element
         }}</sui-table-cell>
       </sui-table-row>
+      <!-- no data -->
+      <sui-table-row v-if="!rows.length">
+        <sui-table-cell :colspan="columns.length" class="no-data">{{ $t("no_data") }}</sui-table-cell>
+      </sui-table-row>
     </sui-table-body>
   </sui-table>
 </template>
@@ -156,4 +160,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.no-data {
+  text-align: center !important;
+  font-style: italic;
+}
 </style>
