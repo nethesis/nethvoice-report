@@ -1,4 +1,7 @@
 <?php
+/*
+ * This scripts consolidates queue statistics
+ */
 
 # Test lock
 $fp = fopen( "/var/run/nethvoice/queuereport-update-lock", "a" );
@@ -10,36 +13,6 @@ if ( !$fp || !flock($fp,LOCK_EX|LOCK_NB,$eWouldBlock) || $eWouldBlock ) {
 include_once('/etc/freepbx_db.conf');
 ini_set("date.timezone", "Europe/Rome");
 $now = time();
-
-// Update report_queue table if required
-$sql = "SELECT NULL FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = 'report_queue' AND table_schema = 'asteriskcdrdb' AND column_name = 'cid'";
-$stmt = $cdrdb->prepare($sql);
-$stmt->execute();
-$results = $stmt->fetchAll(\PDO::FETCH_NUM);
-if (empty($results)) {
-    $sqls[] = "ALTER TABLE `report_queue` ADD `cid` varchar(100) DEFAULT NULL";
-}
-
-// Update report_queue table if required
-$sql = "SELECT NULL FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = 'report_queue' AND table_schema = 'asteriskcdrdb' AND column_name = 'data4'";
-$stmt = $cdrdb->prepare($sql);
-$stmt->execute();
-$results = $stmt->fetchAll(\PDO::FETCH_NUM);
-if (empty($results)) {
-    $sqls[] = "ALTER TABLE `report_queue` ADD `data4` bigint(21) unsigned not null default 0";
-}
-
-if (!empty($sqls)) {
-    foreach ($sqls as $sql) {
-        try {
-           $stmt = $cdrdb->prepare($sql);
-           $stmt->execute();
-           $cdrdb->query($sql);
-        } catch (Exception $e) {
-           error_log($e->getMessage());
-        }
-    }
-}
 
 # Copy queue_log content into queue_log_history
 $sqls = array();
