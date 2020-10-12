@@ -450,8 +450,8 @@ export default {
   },
   methods: {
     retrieveFilter() {
-      let filter = this.get("reportFilter");
-      let filterValues = this.get("reportFilterValues");
+      let filter = this.get(this.reportFilterStorageName);
+      let filterValues = this.get(this.reportFilterValuesStorageName);
 
       if (
         filter &&
@@ -466,7 +466,7 @@ export default {
         this.filterValues = filterValues;
 
         // set selected values in filter
-        this.setFilterSelection(filter);
+        this.setFilterSelection(filter, true);
 
         // setTimeout(() => {
         //   this.applyFilters(); ////
@@ -633,13 +633,13 @@ export default {
 
           // save filter values to local storage (with expiry)
           this.saveToLocalStorageWithExpiry(
-            "reportFilterValues",
+            this.reportFilterValuesStorageName,
             this.filterValues,
-            1
+            10
           ); //// TODO use 8 * 60 (i.e. 8 hours)
 
           // set selected values in filter
-          this.setFilterSelection(this.defaultFilter);
+          this.setFilterSelection(this.defaultFilter, false);
 
           // setTimeout(() => {
           //   this.applyFilters(); ////
@@ -650,7 +650,26 @@ export default {
         }
       );
     },
-    setFilterSelection(filter) {
+    setFilterSelection(filter, fromLocalStorage) {
+      if (fromLocalStorage) {
+        this.filter.queues = filter.queues;
+        this.filter.groups = filter.groups;
+        this.filter.agents = filter.agents;
+        this.filter.reasons = filter.reasons;
+        this.filter.results = filter.results;
+        this.filter.ivrs = filter.ivrs;
+        this.filter.choices = filter.choices;
+        this.filter.origins = filter.origins;
+        this.filter.destinations = filter.destinations;
+        this.filter.caller = filter.caller;
+        this.filter.nullCall = filter.nullCall;
+
+        if (this.$refs.filterContactName) {
+          this.$refs.filterContactName.$el.firstChild.value =
+            filter.contactName;
+        }
+      }
+
       // time
       this.filter.time.group = filter.time.group;
       this.filter.time.division = filter.time.division;
@@ -662,7 +681,7 @@ export default {
       this.filter.nullCall = filter.nullCall;
 
       // save filter to local storage
-      this.set("reportFilter", this.filter);
+      this.set(this.reportFilterStorageName, this.filter);
     },
     getSavedSearches(searchToSelect) {
       this.getSearches(
@@ -760,11 +779,6 @@ export default {
       return result;
     },
     applyFilters() {
-      // save filter to local storage
-      this.set("reportFilter", this.filter);
-
-      let filterToApply = JSON.parse(JSON.stringify(this.filter));
-
       if (
         this.$refs.filterContactName &&
         this.$refs.filterContactName.$el &&
@@ -777,6 +791,7 @@ export default {
         });
 
         if (contact) {
+          this.filter.contactName = contactName; // save contact name to local storage
           let phoneNumbers = [];
 
           for (const [phoneType, phoneList] of Object.entries(contact.phones)) {
@@ -788,12 +803,16 @@ export default {
           }
 
           if (phoneNumbers.length) {
-            filterToApply.phones = phoneNumbers;
+            this.filter.phones = phoneNumbers;
           }
         }
+      } else {
+        this.filter.phones = [];
       }
 
-      this.$root.$emit("applyFilters", filterToApply);
+      // save filter to local storage
+      this.set(this.reportFilterStorageName, this.filter);
+      this.$root.$emit("applyFilters", this.filter);
     },
     hackDropdown(e) {
       e.target.parentNode
@@ -1043,6 +1062,12 @@ export default {
     },
     showFilterNullCall: function () {
       return this.isFilterInView("nullCall");
+    },
+    reportFilterStorageName: function () {
+      return "reportFilter-" + this.get("loggedUser").username;
+    },
+    reportFilterValuesStorageName: function () {
+      return "reportFilterValues-" + this.get("loggedUser").username;
     },
   },
 };
