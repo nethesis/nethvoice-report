@@ -44,7 +44,7 @@
       </sui-menu-menu>
     </sui-menu-item>
 
-    <sui-menu-item :active="isActive('performance', true)">
+    <sui-menu-item :active="isActive('/queue/performance')">
       <router-link is="sui-menu-header" to="/queue/performance">{{$t("menu.performance")}}</router-link>
       <span v-show="isTag('/queue/performance')" class="press-enter dot"></span>
     </sui-menu-item>

@@ -133,17 +133,17 @@ export default {
 
 .table-chart {
   width: 95%;
-  margin: 2rem auto;
+  margin: 0 2rem 2rem 2rem;
 }
 
 .line-chart {
   width: 95%;
-  margin: 2rem auto;
+  margin: 0 2rem 2rem 2rem;
 }
 
 .pie-chart {
-  width: 35%;
-  margin: 2rem;
+  max-width: 26rem;
+  margin: 0 2rem 2rem 2rem;
 }
 
 .loader-height {
