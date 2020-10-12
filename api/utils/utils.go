@@ -27,6 +27,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/juliangruber/go-intersect"
 	"github.com/pkg/errors"
@@ -111,4 +112,34 @@ func Intersect(a []string, b []string) []string {
 
 	// return []string result
 	return s
+}
+
+func ExtractStrings(v []string) string {
+	result := strings.Join(v, `","`)
+
+	return "\"" + result + "\""
+}
+
+func ExtractPhones(p []string, plain bool) string {
+	// declare numbers array
+	var numbers []string
+
+	// loop numbers in plain mode: <number>, <number>, <number>, ...
+	if plain {
+		for _, r := range p {
+			number := strings.Split(r, "_")
+			numbers = append(numbers, number[1])
+		}
+
+		return strings.Join(numbers[:], ",")
+	}
+
+	// loop numbers in type mode: <type> = <number OR <type> = <number> OR ...
+	for _, r := range p {
+		number := strings.Split(r, "_")
+		numbers = append(numbers, number[0]+" = "+number[1])
+	}
+
+	return strings.Join(numbers[:], " OR ")
+
 }

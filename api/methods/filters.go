@@ -100,6 +100,7 @@ func GetDefaultFilter(c *gin.Context) {
 
 	// assign default filter intersection
 	defaultFilter.IVRs = valuesFilter.IVRs
+	defaultFilter.Phones = valuesFilter.Phones
 	defaultFilter.Reasons = valuesFilter.Reasons
 	defaultFilter.Results = valuesFilter.Results
 	defaultFilter.Choices = valuesFilter.Choices

@@ -27,6 +27,7 @@ type Filter struct {
 	Groups []string `json:"groups"`
 	Agents []string `json:"agents"`
 	IVRs   []string `json:"ivrs"`
+	Phones []string `json:"phones"`
 
 	Reasons      []string `json:"reasons"`
 	Results      []string `json:"results"`

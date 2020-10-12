@@ -30,7 +30,6 @@ import (
 	"net/http"
 	"os"
 	"path"
-	"strings"
 	"text/template"
 	"time"
 
@@ -95,7 +94,7 @@ func GetQueueReports(c *gin.Context) {
 	}
 
 	// parse template
-	q := template.Must(template.New(path.Base(queryFile)).Funcs(template.FuncMap{"StringsJoin": strings.Join}).ParseFiles(queryFile))
+	q := template.Must(template.New(path.Base(queryFile)).Funcs(template.FuncMap{"ExtractStrings": utils.ExtractStrings}).Funcs(template.FuncMap{"ExtractPhones": utils.ExtractPhones}).ParseFiles(queryFile))
 
 	// compile query with filter object
 	var queryString bytes.Buffer
