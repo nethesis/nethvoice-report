@@ -94,6 +94,8 @@ export default {
     },
     applyFilters(filter) {
       for (let chart of this.charts) {
+        chart.data = null;
+
         this.execQuery(
           filter,
           this.$route.meta.section,
