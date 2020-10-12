@@ -24,8 +24,8 @@
         </sui-form-field>
       </sui-form-fields>
 
-      <sui-form-fields v-if="showFilterTime">
-        <sui-form-field width="four">
+      <sui-form-fields>
+        <sui-form-field v-if="showFilterTimeGroup" width="four">
           <label>Group by</label>
           <sui-dropdown
             :options="groupByTimeValues"
@@ -35,7 +35,7 @@
             v-model="filter.time.group"
           />
         </sui-form-field>
-        <sui-form-field width="six">
+        <sui-form-field v-if="showFilterTime" width="six">
           <label>Time interval</label>
           <sui-button-group class="fluid">
             <sui-button
@@ -1056,6 +1056,9 @@ export default {
   computed: {
     showFilterTime: function () {
       return this.isFilterInView("time");
+    },
+    showFilterTimeGroup: function () {
+      return this.isFilterInView("timeGroup");
     },
     showFilterTimeSplit: function () {
       return this.isFilterInView("timeSplit");

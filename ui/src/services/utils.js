@@ -45,29 +45,29 @@ var UtilService = {
           "default": ["time", "queue"],
         },
         "data": {
-          "summary": ["time", "queue"],
-          "agent": ["time", "queue", "agent"],
-          "session": ["time", "queue", "reason"],
-          "caller": ["time", "queue", "caller", "contactName"],
+          "summary": ["timeGroup", "time", "queue"],
+          "agent": ["timeGroup", "time", "queue", "agent"],
+          "session": ["time", "queue", "reason", "agent"],
+          "caller": ["timeGroup", "time", "queue", "caller", "contactName"],
           "call": ["time", "queue", "caller", "contactName", "agent", "result"],
-          "lostCall": ["time", "queue", "caller", "contactName", "reason"], //// verify
-          "ivr": ["time", "ivr", "choice"]
+          "lostCall": ["timeGroup", "time", "queue", "caller", "contactName", "reason"], //// verify
+          "ivr": ["timeGroup", "time", "ivr", "choice"]
         },
         "performance": {
-          "default": ["time", "queue"]
+          "default": ["timeGroup", "time", "queue"]
         },
         "distribution": {
-          "hourly": ["time", "queue", "timeSplit", "agent", "destination", "ivr"],
+          "hourly": ["timeGroup", "time", "queue", "timeSplit", "agent", "destination", "ivr"],
           "geographic": ["time", "queue", "origin"],
         },
         "graphs": {
-          "load": ["time", "queue", "origin"], //// verify
-          "hour": ["time", "queue", "agent", "destination", "ivr", "choice"],
-          "agent": ["time", "queue", "agent"],
-          "area": ["time", "queue", "origin"],
-          "queue_position": ["time", "queue", "timeSplit"],
-          "avg_duration": ["time", "queue", "timeSplit"],
-          "avg_wait": ["time", "queue", "timeSplit"]
+          "load": ["timeGroup", "time", "queue", "origin"], //// verify
+          "hour": ["timeGroup", "time", "queue", "agent", "destination", "ivr", "choice"],
+          "agent": ["timeGroup", "time", "queue", "agent"],
+          "area": ["timeGroup", "time", "queue", "origin"],
+          "queue_position": ["timeGroup", "time", "queue", "timeSplit"],
+          "avg_duration": ["timeGroup", "time", "queue", "timeSplit"],
+          "avg_wait": ["timeGroup", "time", "queue", "timeSplit"]
         }
       }
     },
