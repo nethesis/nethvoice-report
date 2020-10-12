@@ -1,12 +1,12 @@
-DROP TABLE IF EXISTS summary_good_year;
+DROP TABLE IF EXISTS data_summary_good_year;
 
-DROP TABLE IF EXISTS summary_good_month;
+DROP TABLE IF EXISTS data_summary_good_month;
 
-DROP TABLE IF EXISTS summary_good_week;
+DROP TABLE IF EXISTS data_summary_good_week;
 
-DROP TABLE IF EXISTS summary_good_day;
+DROP TABLE IF EXISTS data_summary_good_day;
 
-CREATE TABLE summary_good_year AS
+CREATE TABLE data_summary_good_year AS
 SELECT
        Date_format(From_unixtime(timestamp_in), "%Y") AS period,
        qname,
@@ -31,7 +31,7 @@ GROUP BY
 ORDER BY
        period ASC;
 
-CREATE TABLE summary_good_month AS
+CREATE TABLE data_summary_good_month AS
 SELECT
        Date_format(From_unixtime(timestamp_in), "%Y-%m") AS period,
        qname,
@@ -56,7 +56,7 @@ GROUP BY
 ORDER BY
        period ASC;
 
-CREATE TABLE summary_good_week AS
+CREATE TABLE data_summary_good_week AS
 SELECT
        Date_format(From_unixtime(timestamp_in), "%Y-%u") AS period,
        qname,
@@ -81,7 +81,7 @@ GROUP BY
 ORDER BY
        period ASC;
 
-CREATE TABLE summary_good_day AS
+CREATE TABLE data_summary_good_day AS
 SELECT
        Date_format(From_unixtime(timestamp_in), "%Y-%m-%d") AS period,
        qname,

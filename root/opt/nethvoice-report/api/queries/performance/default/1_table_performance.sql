@@ -190,6 +190,6 @@ SELECT p_a_d.period AS period£{{ .Time.Group }}Date,
        p_a_d.max_duration                             AS duration$max£seconds,
        p_a_d.avg_duration                             AS duration$avg£seconds
 FROM   performance_wait_duration_{{ .Time.Group }} p_a_d
-WHERE  TRUE {{ if and .Time.Interval.Start .Time.Interval.End }} AND p_a_d.period >= "{{ .Time.Interval.Start }}" AND p_a_d.period <= "{{ .Time.Interval.End }}" {{ end }} {{ if gt (len .Queues) 0 }} AND p_a_d.qname in ({{ StringsJoin .Queues "," }}) {{ end }}
+WHERE  TRUE {{ if and .Time.Interval.Start .Time.Interval.End }} AND p_a_d.period >= "{{ .Time.Interval.Start }}" AND p_a_d.period <= "{{ .Time.Interval.End }}" {{ end }} {{ if gt (len .Queues) 0 }} AND p_a_d.qname in ({{ ExtractStrings .Queues }}) {{ end }}
 GROUP  BY p_a_d.period,
           p_a_d.qname;

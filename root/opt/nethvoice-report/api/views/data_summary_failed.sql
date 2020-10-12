@@ -1,12 +1,12 @@
-DROP TABLE IF EXISTS summary_exitempty_year;
+DROP TABLE IF EXISTS data_summary_failed_year;
 
-DROP TABLE IF EXISTS summary_exitempty_month;
+DROP TABLE IF EXISTS data_summary_failed_month;
 
-DROP TABLE IF EXISTS summary_exitempty_week;
+DROP TABLE IF EXISTS data_summary_failed_week;
 
-DROP TABLE IF EXISTS summary_exitempty_day;
+DROP TABLE IF EXISTS data_summary_failed_day;
 
-CREATE TABLE summary_exitempty_year AS
+CREATE TABLE data_summary_failed_year AS
 SELECT
        Date_format(From_unixtime(timestamp_in), "%Y") AS period,
        qname,
@@ -24,14 +24,17 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'EXITEMPTY'
+       (
+              action = 'ABANDON'
+              AND hold > 5
+       )
 GROUP BY
        period,
        qname
 ORDER BY
        period ASC;
 
-CREATE TABLE summary_exitempty_month AS
+CREATE TABLE data_summary_failed_month AS
 SELECT
        Date_format(From_unixtime(timestamp_in), "%Y-%m") AS period,
        qname,
@@ -49,14 +52,17 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'EXITEMPTY'
+       (
+              action = 'ABANDON'
+              AND hold > 5
+       )
 GROUP BY
        period,
        qname
 ORDER BY
        period ASC;
 
-CREATE TABLE summary_exitempty_week AS
+CREATE TABLE data_summary_failed_week AS
 SELECT
        Date_format(From_unixtime(timestamp_in), "%Y-%u") AS period,
        qname,
@@ -74,14 +80,17 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'EXITEMPTY'
+       (
+              action = 'ABANDON'
+              AND hold > 5
+       )
 GROUP BY
        period,
        qname
 ORDER BY
        period ASC;
 
-CREATE TABLE summary_exitempty_day AS
+CREATE TABLE data_summary_failed_day AS
 SELECT
        Date_format(From_unixtime(timestamp_in), "%Y-%m-%d") AS period,
        qname,
@@ -99,7 +108,10 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'EXITEMPTY'
+       (
+              action = 'ABANDON'
+              AND hold > 5
+       )
 GROUP BY
        period,
        qname

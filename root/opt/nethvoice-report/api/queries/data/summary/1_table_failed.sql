@@ -20,5 +20,5 @@ WHERE   TRUE
             AND period <= "{{ .Time.Interval.End }}"
         {{ end }}
         {{ if gt (len .Queues) 0 }}
-            AND qname in ({{ StringsJoin .Queues "," }})
+            AND qname in ({{ ExtractStrings .Queues }})
         {{ end }};

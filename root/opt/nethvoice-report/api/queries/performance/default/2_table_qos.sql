@@ -9,7 +9,7 @@ FROM   (SELECT "total"                           AS responseTime£label,
                         AND timestamp_out <= "{{ .Time.Interval.End }}"
                         {{ end }}
                         {{ if gt (len .Queues) 0 }}
-                        AND qname in ({{ StringsJoin .Queues "," }})
+                        AND qname in ({{ ExtractStrings .Queues }})
                         {{ end }}) AS answer£num,
                 100 as percentage£percent
         UNION
@@ -22,7 +22,7 @@ FROM   (SELECT "total"                           AS responseTime£label,
                AND timestamp_out <= "{{ .Time.Interval.End }}"
                {{ end }}
                {{ if gt (len .Queues) 0 }}
-               AND qname in ({{ StringsJoin .Queues "," }})
+               AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}) AS answer£num,
                ( Round((SELECT Sum(count) AS count
                         FROM   performance_qos_total_5
@@ -32,7 +32,7 @@ FROM   (SELECT "total"                           AS responseTime£label,
                AND timestamp_out <= "{{ .Time.Interval.End }}"
                {{ end }}
                {{ if gt (len .Queues) 0 }}
-               AND qname in ({{ StringsJoin .Queues "," }})
+               AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}) * 100 /
                        (SELECT Sum(count)
                         FROM   performance_qos_total
@@ -42,7 +42,7 @@ FROM   (SELECT "total"                           AS responseTime£label,
                AND timestamp_out <= "{{ .Time.Interval.End }}"
                {{ end }}
                {{ if gt (len .Queues) 0 }}
-               AND qname in ({{ StringsJoin .Queues "," }})
+               AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}),
                    2) )                         AS percentage£percent
         UNION
@@ -55,7 +55,7 @@ FROM   (SELECT "total"                           AS responseTime£label,
                AND timestamp_out <= "{{ .Time.Interval.End }}"
                {{ end }}
                {{ if gt (len .Queues) 0 }}
-               AND qname in ({{ StringsJoin .Queues "," }})
+               AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}) AS answer£num,
                ( Round((SELECT Sum(count) AS count
                         FROM   performance_qos_total_10
@@ -65,7 +65,7 @@ FROM   (SELECT "total"                           AS responseTime£label,
                AND timestamp_out <= "{{ .Time.Interval.End }}"
                {{ end }}
                {{ if gt (len .Queues) 0 }}
-               AND qname in ({{ StringsJoin .Queues "," }})
+               AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}) * 100 /
                        (SELECT Sum(count)
                         FROM   performance_qos_total
@@ -75,7 +75,7 @@ FROM   (SELECT "total"                           AS responseTime£label,
                AND timestamp_out <= "{{ .Time.Interval.End }}"
                {{ end }}
                {{ if gt (len .Queues) 0 }}
-               AND qname in ({{ StringsJoin .Queues "," }})
+               AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}),
                    2) )                         AS percentage£percent
         UNION
@@ -88,7 +88,7 @@ FROM   (SELECT "total"                           AS responseTime£label,
                AND timestamp_out <= "{{ .Time.Interval.End }}"
                {{ end }}
                {{ if gt (len .Queues) 0 }}
-               AND qname in ({{ StringsJoin .Queues "," }})
+               AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}) AS answer£num,
                ( Round((SELECT Sum(count) AS count
                         FROM   performance_qos_total_15
@@ -98,7 +98,7 @@ FROM   (SELECT "total"                           AS responseTime£label,
                AND timestamp_out <= "{{ .Time.Interval.End }}"
                {{ end }}
                {{ if gt (len .Queues) 0 }}
-               AND qname in ({{ StringsJoin .Queues "," }})
+               AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}) * 100 /
                        (SELECT Sum(count)
                         FROM   performance_qos_total
@@ -108,7 +108,7 @@ FROM   (SELECT "total"                           AS responseTime£label,
                AND timestamp_out <= "{{ .Time.Interval.End }}"
                {{ end }}
                {{ if gt (len .Queues) 0 }}
-               AND qname in ({{ StringsJoin .Queues "," }})
+               AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}),
                    2) )                         AS percentage£percent
         UNION
@@ -121,7 +121,7 @@ FROM   (SELECT "total"                           AS responseTime£label,
                AND timestamp_out <= "{{ .Time.Interval.End }}"
                {{ end }}
                {{ if gt (len .Queues) 0 }}
-               AND qname in ({{ StringsJoin .Queues "," }})
+               AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}) AS answer£num,
                ( Round((SELECT Sum(count) AS count
                         FROM   performance_qos_total_20
@@ -131,7 +131,7 @@ FROM   (SELECT "total"                           AS responseTime£label,
                AND timestamp_out <= "{{ .Time.Interval.End }}"
                {{ end }}
                {{ if gt (len .Queues) 0 }}
-               AND qname in ({{ StringsJoin .Queues "," }})
+               AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}) * 100 /
                        (SELECT Sum(count)
                         FROM   performance_qos_total
@@ -141,7 +141,7 @@ FROM   (SELECT "total"                           AS responseTime£label,
                AND timestamp_out <= "{{ .Time.Interval.End }}"
                {{ end }}
                {{ if gt (len .Queues) 0 }}
-               AND qname in ({{ StringsJoin .Queues "," }})
+               AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}),
                    2) )                         AS percentage£percent
         UNION
@@ -154,7 +154,7 @@ FROM   (SELECT "total"                           AS responseTime£label,
                AND timestamp_out <= "{{ .Time.Interval.End }}"
                {{ end }}
                {{ if gt (len .Queues) 0 }}
-               AND qname in ({{ StringsJoin .Queues "," }})
+               AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}) AS answer£num,
                ( Round((SELECT Sum(count) AS count
                         FROM   performance_qos_total_25
@@ -164,7 +164,7 @@ FROM   (SELECT "total"                           AS responseTime£label,
                AND timestamp_out <= "{{ .Time.Interval.End }}"
                {{ end }}
                {{ if gt (len .Queues) 0 }}
-               AND qname in ({{ StringsJoin .Queues "," }})
+               AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}) * 100 /
                        (SELECT Sum(count)
                         FROM   performance_qos_total
@@ -174,7 +174,7 @@ FROM   (SELECT "total"                           AS responseTime£label,
                AND timestamp_out <= "{{ .Time.Interval.End }}"
                {{ end }}
                {{ if gt (len .Queues) 0 }}
-               AND qname in ({{ StringsJoin .Queues "," }})
+               AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}),
                    2) )                         AS percentage£percent
         UNION
@@ -187,7 +187,7 @@ FROM   (SELECT "total"                           AS responseTime£label,
                AND timestamp_out <= "{{ .Time.Interval.End }}"
                {{ end }}
                {{ if gt (len .Queues) 0 }}
-               AND qname in ({{ StringsJoin .Queues "," }})
+               AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}) AS answer£num,
                ( Round((SELECT Sum(count) AS count
                         FROM   performance_qos_total_30
@@ -197,7 +197,7 @@ FROM   (SELECT "total"                           AS responseTime£label,
                AND timestamp_out <= "{{ .Time.Interval.End }}"
                {{ end }}
                {{ if gt (len .Queues) 0 }}
-               AND qname in ({{ StringsJoin .Queues "," }})
+               AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}) * 100 /
                        (SELECT Sum(count)
                         FROM   performance_qos_total
@@ -207,7 +207,7 @@ FROM   (SELECT "total"                           AS responseTime£label,
                AND timestamp_out <= "{{ .Time.Interval.End }}"
                {{ end }}
                {{ if gt (len .Queues) 0 }}
-               AND qname in ({{ StringsJoin .Queues "," }})
+               AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}),
                    2) )                         AS percentage£percent
         UNION
@@ -220,7 +220,7 @@ FROM   (SELECT "total"                           AS responseTime£label,
                AND timestamp_out <= "{{ .Time.Interval.End }}"
                {{ end }}
                {{ if gt (len .Queues) 0 }}
-               AND qname in ({{ StringsJoin .Queues "," }})
+               AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}) AS answer£num,
                ( Round((SELECT Sum(count) AS count
                         FROM   performance_qos_total_45
@@ -230,7 +230,7 @@ FROM   (SELECT "total"                           AS responseTime£label,
                AND timestamp_out <= "{{ .Time.Interval.End }}"
                {{ end }}
                {{ if gt (len .Queues) 0 }}
-               AND qname in ({{ StringsJoin .Queues "," }})
+               AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}) * 100 /
                        (SELECT Sum(count)
                         FROM   performance_qos_total
@@ -240,7 +240,7 @@ FROM   (SELECT "total"                           AS responseTime£label,
                AND timestamp_out <= "{{ .Time.Interval.End }}"
                {{ end }}
                {{ if gt (len .Queues) 0 }}
-               AND qname in ({{ StringsJoin .Queues "," }})
+               AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}),
                    2) )                         AS percentage£percent
         UNION
@@ -253,7 +253,7 @@ FROM   (SELECT "total"                           AS responseTime£label,
                AND timestamp_out <= "{{ .Time.Interval.End }}"
                {{ end }}
                {{ if gt (len .Queues) 0 }}
-               AND qname in ({{ StringsJoin .Queues "," }})
+               AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}) AS answer£num,
                ( Round((SELECT Sum(count) AS count
                         FROM   performance_qos_total_60
@@ -263,7 +263,7 @@ FROM   (SELECT "total"                           AS responseTime£label,
                AND timestamp_out <= "{{ .Time.Interval.End }}"
                {{ end }}
                {{ if gt (len .Queues) 0 }}
-               AND qname in ({{ StringsJoin .Queues "," }})
+               AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}) * 100 /
                        (SELECT Sum(count)
                         FROM   performance_qos_total
@@ -273,7 +273,7 @@ FROM   (SELECT "total"                           AS responseTime£label,
                AND timestamp_out <= "{{ .Time.Interval.End }}"
                {{ end }}
                {{ if gt (len .Queues) 0 }}
-               AND qname in ({{ StringsJoin .Queues "," }})
+               AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}),
                    2) )                         AS percentage£percent
         UNION
@@ -286,7 +286,7 @@ FROM   (SELECT "total"                           AS responseTime£label,
                AND timestamp_out <= "{{ .Time.Interval.End }}"
                {{ end }}
                {{ if gt (len .Queues) 0 }}
-               AND qname in ({{ StringsJoin .Queues "," }})
+               AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}) AS answer£num,
                ( Round((SELECT Sum(count) AS count
                         FROM   performance_qos_total_75
@@ -296,7 +296,7 @@ FROM   (SELECT "total"                           AS responseTime£label,
                AND timestamp_out <= "{{ .Time.Interval.End }}"
                {{ end }}
                {{ if gt (len .Queues) 0 }}
-               AND qname in ({{ StringsJoin .Queues "," }})
+               AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}) * 100 /
                        (SELECT Sum(count)
                         FROM   performance_qos_total
@@ -306,7 +306,7 @@ FROM   (SELECT "total"                           AS responseTime£label,
                AND timestamp_out <= "{{ .Time.Interval.End }}"
                {{ end }}
                {{ if gt (len .Queues) 0 }}
-               AND qname in ({{ StringsJoin .Queues "," }})
+               AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}),
                    2) )                         AS percentage£percent
         UNION
@@ -319,7 +319,7 @@ FROM   (SELECT "total"                           AS responseTime£label,
                AND timestamp_out <= "{{ .Time.Interval.End }}"
                {{ end }}
                {{ if gt (len .Queues) 0 }}
-               AND qname in ({{ StringsJoin .Queues "," }})
+               AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}) AS answer£num,
                ( Round((SELECT Sum(count) AS count
                         FROM   performance_qos_total_90
@@ -329,7 +329,7 @@ FROM   (SELECT "total"                           AS responseTime£label,
                AND timestamp_out <= "{{ .Time.Interval.End }}"
                {{ end }}
                {{ if gt (len .Queues) 0 }}
-               AND qname in ({{ StringsJoin .Queues "," }})
+               AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}) * 100 /
                        (SELECT Sum(count)
                         FROM   performance_qos_total
@@ -339,6 +339,6 @@ FROM   (SELECT "total"                           AS responseTime£label,
                AND timestamp_out <= "{{ .Time.Interval.End }}"
                {{ end }}
                {{ if gt (len .Queues) 0 }}
-               AND qname in ({{ StringsJoin .Queues "," }})
+               AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}),
                    2) )                         AS percentage£percent) AS responseTime£labels;

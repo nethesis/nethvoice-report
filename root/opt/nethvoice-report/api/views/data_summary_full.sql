@@ -1,12 +1,12 @@
-DROP TABLE IF EXISTS summary_full_year;
+DROP TABLE IF EXISTS data_summary_full_year;
 
-DROP TABLE IF EXISTS summary_full_month;
+DROP TABLE IF EXISTS data_summary_full_month;
 
-DROP TABLE IF EXISTS summary_full_week;
+DROP TABLE IF EXISTS data_summary_full_week;
 
-DROP TABLE IF EXISTS summary_full_day;
+DROP TABLE IF EXISTS data_summary_full_day;
 
-CREATE TABLE summary_full_year AS
+CREATE TABLE data_summary_full_year AS
 SELECT
        Date_format(From_unixtime(timestamp_in), "%Y") AS period,
        qname,
@@ -23,7 +23,7 @@ GROUP BY
 ORDER BY
        period ASC;
 
-CREATE TABLE summary_full_month AS
+CREATE TABLE data_summary_full_month AS
 SELECT
        Date_format(From_unixtime(timestamp_in), "%Y-%m") AS period,
        qname,
@@ -40,7 +40,7 @@ GROUP BY
 ORDER BY
        period ASC;
 
-CREATE TABLE summary_full_week AS
+CREATE TABLE data_summary_full_week AS
 SELECT
        Date_format(From_unixtime(timestamp_in), "%Y-%u") AS period,
        qname,
@@ -57,7 +57,7 @@ GROUP BY
 ORDER BY
        period ASC;
 
-CREATE TABLE summary_full_day AS
+CREATE TABLE data_summary_full_day AS
 SELECT
        Date_format(From_unixtime(timestamp_in), "%Y-%m-%d") AS period,
        qname,

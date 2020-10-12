@@ -1,16 +1,16 @@
 SELECT
     period AS period£{{ .Time.Group }}Date,
-    qname,
-    qdescr,
-    uniqCid AS uniqCid£num,
-    num AS num£num
+    ivr_id,
+    ivr_name,
+    choice,
+    tot AS tot£num
 FROM
-    summary_joinempty_{{ .Time.Group }}
+    data_ivr_{{ .Time.Group }}
 WHERE   TRUE
         {{ if and .Time.Interval.Start .Time.Interval.End }}
             AND period >= "{{ .Time.Interval.Start }}"
             AND period <= "{{ .Time.Interval.End }}"
         {{ end }}
-        {{ if gt (len .Queues) 0 }}
-            AND qname in ({{ ExtractStrings .Queues }})
+        {{ if gt (len .IVRs) 0 }}
+            AND ivr_name in ({{ ExtractStrings .IVRs }})
         {{ end }};
