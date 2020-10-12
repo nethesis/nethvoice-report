@@ -22,6 +22,9 @@
 
 password=$(perl -e "use NethServer::Password; print NethServer::Password::store('nethvoice_report');")
 
+# create schema
+/usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb < /opt/nethvoice-report/scripts/schema.sql
+
 # grant some accesses to asteriskcdrdb database
 /usr/bin/mysql --defaults-file=/root/.my.cnf -e "GRANT SELECT on asteriskcdrdb.* to 'nethvoice_report'@'localhost' identified by '$password';"
 /usr/bin/mysql --defaults-file=/root/.my.cnf -e "GRANT INSERT on asteriskcdrdb.* to 'nethvoice_report'@'localhost' identified by '$password';"
