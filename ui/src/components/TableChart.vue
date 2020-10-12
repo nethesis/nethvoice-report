@@ -132,7 +132,6 @@ export default {
       });
     },
     formatData() {
-      console.log("formatData(), this.columns", this.columns); ////
       const context = this;
 
       // change columns and rows arrays while iterating on them
@@ -143,7 +142,7 @@ export default {
           const format = tokens[1];
 
           // remove format from column name
-          this[colIndex] = columnName; //// uppercase?
+          this[colIndex] = columnName;
 
           // format cell value in all data rows
           context.rows.forEach(function (row, rowIndex) {

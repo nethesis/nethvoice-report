@@ -129,7 +129,7 @@ export default {
   },
   watch: {
     $route: function () {
-      if (this.$route.meta.parent == "") {
+      if (this.$route.meta.view == "default") {
         this.title = this.$i18n.t(this.$route.meta.name);
       } else {
         this.title =
