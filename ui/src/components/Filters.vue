@@ -158,9 +158,6 @@
             v-model="filter.origins"
           />
         </sui-form-field>
-        <!-- </sui-grid>
-
-      <sui-form-fields> -->
         <sui-form-field v-if="showFilterDestination" width="six">
           <label>Destinations</label>
           <sui-dropdown
@@ -978,7 +975,7 @@ export default {
             this.saveToLocalStorageWithExpiry(
               "reportPhoneBook",
               this.phoneBook,
-              1
+              10
             ); //// TODO use 8 * 60 (i.e. 8 hours)
           },
           (error) => {

@@ -124,9 +124,9 @@ var UtilService = {
       let minutes = parseInt(Math.floor((value - hours * 3600) / 60));
       let seconds = parseInt((value - (hours * 3600 + minutes * 60)) % 60);
 
-      let dHours = hours > 9 ? hours : "0" + hours;
-      let dMins = minutes > 9 ? minutes : "0" + minutes;
-      let dSecs = seconds > 9 ? seconds : "0" + seconds;
+      let dHours = hours > 9 ? hours : hours;
+      let dMins = minutes > 9 ? minutes : minutes;
+      let dSecs = seconds > 9 ? seconds : seconds;
 
       ret = dSecs + "s";
       if (minutes) {

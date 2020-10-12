@@ -93,8 +93,6 @@ export default {
       this.$root.$emit("requestApplyFilter");
     },
     applyFilters(filter) {
-      filter.agents = ["0721", "0722"]; ////
-
       for (let chart of this.charts) {
         this.execQuery(
           filter,
