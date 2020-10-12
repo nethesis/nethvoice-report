@@ -58,6 +58,7 @@
       "november": "November",
       "december": "December"
     },
+    "week": "Week",
     "no_data": "No data",
     "total": "Total",
     "queueName": "Queue name"

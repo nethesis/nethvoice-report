@@ -85,25 +85,33 @@ var UtilService = {
         case "percent":
           return this.formatPercentage(value);
         case "label":
-          return this.$i18n.t(value) + " (i18n)"; ////
+          return this.$i18n.t(value);
         case "yearDate":
           // no formatting needed
           return value;
         case "monthDate":
-          return this.formatMonthDate(value); ////
+          return this.formatMonthDate(value);
         case "weekDate":
-          return value + " (weekDate)"; ////
+          return this.formatWeekDate(value);
         case "dayDate":
           // no formatting needed
           return value;
       }
     },
     formatMonthDate(value) {
+      // value: e.g. "2020-10"
       const tokens = value.split("-");
       const year = tokens[0];
       const monthNum = tokens[1];
       const month = this.$i18n.t("month." + this.getMonthNames()[monthNum - 1]);
-      return month + " " + year; ////
+      return month + " " + year;
+    },
+    formatWeekDate(value) {
+      // value: e.g. "2020-50"
+      const tokens = value.split("-");
+      const year = tokens[0];
+      const weekNum = parseInt(tokens[1]);
+      return this.$i18n.t("week") + " " + weekNum + " " + year;
     },
     getMonthNames() {
       return [
