@@ -157,8 +157,8 @@ func InitJWT() *jwt.GinJWTMiddleware {
 					return true
 				}
 
-				// X user (api key auth) is always authorized to access all resources (queues, groups, ...)
-				if v.Username == "X" {
+				// X user (api key auth) and admin are always authorized to access all resources (queues, groups, ...)
+				if v.Username == "X" || v.Username == "admin" {
 					return true
 				}
 
