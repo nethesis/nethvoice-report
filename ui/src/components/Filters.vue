@@ -304,6 +304,8 @@ import UtilService from "../services/utils";
 import SearchService from "../services/searches";
 import PhonebookService from "../services/phonebook";
 
+import moment from "moment";
+
 export default {
   name: "Filters",
   mixins: [
@@ -779,6 +781,12 @@ export default {
       return result;
     },
     applyFilters() {
+      this.filter.contactName = "";
+
+      let filterToApply = JSON.parse(JSON.stringify(this.filter));
+      filterToApply.phones = [];
+
+      // retrieve contact name phones
       if (
         this.$refs.filterContactName &&
         this.$refs.filterContactName.$el &&
@@ -803,16 +811,41 @@ export default {
           }
 
           if (phoneNumbers.length) {
-            this.filter.phones = phoneNumbers;
+            filterToApply.phones = phoneNumbers;
           }
         }
-      } else {
-        this.filter.phones = [];
       }
 
       // save filter to local storage
       this.set(this.reportFilterStorageName, this.filter);
-      this.$root.$emit("applyFilters", this.filter);
+
+      // format time interval
+
+      if (filterToApply.time.interval) {
+        let dateFormat = "";
+
+        if (filterToApply.time.group == "year") {
+          dateFormat = "YYYY";
+        } else if (filterToApply.time.group == "month") {
+          dateFormat = "YYYY-MM";
+        } else if (filterToApply.time.group == "week") {
+          dateFormat = "YYYY-WW";
+        } else if (filterToApply.time.group == "day") {
+          dateFormat = "YYYY-MM-DD";
+        }
+        filterToApply.time.interval.start = moment(
+          filterToApply.time.interval.start
+        ).format(dateFormat);
+        filterToApply.time.interval.end = moment(
+          filterToApply.time.interval.end
+        ).format(dateFormat);
+
+        console.log("start", filterToApply.time.interval.start); ////
+        console.log("end", filterToApply.time.interval.end); ////
+      }
+
+      // apply filters
+      this.$root.$emit("applyFilters", filterToApply);
     },
     hackDropdown(e) {
       e.target.parentNode

@@ -44,6 +44,20 @@
       "test-total-calls-for-queue": "Total calls for queue",
       "test-hourly-distribution": "Hourly distribution"
     },
+    "month": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+    },
     "no_data": "No data",
     "total": "Total",
     "queueName": "Queue name"

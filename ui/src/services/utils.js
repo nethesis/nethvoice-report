@@ -90,12 +90,36 @@ var UtilService = {
           // no formatting needed
           return value;
         case "monthDate":
-          return value + " (monthDate)"; ////
+          return this.formatMonthDate(value); ////
         case "weekDate":
           return value + " (weekDate)"; ////
         case "dayDate":
-          return value + " (dayDate)"; ////
+          // no formatting needed
+          return value;
       }
+    },
+    formatMonthDate(value) {
+      const tokens = value.split("-");
+      const year = tokens[0];
+      const monthNum = tokens[1];
+      const month = this.$i18n.t("month." + this.getMonthNames()[monthNum - 1]);
+      return month + " " + year; ////
+    },
+    getMonthNames() {
+      return [
+        "january",
+        "february",
+        "march",
+        "april",
+        "may",
+        "june",
+        "july",
+        "august",
+        "september",
+        "october",
+        "november",
+        "december"
+      ]
     },
     formatNumber(value) {
       const num = parseFloat(value);
