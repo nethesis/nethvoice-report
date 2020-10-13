@@ -6,7 +6,7 @@ SELECT period AS period£{{ .Time.Group }}Date,
        provincia, 
        regione, 
        total AS total£num 
-FROM   distribution_geo_year 
+FROM   distribution_geo_{{ .Time.Group }} 
 WHERE  TRUE 
         {{ if and .Time.Interval.Start .Time.Interval.End }}
             AND period >= "{{ .Time.Interval.Start }}"
