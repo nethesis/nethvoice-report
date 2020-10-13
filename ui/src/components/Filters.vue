@@ -814,7 +814,14 @@ export default {
         }
       }
 
+      // set group by day if "Group by" field is hidden
+
+      if (!this.showFilterTimeGroup) {
+        filterToApply.time.group = "day";
+      }
+
       // format time interval
+
       if (filterToApply.time.interval) {
         let dateFormat = "";
 
