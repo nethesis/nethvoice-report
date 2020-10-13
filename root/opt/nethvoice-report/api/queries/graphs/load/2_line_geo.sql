@@ -16,9 +16,5 @@ WHERE  TRUE
        {{ end }}
 ORDER BY qdescr, period£{{ .Time.Group }}Date;
 {{ else }}
-SELECT 1 AS qdescr,
-       2 AS period£{{ .Time.Group }}Date,
-       3 AS total£num
-FROM   DUAL
-WHERE  false;
+SELECT "origins field is required" AS "!message";
 {{ end }}

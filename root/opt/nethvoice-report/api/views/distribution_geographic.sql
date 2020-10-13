@@ -16,7 +16,7 @@ CREATE TABLE distribution_geo_year AS
          regione, 
          Count(id)                                      AS total 
   FROM   report_queue_callers 
-  WHERE  true 
+  WHERE  regione IS NOT NULL 
   GROUP  BY period, 
             qname, 
             regione 
@@ -36,7 +36,7 @@ CREATE TABLE distribution_geo_month AS
          regione, 
          Count(id)                                      AS total
   FROM   report_queue_callers 
-  WHERE  true 
+  WHERE  regione IS NOT NULL
   GROUP  BY period, 
             qname, 
             regione 
@@ -56,7 +56,7 @@ CREATE TABLE distribution_geo_week AS
          regione, 
          Count(id)                                      AS total
   FROM   report_queue_callers 
-  WHERE  true 
+  WHERE  regione IS NOT NULL
   GROUP  BY period, 
             qname, 
             regione 
@@ -76,7 +76,7 @@ CREATE TABLE distribution_geo_day AS
          regione, 
          Count(id)                                      AS total
   FROM   report_queue_callers 
-  WHERE  true 
+  WHERE  regione IS NOT NULL
   GROUP  BY period, 
             qname, 
             regione 
