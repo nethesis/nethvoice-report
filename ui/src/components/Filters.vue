@@ -193,6 +193,8 @@
             :fullTextSearch="'exact'"
             :maxResults="20"
             class="searchContactName"
+            @input="contactNameInput"
+            :value="filter.contactName"
           />
         </sui-form-field>
         <sui-form-field v-if="showFilterNullCall" width="four">
@@ -202,16 +204,25 @@
       </sui-grid>
 
       <sui-form-fields class="mg-top-md">
-        <sui-button primary type="submit" class="mg-right-sm"
-          >Apply filters</sui-button
+        <sui-button primary type="submit" icon="search">Search</sui-button>
+        <sui-button
+          type="button"
+          class="mg-right-sm"
+          @click.native="clearFilters()"
+          icon="eraser"
+          >Clear</sui-button
         >
-        <sui-button type="button" @click.native="showSaveSearchModal(true)"
+        <sui-button
+          type="button"
+          @click.native="showSaveSearchModal(true)"
+          icon="save"
           >Save search</sui-button
         >
         <sui-button
           type="button"
           :disabled="!selectedSearch"
           @click.native="showOverwriteSearchModal(true)"
+          icon="save"
           >Overwrite search</sui-button
         >
       </sui-form-fields>
@@ -469,10 +480,6 @@ export default {
 
         // set selected values in filter
         this.setFilterSelection(filter, true);
-
-        // setTimeout(() => {
-        //   this.applyFilters(); ////
-        // }, 1000); ////
       } else {
         console.log("retrieving default filter from backend:"); ////
 
@@ -642,10 +649,6 @@ export default {
 
           // set selected values in filter
           this.setFilterSelection(this.defaultFilter, false);
-
-          // setTimeout(() => {
-          //   this.applyFilters(); ////
-          // }, 1000); ////
         },
         (error) => {
           console.error(error.body);
@@ -665,11 +668,7 @@ export default {
         this.filter.destinations = filter.destinations;
         this.filter.caller = filter.caller;
         this.filter.nullCall = filter.nullCall;
-
-        if (this.$refs.filterContactName) {
-          this.$refs.filterContactName.$el.firstChild.value =
-            filter.contactName;
-        }
+        this.filter.contactName = filter.contactName;
       }
 
       // time
@@ -682,8 +681,10 @@ export default {
       // null call
       this.filter.nullCall = filter.nullCall;
 
-      // save filter to local storage
-      this.set(this.reportFilterStorageName, this.filter);
+      if (!fromLocalStorage) {
+        // save filter to local storage
+        this.set(this.reportFilterStorageName, this.filter);
+      }
     },
     getSavedSearches(searchToSelect) {
       this.getSearches(
@@ -781,25 +782,19 @@ export default {
       return result;
     },
     applyFilters() {
-      this.filter.contactName = "";
+      // save filter to local storage
+      this.set(this.reportFilterStorageName, this.filter);
 
       let filterToApply = JSON.parse(JSON.stringify(this.filter));
       filterToApply.phones = [];
 
       // retrieve contact name phones
-      if (
-        this.$refs.filterContactName &&
-        this.$refs.filterContactName.$el &&
-        this.$refs.filterContactName.$el.firstChild &&
-        this.$refs.filterContactName.$el.firstChild.value
-      ) {
-        const contactName = this.$refs.filterContactName.$el.firstChild.value;
+      if (this.filter.contactName) {
         const contact = this.phoneBook.find((c) => {
-          return c.title == contactName;
+          return c.title == this.filter.contactName;
         });
 
         if (contact) {
-          this.filter.contactName = contactName; // save contact name to local storage
           let phoneNumbers = [];
 
           for (const [phoneType, phoneList] of Object.entries(contact.phones)) {
@@ -812,15 +807,14 @@ export default {
 
           if (phoneNumbers.length) {
             filterToApply.phones = phoneNumbers;
+
+            console.log("contact", contact.title); ////
+            console.log("phoneNumbers", phoneNumbers); ////
           }
         }
       }
 
-      // save filter to local storage
-      this.set(this.reportFilterStorageName, this.filter);
-
       // format time interval
-
       if (filterToApply.time.interval) {
         let dateFormat = "";
 
@@ -1051,6 +1045,24 @@ export default {
           console.error(error.body);
         }
       );
+    },
+    contactNameInput(event) {
+      if (typeof event == "string") {
+        this.filter.contactName = event;
+      }
+    },
+    clearFilters() {
+      this.filter.queues = [];
+      this.filter.groups = [];
+      this.filter.agents = [];
+      this.filter.ivrs = [];
+      this.filter.reasons = [];
+      this.filter.results = [];
+      this.filter.choices = [];
+      this.filter.destinations = [];
+      this.filter.origins = [];
+      this.filter.caller = "";
+      this.filter.contactName = "";
     },
   },
   computed: {
