@@ -11,6 +11,9 @@ WHERE   TRUE
             AND period >= "{{ .Time.Interval.Start }}"
             AND period <= "{{ .Time.Interval.End }}"
         {{ end }}
+        {{ if gt (len .Choices) 0 }}
+            AND choice in ({{ ExtractStrings .Choices }})
+        {{ end }}
         {{ if gt (len .IVRs) 0 }}
             AND ivr_name in ({{ ExtractStrings .IVRs }})
         {{ end }};
