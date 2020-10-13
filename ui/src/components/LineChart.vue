@@ -15,21 +15,21 @@ export default {
       default: function () {
         return {
           height: `22rem`,
-          position: 'relative'
-        }
+          position: "relative",
+        };
       },
     },
   },
   data() {
     return {
       labels: [],
-      values: [],
+      datasets: [],
       options: {
         responsive: true,
         maintainAspectRatio: false,
         legend: {
-          position: 'right',
-        }
+          position: "right",
+        },
       },
       colors: [
         "#2185d0",
@@ -60,42 +60,72 @@ export default {
       this.renderChart(chartData, this.options);
     },
     parseData() {
-      // remove first element (query columns)
-      const rows = this.data.filter((_, i) => i !== 0);
       this.labels = [];
       this.datasets = [];
-      let currentDataset = null;
-      let labelsProcessed = false;
 
-      rows.forEach((row, index) => {
+      // remove first element (query columns)
+      const rows = this.data.filter((_, i) => i !== 0);
+
+      // build a data structure (datasetMap) like this:
+      // {
+      //   datasetName: {2018: 0, 2019: 18, 2020: 4}
+      //   otherDatasetName: {2018: 0, 2019: 39, 2020: 210}
+      //   yetAnotherDataset: {2018: 0, 2019: 526, 2020: 28}
+      // }
+
+      let labelSet = new Set();
+      let datasetNameSet = new Set();
+      let datasetMap = {};
+
+      rows.forEach((row) => {
+        datasetNameSet.add(row[0]);
+        labelSet.add(row[1]);
+      });
+
+      datasetNameSet.forEach((datasetName) => {
+        datasetMap[datasetName] = {};
+      });
+
+      rows.forEach((row) => {
         const datasetName = row[0];
         const label = row[1];
         const value = parseFloat(row[2]);
 
-        if (currentDataset != null && datasetName == currentDataset.label) {
-          // add data to dataset
-          currentDataset.data.push(value);
+        datasetMap[datasetName][label] = value;
+      });
 
-          if (!labelsProcessed) {
-            this.labels.push(label);
-          }
-        } else {
-          // new dataset
+      this.labels = Array.from(labelSet).sort();
 
-          if (currentDataset != null && !labelsProcessed) {
-            labelsProcessed = true;
-          }
+      // add missing data with zero values
 
-          const color = this.colors[index % this.colors.length];
-          currentDataset = {
-            label: datasetName,
-            data: [value],
-            borderColor: color,
-            backgroundColor: color,
-            fill: false,
-          };
-          this.datasets.push(currentDataset);
-        }
+      for (const [datasetName, data] of Object.entries(datasetMap)) {
+        const labels = Object.keys(data);
+        let missingLabels = this.labels.filter((l) => !labels.includes(l));
+
+        missingLabels.forEach((missingLabel) => {
+          datasetMap[datasetName][missingLabel] = 0;
+        });
+      }
+
+      // initialize line chart data
+
+      Object.entries(datasetMap).forEach(([datasetName, data], index) => {
+        const sortedLabels = Object.keys(data).sort();
+        let datasetValues = [];
+
+        sortedLabels.forEach((label) => {
+          datasetValues.push(data[label]);
+        });
+
+        const color = this.colors[index % this.colors.length];
+
+        this.datasets.push({
+          label: datasetName,
+          data: datasetValues,
+          borderColor: color,
+          backgroundColor: color,
+          fill: false,
+        });
       });
       this.renderLineChart();
     },
