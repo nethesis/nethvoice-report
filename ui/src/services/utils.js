@@ -64,7 +64,7 @@ var UtilService = {
           "load": ["timeGroup", "time", "queue", "origin"], //// verify
           "hour": ["timeGroup", "time", "queue", "agent", "destination", "ivr", "choice"],
           "agent": ["timeGroup", "time", "queue", "agent"],
-          "area": ["timeGroup", "time", "queue", "origin"],
+          "area": ["timeGroup", "time", "queue"],
           "queue_position": ["timeGroup", "time", "queue", "timeSplit"],
           "avg_duration": ["timeGroup", "time", "queue", "timeSplit"],
           "avg_wait": ["timeGroup", "time", "queue", "timeSplit"]
