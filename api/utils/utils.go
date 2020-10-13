@@ -131,15 +131,54 @@ func ExtractPhones(p []string, plain bool) string {
 			numbers = append(numbers, number[1])
 		}
 
-		return strings.Join(numbers[:], ",")
+		return "\"" + strings.Join(numbers[:], `","`) + "\""
 	}
 
-	// loop numbers in type mode: <type> = <number OR <type> = <number> OR ...
+	// loop numbers in type mode: <type> = <number> OR <type> = <number> OR ...
 	for _, r := range p {
 		number := strings.Split(r, "_")
-		numbers = append(numbers, number[0]+" = "+number[1])
+		numbers = append(numbers, number[0]+" = \""+number[1] + "\"")
 	}
 
 	return strings.Join(numbers[:], " OR ")
 
+}
+
+func ExtractOrigins(o []string, plain bool) string {
+	// declare origins array
+        var origins []string
+
+	// loop origins in plain mode: <origin>, <origin>, <origin>, ...
+	if plain {
+                for _, r := range o {
+                        origin := strings.Split(r, "_")
+                        origins = append(origins, origin[1])
+                }
+
+                return "\"" + strings.Join(origins[:], `","`) + "\""
+        }
+
+	// loop origins in type mode: <type> = <origin> OR <type> = <origin> OR ...
+	for _, r := range o {
+                origin := strings.Split(r, "_")
+
+		// convert origin to table fields
+		var field string
+
+		switch origin[0] {
+		case "district":
+			field = "comune"
+		case "province":
+			field = "provincia"
+		case "region":
+			field = "regione"
+		case "areaCode":
+			field = "prefisso"
+
+		}
+
+                origins = append(origins, field+" = \""+origin[1] + "\"")
+        }
+
+        return strings.Join(origins[:], " OR ")
 }
