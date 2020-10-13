@@ -1,3 +1,4 @@
+#!/usr/bin/php
 <?php
 /*
  * This scripts consolidates queue statistics
@@ -10,9 +11,25 @@ if ( !$fp || !flock($fp,LOCK_EX|LOCK_NB,$eWouldBlock) || $eWouldBlock ) {
   exit(1);
 }
 
-include_once('/etc/freepbx_db.conf');
 ini_set("date.timezone", "Europe/Rome");
 $now = time();
+
+
+# Connect to db
+$conf = json_decode(file_get_contents("/opt/nethvoice-report/api/conf.json"), true);
+if (!$conf) {
+    fputs(STDERR, "Can't read configuration file");
+    exit(1);
+}
+$conf = $conf['queue_database'];
+
+try {
+    $cdrdb = new PDO("mysql:dbname={$conf['name']};host={$conf['host']}", $conf['user'], $conf['password']);
+} catch  (PDOException $e) {
+    fputs(STDERR, 'Connection failed: ' . $e->getMessage());
+    exit(1);
+}
+
 
 # Copy queue_log content into queue_log_history
 $sqls = array();
