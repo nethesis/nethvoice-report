@@ -3,7 +3,7 @@
     <!-- handle popups -->
     <portal-target name="semantic-ui-vue"></portal-target>
     <!-- login view -->
-    <div v-if="!isLogged">
+    <div v-show="!isLogged">
       <Login />
     </div>
     <!-- end login view -->

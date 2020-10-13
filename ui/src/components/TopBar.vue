@@ -126,6 +126,11 @@ export default {
     if (this.isAdmin) {
       this.getAdminSettings();
     }
+
+    // event "logout" is triggered by $http interceptor if token has expired
+    this.$root.$on("logout", () => {
+      this.doLogout();
+    });
   },
   watch: {
     $route: function () {

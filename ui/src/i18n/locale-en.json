@@ -39,7 +39,9 @@
     },
     "login": {
       "invalid_credentials": "Invalid credentials",
-      "invalid_user_pass_try": "Incorrect username or password"
+      "invalid_user_pass_try": "Incorrect username or password",
+      "session_expired": "Your session has expired",
+      "login_again": "Please login again"
     },
     "caption": {
       "test-total-calls-for-queue": "Total calls for queue",

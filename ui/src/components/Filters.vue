@@ -405,9 +405,6 @@ export default {
     "filter.ivrs": function () {
       this.updateIvrChoices();
     },
-    "filter.time.range": function () {
-      console.log("watch filter.time.range", this.filter.time.range); ////
-    },
     "filter.time.interval": function () {
       if (
         this.filter.time.interval &&
@@ -1037,22 +1034,6 @@ export default {
           }
         );
       }
-    },
-    doLogout() {
-      this.execLogout(
-        () => {
-          // remove from localstorage
-          this.delete("loggedUser");
-
-          // change route
-          this.$parent.didLogout();
-          this.$router.push("/");
-        },
-        (error) => {
-          // print error
-          console.error(error.body);
-        }
-      );
     },
     contactNameInput(event) {
       if (typeof event == "string") {
