@@ -50,7 +50,7 @@ var UtilService = {
           "session": ["time", "queue", "reason", "agent"],
           "caller": ["timeGroup", "time", "queue", "caller", "contactName"],
           "call": ["time", "queue", "caller", "contactName", "agent", "result"],
-          "lostCall": ["timeGroup", "time", "queue", "caller", "contactName", "reason"], //// verify
+          "lost_call": ["timeGroup", "time", "queue", "caller", "contactName", "reason"], //// verify
           "ivr": ["timeGroup", "time", "ivr", "choice"]
         },
         "performance": {
@@ -58,7 +58,7 @@ var UtilService = {
         },
         "distribution": {
           "hourly": ["timeGroup", "time", "queue", "timeSplit", "agent", "destination", "ivr"],
-          "geographic": ["time", "queue", "origin"],
+          "geographic": ["timeGroup", "time", "queue", "origin"],
         },
         "graphs": {
           "load": ["timeGroup", "time", "queue", "origin"], //// verify

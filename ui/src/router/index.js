@@ -86,6 +86,18 @@ const routes = [
     },
   },
   {
+    path: "/queue/data/lost_call",
+    name: "QueueDataLostCall",
+    component: QueueView,
+    meta: {
+      name: "data.by_lost_call",
+      parent: "data",
+      section: "data",
+      view: "lost_call",
+      tags: ["lost call"],
+    },
+  },
+  {
     path: "/queue/data/ivr",
     name: "QueueDataIVR",
     component: QueueView,

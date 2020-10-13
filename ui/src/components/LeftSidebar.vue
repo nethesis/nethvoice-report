@@ -39,6 +39,8 @@
         <router-link is="sui-menu-item" :active="isActive('/queue/data/caller')" to="/queue/data/caller">{{$t("data.by_caller")}}</router-link>
         <span v-show="isTag('/queue/data/call')" class="press-enter dot-small"></span>
         <router-link is="sui-menu-item" :active="isActive('/queue/data/call')" to="/queue/data/call">{{$t("data.by_call")}}</router-link>
+        <span v-show="isTag('/queue/data/lost_call')" class="press-enter dot-small"></span>
+        <router-link is="sui-menu-item" :active="isActive('/queue/data/lost_call')" to="/queue/data/lost_call">{{$t("data.by_lost_call")}}</router-link>
         <span v-show="isTag('/queue/data/ivr')" class="press-enter dot-small"></span>
         <router-link is="sui-menu-item" :active="isActive('/queue/data/ivr')" to="/queue/data/ivr">{{$t("data.ivr")}}</router-link>
       </sui-menu-menu>

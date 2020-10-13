@@ -76,21 +76,25 @@ export default {
         this.$route.meta.view
       ];
 
-      for (const queryName of this.queryNames) {
-        const tokens = queryName.split("_");
-        const position = parseInt(tokens[0]);
-        const type = tokens[1];
-        const caption = tokens[2];
-        charts.push({
-          name: queryName,
-          position: position,
-          type: type,
-          caption: caption,
-          data: null,
-        });
+      if (this.queryNames) {
+        for (const queryName of this.queryNames) {
+          const tokens = queryName.split("_");
+          const position = parseInt(tokens[0]);
+          const type = tokens[1];
+          const caption = tokens[2];
+          charts.push({
+            name: queryName,
+            position: position,
+            type: type,
+            caption: caption,
+            data: null,
+          });
+        }
+        this.charts = charts.sort(this.sortByProperty("position"));
+        this.$root.$emit("requestApplyFilter");
+      } else {
+        this.charts = [];
       }
-      this.charts = charts.sort(this.sortByProperty("position"));
-      this.$root.$emit("requestApplyFilter");
     },
     applyFilters(filter) {
       for (let chart of this.charts) {

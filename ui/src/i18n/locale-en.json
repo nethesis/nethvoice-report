@@ -21,6 +21,7 @@
       "by_session": "By Session",
       "by_caller": "By Caller",
       "by_call": "By Call",
+      "by_lost_call": "By Lost call",
       "ivr": "IVR"
     },
     "distribution": {
