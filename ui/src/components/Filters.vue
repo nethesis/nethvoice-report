@@ -19,6 +19,7 @@
             negative
             :disabled="!selectedSearch"
             @click.native="showDeleteSearchModal(true)"
+            icon="trash"
             >Delete search</sui-button
           >
         </sui-form-field>
