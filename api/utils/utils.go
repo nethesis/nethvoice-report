@@ -28,9 +28,12 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"reflect"
 
 	"github.com/juliangruber/go-intersect"
 	"github.com/pkg/errors"
+
+	"github.com/nethesis/nethvoice-report/api/configuration"
 )
 
 var excludedRoutes = [...]string{"/api/searches", "/api/filters/:section/:view"}
@@ -181,4 +184,16 @@ func ExtractOrigins(o []string, plain bool) string {
         }
 
         return strings.Join(origins[:], " OR ")
+}
+
+func ExtractSettings (settingName string) string {
+	// get settings struct
+	settings := configuration.Config.Settings
+
+	// reflect settings struct
+	r := reflect.ValueOf(settings)
+	f := reflect.Indirect(r).FieldByName(settingName)
+
+	// return value
+	return string(f.String())
 }

@@ -29,7 +29,6 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/nethesis/nethvoice-report/api/models"
-	"github.com/nethesis/nethvoice-report/api/utils"
 )
 
 type Configuration struct {
@@ -72,7 +71,7 @@ func Init(ConfigFilePtr *string) {
 		// check errors or parse JSON
 		err := decoder.Decode(&Config)
 		if err != nil {
-			utils.LogError(errors.Wrap(err, "error decoding configuration file"))
+			os.Stderr.WriteString(errors.Wrap(err, "error decoding configuration file").Error() + "\n")
 		}
 	}
 }
