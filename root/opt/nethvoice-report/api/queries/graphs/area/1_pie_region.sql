@@ -11,7 +11,7 @@ WHERE  TRUE
                 AND qname in ({{ ExtractStrings .Queues }})
         {{ end }}
 GROUP BY regione
-ORDER  BY total DESC, 
+ORDER  BY total£num DESC, 
           regione; 
 {{ else }}
 SELECT "queues field is required" AS "!message";

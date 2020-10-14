@@ -1,7 +1,8 @@
 {{ if gt (len .Queues) 0  }}
-SELECT provincia, 
-       sum(total) AS total£num
-FROM   distribution_geo_{{ .Time.Group }}
+SELECT CONCAT(qdescr, " (", qname, ")") AS qdescr,
+       time_{{ .Time.Division  }} AS time£hourDate,
+       avg_position AS avgPosition£num
+FROM   graph_queue_position_{{ .Time.Group }}_{{ .Time.Division }}
 WHERE  TRUE
         {{ if and .Time.Interval.Start .Time.Interval.End }}
             AND period >= "{{ .Time.Interval.Start }}"
@@ -10,10 +11,6 @@ WHERE  TRUE
         {{ if gt (len .Queues) 0 }}
                 AND qname in ({{ ExtractStrings .Queues }})
         {{ end }}
-GROUP BY provincia
-ORDER  BY total£num DESC,
-          provincia;
 {{ else }}
 SELECT "queues field is required" AS "!message";
 {{ end }}
-~                    
