@@ -5,7 +5,12 @@
       {{ $t("caption." + chart.caption) }}
     </h4>
     <div v-show="!chart.data">
-      <sui-loader active centered inline class="loader-height" />
+        <sui-loader v-if="!chart.message" active centered inline class="loader-height" />
+        <div v-else>
+          <sui-message warning>
+            <i class="exclamation triangle icon"></i>{{ $t("message." + chart.message) }}
+          </sui-message>
+        </div>
     </div>
     <div v-show="chart.data">
       <!-- table chart -->
@@ -88,6 +93,7 @@ export default {
             type: type,
             caption: caption,
             data: null,
+            message: null,
           });
         }
         this.charts = charts.sort(this.sortByProperty("position"));
@@ -107,7 +113,17 @@ export default {
           chart.name,
           (success) => {
             const result = success.body;
-            chart.data = result;
+
+            // check warning message
+            if (
+              result.length == 2 &&
+              result[0].length == 1 &&
+              result[0][0] == "!message"
+            ) {
+              chart.message = result[1][0].replace(/ /g, "_");
+            } else {
+              chart.data = result;
+            }
           },
           (error) => {
             console.error(error.body);

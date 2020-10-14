@@ -61,6 +61,9 @@
       "november": "November",
       "december": "December"
     },
+    "message": {
+      "origins_field_is_required": "Select one or more origins in filter to display this chart"
+    },
     "week": "Week",
     "no_data": "No data",
     "total": "Total",
