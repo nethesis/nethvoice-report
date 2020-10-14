@@ -222,88 +222,93 @@
           type="button"
           :disabled="!selectedSearch"
           @click.native="showOverwriteSearchModal(true)"
-          icon="save"
+          icon="edit"
           >Overwrite search</sui-button
         >
       </sui-form-fields>
     </sui-form>
 
     <!-- save search modal -->
-    <sui-modal v-model="openSaveSearchModal" size="tiny">
-      <sui-modal-header>Save search</sui-modal-header>
-      <sui-modal-content>
-        <sui-modal-description>
-          <p>Enter a name for your new saved search</p>
-          <sui-form :error="errorNewSearch">
+    <sui-form @submit.prevent="validateSaveNewSearch()" :error="errorNewSearch">
+      <sui-modal v-model="openSaveSearchModal" size="tiny">
+        <sui-modal-header>Save search</sui-modal-header>
+        <sui-modal-content>
+          <sui-modal-description>
+            <p>Enter a name for your new saved search</p>
             <sui-form-field>
               <input placeholder="Search name" v-model="newSearchName" />
             </sui-form-field>
             <sui-message error v-show="errorNewSearch">
               <p>{{ errorMessage }}</p>
             </sui-message>
-          </sui-form>
-        </sui-modal-description>
-      </sui-modal-content>
-      <sui-modal-actions>
-        <sui-button @click.native="showSaveSearchModal(false)"
-          >Cancel</sui-button
-        >
-        <sui-button
-          primary
-          @click.native="validateSaveNewSearch()"
-          :loading="loader.saveSearch"
-          content="Save"
-        ></sui-button>
-      </sui-modal-actions>
-    </sui-modal>
+          </sui-modal-description>
+        </sui-modal-content>
+        <sui-modal-actions>
+          <sui-button type="button" @click.native="showSaveSearchModal(false)"
+            >Cancel</sui-button
+          >
+          <sui-button
+            type="submit"
+            primary
+            :loading="loader.saveSearch"
+            content="Save"
+          ></sui-button>
+        </sui-modal-actions>
+      </sui-modal>
+    </sui-form>
 
     <!-- overwrite search modal -->
-    <sui-modal v-model="openOverwriteSearchModal" size="tiny">
-      <sui-modal-header>Overwrite search</sui-modal-header>
-      <sui-modal-content>
-        <sui-modal-description>
-          <sui-message warning>
-            <i class="exclamation triangle icon"></i>You are about to overwrite
-            "{{ selectedSearch }}" search
-          </sui-message>
-          <p>Are you sure?</p>
-        </sui-modal-description>
-      </sui-modal-content>
-      <sui-modal-actions>
-        <sui-button @click.native="showOverwriteSearchModal(false)"
-          >Cancel</sui-button
-        >
-        <sui-button negative @click.native="saveSearch(selectedSearch)"
-          >Overwrite</sui-button
-        >
-      </sui-modal-actions>
-    </sui-modal>
+    <sui-form @submit.prevent="saveSearch(selectedSearch)" warning>
+      <sui-modal v-model="openOverwriteSearchModal" size="tiny">
+        <sui-modal-header>Overwrite search</sui-modal-header>
+        <sui-modal-content>
+          <sui-modal-description>
+            <sui-message warning>
+              <i class="exclamation triangle icon"></i>You are about to
+              overwrite "{{ selectedSearch }}" search
+            </sui-message>
+            <p>Are you sure?</p>
+          </sui-modal-description>
+        </sui-modal-content>
+        <sui-modal-actions>
+          <sui-button
+            type="button"
+            @click.native="showOverwriteSearchModal(false)"
+            >Cancel</sui-button
+          >
+          <sui-button type="submit" negative>Overwrite</sui-button>
+        </sui-modal-actions>
+      </sui-modal>
+    </sui-form>
 
     <!-- delete search modal -->
-    <sui-modal v-model="openDeleteSearchModal" size="tiny">
-      <sui-modal-header>Delete search</sui-modal-header>
-      <sui-modal-content>
-        <sui-modal-description>
-          <sui-message warning>
-            <i class="exclamation triangle icon"></i>You are about to delete "{{
-              selectedSearch
-            }}" search
-          </sui-message>
-          <p>Are you sure?</p>
-        </sui-modal-description>
-      </sui-modal-content>
-      <sui-modal-actions>
-        <sui-button @click.native="showDeleteSearchModal(false)"
-          >Cancel</sui-button
+    <sui-form @submit.prevent="deleteSelectedSearch()" warning>
+      <sui-modal v-model="openDeleteSearchModal" size="tiny">
+        <sui-modal-header
+          >Delete search</sui-modal-header
         >
-        <sui-button
-          negative
-          @click.native="deleteSelectedSearch()"
-          :loading="loader.deleteSearch"
-          content="Delete"
-        ></sui-button>
-      </sui-modal-actions>
-    </sui-modal>
+        <sui-modal-content>
+          <sui-modal-description>
+            <sui-message warning>
+              <i class="exclamation triangle icon"></i>You are about to delete
+              "{{ selectedSearch }}" search
+            </sui-message>
+            <p>Are you sure?</p>
+          </sui-modal-description>
+        </sui-modal-content>
+        <sui-modal-actions>
+          <sui-button type="button" @click.native="showDeleteSearchModal(false)"
+            >Cancel</sui-button
+          >
+          <sui-button
+            negative
+            type="submit"
+            :loading="loader.deleteSearch"
+            content="Delete"
+          ></sui-button>
+        </sui-modal-actions>
+      </sui-modal>
+    </sui-form>
   </div>
 </template>
 
@@ -839,6 +844,8 @@ export default {
     },
     showSaveSearchModal(value) {
       this.newSearchName = "";
+      this.errorMessage = "";
+      this.errorNewSearch = false;
       this.openSaveSearchModal = value;
     },
     showOverwriteSearchModal(value) {

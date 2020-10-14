@@ -42,28 +42,30 @@
   </div>
 
   <!-- show details modal -->
-  <sui-modal v-if="chartDetails" v-model="openDetailsModal" size="tiny">
-    <sui-modal-header>{{ $t("caption." + chartDetails.caption) }}</sui-modal-header>
-    <sui-modal-content scrolling ref="chartDetailsContent">
-      <sui-table compact celled selectable striped collapsing class="chart-details">
-        <sui-table-body>
-          <sui-table-row v-for="(entry, index) in chartDetails.details" v-bind:key="index">
-            <sui-table-cell>
-              {{ entry[0] }}
-            </sui-table-cell>
-            <sui-table-cell>
-              {{ entry[1] | formatNumber }}
-            </sui-table-cell>
-          </sui-table-row>
-        </sui-table-body>
-      </sui-table>
-    </sui-modal-content>
-    <sui-modal-actions>
-      <sui-button primary @click.native="hideDetailsModal()"
-        >{{ $t("close") }}</sui-button
-      >
-    </sui-modal-actions>
-  </sui-modal>
+  <sui-form @submit.prevent="hideDetailsModal()">
+    <sui-modal v-if="chartDetails" v-model="openDetailsModal" size="tiny">
+      <sui-modal-header>{{ $t("caption." + chartDetails.caption) }}</sui-modal-header>
+      <sui-modal-content scrolling ref="chartDetailsContent">
+        <sui-table compact celled selectable striped collapsing class="chart-details">
+          <sui-table-body>
+            <sui-table-row v-for="(entry, index) in chartDetails.details" v-bind:key="index">
+              <sui-table-cell>
+                {{ entry[0] }}
+              </sui-table-cell>
+              <sui-table-cell>
+                {{ entry[1] | formatNumber }}
+              </sui-table-cell>
+            </sui-table-row>
+          </sui-table-body>
+        </sui-table>
+      </sui-modal-content>
+      <sui-modal-actions>
+        <sui-button type="submit" primary>
+          {{ $t("close") }}
+        </sui-button>
+      </sui-modal-actions>
+    </sui-modal>
+  </sui-form>
 </div>
 </template>
 
