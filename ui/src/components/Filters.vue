@@ -10,7 +10,6 @@
             selection
             v-model="selectedSearch"
             :options="savedSearches"
-            @click="hackDropdown"
           />
         </sui-form-field>
         <sui-form-field width="four">
@@ -399,6 +398,11 @@ export default {
     };
   },
   watch: {
+    $route: function () {
+      if (this.savedSearches) {
+        this.mapSavedSearches(this.savedSearches);
+      }
+    },
     selectedSearch: function () {
       this.setFilterValuesFromSearch();
     },
@@ -716,20 +720,7 @@ export default {
           searchesNotMatchingView.push(search);
         }
       }
-
-      if (searchesNotMatchingView.length) {
-        // show divider and searches of other views
-        const divider = {
-          //// debug switching views
-          value: "-",
-          text: "-",
-        };
-        this.savedSearches = searchesMatchingView
-          .concat([divider])
-          .concat(searchesNotMatchingView);
-      } else {
-        this.savedSearches = searchesMatchingView;
-      }
+      this.savedSearches = searchesMatchingView.concat(searchesNotMatchingView);
     },
     setFilterValuesFromSearch() {
       // retrieve search object
@@ -846,20 +837,6 @@ export default {
       // apply filters
       this.$root.$emit("applyFilters", filterToApply);
     },
-    hackDropdown(e) {
-      e.target.parentNode
-        .querySelectorAll("div[role=option]")
-        .forEach((item) => {
-          if (item.textContent === "-") {
-            console.log("hackDropdown, item found", item); ////
-
-            item.textContent = "";
-            item.classList.remove("item");
-            item.classList.add("divider");
-            item.disabled = true; //// need testing
-          }
-        });
-    },
     showSaveSearchModal(value) {
       this.newSearchName = "";
       this.openSaveSearchModal = value;
@@ -900,10 +877,10 @@ export default {
       let filterToSave = JSON.parse(JSON.stringify(this.filter));
 
       // convert time interval to string
-      filterToSave.time.interval.start = this.formatDate(
+      filterToSave.time.interval.start = this.$options.filters.formatDate(
         this.filter.time.interval.start
       );
-      filterToSave.time.interval.end = this.formatDate(
+      filterToSave.time.interval.end = this.$options.filters.formatDate(
         this.filter.time.interval.end
       );
 
