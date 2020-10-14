@@ -13,17 +13,25 @@
         </div>
     </div>
     <div v-show="chart.data">
-      <!-- table chart -->
-      <div v-if="chart.type == 'table'">
-        <TableChart :caption="chart.caption" :data="chart.data" />
+      <div v-show="chart.data && chart.data.length == 1">
+        <!-- no data, only query header is present -->
+        <sui-message warning>
+          <i class="exclamation triangle icon"></i>{{ $t("no_data") }}
+        </sui-message>
       </div>
-      <!-- line chart -->
-      <div v-if="chart.type == 'line'">
-        <line-chart :data="chart.data" :caption="chart.caption"></line-chart>
-      </div>
-      <!-- pie chart -->
-      <div v-if="chart.type == 'pie'">
-        <pie-chart :data="chart.data" :caption="chart.caption"></pie-chart>
+      <div v-show="chart.data && chart.data.length > 1">
+        <!-- table chart -->
+        <div v-if="chart.type == 'table'">
+          <TableChart :caption="chart.caption" :data="chart.data" />
+        </div>
+        <!-- line chart -->
+        <div v-if="chart.type == 'line'">
+          <line-chart :data="chart.data" :caption="chart.caption"></line-chart>
+        </div>
+        <!-- pie chart -->
+        <div v-if="chart.type == 'pie'">
+          <pie-chart :data="chart.data" :caption="chart.caption"></pie-chart>
+        </div>
       </div>
     </div>
   </div>
