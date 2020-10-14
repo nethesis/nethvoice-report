@@ -62,11 +62,16 @@
       "december": "December"
     },
     "message": {
-      "origins_field_is_required": "Select one or more origins in filter to display this chart"
+      "origins_field_is_required": "Select one or more origins in filter to display this chart",
+      "queues_field_is_required": "Select one or more queues in filter to display this chart"
     },
+    "close": "Close",
+    "save": "Save",
     "week": "Week",
     "no_data": "No data",
     "total": "Total",
-    "queueName": "Queue name"
+    "queueName": "Queue name",
+    "show_details": "Show details",
+    "others": "Others"
   }
 }

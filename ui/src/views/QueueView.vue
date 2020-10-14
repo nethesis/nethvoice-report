@@ -34,7 +34,45 @@
         </div>
       </div>
     </div>
+    <div v-show="chart.details" class="show-details">
+      <sui-button type="button" size="tiny" icon="zoom" @click.native="showDetailsModal(chart)">
+        {{ $t("show_details") }}
+      </sui-button>
+    </div>
   </div>
+
+  <!-- show details modal -->
+  <sui-modal v-if="chartDetails" v-model="openDetailsModal" size="tiny">
+    <sui-modal-header>{{ $t("caption." + chartDetails.caption) }}</sui-modal-header>
+    <sui-modal-content scrolling>
+
+      <sui-table compact celled selectable striped>
+        <!-- <sui-table-header>
+          <sui-table-row>
+            <sui-table-header-cell
+              v-for="(column, index) in columns"
+              v-bind:key="index"
+              >{{ $t(column) }}</sui-table-header-cell
+            >
+          </sui-table-row>
+        </sui-table-header> -->
+
+        <sui-table-body>
+          <sui-table-row v-for="(entry, index) in chartDetails.details" v-bind:key="index">
+            <sui-table-cell v-for="(element, index) in entry" v-bind:key="index">{{
+              element
+            }}</sui-table-cell>
+          </sui-table-row>
+        </sui-table-body>
+      </sui-table>
+
+    </sui-modal-content>
+    <sui-modal-actions>
+      <sui-button primary @click.native="hideDetailsModal()"
+        >{{ $t("close") }}</sui-button
+      >
+    </sui-modal-actions>
+  </sui-modal>
 </div>
 </template>
 
@@ -56,6 +94,9 @@ export default {
       queryTree: null,
       queryNames: [],
       charts: [],
+      MAX_PIE_ENTRIES: 8,
+      openDetailsModal: false,
+      chartDetails: null,
     };
   },
   mounted() {
@@ -102,6 +143,7 @@ export default {
             caption: caption,
             data: null,
             message: null,
+            details: null,
           });
         }
         this.charts = charts.sort(this.sortByProperty("position"));
@@ -113,6 +155,8 @@ export default {
     applyFilters(filter) {
       for (let chart of this.charts) {
         chart.data = null;
+        chart.message = null;
+        chart.details = null;
 
         this.execQuery(
           filter,
@@ -131,6 +175,14 @@ export default {
               chart.message = result[1][0].replace(/ /g, "_");
             } else {
               chart.data = result;
+
+              // show details button for pie chart with a lot of entries
+              if (
+                chart.type == "pie" &&
+                result.length > this.MAX_PIE_ENTRIES + 1
+              ) {
+                chart.details = result.filter((_, i) => i !== 0);
+              }
             }
           },
           (error) => {
@@ -138,6 +190,13 @@ export default {
           }
         );
       }
+    },
+    showDetailsModal(chart) {
+      this.chartDetails = chart;
+      this.openDetailsModal = true;
+    },
+    hideDetailsModal() {
+      this.openDetailsModal = false;
     },
   },
 };
