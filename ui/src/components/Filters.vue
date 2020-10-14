@@ -734,7 +734,7 @@ export default {
       );
 
       // set filter values
-      this.filter = search.filter;
+      this.filter = JSON.parse(JSON.stringify(search.filter));
     },
     getToday() {
       const today = new Date();
