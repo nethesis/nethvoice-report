@@ -5,19 +5,6 @@ var UtilService = {
     }
   },
   methods: {
-    formatDate(date) {
-      var d = new Date(date),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
-
-      if (month.length < 2)
-        month = '0' + month;
-      if (day.length < 2)
-        day = '0' + day;
-
-      return [year, month, day].join('-');
-    },
     sortByProperty(property) {
       return function (a, b) {
         if (a[property] < b[property]) {
@@ -79,39 +66,24 @@ var UtilService = {
     formatValue(value, format) {
       switch (format) {
         case "num":
-          return this.formatNumber(value);
+          return this.$options.filters.formatNumber(value);
         case "seconds":
-          return this.formatTime(value);
+          return this.$options.filters.formatTime(value);
         case "percent":
-          return this.formatPercentage(value);
+          return this.$options.filters.formatPercentage(value);
         case "label":
           return this.$i18n.t(value);
         case "yearDate":
           // no formatting needed
           return value;
         case "monthDate":
-          return this.formatMonthDate(value);
+          return this.$options.filters.formatMonthDate(value);
         case "weekDate":
-          return this.formatWeekDate(value);
+          return this.$options.filters.formatWeekDate(value);
         case "dayDate":
           // no formatting needed
           return value;
       }
-    },
-    formatMonthDate(value) {
-      // value: e.g. "2020-10"
-      const tokens = value.split("-");
-      const year = tokens[0];
-      const monthNum = tokens[1];
-      const month = this.$i18n.t("month." + this.getMonthNames()[monthNum - 1]);
-      return month + " " + year;
-    },
-    formatWeekDate(value) {
-      // value: e.g. "2020-50"
-      const tokens = value.split("-");
-      const year = tokens[0];
-      const weekNum = parseInt(tokens[1]);
-      return this.$i18n.t("week") + " " + weekNum + " " + year;
     },
     getMonthNames() {
       return [
@@ -128,47 +100,6 @@ var UtilService = {
         "november",
         "december"
       ]
-    },
-    formatNumber(value) {
-      const num = parseFloat(value);
-
-      if (isNaN(num)) {
-        return "-";
-      }
-      return num.toLocaleString();
-    },
-    formatPercentage(value) {
-      const numFormatted = this.formatNumber(value);
-
-      if (!numFormatted || numFormatted == "-") {
-        return "-";
-      } else {
-        return numFormatted + " %";
-      }
-    },
-    formatTime: function (value) {
-      if (!value || value.length == 0) {
-        return '-'
-      }
-
-      var ret = "";
-      let hours = parseInt(Math.floor(value / 3600));
-      let minutes = parseInt(Math.floor((value - hours * 3600) / 60));
-      let seconds = parseInt((value - (hours * 3600 + minutes * 60)) % 60);
-
-      let dHours = hours > 9 ? hours : hours;
-      let dMins = minutes > 9 ? minutes : minutes;
-      let dSecs = seconds > 9 ? seconds : seconds;
-
-      ret = dSecs + "s";
-      if (minutes) {
-        ret = dMins + "m " + ret;
-      }
-      if (hours) {
-        ret = dHours + "h " + ret;
-      }
-
-      return ret + " (" + value + ")";
     },
   },
 };

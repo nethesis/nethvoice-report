@@ -16,7 +16,7 @@
       <div v-show="chart.data && chart.data.length == 1">
         <!-- no data, only query header is present -->
         <sui-message warning>
-          <i class="exclamation triangle icon"></i>{{ $t("no_data") }}
+          <i class="exclamation triangle icon"></i>{{ $t("no_data_for_current_filter") }}
         </sui-message>
       </div>
       <div v-show="chart.data && chart.data.length > 1">
@@ -44,28 +44,19 @@
   <!-- show details modal -->
   <sui-modal v-if="chartDetails" v-model="openDetailsModal" size="tiny">
     <sui-modal-header>{{ $t("caption." + chartDetails.caption) }}</sui-modal-header>
-    <sui-modal-content scrolling>
-
-      <sui-table compact celled selectable striped>
-        <!-- <sui-table-header>
-          <sui-table-row>
-            <sui-table-header-cell
-              v-for="(column, index) in columns"
-              v-bind:key="index"
-              >{{ $t(column) }}</sui-table-header-cell
-            >
-          </sui-table-row>
-        </sui-table-header> -->
-
+    <sui-modal-content scrolling ref="chartDetailsContent">
+      <sui-table compact celled selectable striped collapsing class="chart-details">
         <sui-table-body>
           <sui-table-row v-for="(entry, index) in chartDetails.details" v-bind:key="index">
-            <sui-table-cell v-for="(element, index) in entry" v-bind:key="index">{{
-              element
-            }}</sui-table-cell>
+            <sui-table-cell>
+              {{ entry[0] }}
+            </sui-table-cell>
+            <sui-table-cell>
+              {{ entry[1] | formatNumber }}
+            </sui-table-cell>
           </sui-table-row>
         </sui-table-body>
       </sui-table>
-
     </sui-modal-content>
     <sui-modal-actions>
       <sui-button primary @click.native="hideDetailsModal()"
@@ -194,6 +185,11 @@ export default {
     showDetailsModal(chart) {
       this.chartDetails = chart;
       this.openDetailsModal = true;
+
+      // scroll modal to top
+      this.$nextTick(() => {
+        this.$refs.chartDetailsContent.$el.scrollTop = 0;
+      });
     },
     hideDetailsModal() {
       this.openDetailsModal = false;

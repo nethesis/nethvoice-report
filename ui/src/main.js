@@ -12,6 +12,8 @@ import SuiVue from "semantic-ui-vue";
 import "semantic-ui-css/semantic.min.css";
 import "./styles/main.css";
 
+import "./filters/filters";
+
 Vue.config.productionTip = false;
 Vue.use(SuiVue);
 

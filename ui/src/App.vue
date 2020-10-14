@@ -159,4 +159,8 @@ export default {
 .show-details {
   margin-top: 0.5rem;
 }
+
+.ui.table.chart-details {
+  margin: 0 auto;
+}
 </style>

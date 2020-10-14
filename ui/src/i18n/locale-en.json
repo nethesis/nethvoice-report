@@ -69,6 +69,7 @@
     "save": "Save",
     "week": "Week",
     "no_data": "No data",
+    "no_data_for_current_filter": "No data. Try to change filter values to display this chart",
     "total": "Total",
     "queueName": "Queue name",
     "show_details": "Show details",
