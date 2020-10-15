@@ -1,9 +1,9 @@
 {{ if gt (len .Queues) 0  }}
 SELECT CONCAT(qdescr, " (", qname, ")") AS qdescr,
-       time_{{ .Time.Division  }} AS time£hourDate,
-       Avg(avg_hold) AS avgHold£num
-FROM   graph_queue_hold_{{ .Time.Division }}
-WHERE  time_{{ .Time.Division  }} >= '{{ ExtractSettings "StartHour" }}' AND time_{{ .Time.Division  }} <= '{{ ExtractSettings "EndHour" }}'
+       hour AS time£hourDate,
+       Sum(num) AS num£num
+FROM   graph_hour_full
+WHERE  hour >= '{{ ExtractSettings "StartHour" }}' AND hour <= '{{ ExtractSettings "EndHour" }}'
         {{ if and .Time.Interval.Start .Time.Interval.End }}
             AND period >= "{{ .Time.Interval.Start }}"
             AND period <= "{{ .Time.Interval.End }}"
@@ -11,8 +11,7 @@ WHERE  time_{{ .Time.Division  }} >= '{{ ExtractSettings "StartHour" }}' AND tim
         {{ if gt (len .Queues) 0 }}
                 AND qname in ({{ ExtractStrings .Queues }})
         {{ end }}
-GROUP BY time_{{ .Time.Division }},qdescr
-ORDER BY qdescr,time_{{ .Time.Division }}
+GROUP BY hour,qdescr
 {{ else }}
 SELECT "queues field is required" AS "!message";
 {{ end }}
