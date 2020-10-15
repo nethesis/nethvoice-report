@@ -1,7 +1,6 @@
 <template>
   <div>
-    <sui-loader v-if="loader.filter" active centered inline />
-    <sui-form v-else class="filters-form" @submit.prevent="applyFilters">
+    <sui-form class="filters-form" @submit.prevent="applyFilters">
       <sui-form-fields v-if="savedSearches.length" class="mg-bottom-md">
         <sui-form-field width="six">
           <sui-dropdown
@@ -204,7 +203,7 @@
       </sui-grid>
 
       <sui-form-fields class="mg-top-md">
-        <sui-button primary type="submit" icon="search">Search</sui-button>
+        <sui-button primary type="submit" icon="search" :disabled="loader.filter">Search</sui-button>
         <sui-button
           type="button"
           class="mg-right-sm"
@@ -381,7 +380,7 @@ export default {
       errorNewSearch: false,
       errorMessage: "",
       loader: {
-        filter: false,
+        filter: true,
         saveSearch: false,
         deleteSearch: false,
       },
@@ -464,11 +463,14 @@ export default {
 
     // views request to apply filter on loading
     this.$root.$on("requestApplyFilter", () => {
-      this.applyFilters();
+      if (this.loader.filter == false) {
+        this.applyFilters();
+      }
     });
   },
   methods: {
     retrieveFilter() {
+      this.loader.filter = true;
       let filter = this.get(this.reportFilterStorageName);
       let filterValues = this.get(this.reportFilterValuesStorageName);
 
@@ -691,6 +693,8 @@ export default {
         // save filter to local storage
         this.set(this.reportFilterStorageName, this.filter);
       }
+
+      this.loader.filter = false;
     },
     getSavedSearches(searchToSelect) {
       this.getSearches(
