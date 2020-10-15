@@ -67,7 +67,7 @@ var Filters = {
         if (hours) {
             ret = dHours + "h " + ret;
         }
-        return ret + " (" + value + ")";
+        return ret;
     },
 };
 
