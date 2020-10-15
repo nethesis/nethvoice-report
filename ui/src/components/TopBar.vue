@@ -49,40 +49,43 @@
     </sui-container>
 
     <!-- settings modal -->
-    <sui-modal v-model="openSettingsModal" size="small">
-      <sui-modal-header>Settings</sui-modal-header>
-      <sui-modal-content>
-        <sui-modal-description>
-          <sui-form>
+    <sui-form @submit.prevent="saveAdminSettings()">
+      <sui-modal v-model="openSettingsModal" size="tiny">
+        <sui-modal-header>Settings</sui-modal-header>
+        <sui-modal-content>
+          <sui-modal-description>
             <sui-form-fields>
               <sui-form-field>
-                <label>Office hour start</label>
+                <label>Office hours start</label>
                 <vue-timepicker
                   :minute-interval="5"
                   v-model="officeHourStart"
                 ></vue-timepicker>
               </sui-form-field>
               <sui-form-field>
-                <label>Office hour end</label>
+                <label>Office hours end</label>
                 <vue-timepicker
                   :minute-interval="5"
                   v-model="officeHourEnd"
                 ></vue-timepicker>
               </sui-form-field>
             </sui-form-fields>
-          </sui-form>
-        </sui-modal-description>
-      </sui-modal-content>
-      <sui-modal-actions>
-        <sui-button @click.native="showSettingsModal(false)">Cancel</sui-button>
-        <sui-button
-          primary
-          @click.native="saveAdminSettings()"
-          :loading="loader.saveSettings"
-          content="Save"
-        ></sui-button>
-      </sui-modal-actions>
-    </sui-modal>
+            <span class="gray">{{ $t("office_hours_description") }}</span>
+          </sui-modal-description>
+        </sui-modal-content>
+        <sui-modal-actions>
+          <sui-button type="button" @click.native="showSettingsModal(false)"
+            >Cancel</sui-button
+          >
+          <sui-button
+            primary
+            type="submit"
+            :loading="loader.saveSettings"
+            content="Save"
+          ></sui-button>
+        </sui-modal-actions>
+      </sui-modal>
+    </sui-form>
   </div>
 </template>
 

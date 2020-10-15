@@ -163,4 +163,8 @@ export default {
 .ui.table.chart-details {
   margin: 0 auto;
 }
+
+.gray {
+  color: gray;
+}
 </style>
