@@ -203,7 +203,13 @@
       </sui-grid>
 
       <sui-form-fields class="mg-top-md">
-        <sui-button primary type="submit" icon="search" :disabled="loader.filter">Search</sui-button>
+        <sui-button
+          primary
+          type="submit"
+          icon="search"
+          :disabled="loader.filter"
+          >Search</sui-button
+        >
         <sui-button
           type="button"
           class="mg-right-sm"
@@ -283,9 +289,7 @@
     <!-- delete search modal -->
     <sui-form @submit.prevent="deleteSelectedSearch()" warning>
       <sui-modal v-model="openDeleteSearchModal" size="tiny">
-        <sui-modal-header
-          >Delete search</sui-modal-header
-        >
+        <sui-modal-header>Delete search</sui-modal-header>
         <sui-modal-content>
           <sui-modal-description>
             <sui-message warning>
@@ -333,7 +337,6 @@ export default {
   ],
   data() {
     return {
-      showFilters: true,
       selectedSearch: null,
       filter: {
         queues: [],
@@ -356,7 +359,7 @@ export default {
         },
         caller: "",
         contactName: "",
-        nullCall: false,
+        nullCall: false, ////
       },
       filterValues: {
         queues: [],
