@@ -16,7 +16,7 @@ CREATE TABLE graph_queue_duration_10 AS SELECT Date_format(From_unixtime(timesta
        Avg(duration) 
        AS avg_duration 
 FROM   report_queue 
-WHERE  NOT action = "exitwithkey" 
+WHERE  NOT action = "exitwithkey" AND NOT action = "FULL" AND NOT action = "JOINEMPTY" 
 GROUP  BY qdescr, 
           period, 
           time_10 
@@ -36,7 +36,7 @@ CREATE TABLE graph_queue_duration_15 AS SELECT Date_format(From_unixtime(timesta
        Avg(duration) 
        AS avg_duration 
 FROM   report_queue 
-WHERE  NOT action = "exitwithkey"
+WHERE  NOT action = "exitwithkey" AND NOT action = "FULL" AND NOT action = "JOINEMPTY"
 GROUP  BY qdescr, 
           period, 
           time_15 
@@ -56,7 +56,7 @@ CREATE TABLE graph_queue_duration_30 AS SELECT Date_format(From_unixtime(timesta
        Avg(duration) 
        AS avg_duration 
 FROM   report_queue 
-WHERE  NOT action = "exitwithkey" 
+WHERE  NOT action = "exitwithkey" AND NOT action = "FULL" AND NOT action = "JOINEMPTY" 
 GROUP  BY qdescr, 
           period, 
           time_30 
@@ -76,7 +76,7 @@ CREATE TABLE graph_queue_duration_60 AS SELECT Date_format(From_unixtime(timesta
        Avg(duration) 
        AS avg_duration 
 FROM   report_queue 
-WHERE  NOT action = "exitwithkey"
+WHERE  NOT action = "exitwithkey" AND NOT action = "FULL" AND NOT action = "JOINEMPTY"
 GROUP  BY qdescr, 
           period, 
           time_60 

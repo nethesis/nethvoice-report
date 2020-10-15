@@ -16,7 +16,7 @@ CREATE TABLE graph_queue_position_10 AS SELECT Date_format(From_unixtime(timesta
        Avg(position) 
        AS avg_position 
 FROM   report_queue 
-WHERE  NOT action = "full" 
+WHERE  NOT action = "full" AND NOT action = "JOINEMPTY" 
 GROUP  BY qdescr, 
           period, 
           time_10 
@@ -36,7 +36,7 @@ CREATE TABLE graph_queue_position_15 AS SELECT Date_format(From_unixtime(timesta
        Avg(position) 
        AS avg_position 
 FROM   report_queue 
-WHERE  NOT action = "full"
+WHERE  NOT action = "full" AND NOT action = "JOINEMPTY"
 GROUP  BY qdescr, 
           period, 
           time_15 
@@ -56,7 +56,7 @@ CREATE TABLE graph_queue_position_30 AS SELECT Date_format(From_unixtime(timesta
        Avg(position) 
        AS avg_position 
 FROM   report_queue 
-WHERE  NOT action = "full" 
+WHERE  NOT action = "full" AND NOT action = "JOINEMPTY" 
 GROUP  BY qdescr, 
           period, 
           time_30 
@@ -76,7 +76,7 @@ CREATE TABLE graph_queue_position_60 AS SELECT Date_format(From_unixtime(timesta
        Avg(position) 
        AS avg_position 
 FROM   report_queue 
-WHERE  NOT action = "full"
+WHERE  NOT action = "full" AND NOT action = "JOINEMPTY"
 GROUP  BY qdescr, 
           period, 
           time_60 
