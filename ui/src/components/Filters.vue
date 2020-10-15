@@ -392,11 +392,10 @@ export default {
         { value: "year", text: "Year" },
       ],
       splitByTimeValues: [
-        { value: "", text: "-" },
-        { value: "10", text: "10 minutes" },
-        { value: "15", text: "15 minutes" },
-        { value: "30", text: "30 minutes" },
         { value: "60", text: "1 hour" },
+        { value: "30", text: "30 minutes" },
+        { value: "15", text: "15 minutes" },
+        { value: "10", text: "10 minutes" },
       ],
       phoneBook: [],
       queueReportViewFilterMap: null,
@@ -808,10 +807,16 @@ export default {
         }
       }
 
-      // set group by day if "Group by" field is hidden
+      // set group by day if "Group by time" field is hidden
 
       if (!this.showFilterTimeGroup) {
         filterToApply.time.group = "day";
+      }
+
+      // set splity by 1 hour if "Split by time" field is hidden
+
+      if (!this.showFilterTimeSplit) {
+        filterToApply.time.division = "60";
       }
 
       // format time interval
