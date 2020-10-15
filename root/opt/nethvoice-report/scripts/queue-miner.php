@@ -11,7 +11,17 @@ if ( !$fp || !flock($fp,LOCK_EX|LOCK_NB,$eWouldBlock) || $eWouldBlock ) {
   exit(1);
 }
 
-ini_set("date.timezone", "Europe/Rome");
+# Read and set timezone
+$timezone = "Europe/Rome";
+$config_file = "/var/lib/tancredi/data/scopes/defaults.ini";
+if (file_exists($config_file)) {
+    $sections = parse_ini_file("/var/lib/tancredi/data/scopes/defaults.ini", true);
+
+    if (isset($sections['data']['timezone'])) {
+        $timezone = $sections['data']['timezone'];
+    }
+}
+ini_set("date.timezone", $timezone);
 $now = time();
 
 
