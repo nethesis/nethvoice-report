@@ -888,17 +888,80 @@ export default {
       }
       this.saveSearch(this.newSearchName);
     },
-    saveSearch(searchName) {
-      this.loader.saveSearch = true;
+    computeFilterToSave() {
       let filterToSave = JSON.parse(JSON.stringify(this.filter));
 
+      // remove hidden filters
+
+      if (!this.showFilterQueue) {
+        filterToSave.queues = [];
+      }
+
+      if (!this.showFilterGroup) {
+        filterToSave.groups = [];
+      }
+
+      if (!this.showFilterAgent) {
+        filterToSave.agents = [];
+      }
+
+      if (!this.showFilterIvr) {
+        filterToSave.ivrs = [];
+      }
+
+      if (!this.showFilterReason) {
+        filterToSave.reasons = [];
+      }
+
+      if (!this.showFilterResult) {
+        filterToSave.results = [];
+      }
+
+      if (!this.showFilterChoice) {
+        filterToSave.choices = [];
+      }
+
+      if (!this.showFilterDestination) {
+        filterToSave.destinations = [];
+      }
+
+      if (!this.showFilterOrigin) {
+        filterToSave.origins = [];
+      }
+
+      if (!this.showFilterTimeGroup) {
+        filterToSave.time.group = "";
+      }
+
+      if (!this.showFilterTimeSplit) {
+        filterToSave.time.division = "";
+      }
+
+      if (!this.showFilterCaller) {
+        filterToSave.caller = "";
+      }
+
+      if (!this.showFilterNullCall) {
+        filterToSave.contactName = "";
+      }
+
       // convert time interval to string
-      filterToSave.time.interval.start = this.$options.filters.formatDate(
-        this.filter.time.interval.start
-      );
-      filterToSave.time.interval.end = this.$options.filters.formatDate(
-        this.filter.time.interval.end
-      );
+      if (this.filter.time.interval) {
+        filterToSave.time.interval.start = this.$options.filters.formatDate(
+          this.filter.time.interval.start
+        );
+        filterToSave.time.interval.end = this.$options.filters.formatDate(
+          this.filter.time.interval.end
+        );
+      }
+
+      return filterToSave;
+    },
+    saveSearch(searchName) {
+      this.loader.saveSearch = true;
+      let filterToSave = this.computeFilterToSave();
+
+      console.log("filterToSave", filterToSave); ////
 
       this.createSearch(
         {
