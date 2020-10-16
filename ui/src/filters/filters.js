@@ -14,20 +14,37 @@ var Filters = {
 
         return [year, month, day].join('-');
     },
-    formatMonthDate(value) {
+    getMonthNames() {
+        return [
+            "january",
+            "february",
+            "march",
+            "april",
+            "may",
+            "june",
+            "july",
+            "august",
+            "september",
+            "october",
+            "november",
+            "december"
+        ]
+    },
+    formatMonthDate(value, i18n) {
         // value: e.g. "2020-10"
         const tokens = value.split("-");
         const year = tokens[0];
         const monthNum = tokens[1];
-        const month = this.$i18n.t("month." + this.getMonthNames()[monthNum - 1]);
+        const monthI18nKey = "month." + this.getMonthNames()[monthNum - 1];
+        const month = i18n ? i18n.t(monthI18nKey) : monthI18nKey;
         return month + " " + year;
     },
-    formatWeekDate(value) {
+    formatWeekDate(value, i18n) {
         // value: e.g. "2020-50"
         const tokens = value.split("-");
         const year = tokens[0];
         const weekNum = parseInt(tokens[1]);
-        return this.$i18n.t("week") + " " + weekNum + " " + year;
+        return (i18n ? i18n.t("week") : "week") + " " + weekNum + " " + year;
     },
     formatNumber(value) {
         const num = parseFloat(value);

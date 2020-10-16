@@ -72,34 +72,18 @@ var UtilService = {
         case "percent":
           return this.$options.filters.formatPercentage(value);
         case "label":
-          return this.$i18n.t(value);
+          return this.$i18n ? this.$i18n.t(value) : value;
         case "yearDate":
           // no formatting needed
           return value;
         case "monthDate":
-          return this.$options.filters.formatMonthDate(value);
+          return this.$options.filters.formatMonthDate(value, this.$i18n);
         case "weekDate":
-          return this.$options.filters.formatWeekDate(value);
+          return this.$options.filters.formatWeekDate(value, this.$i18n);
         case "dayDate":
           // no formatting needed
           return value;
       }
-    },
-    getMonthNames() {
-      return [
-        "january",
-        "february",
-        "march",
-        "april",
-        "may",
-        "june",
-        "july",
-        "august",
-        "september",
-        "october",
-        "november",
-        "december"
-      ]
     },
   },
 };
