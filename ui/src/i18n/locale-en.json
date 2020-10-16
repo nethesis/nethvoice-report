@@ -63,13 +63,14 @@
     },
     "message": {
       "origins_field_is_required": "Select one or more origins in filter to display this chart",
-      "queues_field_is_required": "Select one or more queues in filter to display this chart"
+      "queues_field_is_required": "Select one or more queues in filter to display this chart",
+      "agents_field_is_required": "Select one or more agents in filter to display this chart"
     },
     "close": "Close",
     "save": "Save",
     "week": "Week",
     "no_data": "No data",
-    "no_data_for_current_filter": "No data. Try to change filter values to display this chart",
+    "no_data_for_current_filter": "No data for current filters",
     "total": "Total",
     "queueName": "Queue name",
     "show_details": "Show details",

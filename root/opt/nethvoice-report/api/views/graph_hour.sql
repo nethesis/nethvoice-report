@@ -173,3 +173,20 @@ CREATE TABLE graph_hour_null AS
             qdescr, 
             hour; 
 /* end null */
+
+/* agents */
+DROP TABLE IF EXISTS graph_hour_agents;
+
+CREATE TABLE graph_hour_agents AS 
+  SELECT Date_format(From_unixtime(timestamp_in), "%Y-%m-%d") AS period, 
+         agent, 
+         Date_format(From_unixtime(timestamp_in), "%H:00") AS hour, 
+         Count(id)                                      AS num 
+  FROM   report_queue 
+  GROUP  BY agent,
+            period,
+            hour 
+  ORDER  BY agent, 
+            qdescr, 
+            hour; 
+/* end agents */
