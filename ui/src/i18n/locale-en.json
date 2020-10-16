@@ -62,9 +62,10 @@
       "december": "December"
     },
     "message": {
-      "origins_field_is_required": "Select one or more origins in filter to display this chart",
-      "queues_field_is_required": "Select one or more queues in filter to display this chart",
-      "agents_field_is_required": "Select one or more agents in filter to display this chart"
+      "origins_field_is_required": "Select one or more Origins in filter to display this chart",
+      "queues_field_is_required": "Select one or more Queues in filter to display this chart",
+      "agents_field_is_required": "Select one or more Agents in filter to display this chart",
+      "ivr_or_choice_fields_are_required": "Select one or more IVR or Choices in filter to display this chart"
     },
     "close": "Close",
     "save": "Save",

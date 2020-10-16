@@ -846,10 +846,9 @@ export default {
         filterToApply.time.interval.end = moment(
           filterToApply.time.interval.end
         ).format(dateFormat);
-
-        console.log("start", filterToApply.time.interval.start); ////
-        console.log("end", filterToApply.time.interval.end); ////
       }
+
+      console.log("filterToApply", filterToApply); ////
 
       // apply filters
       this.$root.$emit("applyFilters", filterToApply);
