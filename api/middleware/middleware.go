@@ -61,8 +61,8 @@ func InitJWT() *jwt.GinJWTMiddleware {
 	authMiddleware, errDefine := jwt.New(&jwt.GinJWTMiddleware{
 		Realm:       "queue-report",
 		Key:         []byte(configuration.Config.Secret),
-		Timeout:     time.Hour,
-		MaxRefresh:  time.Hour,
+		Timeout:     time.Hour * 4,
+		MaxRefresh:  time.Hour * 4,
 		IdentityKey: identityKey,
 		Authenticator: func(c *gin.Context) (interface{}, error) {
 			// check login credentials exists
