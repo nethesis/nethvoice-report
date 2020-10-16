@@ -37,7 +37,7 @@ var UtilService = {
           "session": ["time", "queue", "reason", "agent"],
           "caller": ["timeGroup", "time", "queue", "caller", "contactName"],
           "call": ["time", "queue", "caller", "contactName", "agent", "result"],
-          "lost_call": ["timeGroup", "time", "queue", "caller", "contactName", "reason"], //// verify
+          "lost_call": ["timeGroup", "time", "queue", "caller", "contactName", "reason"],
           "ivr": ["timeGroup", "time", "ivr", "choice"]
         },
         "performance": {
@@ -48,13 +48,13 @@ var UtilService = {
           "geographic": ["timeGroup", "time", "queue", "origin"],
         },
         "graphs": {
-          "load": ["timeGroup", "time", "queue", "origin"], //// verify
-          "hour": ["timeGroup", "time", "queue", "agent", "destination", "ivr", "choice"],
+          "load": ["timeGroup", "time", "queue", "origin"],
+          "hour": ["time", "queue", "agent", "destination", "ivr", "choice"],
           "agent": ["timeGroup", "time", "queue", "agent"],
           "area": ["timeGroup", "time", "queue"],
-          "queue_position": ["timeGroup", "time", "queue", "timeSplit"],
-          "avg_duration": ["timeGroup", "time", "queue", "timeSplit"],
-          "avg_wait": ["timeGroup", "time", "queue", "timeSplit"]
+          "queue_position": ["time", "queue", "timeSplit"],
+          "avg_duration": ["time", "queue", "timeSplit"],
+          "avg_wait": ["time", "queue", "timeSplit"]
         }
       }
     },
