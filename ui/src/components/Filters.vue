@@ -1169,7 +1169,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .masthead {
   padding: 14px 0px 15px 0px !important;
   min-height: 65px;
