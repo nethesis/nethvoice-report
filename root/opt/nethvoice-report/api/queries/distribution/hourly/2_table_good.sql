@@ -15,7 +15,7 @@ WHERE   time_{{ .Time.Division  }} >= '{{ ExtractSettings "StartHour" }}' AND ti
             AND qname in ({{ ExtractStrings .Queues }})
         {{ end }}
 GROUP BY period, time_{{ .Time.Division }},qdescr
-ORDER BY qperiod, descr,time_{{ .Time.Division }}
+ORDER BY period, qdescr,time_{{ .Time.Division }}
 {{ else }}
 SELECT "queues field is required" AS "!message";
 {{ end }}
