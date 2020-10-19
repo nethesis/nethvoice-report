@@ -1,5 +1,6 @@
+{{ if and .Time.Interval.Start .Time.Interval.End }}
 SELECT
-    period AS period£hourDate,
+    period AS time,
     cid,
     name,
     company,
@@ -27,4 +28,8 @@ WHERE TRUE
         AND cid in ({{ ExtractPhones .Phones true }})
     {{ end }}
 ORDER BY
-    period DESC;
+    period DESC
+;
+{{ else }}
+SELECT "timeIntervalStart and timeIntervalEnd are required" AS "!message";
+{{ end }}
