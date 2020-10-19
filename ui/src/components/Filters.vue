@@ -683,10 +683,16 @@ export default {
       }
 
       // time
+      this.filter.time.range = filter.time.range;
+
+      if (this.filter.time.range) {
+        this.filter.time.range = filter.time.range;
+        this.filter.time.interval = this.selectTime(this.filter.time.range);
+      } else {
+        this.filter.time.interval = filter.time.interval;
+      }
       this.filter.time.group = filter.time.group;
       this.filter.time.division = filter.time.division;
-      this.filter.time.interval = filter.time.interval;
-      this.filter.time.range = filter.time.range;
       this.selectTime(filter.time.range);
 
       // null call
