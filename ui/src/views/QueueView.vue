@@ -108,7 +108,25 @@ export default {
     retrieveQueryTree() {
       this.getQueryTree(
         (success) => {
+          console.log("success.body.query_tree", success.body.query_tree); ////
+
+          for (const viewData of Object.values(success.body.query_tree)) {
+            for (const queries of Object.values(viewData)) {
+              queries.forEach(function (query, index) {
+
+                console.log("query", query) ////
+
+                const tokens = query.split(".");
+                const queryName = tokens[0];
+                const queryType = tokens[1];
+                this[index] = { name: queryName, type: queryType };
+              }, this.queries);
+            }
+          }
           this.queryTree = success.body.query_tree;
+
+          console.log("this.queryTree", this.queryTree); ////
+
           this.initCharts();
         },
         (error) => {

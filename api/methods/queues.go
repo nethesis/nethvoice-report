@@ -27,6 +27,7 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"path"
@@ -48,6 +49,7 @@ func GetQueueReports(c *gin.Context) {
 	section := c.Param("section")
 	view := c.Param("view")
 	graph := c.Query("graph")
+	queryType := c.Query("type")
 
 	// extract filter
 	filterParam := c.Query("filter")
@@ -69,7 +71,7 @@ func GetQueueReports(c *gin.Context) {
 
 	// calculate hash
 	h := sha256.New()
-	h.Write([]byte(section + view + graph + string(filterString)))
+	h.Write([]byte(section + view + graph + queryType + string(filterString)))
 	hash := fmt.Sprintf("%x", h.Sum(nil))
 
 	// init cache connection
@@ -84,14 +86,45 @@ func GetQueueReports(c *gin.Context) {
 		return
 	}
 
-	// data is not cached, find query path
-	queryFile := configuration.Config.QueryPath + "/" + section + "/" + view + "/" + graph + ".sql"
+	// query result is not cached, execute query
+
+	queryFile := configuration.Config.QueryPath + "/" + section + "/" + view + "/" + graph
 
 	// check if query file exists
 	if _, errExists := os.Stat(queryFile); os.IsNotExist(errExists) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "query file does not exists", "status": errExists.Error()})
 		return
 	}
+
+	var err error
+	var queryResult string
+
+	switch queryType {
+	case "sql":
+		queryResult, err = executeSqlQuery(queryFile, filter, section, view, graph, c)
+		if err != nil {
+			return
+		}
+	default:
+		queryResult, err = executeRrdQuery(queryFile, filter, section, view, graph, c)
+		if err != nil {
+			return
+		}
+	}
+
+	// save calculated query result to cache
+	errCache = cacheConnection.Set(hash, queryResult, 0).Err()
+	cacheConnection.Expire(hash, time.Duration(configuration.Config.TTLCache)*time.Minute)
+	if errCache != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "error on saving to cache", "status": errCache.Error()})
+		return
+	}
+
+	// return data
+	c.Data(http.StatusOK, "application/json; charset=utf-8", []byte(queryResult))
+}
+
+func executeSqlQuery(queryFile string, filter models.Filter, section string, view string, graph string, c *gin.Context) (string, error) {
 
 	// parse template
 	q := template.Must(template.New(path.Base(queryFile)).Funcs(template.FuncMap{"ExtractStrings": utils.ExtractStrings}).Funcs(template.FuncMap{"ExtractPhones": utils.ExtractPhones}).Funcs(template.FuncMap{"ExtractOrigins": utils.ExtractOrigins}).Funcs(template.FuncMap{"ExtractSettings": utils.ExtractSettings}).ParseFiles(queryFile))
@@ -101,7 +134,7 @@ func GetQueueReports(c *gin.Context) {
 	errTpl := q.Execute(&queryString, &filter)
 	if errTpl != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "invalid query template compiling", "status": errTpl.Error()})
-		return
+		return "", errTpl
 	}
 
 	// execute query
@@ -109,23 +142,39 @@ func GetQueueReports(c *gin.Context) {
 	results, errQuery := db.Query(queryString.String())
 	if errQuery != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "invalid query execution", "status": errQuery.Error()})
-		return
-	}
-
-	// parse results
-	data = utils.ParseResults(results)
-
-	// save calculated data to cache
-	errCache = cacheConnection.Set(hash, data, 0).Err()
-	cacheConnection.Expire(hash, time.Duration(configuration.Config.TTLCache)*time.Minute)
-	if errCache != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "error on saving to cache", "status": errCache.Error()})
-		return
+		return "", errQuery
 	}
 
 	// close results
 	defer results.Close()
 
-	// return data
-	c.Data(http.StatusOK, "application/json; charset=utf-8", []byte(data))
+	// parse results
+	data := utils.ParseResults(results)
+	return data, nil
+}
+
+func executeRrdQuery(queryFile string, filter models.Filter, section string, view string, graph string, c *gin.Context) (string, error) {
+	rrdFile, errRead := ioutil.ReadFile(queryFile)
+	if errRead != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "cannot open rrd file", "status": errRead.Error()})
+		return "", errRead
+	}
+
+	rrdFileString := string(rrdFile)
+
+	fmt.Println("rrdFileString", rrdFileString) ////
+
+	hostname, errHostname := os.Hostname()
+	if errHostname != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "cannot retrieve hostname", "status": errHostname.Error()})
+		return "", errHostname
+	}
+
+	fmt.Println("==========================")
+	fmt.Println("==========================")
+	fmt.Println(hostname)
+	fmt.Println("==========================")
+	fmt.Println("==========================")
+
+	return "", nil ////
 }

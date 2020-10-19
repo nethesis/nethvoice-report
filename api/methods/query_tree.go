@@ -38,14 +38,12 @@ func GetQueryTree(c *gin.Context) {
 
 	// get all .sql files inside query path, including subdirectories
 	err := filepath.Walk(queryPath, func(path string, info os.FileInfo, err error) error {
-		if filepath.Ext(path) != ".sql" {
+		if filepath.Ext(path) != ".sql" && filepath.Ext(path) != ".rrd" {
 			return nil
 		}
 
 		// get query, view and section names
 		queryName := filepath.Base(path)
-		// remove .sql extension
-		queryName = queryName[0 : len(queryName)-4]
 		viewPath := filepath.Dir(path)
 		viewName := filepath.Base(viewPath)
 		sectionName := filepath.Base(filepath.Dir(viewPath))

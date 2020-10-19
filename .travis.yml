@@ -28,7 +28,7 @@ env:
         -e ENDPOINTS_PACK
         "
 before_install:
-    - sudo apt-get install curl python-software-properties npm python-setuptools -y
+    - sudo apt-get install curl python-software-properties npm python-setuptools librrd-dev -y
     - curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
     -  sudo apt-get install nodejs
     - sudo npm config set ca ""
