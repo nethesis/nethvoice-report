@@ -3,8 +3,8 @@ SELECT
         period AS period£{{ .Time.Group }}Date,
         qname,
         qdescr,
-        time_{{ .Time.Division  }} AS time£hourDate,
-        total AS total£num
+        time_{{ .Time.Division  }} AS `time£hourDate#pivot`,
+        total AS `total£num#sum`
 FROM    distribution_hour_null_{{ .Time.Group }}_{{ .Time.Division  }}
 WHERE   time_{{ .Time.Division  }} >= '{{ ExtractSettings "StartHour" }}' AND time_{{ .Time.Division  }} <= '{{ ExtractSettings "EndHour" }}'
         {{ if and .Time.Interval.Start .Time.Interval.End }}
