@@ -16,6 +16,7 @@ Requires:	redis
 
 BuildRequires: 	perl
 BuildRequires: 	nethserver-devtools
+BuildRequires: 	python2-devel
 
 %description
 Queue and CDR/Costs reports
