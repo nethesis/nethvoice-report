@@ -20,7 +20,7 @@ SELECT
 FROM
     report_queue
 WHERE
-    action = 'ANSWER'
+    ACTION = 'ANSWER'
 GROUP BY
     period,
     qname;
@@ -39,7 +39,7 @@ SELECT
 FROM
     report_queue
 WHERE
-    action = 'ANSWER'
+    ACTION = 'ANSWER'
 GROUP BY
     period,
     qname;
@@ -58,7 +58,7 @@ SELECT
 FROM
     report_queue
 WHERE
-    action = 'ANSWER'
+    ACTION = 'ANSWER'
 GROUP BY
     period,
     qname;
@@ -77,7 +77,7 @@ SELECT
 FROM
     report_queue
 WHERE
-    action = 'ANSWER'
+    ACTION = 'ANSWER'
 GROUP BY
     period,
     qname;

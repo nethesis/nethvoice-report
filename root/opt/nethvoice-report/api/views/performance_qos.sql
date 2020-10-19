@@ -29,7 +29,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'ANSWER'
+       ACTION = 'ANSWER'
 GROUP BY
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
        Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'),
@@ -44,7 +44,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'ANSWER'
+       ACTION = 'ANSWER'
        AND hold < 5
 GROUP BY
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
@@ -60,7 +60,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'ANSWER'
+       ACTION = 'ANSWER'
        AND hold < 10
 GROUP BY
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
@@ -76,7 +76,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'ANSWER'
+       ACTION = 'ANSWER'
        AND hold < 15
 GROUP BY
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
@@ -92,7 +92,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'ANSWER'
+       ACTION = 'ANSWER'
        AND hold < 20
 GROUP BY
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
@@ -108,7 +108,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'ANSWER'
+       ACTION = 'ANSWER'
        AND hold < 25
 GROUP BY
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
@@ -124,7 +124,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'ANSWER'
+       ACTION = 'ANSWER'
        AND hold < 30
 GROUP BY
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
@@ -140,7 +140,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'ANSWER'
+       ACTION = 'ANSWER'
        AND hold < 45
 GROUP BY
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
@@ -156,7 +156,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'ANSWER'
+       ACTION = 'ANSWER'
        AND hold < 60
 GROUP BY
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
@@ -172,7 +172,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'ANSWER'
+       ACTION = 'ANSWER'
        AND hold < 75
 GROUP BY
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
@@ -188,7 +188,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'ANSWER'
+       ACTION = 'ANSWER'
        AND hold < 90
 GROUP BY
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),

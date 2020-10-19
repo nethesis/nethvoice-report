@@ -17,7 +17,7 @@ FROM
        report_queue
 WHERE
        (
-              action = 'ABANDON'
+              ACTION = 'ABANDON'
               AND hold <= 5
        )
 GROUP BY
@@ -37,7 +37,7 @@ FROM
        report_queue
 WHERE
        (
-              action = 'ABANDON'
+              ACTION = 'ABANDON'
               AND hold <= 5
        )
 GROUP BY
@@ -57,7 +57,7 @@ FROM
        report_queue
 WHERE
        (
-              action = 'ABANDON'
+              ACTION = 'ABANDON'
               AND hold <= 5
        )
 GROUP BY
@@ -77,7 +77,7 @@ FROM
        report_queue
 WHERE
        (
-              action = 'ABANDON'
+              ACTION = 'ABANDON'
               AND hold <= 5
        )
 GROUP BY

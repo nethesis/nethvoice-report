@@ -15,7 +15,7 @@ SELECT
     position,
     SEC_TO_TIME(hold) AS hold,
     SEC_TO_TIME(duration) AS duration,
-    action AS result
+    ACTION AS result
 FROM
     report_queue
 ORDER BY

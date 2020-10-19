@@ -25,7 +25,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'ABANDON'
+       ACTION = 'ABANDON'
        AND hold <= 5
 GROUP BY
        period,
@@ -55,7 +55,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'ABANDON'
+       ACTION = 'ABANDON'
        AND hold <= 5
 GROUP BY
        period,
@@ -85,7 +85,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'ABANDON'
+       ACTION = 'ABANDON'
        AND hold <= 5
 GROUP BY
        period,
@@ -115,7 +115,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'ABANDON'
+       ACTION = 'ABANDON'
        AND hold <= 5
 GROUP BY
        period,
@@ -153,7 +153,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'ABANDON'
+       ACTION = 'ABANDON'
        AND hold <= 5
 GROUP BY
        period,
@@ -183,7 +183,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'ABANDON'
+       ACTION = 'ABANDON'
        AND hold <= 5
 GROUP BY
        period,
@@ -213,7 +213,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'ABANDON'
+       ACTION = 'ABANDON'
        AND hold <= 5
 GROUP BY
        period,
@@ -243,7 +243,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'ABANDON'
+       ACTION = 'ABANDON'
        AND hold <= 5
 GROUP BY
        period,
@@ -281,7 +281,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'ABANDON'
+       ACTION = 'ABANDON'
        AND hold <= 5
 GROUP BY
        period,
@@ -311,7 +311,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'ABANDON'
+       ACTION = 'ABANDON'
        AND hold <= 5
 GROUP BY
        period,
@@ -341,7 +341,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'ABANDON'
+       ACTION = 'ABANDON'
        AND hold <= 5
 GROUP BY
        period,
@@ -371,7 +371,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'ABANDON'
+       ACTION = 'ABANDON'
        AND hold <= 5
 GROUP BY
        period,
@@ -409,7 +409,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'ABANDON'
+       ACTION = 'ABANDON'
        AND hold <= 5
 GROUP BY
        period,
@@ -439,7 +439,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'ABANDON'
+       ACTION = 'ABANDON'
        AND hold <= 5
 GROUP BY
        period,
@@ -469,7 +469,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'ABANDON'
+       ACTION = 'ABANDON'
        AND hold <= 5
 GROUP BY
        period,
@@ -499,7 +499,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'ABANDON'
+       ACTION = 'ABANDON'
        AND hold <= 5
 GROUP BY
        period,

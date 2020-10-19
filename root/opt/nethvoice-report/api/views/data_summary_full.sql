@@ -16,7 +16,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'FULL'
+       ACTION = 'FULL'
 GROUP BY
        period,
        qname
@@ -33,7 +33,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'FULL'
+       ACTION = 'FULL'
 GROUP BY
        period,
        qname
@@ -50,7 +50,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'FULL'
+       ACTION = 'FULL'
 GROUP BY
        period,
        qname
@@ -67,7 +67,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'FULL'
+       ACTION = 'FULL'
 GROUP BY
        period,
        qname

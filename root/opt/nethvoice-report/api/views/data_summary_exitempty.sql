@@ -24,7 +24,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'EXITEMPTY'
+       ACTION = 'EXITEMPTY'
 GROUP BY
        period,
        qname
@@ -49,7 +49,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'EXITEMPTY'
+       ACTION = 'EXITEMPTY'
 GROUP BY
        period,
        qname
@@ -74,7 +74,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'EXITEMPTY'
+       ACTION = 'EXITEMPTY'
 GROUP BY
        period,
        qname
@@ -99,7 +99,7 @@ SELECT
 FROM
        report_queue
 WHERE
-       action = 'EXITEMPTY'
+       ACTION = 'EXITEMPTY'
 GROUP BY
        period,
        qname

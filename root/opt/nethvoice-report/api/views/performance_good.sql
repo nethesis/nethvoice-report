@@ -15,7 +15,7 @@ FROM
     report_queue
 WHERE
     (
-        action = 'ANSWER'
+        ACTION = 'ANSWER'
         AND hold < 60
     )
 GROUP BY
@@ -33,7 +33,7 @@ FROM
     report_queue
 WHERE
     (
-        action = 'ANSWER'
+        ACTION = 'ANSWER'
         AND hold < 60
     )
 GROUP BY
@@ -51,7 +51,7 @@ FROM
     report_queue
 WHERE
     (
-        action = 'ANSWER'
+        ACTION = 'ANSWER'
         AND hold < 60
     )
 GROUP BY
@@ -69,7 +69,7 @@ FROM
     report_queue
 WHERE
     (
-        action = 'ANSWER'
+        ACTION = 'ANSWER'
         AND hold < 60
     )
 GROUP BY
