@@ -207,6 +207,10 @@ export default {
   height: 12px;
 }
 
+#docs-menu {
+  z-index: 10001;
+}
+
 #docs-menu:hover::-webkit-scrollbar-thumb {
   background-color: rgba(255, 255, 255, 0.25);
 }

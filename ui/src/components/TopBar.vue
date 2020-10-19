@@ -1,5 +1,5 @@
 <template>
-  <div class="masthead">
+  <div class="masthead topbar">
     <sui-container>
       <sui-menu floated="right">
         <sui-popup
@@ -35,7 +35,7 @@
             v-on:click="toggleFilters()"
             class="filter-button"
             :active="showFilters"
-            content="Filters"
+            :content="$t('menu.filters')"
             icon="filter"
           />
         </sui-popup>
@@ -43,10 +43,8 @@
       <h1 is="sui-header" class="view-title">
         {{ title }}
       </h1>
-      <div v-show="this.showFilters">
-        <Filters />
-      </div>
     </sui-container>
+    <Filters :showFiltersForm="showFilters" />
 
     <!-- settings modal -->
     <sui-form @submit.prevent="saveAdminSettings()">
@@ -161,6 +159,7 @@ export default {
     toggleFilters: function () {
       this.showFilters = !this.showFilters;
       this.set("showFilters", this.showFilters);
+      this.$root.$emit("toggleFilters");
     },
     doLogout() {
       this.execLogout(
@@ -221,29 +220,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.masthead {
-  padding: 14px 0px 15px 0px !important;
-  min-height: 65px;
-  margin-bottom: 0 !important;
-  border-bottom: 1px solid rgba(34, 36, 38, 0.15);
-  box-shadow: 0 1px 2px 0 rgba(34, 36, 38, 0.15);
-
-  .ui.container {
-    margin-right: 3em !important;
-    margin-left: 3em !important;
-    width: auto !important;
-
-    .ui.header {
-      margin: 0px !important;
-    }
-
-    .ui.right.floated.menu {
-      margin-top: -2px;
-    }
-  }
-}
-
+<style lang="scss">
 .filter-button {
   .icon {
     margin-right: 10px !important;

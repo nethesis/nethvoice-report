@@ -1,5 +1,34 @@
 {
   "en": {
+    "filter": {
+      "group_by": "Group by",
+      "saved_search": "Saved search",
+      "delete_search": "Delete search",
+      "time_interval": "Time interval",
+      "yesterday": "Yesterday",
+      "last_week": "Last week",
+      "last_month": "Last month",
+      "day": "Day",
+      "week": "Week",
+      "month": "Month",
+      "year": "Year",
+      "dates_placeholder": "Select the date range",
+      "dates_label": "Date start/end",
+      "queues_label": "Queues",
+      "groups_label": "Groups",
+      "agents_label": "Agents",
+      "ivrs_label": "IVR",
+      "choices_label": "IVR choices",
+      "origins_label": "Origins",
+      "origins_placeholder": "Area code, district, province or region",
+      "destinations_label": "Destinations",
+      "results_label": "Results",
+      "time_split_label": "Period",
+      "caller_label": "Caller",
+      "contact_name_label": "Contact name / Company",
+      "null_call_label": "Null call",
+      "reasons_label": "Reason"
+    },
     "menu": {
       "queue": "Queue report",
       "cdr": "CDR & Cost report",
@@ -13,7 +42,9 @@
       "login": "Login",
       "logout": "Logout",
       "hide_filters": "Hide filters",
-      "show_filters": "Show filters"
+      "show_filters": "Show filters",
+      "active_filters": "Active filters",
+      "filters": "Filters"
     },
     "data": {
       "summary": "Summary",

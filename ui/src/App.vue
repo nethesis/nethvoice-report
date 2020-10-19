@@ -11,8 +11,8 @@
     <div v-if="isLogged">
       <!-- start leftsidebar -->
       <LeftSidebar />
-      <div class="docs-container">
-        <!-- start leftsidebar -->
+      <div views-wrapper="true" class="docs-container">
+        <!-- start topbar -->
         <TopBar />
         <!-- end topbar -->
         <div class="mg-3-em">
@@ -93,6 +93,7 @@ export default {
 
 .docs-container {
   margin-left: 260px;
+  width: calc(100% - 260px);
   min-width: 550px;
   height: 100vh;
   overflow-y: scroll;
@@ -121,6 +122,7 @@ export default {
 
 .mg-top-md {
   margin-top: 2rem !important;
+  padding-left: 7px;
 }
 
 .mg-bottom-md {
@@ -166,5 +168,39 @@ export default {
 
 .gray {
   color: gray;
+}
+
+.component-body {
+    position: relative;
+    margin-left: 3em !important;
+    margin-right: 3em !important;
+    padding: 2em 0em 7em;
+    width: auto;
+}
+
+.modals {
+  z-index: 11000 !important;
+}
+
+.masthead.topbar {
+  padding: 14px 0px 15px 0px !important;
+  min-height: 65px;
+  margin-bottom: 0 !important;
+  border-bottom: none;
+  box-shadow: none;
+
+  .ui.container {
+    margin-right: 3em !important;
+    margin-left: 3em !important;
+    width: auto !important;
+
+    .ui.header {
+      margin: 0px !important;
+    }
+
+    .ui.right.floated.menu {
+      margin-top: -2px;
+    }
+  }
 }
 </style>

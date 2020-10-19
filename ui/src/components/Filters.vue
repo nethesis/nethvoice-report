@@ -1,317 +1,342 @@
 <template>
   <div>
-    <sui-form class="filters-form" @submit.prevent="applyFilters">
-      <sui-form-fields v-if="savedSearches.length" class="mg-bottom-md">
-        <sui-form-field width="six">
-          <sui-dropdown
-            placeholder="Saved search"
-            search
-            selection
-            v-model="selectedSearch"
-            :options="savedSearches"
-          />
-        </sui-form-field>
-        <sui-form-field width="four">
+    <sui-container v-if="this.showFiltersForm">
+      <sui-form class="filters-form" @submit.prevent="applyFilters">
+        <sui-form-fields v-if="savedSearches.length" class="mg-bottom-md">
+          <sui-form-field width="six">
+            <sui-dropdown
+              :placeholder="$t('filter.saved_search')"
+              search
+              selection
+              v-model="selectedSearch"
+              :options="savedSearches"
+            />
+          </sui-form-field>
+          <sui-form-field width="four">
+            <sui-button
+              type="button"
+              negative
+              :disabled="!selectedSearch"
+              @click.native="showDeleteSearchModal(true)"
+              icon="trash"
+              >{{$t('filter.delete_search')}}</sui-button
+            >
+          </sui-form-field>
+        </sui-form-fields>
+
+        <sui-form-fields>
+          <sui-form-field v-if="showFilterTimeGroup" width="four">
+            <label>{{$t('filter.group_by')}}</label>
+            <sui-dropdown
+              :options="groupByTimeValues"
+              :placeholder="$t('filter.group_by')"
+              search
+              selection
+              v-model="filter.time.group"
+            />
+          </sui-form-field>
+          <sui-form-field v-if="showFilterTime" width="six">
+            <label>{{$t('filter.time_interval')}}</label>
+            <sui-button-group class="fluid">
+              <sui-button
+                :active="filter.time.range == 'yesterday'"
+                @click="selectTime('yesterday')"
+                type="button"
+                >{{$t('filter.yesterday')}}</sui-button
+              >
+              <sui-button
+                :active="filter.time.range == 'last_week'"
+                @click="selectTime('last_week')"
+                type="button"
+                >{{$t('filter.last_week')}}</sui-button
+              >
+              <sui-button
+                :active="filter.time.range == 'last_month'"
+                @click="selectTime('last_month')"
+                type="button"
+                >{{$t('filter.last_month')}}</sui-button
+              >
+            </sui-button-group>
+          </sui-form-field>
+          <sui-form-field width="four">
+            <label>{{$t('filter.dates_label')}}</label>
+            <v-date-picker
+              mode="range"
+              v-model="filter.time.interval"
+              :input-props='{ placeholder: $t("filter.dates_placeholder") }'
+              :available-dates="{ start: null, end: new Date() }"
+              :masks="{ input: 'YYYY/MM/DD' }"
+            />
+          </sui-form-field>
+        </sui-form-fields>
+
+        <sui-grid>
+          <sui-form-field v-if="showFilterQueue" width="four">
+            <label>{{$t('filter.queues_label')}}</label>
+            <sui-dropdown
+              multiple
+              :options="filterValues.queues"
+              :placeholder="$t('filter.queues_label')"
+              search
+              selection
+              v-model="filter.queues"
+            />
+          </sui-form-field>
+          <sui-form-field v-if="showFilterGroup" width="four">
+            <label>{{$t('filter.groups_label')}}</label>
+            <sui-dropdown
+              multiple
+              :options="filterValues.groups"
+              :placeholder="$t('filter.groups_label')"
+              search
+              selection
+              v-model="filter.groups"
+            />
+          </sui-form-field>
+          <sui-form-field v-if="showFilterAgent" width="four">
+            <label>{{$t('filter.agents_label')}}</label>
+            <sui-dropdown
+              multiple
+              :options="filterValues.agents"
+              :placeholder="$t('filter.agents_label')"
+              search
+              selection
+              v-model="filter.agents"
+            />
+          </sui-form-field>
+          <sui-form-field v-if="showFilterReason" width="four">
+            <label>{{$t('filter.reasons_label')}}</label>
+            <sui-dropdown
+              multiple
+              :options="filterValues.reasons"
+              :placeholder="$t('filter.reasons_label')"
+              search
+              selection
+              v-model="filter.reasons"
+            />
+          </sui-form-field>
+          <sui-form-field v-if="showFilterResult" width="four">
+            <label>{{$t('filter.results_label')}}</label>
+            <sui-dropdown
+              multiple
+              :options="filterValues.results"
+              :placeholder="$t('filter.results_label')"
+              search
+              selection
+              v-model="filter.results"
+            />
+          </sui-form-field>
+          <sui-form-field v-if="showFilterIvr" width="four">
+            <label>{{$t('filter.ivrs_label')}}</label>
+            <sui-dropdown
+              multiple
+              :options="filterValues.ivrs"
+              :placeholder="$t('filter.ivrs_label')"
+              search
+              selection
+              v-model="filter.ivrs"
+            />
+          </sui-form-field>
+          <sui-form-field v-if="showFilterChoice" width="four">
+            <label>{{$t('filter.choices_label')}}</label>
+            <sui-dropdown
+              multiple
+              :options="filterValues.choices"
+              :placeholder="$t('filter.choices_label')"
+              search
+              selection
+              v-model="filter.choices"
+            />
+          </sui-form-field>
+          <sui-form-field v-if="showFilterOrigin" width="six">
+            <label>{{$t('filter.origins_label')}}</label>
+            <sui-dropdown
+              multiple
+              :options="filterValues.origins"
+              :placeholder="$t('filter.origins_placeholder')"
+              search
+              selection
+              v-model="filter.origins"
+            />
+          </sui-form-field>
+          <sui-form-field v-if="showFilterDestination" width="six">
+            <label>{{$t('filter.destinations_label')}}</label>
+            <sui-dropdown
+              multiple
+              :options="filterValues.destinations"
+              :placeholder="$t('filter.destinations_label')"
+              search
+              selection
+              v-model="filter.destinations"
+            />
+          </sui-form-field>
+          <sui-form-field v-if="showFilterTimeSplit" width="four">
+            <label>{{$t('filter.time_split_label')}}</label>
+            <sui-dropdown
+              :options="splitByTimeValues"
+              :placeholder="$t('filter.time_split_label')"
+              search
+              selection
+              v-model="filter.time.division"
+            />
+          </sui-form-field>
+          <sui-form-field v-if="showFilterCaller" width="four">
+            <label>{{$t('filter.caller_label')}}</label>
+            <sui-input
+              :placeholder="$t('filter.caller_label')"
+              v-model="filter.caller"
+            />
+          </sui-form-field>
+          <sui-form-field v-if="showFilterContactName" width="six">
+            <label>{{$t('filter.contact_name_label')}}</label>
+            <sui-search
+              :searchFields="['title', 'cleanName']"
+              :source="phoneBook"
+              ref="filterContactName"
+              :placeholder="$t('filter.contact_name_label')"
+              :fullTextSearch="'exact'"
+              :maxResults="20"
+              class="searchContactName"
+              @input="contactNameInput"
+              :value="filter.contactName"
+            />
+          </sui-form-field>
+          <sui-form-field v-if="showFilterNullCall" width="four">
+            <label>{{$t('filter.null_call_label')}}</label>
+            <sui-checkbox label toggle v-model="filter.nullCall" />
+          </sui-form-field>
+        </sui-grid>
+
+        <sui-form-fields class="mg-top-md">
           <sui-button
-            type="button"
-            negative
-            :disabled="!selectedSearch"
-            @click.native="showDeleteSearchModal(true)"
-            icon="trash"
-            >Delete search</sui-button
-          >
-        </sui-form-field>
-      </sui-form-fields>
-
-      <sui-form-fields>
-        <sui-form-field v-if="showFilterTimeGroup" width="four">
-          <label>Group by</label>
-          <sui-dropdown
-            :options="groupByTimeValues"
-            placeholder="Group by time"
-            search
-            selection
-            v-model="filter.time.group"
-          />
-        </sui-form-field>
-        <sui-form-field v-if="showFilterTime" width="six">
-          <label>Time interval</label>
-          <sui-button-group class="fluid">
-            <sui-button
-              :active="filter.time.range == 'yesterday'"
-              @click="selectTime('yesterday')"
-              type="button"
-              >Yesterday</sui-button
-            >
-            <sui-button
-              :active="filter.time.range == 'last_week'"
-              @click="selectTime('last_week')"
-              type="button"
-              >Last week</sui-button
-            >
-            <sui-button
-              :active="filter.time.range == 'last_month'"
-              @click="selectTime('last_month')"
-              type="button"
-              >Last month</sui-button
-            >
-          </sui-button-group>
-        </sui-form-field>
-        <sui-form-field width="four">
-          <label>Date start/end</label>
-          <v-date-picker
-            mode="range"
-            v-model="filter.time.interval"
-            :available-dates="{ start: null, end: new Date() }"
-            :masks="{ input: 'YYYY/MM/DD' }"
-          />
-        </sui-form-field>
-      </sui-form-fields>
-
-      <sui-grid>
-        <sui-form-field v-if="showFilterQueue" width="four">
-          <label>Queues</label>
-          <sui-dropdown
-            multiple
-            :options="filterValues.queues"
-            placeholder="Queues"
-            search
-            selection
-            v-model="filter.queues"
-          />
-        </sui-form-field>
-        <sui-form-field v-if="showFilterGroup" width="four">
-          <label>Groups</label>
-          <sui-dropdown
-            multiple
-            :options="filterValues.groups"
-            placeholder="Groups"
-            search
-            selection
-            v-model="filter.groups"
-          />
-        </sui-form-field>
-        <sui-form-field v-if="showFilterAgent" width="four">
-          <label>Agent</label>
-          <sui-dropdown
-            multiple
-            :options="filterValues.agents"
-            placeholder="Agent"
-            search
-            selection
-            v-model="filter.agents"
-          />
-        </sui-form-field>
-        <sui-form-field v-if="showFilterReason" width="four">
-          <label>Reasons</label>
-          <sui-dropdown
-            multiple
-            :options="filterValues.reasons"
-            placeholder="Reasons"
-            search
-            selection
-            v-model="filter.reasons"
-          />
-        </sui-form-field>
-        <sui-form-field v-if="showFilterResult" width="four">
-          <label>Results</label>
-          <sui-dropdown
-            multiple
-            :options="filterValues.results"
-            placeholder="Results"
-            search
-            selection
-            v-model="filter.results"
-          />
-        </sui-form-field>
-        <sui-form-field v-if="showFilterIvr" width="four">
-          <label>IVR</label>
-          <sui-dropdown
-            multiple
-            :options="filterValues.ivrs"
-            placeholder="IVR"
-            search
-            selection
-            v-model="filter.ivrs"
-          />
-        </sui-form-field>
-        <sui-form-field v-if="showFilterChoice" width="four">
-          <label>IVR choices</label>
-          <sui-dropdown
-            multiple
-            :options="filterValues.choices"
-            placeholder="IVR choices"
-            search
-            selection
-            v-model="filter.choices"
-          />
-        </sui-form-field>
-        <sui-form-field v-if="showFilterOrigin" width="six">
-          <label>Origins</label>
-          <sui-dropdown
-            multiple
-            :options="filterValues.origins"
-            placeholder="Area code, district, province or region"
-            search
-            selection
-            v-model="filter.origins"
-          />
-        </sui-form-field>
-        <sui-form-field v-if="showFilterDestination" width="six">
-          <label>Destinations</label>
-          <sui-dropdown
-            multiple
-            :options="filterValues.destinations"
-            placeholder="Destinations"
-            search
-            selection
-            v-model="filter.destinations"
-          />
-        </sui-form-field>
-        <sui-form-field v-if="showFilterTimeSplit" width="four">
-          <label>Split by time</label>
-          <sui-dropdown
-            :options="splitByTimeValues"
-            placeholder="Split by time"
-            search
-            selection
-            v-model="filter.time.division"
-          />
-        </sui-form-field>
-        <sui-form-field v-if="showFilterCaller" width="four">
-          <label>Caller</label>
-          <sui-input placeholder="Caller" v-model="filter.caller" />
-        </sui-form-field>
-        <sui-form-field v-if="showFilterContactName" width="six">
-          <label>Contact name / Company</label>
-          <sui-search
-            :searchFields="['title', 'cleanName']"
-            :source="phoneBook"
-            ref="filterContactName"
-            placeholder="Contact name / Company"
-            :fullTextSearch="'exact'"
-            :maxResults="20"
-            class="searchContactName"
-            @input="contactNameInput"
-            :value="filter.contactName"
-          />
-        </sui-form-field>
-        <sui-form-field v-if="showFilterNullCall" width="four">
-          <label>Null call</label>
-          <sui-checkbox label toggle v-model="filter.nullCall" />
-        </sui-form-field>
-      </sui-grid>
-
-      <sui-form-fields class="mg-top-md">
-        <sui-button
-          primary
-          type="submit"
-          icon="search"
-          :disabled="loader.filter"
-          >Search</sui-button
-        >
-        <sui-button
-          type="button"
-          class="mg-right-sm"
-          @click.native="clearFilters()"
-          icon="eraser"
-          >Clear</sui-button
-        >
-        <sui-button
-          type="button"
-          @click.native="showSaveSearchModal(true)"
-          icon="save"
-          >Save search</sui-button
-        >
-        <sui-button
-          type="button"
-          :disabled="!selectedSearch"
-          @click.native="showOverwriteSearchModal(true)"
-          icon="edit"
-          >Overwrite search</sui-button
-        >
-      </sui-form-fields>
-    </sui-form>
-
-    <!-- save search modal -->
-    <sui-form @submit.prevent="validateSaveNewSearch()" :error="errorNewSearch">
-      <sui-modal v-model="openSaveSearchModal" size="tiny">
-        <sui-modal-header>Save search</sui-modal-header>
-        <sui-modal-content>
-          <sui-modal-description>
-            <p>Enter a name for your new saved search</p>
-            <sui-form-field>
-              <input placeholder="Search name" v-model="newSearchName" />
-            </sui-form-field>
-            <sui-message error v-show="errorNewSearch">
-              <p>{{ errorMessage }}</p>
-            </sui-message>
-          </sui-modal-description>
-        </sui-modal-content>
-        <sui-modal-actions>
-          <sui-button type="button" @click.native="showSaveSearchModal(false)"
-            >Cancel</sui-button
-          >
-          <sui-button
-            type="submit"
             primary
-            :loading="loader.saveSearch"
-            content="Save"
-          ></sui-button>
-        </sui-modal-actions>
-      </sui-modal>
-    </sui-form>
-
-    <!-- overwrite search modal -->
-    <sui-form @submit.prevent="saveSearch(selectedSearch)" warning>
-      <sui-modal v-model="openOverwriteSearchModal" size="tiny">
-        <sui-modal-header>Overwrite search</sui-modal-header>
-        <sui-modal-content>
-          <sui-modal-description>
-            <sui-message warning>
-              <i class="exclamation triangle icon"></i>You are about to
-              overwrite "{{ selectedSearch }}" search
-            </sui-message>
-            <p>Are you sure?</p>
-          </sui-modal-description>
-        </sui-modal-content>
-        <sui-modal-actions>
+            type="submit"
+            icon="search"
+            :disabled="loader.filter"
+            >Search</sui-button
+          >
           <sui-button
             type="button"
-            @click.native="showOverwriteSearchModal(false)"
-            >Cancel</sui-button
-          >
-          <sui-button type="submit" negative>Overwrite</sui-button>
-        </sui-modal-actions>
-      </sui-modal>
-    </sui-form>
-
-    <!-- delete search modal -->
-    <sui-form @submit.prevent="deleteSelectedSearch()" warning>
-      <sui-modal v-model="openDeleteSearchModal" size="tiny">
-        <sui-modal-header>Delete search</sui-modal-header>
-        <sui-modal-content>
-          <sui-modal-description>
-            <sui-message warning>
-              <i class="exclamation triangle icon"></i>You are about to delete
-              "{{ selectedSearch }}" search
-            </sui-message>
-            <p>Are you sure?</p>
-          </sui-modal-description>
-        </sui-modal-content>
-        <sui-modal-actions>
-          <sui-button type="button" @click.native="showDeleteSearchModal(false)"
-            >Cancel</sui-button
+            class="mg-right-sm"
+            @click.native="clearFilters()"
+            icon="eraser"
+            >Clear</sui-button
           >
           <sui-button
-            negative
-            type="submit"
-            :loading="loader.deleteSearch"
-            content="Delete"
-          ></sui-button>
-        </sui-modal-actions>
-      </sui-modal>
-    </sui-form>
+            type="button"
+            @click.native="showSaveSearchModal(true)"
+            icon="save"
+            >Save search</sui-button
+          >
+          <sui-button
+            type="button"
+            :disabled="!selectedSearch"
+            @click.native="showOverwriteSearchModal(true)"
+            icon="edit"
+            >Overwrite search</sui-button
+          >
+        </sui-form-fields>
+      </sui-form>
+
+      <!-- save search modal -->
+      <sui-form @submit.prevent="validateSaveNewSearch()" :error="errorNewSearch">
+        <sui-modal v-model="openSaveSearchModal" size="tiny">
+          <sui-modal-header>Save search</sui-modal-header>
+          <sui-modal-content>
+            <sui-modal-description>
+              <p>Enter a name for your new saved search</p>
+              <sui-form-field>
+                <input placeholder="Search name" v-model="newSearchName" />
+              </sui-form-field>
+              <sui-message error v-show="errorNewSearch">
+                <p>{{ errorMessage }}</p>
+              </sui-message>
+            </sui-modal-description>
+          </sui-modal-content>
+          <sui-modal-actions>
+            <sui-button type="button" @click.native="showSaveSearchModal(false)"
+              >Cancel</sui-button
+            >
+            <sui-button
+              type="submit"
+              primary
+              :loading="loader.saveSearch"
+              content="Save"
+            ></sui-button>
+          </sui-modal-actions>
+        </sui-modal>
+      </sui-form>
+
+      <!-- overwrite search modal -->
+      <sui-form @submit.prevent="saveSearch(selectedSearch)" warning>
+        <sui-modal v-model="openOverwriteSearchModal" size="tiny">
+          <sui-modal-header>Overwrite search</sui-modal-header>
+          <sui-modal-content>
+            <sui-modal-description>
+              <sui-message warning>
+                <i class="exclamation triangle icon"></i>You are about to
+                overwrite "{{ selectedSearch }}" search
+              </sui-message>
+              <p>Are you sure?</p>
+            </sui-modal-description>
+          </sui-modal-content>
+          <sui-modal-actions>
+            <sui-button
+              type="button"
+              @click.native="showOverwriteSearchModal(false)"
+              >Cancel</sui-button
+            >
+            <sui-button type="submit" negative>Overwrite</sui-button>
+          </sui-modal-actions>
+        </sui-modal>
+      </sui-form>
+
+      <!-- delete search modal -->
+      <sui-form @submit.prevent="deleteSelectedSearch()" warning>
+        <sui-modal v-model="openDeleteSearchModal" size="tiny">
+          <sui-modal-header>Delete search</sui-modal-header>
+          <sui-modal-content>
+            <sui-modal-description>
+              <sui-message warning>
+                <i class="exclamation triangle icon"></i>You are about to delete
+                "{{ selectedSearch }}" search
+              </sui-message>
+              <p>Are you sure?</p>
+            </sui-modal-description>
+          </sui-modal-content>
+          <sui-modal-actions>
+            <sui-button type="button" @click.native="showDeleteSearchModal(false)"
+              >Cancel</sui-button
+            >
+            <sui-button
+              negative
+              type="submit"
+              :loading="loader.deleteSearch"
+              content="Delete"
+            ></sui-button>
+          </sui-modal-actions>
+        </sui-modal>
+      </sui-form>
+    </sui-container>
+    <FixedBar
+      :filter="filter"
+      :selectedSearch="selectedSearch"
+      :showFilterTimeGroup="showFilterTimeGroup"
+      :showFilterTime="showFilterTime"
+      :showFilterQueue="showFilterQueue"
+      :showFilterGroup="showFilterGroup"
+      :showFilterAgent="showFilterAgent"
+      :showFilterReason="showFilterReason"
+      :showFilterResult="showFilterResult"
+      :showFilterIvr="showFilterIvr"
+      :showFilterChoice="showFilterChoice"
+      :showFilterOrigin="showFilterOrigin"
+      :showFilterDestination="showFilterDestination"
+      :showFilterTimeSplit="showFilterTimeSplit"
+      :showFilterCaller="showFilterCaller"
+      :showFilterContactName="showFilterContactName"
+      :showFilterNullCall="showFilterNullCall"
+    />
   </div>
 </template>
 
@@ -322,11 +347,15 @@ import SearchesService from "../services/searches";
 import UtilService from "../services/utils";
 import SearchService from "../services/searches";
 import PhonebookService from "../services/phonebook";
+import FixedBar from "../components/FixedBar.vue";
 
 import moment from "moment";
 
 export default {
   name: "Filters",
+  components: {
+    FixedBar: FixedBar
+  },
   mixins: [
     LoginService,
     StorageService,
@@ -335,6 +364,7 @@ export default {
     SearchService,
     PhonebookService,
   ],
+  props: ["showFiltersForm"],
   data() {
     return {
       selectedSearch: null,
@@ -388,10 +418,10 @@ export default {
         deleteSearch: false,
       },
       groupByTimeValues: [
-        { value: "day", text: "Day" },
-        { value: "week", text: "Week" },
-        { value: "month", text: "Month" },
-        { value: "year", text: "Year" },
+        { value: "day", text: this.$i18n.t('filter.day') },
+        { value: "week", text: this.$i18n.t('filter.week') },
+        { value: "month", text: this.$i18n.t('filter.month') },
+        { value: "year", text: this.$i18n.t('filter.year') },
       ],
       splitByTimeValues: [
         { value: "60", text: "1 hour" },
@@ -1169,28 +1199,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.masthead {
-  padding: 14px 0px 15px 0px !important;
-  min-height: 65px;
-  margin-bottom: 0 !important;
-  border-bottom: 1px solid rgba(34, 36, 38, 0.15);
-  box-shadow: 0 1px 2px 0 rgba(34, 36, 38, 0.15);
-
-  .ui.container {
-    margin-right: 3em !important;
-    margin-left: 3em !important;
-    width: auto !important;
-
-    .ui.header {
-      margin: 0px !important;
-    }
-
-    .ui.right.floated.menu {
-      margin-top: -2px;
-    }
-  }
-}
-
 .filters-form {
   text-align: left;
   margin-top: 30px;

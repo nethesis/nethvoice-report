@@ -3,6 +3,8 @@ import VueResource from "vue-resource";
 import VueI18n from "vue-i18n";
 import PortalVue from "portal-vue";
 import VCalendar from 'v-calendar';
+import VueLodash from 'vue-lodash';
+import lodash from 'lodash';
 
 import App from "./App.vue";
 import router from "./router";
@@ -29,6 +31,7 @@ Vue.http.interceptors.push(function () {
 
 Vue.use(VueI18n);
 Vue.use(PortalVue);
+Vue.use(VueLodash, { name: 'ldsh' , lodash: lodash });
 Vue.use(VCalendar);
 
 // configure i18n
