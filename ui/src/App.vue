@@ -3,7 +3,7 @@
     <!-- handle popups -->
     <portal-target name="semantic-ui-vue"></portal-target>
     <!-- login view -->
-    <div v-if="!isLogged">
+    <div v-show="!isLogged">
       <Login />
     </div>
     <!-- end login view -->
@@ -143,7 +143,7 @@ export default {
 
 .pie-chart {
   max-width: 26rem;
-  margin: 0 2rem 2rem 2rem;
+  margin: 0 2rem 3rem 2rem;
 }
 
 .loader-height {
@@ -154,5 +154,17 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+}
+
+.show-details {
+  margin-top: 0.5rem;
+}
+
+.ui.table.chart-details {
+  margin: 0 auto;
+}
+
+.gray {
+  color: gray;
 }
 </style>

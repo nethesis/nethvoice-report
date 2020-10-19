@@ -5,19 +5,6 @@ var UtilService = {
     }
   },
   methods: {
-    formatDate(date) {
-      var d = new Date(date),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
-
-      if (month.length < 2)
-        month = '0' + month;
-      if (day.length < 2)
-        day = '0' + day;
-
-      return [year, month, day].join('-');
-    },
     sortByProperty(property) {
       return function (a, b) {
         if (a[property] < b[property]) {
@@ -45,26 +32,26 @@ var UtilService = {
           "default": ["time", "queue"],
         },
         "data": {
-          "summary": ["time", "queue"],
-          "agent": ["time", "queue", "agent"],
-          "session": ["time", "queue", "reason"],
-          "caller": ["time", "queue", "caller", "contactName"],
+          "summary": ["timeGroup", "time", "queue"],
+          "agent": ["timeGroup", "time", "queue", "agent"],
+          "session": ["time", "queue", "reason", "agent"],
+          "caller": ["timeGroup", "time", "queue", "caller", "contactName"],
           "call": ["time", "queue", "caller", "contactName", "agent", "result"],
-          "lostCall": ["time", "queue", "caller", "contactName", "reason"], //// verify
-          "ivr": ["time", "ivr", "choice"]
+          "lost_call": ["timeGroup", "time", "queue", "caller", "contactName", "reason"],
+          "ivr": ["timeGroup", "time", "ivr", "choice"]
         },
         "performance": {
-          "default": ["time", "queue"]
+          "default": ["timeGroup", "time", "queue"]
         },
         "distribution": {
-          "hourly": ["time", "queue", "timeSplit", "agent", "destination", "ivr"],
-          "geographic": ["time", "queue", "origin"],
+          "hourly": ["timeGroup", "time", "queue", "timeSplit", "agent", "destination", "ivr"],
+          "geographic": ["timeGroup", "time", "queue", "origin"],
         },
         "graphs": {
-          "load": ["time", "queue", "origin"], //// verify
+          "load": ["timeGroup", "time", "queue", "origin"],
           "hour": ["time", "queue", "agent", "destination", "ivr", "choice"],
-          "agent": ["time", "queue", "agent"],
-          "area": ["time", "queue", "origin"],
+          "agent": ["timeGroup", "time", "queue", "agent"],
+          "area": ["timeGroup", "time", "queue"],
           "queue_position": ["time", "queue", "timeSplit"],
           "avg_duration": ["time", "queue", "timeSplit"],
           "avg_wait": ["time", "queue", "timeSplit"]
@@ -79,64 +66,24 @@ var UtilService = {
     formatValue(value, format) {
       switch (format) {
         case "num":
-          return this.formatNumber(value);
+          return this.$options.filters.formatNumber(value);
         case "seconds":
-          return this.formatTime(value);
+          return this.$options.filters.formatTime(value);
         case "percent":
-          return this.formatPercentage(value);
+          return this.$options.filters.formatPercentage(value);
         case "label":
-          return this.$i18n.t(value) + " (i18n)"; ////
+          return this.$i18n ? this.$i18n.t(value) : value;
         case "yearDate":
           // no formatting needed
           return value;
         case "monthDate":
-          return value + " (monthDate)"; ////
+          return this.$options.filters.formatMonthDate(value, this.$i18n);
         case "weekDate":
-          return value + " (weekDate)"; ////
+          return this.$options.filters.formatWeekDate(value, this.$i18n);
         case "dayDate":
-          return value + " (dayDate)"; ////
+          // no formatting needed
+          return value;
       }
-    },
-    formatNumber(value) {
-      const num = parseFloat(value);
-
-      if (isNaN(num)) {
-        return "-";
-      }
-      return num.toLocaleString();
-    },
-    formatPercentage(value) {
-      const numFormatted = this.formatNumber(value);
-
-      if (!numFormatted || numFormatted == "-") {
-        return "-";
-      } else {
-        return numFormatted + " %";
-      }
-    },
-    formatTime: function (value) {
-      if (!value || value.length == 0) {
-        return '-'
-      }
-
-      var ret = "";
-      let hours = parseInt(Math.floor(value / 3600));
-      let minutes = parseInt(Math.floor((value - hours * 3600) / 60));
-      let seconds = parseInt((value - (hours * 3600 + minutes * 60)) % 60);
-
-      let dHours = hours > 9 ? hours : hours;
-      let dMins = minutes > 9 ? minutes : minutes;
-      let dSecs = seconds > 9 ? seconds : seconds;
-
-      ret = dSecs + "s";
-      if (minutes) {
-        ret = dMins + "m " + ret;
-      }
-      if (hours) {
-        ret = dHours + "h " + ret;
-      }
-
-      return ret + " (" + value + ")";
     },
   },
 };

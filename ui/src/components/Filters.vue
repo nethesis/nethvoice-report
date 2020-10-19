@@ -1,7 +1,6 @@
 <template>
   <div>
-    <sui-loader v-if="loader.filter" active centered inline />
-    <sui-form v-else class="filters-form" @submit.prevent="applyFilters">
+    <sui-form class="filters-form" @submit.prevent="applyFilters">
       <sui-form-fields v-if="savedSearches.length" class="mg-bottom-md">
         <sui-form-field width="six">
           <sui-dropdown
@@ -10,7 +9,6 @@
             selection
             v-model="selectedSearch"
             :options="savedSearches"
-            @click="hackDropdown"
           />
         </sui-form-field>
         <sui-form-field width="four">
@@ -19,13 +17,14 @@
             negative
             :disabled="!selectedSearch"
             @click.native="showDeleteSearchModal(true)"
+            icon="trash"
             >Delete search</sui-button
           >
         </sui-form-field>
       </sui-form-fields>
 
-      <sui-form-fields v-if="showFilterTime">
-        <sui-form-field width="four">
+      <sui-form-fields>
+        <sui-form-field v-if="showFilterTimeGroup" width="four">
           <label>Group by</label>
           <sui-dropdown
             :options="groupByTimeValues"
@@ -35,7 +34,7 @@
             v-model="filter.time.group"
           />
         </sui-form-field>
-        <sui-form-field width="six">
+        <sui-form-field v-if="showFilterTime" width="six">
           <label>Time interval</label>
           <sui-button-group class="fluid">
             <sui-button
@@ -193,6 +192,8 @@
             :fullTextSearch="'exact'"
             :maxResults="20"
             class="searchContactName"
+            @input="contactNameInput"
+            :value="filter.contactName"
           />
         </sui-form-field>
         <sui-form-field v-if="showFilterNullCall" width="four">
@@ -202,97 +203,115 @@
       </sui-grid>
 
       <sui-form-fields class="mg-top-md">
-        <sui-button primary type="submit" class="mg-right-sm"
-          >Apply filters</sui-button
+        <sui-button
+          primary
+          type="submit"
+          icon="search"
+          :disabled="loader.filter"
+          >Search</sui-button
         >
-        <sui-button type="button" @click.native="showSaveSearchModal(true)"
+        <sui-button
+          type="button"
+          class="mg-right-sm"
+          @click.native="clearFilters()"
+          icon="eraser"
+          >Clear</sui-button
+        >
+        <sui-button
+          type="button"
+          @click.native="showSaveSearchModal(true)"
+          icon="save"
           >Save search</sui-button
         >
         <sui-button
           type="button"
           :disabled="!selectedSearch"
           @click.native="showOverwriteSearchModal(true)"
+          icon="edit"
           >Overwrite search</sui-button
         >
       </sui-form-fields>
     </sui-form>
 
     <!-- save search modal -->
-    <sui-modal v-model="openSaveSearchModal" size="tiny">
-      <sui-modal-header>Save search</sui-modal-header>
-      <sui-modal-content>
-        <sui-modal-description>
-          <p>Enter a name for your new saved search</p>
-          <sui-form :error="errorNewSearch">
+    <sui-form @submit.prevent="validateSaveNewSearch()" :error="errorNewSearch">
+      <sui-modal v-model="openSaveSearchModal" size="tiny">
+        <sui-modal-header>Save search</sui-modal-header>
+        <sui-modal-content>
+          <sui-modal-description>
+            <p>Enter a name for your new saved search</p>
             <sui-form-field>
               <input placeholder="Search name" v-model="newSearchName" />
             </sui-form-field>
             <sui-message error v-show="errorNewSearch">
               <p>{{ errorMessage }}</p>
             </sui-message>
-          </sui-form>
-        </sui-modal-description>
-      </sui-modal-content>
-      <sui-modal-actions>
-        <sui-button @click.native="showSaveSearchModal(false)"
-          >Cancel</sui-button
-        >
-        <sui-button
-          primary
-          @click.native="validateSaveNewSearch()"
-          :loading="loader.saveSearch"
-          content="Save"
-        ></sui-button>
-      </sui-modal-actions>
-    </sui-modal>
+          </sui-modal-description>
+        </sui-modal-content>
+        <sui-modal-actions>
+          <sui-button type="button" @click.native="showSaveSearchModal(false)"
+            >Cancel</sui-button
+          >
+          <sui-button
+            type="submit"
+            primary
+            :loading="loader.saveSearch"
+            content="Save"
+          ></sui-button>
+        </sui-modal-actions>
+      </sui-modal>
+    </sui-form>
 
     <!-- overwrite search modal -->
-    <sui-modal v-model="openOverwriteSearchModal" size="tiny">
-      <sui-modal-header>Overwrite search</sui-modal-header>
-      <sui-modal-content>
-        <sui-modal-description>
-          <sui-message warning>
-            <i class="exclamation triangle icon"></i>You are about to overwrite
-            "{{ selectedSearch }}" search
-          </sui-message>
-          <p>Are you sure?</p>
-        </sui-modal-description>
-      </sui-modal-content>
-      <sui-modal-actions>
-        <sui-button @click.native="showOverwriteSearchModal(false)"
-          >Cancel</sui-button
-        >
-        <sui-button negative @click.native="saveSearch(selectedSearch)"
-          >Overwrite</sui-button
-        >
-      </sui-modal-actions>
-    </sui-modal>
+    <sui-form @submit.prevent="saveSearch(selectedSearch)" warning>
+      <sui-modal v-model="openOverwriteSearchModal" size="tiny">
+        <sui-modal-header>Overwrite search</sui-modal-header>
+        <sui-modal-content>
+          <sui-modal-description>
+            <sui-message warning>
+              <i class="exclamation triangle icon"></i>You are about to
+              overwrite "{{ selectedSearch }}" search
+            </sui-message>
+            <p>Are you sure?</p>
+          </sui-modal-description>
+        </sui-modal-content>
+        <sui-modal-actions>
+          <sui-button
+            type="button"
+            @click.native="showOverwriteSearchModal(false)"
+            >Cancel</sui-button
+          >
+          <sui-button type="submit" negative>Overwrite</sui-button>
+        </sui-modal-actions>
+      </sui-modal>
+    </sui-form>
 
     <!-- delete search modal -->
-    <sui-modal v-model="openDeleteSearchModal" size="tiny">
-      <sui-modal-header>Delete search</sui-modal-header>
-      <sui-modal-content>
-        <sui-modal-description>
-          <sui-message warning>
-            <i class="exclamation triangle icon"></i>You are about to delete "{{
-              selectedSearch
-            }}" search
-          </sui-message>
-          <p>Are you sure?</p>
-        </sui-modal-description>
-      </sui-modal-content>
-      <sui-modal-actions>
-        <sui-button @click.native="showDeleteSearchModal(false)"
-          >Cancel</sui-button
-        >
-        <sui-button
-          negative
-          @click.native="deleteSelectedSearch()"
-          :loading="loader.deleteSearch"
-          content="Delete"
-        ></sui-button>
-      </sui-modal-actions>
-    </sui-modal>
+    <sui-form @submit.prevent="deleteSelectedSearch()" warning>
+      <sui-modal v-model="openDeleteSearchModal" size="tiny">
+        <sui-modal-header>Delete search</sui-modal-header>
+        <sui-modal-content>
+          <sui-modal-description>
+            <sui-message warning>
+              <i class="exclamation triangle icon"></i>You are about to delete
+              "{{ selectedSearch }}" search
+            </sui-message>
+            <p>Are you sure?</p>
+          </sui-modal-description>
+        </sui-modal-content>
+        <sui-modal-actions>
+          <sui-button type="button" @click.native="showDeleteSearchModal(false)"
+            >Cancel</sui-button
+          >
+          <sui-button
+            negative
+            type="submit"
+            :loading="loader.deleteSearch"
+            content="Delete"
+          ></sui-button>
+        </sui-modal-actions>
+      </sui-modal>
+    </sui-form>
   </div>
 </template>
 
@@ -303,6 +322,8 @@ import SearchesService from "../services/searches";
 import UtilService from "../services/utils";
 import SearchService from "../services/searches";
 import PhonebookService from "../services/phonebook";
+
+import moment from "moment";
 
 export default {
   name: "Filters",
@@ -316,7 +337,6 @@ export default {
   ],
   data() {
     return {
-      showFilters: true,
       selectedSearch: null,
       filter: {
         queues: [],
@@ -339,7 +359,7 @@ export default {
         },
         caller: "",
         contactName: "",
-        nullCall: false,
+        nullCall: false, ////
       },
       filterValues: {
         queues: [],
@@ -363,7 +383,7 @@ export default {
       errorNewSearch: false,
       errorMessage: "",
       loader: {
-        filter: false,
+        filter: true,
         saveSearch: false,
         deleteSearch: false,
       },
@@ -374,25 +394,26 @@ export default {
         { value: "year", text: "Year" },
       ],
       splitByTimeValues: [
-        { value: "", text: "-" },
-        { value: "10", text: "10 minutes" },
-        { value: "15", text: "15 minutes" },
-        { value: "30", text: "30 minutes" },
         { value: "60", text: "1 hour" },
+        { value: "30", text: "30 minutes" },
+        { value: "15", text: "15 minutes" },
+        { value: "10", text: "10 minutes" },
       ],
       phoneBook: [],
       queueReportViewFilterMap: null,
     };
   },
   watch: {
+    $route: function () {
+      if (this.savedSearches) {
+        this.mapSavedSearches(this.savedSearches);
+      }
+    },
     selectedSearch: function () {
       this.setFilterValuesFromSearch();
     },
     "filter.ivrs": function () {
       this.updateIvrChoices();
-    },
-    "filter.time.range": function () {
-      console.log("watch filter.time.range", this.filter.time.range); ////
     },
     "filter.time.interval": function () {
       if (
@@ -445,11 +466,14 @@ export default {
 
     // views request to apply filter on loading
     this.$root.$on("requestApplyFilter", () => {
-      this.applyFilters();
+      if (this.loader.filter == false) {
+        this.applyFilters();
+      }
     });
   },
   methods: {
     retrieveFilter() {
+      this.loader.filter = true;
       let filter = this.get(this.reportFilterStorageName);
       let filterValues = this.get(this.reportFilterValuesStorageName);
 
@@ -467,10 +491,6 @@ export default {
 
         // set selected values in filter
         this.setFilterSelection(filter, true);
-
-        // setTimeout(() => {
-        //   this.applyFilters(); ////
-        // }, 1000); ////
       } else {
         console.log("retrieving default filter from backend:"); ////
 
@@ -640,10 +660,6 @@ export default {
 
           // set selected values in filter
           this.setFilterSelection(this.defaultFilter, false);
-
-          // setTimeout(() => {
-          //   this.applyFilters(); ////
-          // }, 1000); ////
         },
         (error) => {
           console.error(error.body);
@@ -663,25 +679,31 @@ export default {
         this.filter.destinations = filter.destinations;
         this.filter.caller = filter.caller;
         this.filter.nullCall = filter.nullCall;
-
-        if (this.$refs.filterContactName) {
-          this.$refs.filterContactName.$el.firstChild.value =
-            filter.contactName;
-        }
+        this.filter.contactName = filter.contactName;
       }
 
       // time
+      this.filter.time.range = filter.time.range;
+
+      if (this.filter.time.range) {
+        this.filter.time.range = filter.time.range;
+        this.filter.time.interval = this.selectTime(this.filter.time.range);
+      } else {
+        this.filter.time.interval = filter.time.interval;
+      }
       this.filter.time.group = filter.time.group;
       this.filter.time.division = filter.time.division;
-      this.filter.time.interval = filter.time.interval;
-      this.filter.time.range = filter.time.range;
       this.selectTime(filter.time.range);
 
       // null call
       this.filter.nullCall = filter.nullCall;
 
-      // save filter to local storage
-      this.set(this.reportFilterStorageName, this.filter);
+      if (!fromLocalStorage) {
+        // save filter to local storage
+        this.set(this.reportFilterStorageName, this.filter);
+      }
+
+      this.loader.filter = false;
     },
     getSavedSearches(searchToSelect) {
       this.getSearches(
@@ -715,20 +737,7 @@ export default {
           searchesNotMatchingView.push(search);
         }
       }
-
-      if (searchesNotMatchingView.length) {
-        // show divider and searches of other views
-        const divider = {
-          //// debug switching views
-          value: "-",
-          text: "-",
-        };
-        this.savedSearches = searchesMatchingView
-          .concat([divider])
-          .concat(searchesNotMatchingView);
-      } else {
-        this.savedSearches = searchesMatchingView;
-      }
+      this.savedSearches = searchesMatchingView.concat(searchesNotMatchingView);
     },
     setFilterValuesFromSearch() {
       // retrieve search object
@@ -737,7 +746,7 @@ export default {
       );
 
       // set filter values
-      this.filter = search.filter;
+      this.filter = JSON.parse(JSON.stringify(search.filter));
     },
     getToday() {
       const today = new Date();
@@ -779,19 +788,19 @@ export default {
       return result;
     },
     applyFilters() {
-      if (
-        this.$refs.filterContactName &&
-        this.$refs.filterContactName.$el &&
-        this.$refs.filterContactName.$el.firstChild &&
-        this.$refs.filterContactName.$el.firstChild.value
-      ) {
-        const contactName = this.$refs.filterContactName.$el.firstChild.value;
+      // save filter to local storage
+      this.set(this.reportFilterStorageName, this.filter);
+
+      let filterToApply = JSON.parse(JSON.stringify(this.filter));
+      filterToApply.phones = [];
+
+      // retrieve contact name phones
+      if (this.filter.contactName) {
         const contact = this.phoneBook.find((c) => {
-          return c.title == contactName;
+          return c.title == this.filter.contactName;
         });
 
         if (contact) {
-          this.filter.contactName = contactName; // save contact name to local storage
           let phoneNumbers = [];
 
           for (const [phoneType, phoneList] of Object.entries(contact.phones)) {
@@ -803,33 +812,57 @@ export default {
           }
 
           if (phoneNumbers.length) {
-            this.filter.phones = phoneNumbers;
+            filterToApply.phones = phoneNumbers;
+
+            console.log("contact", contact.title); ////
+            console.log("phoneNumbers", phoneNumbers); ////
           }
         }
-      } else {
-        this.filter.phones = [];
       }
 
-      // save filter to local storage
-      this.set(this.reportFilterStorageName, this.filter);
-      this.$root.$emit("applyFilters", this.filter);
-    },
-    hackDropdown(e) {
-      e.target.parentNode
-        .querySelectorAll("div[role=option]")
-        .forEach((item) => {
-          if (item.textContent === "-") {
-            console.log("hackDropdown, item found", item); ////
+      // set group by day if "Group by time" field is hidden
 
-            item.textContent = "";
-            item.classList.remove("item");
-            item.classList.add("divider");
-            item.disabled = true; //// need testing
-          }
-        });
+      if (!this.showFilterTimeGroup) {
+        filterToApply.time.group = "day";
+      }
+
+      // set splity by 1 hour if "Split by time" field is hidden
+
+      if (!this.showFilterTimeSplit) {
+        filterToApply.time.division = "60";
+      }
+
+      // format time interval
+
+      if (filterToApply.time.interval) {
+        let dateFormat = "";
+
+        if (filterToApply.time.group == "year") {
+          dateFormat = "YYYY";
+        } else if (filterToApply.time.group == "month") {
+          dateFormat = "YYYY-MM";
+        } else if (filterToApply.time.group == "week") {
+          dateFormat = "YYYY-WW";
+        } else if (filterToApply.time.group == "day") {
+          dateFormat = "YYYY-MM-DD";
+        }
+        filterToApply.time.interval.start = moment(
+          filterToApply.time.interval.start
+        ).format(dateFormat);
+        filterToApply.time.interval.end = moment(
+          filterToApply.time.interval.end
+        ).format(dateFormat);
+      }
+
+      console.log("filterToApply", filterToApply); ////
+
+      // apply filters
+      this.$root.$emit("applyFilters", filterToApply);
     },
     showSaveSearchModal(value) {
       this.newSearchName = "";
+      this.errorMessage = "";
+      this.errorNewSearch = false;
       this.openSaveSearchModal = value;
     },
     showOverwriteSearchModal(value) {
@@ -863,17 +896,80 @@ export default {
       }
       this.saveSearch(this.newSearchName);
     },
-    saveSearch(searchName) {
-      this.loader.saveSearch = true;
+    computeFilterToSave() {
       let filterToSave = JSON.parse(JSON.stringify(this.filter));
 
+      // remove hidden filters
+
+      if (!this.showFilterQueue) {
+        filterToSave.queues = [];
+      }
+
+      if (!this.showFilterGroup) {
+        filterToSave.groups = [];
+      }
+
+      if (!this.showFilterAgent) {
+        filterToSave.agents = [];
+      }
+
+      if (!this.showFilterIvr) {
+        filterToSave.ivrs = [];
+      }
+
+      if (!this.showFilterReason) {
+        filterToSave.reasons = [];
+      }
+
+      if (!this.showFilterResult) {
+        filterToSave.results = [];
+      }
+
+      if (!this.showFilterChoice) {
+        filterToSave.choices = [];
+      }
+
+      if (!this.showFilterDestination) {
+        filterToSave.destinations = [];
+      }
+
+      if (!this.showFilterOrigin) {
+        filterToSave.origins = [];
+      }
+
+      if (!this.showFilterTimeGroup) {
+        filterToSave.time.group = "";
+      }
+
+      if (!this.showFilterTimeSplit) {
+        filterToSave.time.division = "";
+      }
+
+      if (!this.showFilterCaller) {
+        filterToSave.caller = "";
+      }
+
+      if (!this.showFilterNullCall) {
+        filterToSave.contactName = "";
+      }
+
       // convert time interval to string
-      filterToSave.time.interval.start = this.formatDate(
-        this.filter.time.interval.start
-      );
-      filterToSave.time.interval.end = this.formatDate(
-        this.filter.time.interval.end
-      );
+      if (this.filter.time.interval) {
+        filterToSave.time.interval.start = this.$options.filters.formatDate(
+          this.filter.time.interval.start
+        );
+        filterToSave.time.interval.end = this.$options.filters.formatDate(
+          this.filter.time.interval.end
+        );
+      }
+
+      return filterToSave;
+    },
+    saveSearch(searchName) {
+      this.loader.saveSearch = true;
+      let filterToSave = this.computeFilterToSave();
+
+      console.log("filterToSave", filterToSave); ////
 
       this.createSearch(
         {
@@ -1003,26 +1099,31 @@ export default {
         );
       }
     },
-    doLogout() {
-      this.execLogout(
-        () => {
-          // remove from localstorage
-          this.delete("loggedUser");
-
-          // change route
-          this.$parent.didLogout();
-          this.$router.push("/");
-        },
-        (error) => {
-          // print error
-          console.error(error.body);
-        }
-      );
+    contactNameInput(event) {
+      if (typeof event == "string") {
+        this.filter.contactName = event;
+      }
+    },
+    clearFilters() {
+      this.filter.queues = [];
+      this.filter.groups = [];
+      this.filter.agents = [];
+      this.filter.ivrs = [];
+      this.filter.reasons = [];
+      this.filter.results = [];
+      this.filter.choices = [];
+      this.filter.destinations = [];
+      this.filter.origins = [];
+      this.filter.caller = "";
+      this.filter.contactName = "";
     },
   },
   computed: {
     showFilterTime: function () {
       return this.isFilterInView("time");
+    },
+    showFilterTimeGroup: function () {
+      return this.isFilterInView("timeGroup");
     },
     showFilterTimeSplit: function () {
       return this.isFilterInView("timeSplit");
@@ -1073,7 +1174,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .masthead {
   padding: 14px 0px 15px 0px !important;
   min-height: 65px;

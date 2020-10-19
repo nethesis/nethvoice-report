@@ -173,3 +173,45 @@ CREATE TABLE graph_hour_null AS
             qdescr, 
             hour; 
 /* end null */
+
+/* agents */
+DROP TABLE IF EXISTS graph_hour_agents;
+
+CREATE TABLE graph_hour_agents AS 
+  SELECT Date_format(From_unixtime(timestamp_in), "%Y-%m-%d") AS period, 
+         agent, 
+         Date_format(From_unixtime(timestamp_in), "%H:00") AS hour, 
+         Count(id)                                      AS num 
+  FROM   report_queue 
+  GROUP  BY agent,
+            period,
+            hour 
+  ORDER  BY agent, 
+            period, 
+            hour; 
+/* end agents */
+
+/* ivr */
+DROP TABLE IF EXISTS graph_hour_ivr;
+
+CREATE TABLE graph_hour_ivr AS 
+  SELECT Date_format(time, "%Y-%m-%d") AS period, 
+         data3 AS ivr_id,
+         data4 AS ivr_name,
+         data2 AS choice, 
+         Date_format(time, "%H:00") AS hour, 
+         Count(id)                                      AS num 
+  FROM   queue_log_history 
+  WHERE
+    queuename = 'NONE'
+    AND agent = 'NONE'
+    AND event = 'INFO'
+    AND data1 = 'IVRAPPEND'
+  GROUP  BY ivr_id, choice, 
+            period,
+            hour 
+  ORDER  BY ivr_id, choice, 
+            period, 
+            hour; 
+/* end ivr */
+

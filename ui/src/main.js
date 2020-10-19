@@ -12,9 +12,21 @@ import SuiVue from "semantic-ui-vue";
 import "semantic-ui-css/semantic.min.css";
 import "./styles/main.css";
 
+import "./filters/filters";
+
 Vue.config.productionTip = false;
 Vue.use(SuiVue);
+
 Vue.use(VueResource);
+Vue.http.interceptors.push(function () {
+  return function (response) {
+    // if authentication token has expired, show login page
+    if (response.status == 401 && response.body && response.body.message == "Token is expired") {
+      this.$root.$emit("logout");
+    }
+  };
+});
+
 Vue.use(VueI18n);
 Vue.use(PortalVue);
 Vue.use(VCalendar);

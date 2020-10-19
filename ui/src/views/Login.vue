@@ -4,7 +4,7 @@
     <sui-grid-column>
       <sui-image size="huge" src="logo.png" />
       <sui-divider hidden />
-      <sui-form v-on:submit.prevent="doLogin()" :error="error">
+      <sui-form v-on:submit.prevent="doLogin()" :error="error" :warning="sessionExpired">
         <sui-segment stacked>
           <sui-form-field>
             <sui-input type="text" placeholder="Username" icon="user" icon-position="left" v-model="username" />
@@ -13,9 +13,21 @@
             <sui-input type="password" placeholder="Password" icon="lock" icon-position="left" v-model="password" />
           </sui-form-field>
           <sui-message error>
-            <sui-message-header>{{$t('login.invalid_credentials')}}</sui-message-header>
+            <sui-message-header>
+              <i class="exclamation triangle icon"></i>
+              {{$t('login.invalid_credentials')}}
+            </sui-message-header>
             <p>
               {{$t('login.invalid_user_pass_try')}}.
+            </p>
+          </sui-message>
+          <sui-message warning>
+            <sui-message-header>
+              <i class="exclamation triangle icon"></i>
+              {{$t('login.session_expired')}}
+            </sui-message-header>
+            <p>
+              {{$t('login.login_again')}}.
             </p>
           </sui-message>
           <sui-button size="large" color="green" fluid>
@@ -40,20 +52,29 @@ export default {
       username: "",
       password: "",
       error: false,
-      loading: false
+      loading: false,
+      sessionExpired: false,
     };
   },
   mixins: [LoginService, StorageService],
+  mounted() {
+    this.$root.$on("logout", () => {
+      this.sessionExpired = true;
+    });
+  },
   methods: {
     doLogin() {
       this.loading = true;
+      this.sessionExpired = false;
 
-      this.execLogin({
+      this.execLogin(
+        {
           username: this.username,
           password: this.password,
         },
         (success) => {
           this.loading = false;
+          this.error = false;
 
           // extract loggedUser info
           var loggedUser = success.body;
@@ -61,6 +82,8 @@ export default {
 
           // save to localstorage
           this.set("loggedUser", loggedUser);
+          this.username = "";
+          this.password = "";
 
           // change route
           this.$parent.didLogin();
@@ -75,7 +98,7 @@ export default {
           console.error(error.body);
         }
       );
-    }
+    },
   },
 };
 </script>

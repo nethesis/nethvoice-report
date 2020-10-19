@@ -21,6 +21,7 @@
       "by_session": "By Session",
       "by_caller": "By Caller",
       "by_call": "By Call",
+      "by_lost_call": "By Lost call",
       "ivr": "IVR"
     },
     "distribution": {
@@ -38,14 +39,44 @@
     },
     "login": {
       "invalid_credentials": "Invalid credentials",
-      "invalid_user_pass_try": "Incorrect username or password"
+      "invalid_user_pass_try": "Incorrect username or password",
+      "session_expired": "Your session has expired",
+      "login_again": "Please login again"
     },
     "caption": {
       "test-total-calls-for-queue": "Total calls for queue",
       "test-hourly-distribution": "Hourly distribution"
     },
+    "month": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+    },
+    "message": {
+      "origins_field_is_required": "Select one or more Origins in filter to display this chart",
+      "queues_field_is_required": "Select one or more Queues in filter to display this chart",
+      "agents_field_is_required": "Select one or more Agents in filter to display this chart",
+      "ivr_or_choice_fields_are_required": "Select one or more IVR or Choices in filter to display this chart",
+      "timeIntervalStart_and_timeIntervalEnd_are_required": "Select a time interval to display this chart"
+    },
+    "close": "Close",
+    "save": "Save",
+    "week": "Week",
     "no_data": "No data",
+    "no_data_for_current_filter": "No data for current filters",
     "total": "Total",
-    "queueName": "Queue name"
+    "queueName": "Queue name",
+    "show_details": "Show details",
+    "others": "Others",
+    "office_hours_description": "Office hours are used to display report charts. Some charts plot data only inside office hours (e.g. Queue report > Graphs > Average duration)"
   }
 }
