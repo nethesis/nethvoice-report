@@ -31,9 +31,10 @@
         "default_filter": \{
           "queues": [],
           "groups": [],
-	  "time": \{
-            "group": "",
-            "division": "",
+	        "time": \{
+            "group": "year",
+            "division": "60",
+            "range": "yesterday",
             "interval": \{
                 "start": "",
                 "end": ""
