@@ -10,8 +10,8 @@ SELECT
     max_duration AS duration$max_duration£seconds,
     min_duration AS duration$min_duration£seconds,
     avg_duration AS duration$avg_duration£seconds,
-    max_position AS max_position£num,
-    avg_position AS max_position£num
+    max_position AS position$max_position£num,
+    avg_position AS position$avg_position£num
 FROM
     summary_good_{{ .Time.Group }}
 WHERE   TRUE

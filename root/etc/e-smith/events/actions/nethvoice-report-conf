@@ -35,6 +35,5 @@ password=$(perl -e "use NethServer::Password; print NethServer::Password::store(
 /usr/bin/mysql --defaults-file=/root/.my.cnf -e "FLUSH PRIVILEGES"
 
 # precalculate some data to use report immediately
-/opt/nethvoice-report/tasks/tasks views
 /opt/nethvoice-report/tasks/tasks phonebook
 /opt/nethvoice-report/tasks/tasks values
