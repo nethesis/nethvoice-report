@@ -27,6 +27,9 @@ WHERE TRUE
     {{ if gt (len .Phones) 0 }}
         AND cid in ({{ ExtractPhones .Phones true }})
     {{ end }}
+    {{ if .Caller }}
+        AND cid LIKE "{{ .Caller }}%"
+    {{ end }}
 ORDER BY
     period DESC;
 {{ else }}

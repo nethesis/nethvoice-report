@@ -13,7 +13,7 @@ SELECT
     max_position AS position$max_position£num,
     avg_position AS position$avg_position£num
 FROM
-    summary_timeout_{{ .Time.Group }}
+    data_summary_timeout_{{ .Time.Group }}
 WHERE   TRUE
         {{ if and .Time.Interval.Start .Time.Interval.End }}
             AND period >= "{{ .Time.Interval.Start }}"

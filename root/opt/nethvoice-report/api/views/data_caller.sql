@@ -9,6 +9,23 @@ SELECT
     cellphone
 FROM
     phonebook.phonebook
+WHERE
+    (
+        name IS NOT NULL
+        OR name != ""
+    )
+    AND (
+        homephone IS NOT NULL
+        OR homephone != ""
+    )
+    AND (
+        workphone IS NOT NULL
+        OR workphone != ""
+    )
+    AND (
+        cellphone IS NOT NULL
+        OR cellphone != ""
+    )
 ORDER BY
     name;
 
@@ -224,20 +241,20 @@ ORDER BY
     period,
     cid;
 
-DROP TABLE IF EXISTS data_caller_year_num;
+DROP TABLE IF EXISTS data_caller_year_name_company;
 
-DROP TABLE IF EXISTS data_caller_month_num;
+DROP TABLE IF EXISTS data_caller_month_name_company;
 
-DROP TABLE IF EXISTS data_caller_week_num;
+DROP TABLE IF EXISTS data_caller_week_name_company;
 
-DROP TABLE IF EXISTS data_caller_day_num;
+DROP TABLE IF EXISTS data_caller_day_name_company;
 
 CREATE TABLE data_caller_year_name_company AS
 SELECT
     *,
     (
         SELECT
-            name
+            GROUP_CONCAT(name)
         FROM
             phonebook_map
         WHERE
@@ -251,7 +268,7 @@ SELECT
     ) AS `name`,
     (
         SELECT
-            name
+            GROUP_CONCAT(company)
         FROM
             phonebook_map
         WHERE
@@ -271,7 +288,7 @@ SELECT
     *,
     (
         SELECT
-            name
+            GROUP_CONCAT(name)
         FROM
             phonebook_map
         WHERE
@@ -285,7 +302,7 @@ SELECT
     ) AS `name`,
     (
         SELECT
-            name
+            GROUP_CONCAT(company)
         FROM
             phonebook_map
         WHERE
@@ -305,7 +322,7 @@ SELECT
     *,
     (
         SELECT
-            name
+            GROUP_CONCAT(name)
         FROM
             phonebook_map
         WHERE
@@ -319,7 +336,7 @@ SELECT
     ) AS `name`,
     (
         SELECT
-            name
+            GROUP_CONCAT(company)
         FROM
             phonebook_map
         WHERE
@@ -339,7 +356,7 @@ SELECT
     *,
     (
         SELECT
-            name
+            GROUP_CONCAT(name)
         FROM
             phonebook_map
         WHERE
@@ -353,7 +370,7 @@ SELECT
     ) AS `name`,
     (
         SELECT
-            name
+            GROUP_CONCAT(company)
         FROM
             phonebook_map
         WHERE

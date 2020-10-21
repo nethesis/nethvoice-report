@@ -70,14 +70,14 @@ func executeReportViews() {
 
 		// handle reading error
 		if errRead != nil {
-			return errors.Wrap(errRead, "Error reading views content")
+			return errors.Wrap(errRead, "Error reading views content:"+viewsPath+"/"+value)
 		}
 
 		// execute query
 		db := source.QueueInstance()
 		rows, errQuery := db.Query(string(queryString))
 		if errQuery != nil {
-			return errors.Wrap(errQuery, "Error in query execution")
+			return errors.Wrap(errQuery, "Error in query execution: "+viewsPath+"/"+value)
 		}
 
 		// close results

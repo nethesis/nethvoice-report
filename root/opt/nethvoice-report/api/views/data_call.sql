@@ -9,6 +9,23 @@ SELECT
     cellphone
 FROM
     phonebook.phonebook
+WHERE
+    (
+        name IS NOT NULL
+        OR name != ""
+    )
+    AND (
+        homephone IS NOT NULL
+        OR homephone != ""
+    )
+    AND (
+        workphone IS NOT NULL
+        OR workphone != ""
+    )
+    AND (
+        cellphone IS NOT NULL
+        OR cellphone != ""
+    )
 ORDER BY
     name;
 
@@ -23,7 +40,7 @@ SELECT
     cid,
     (
         SELECT
-            name
+            GROUP_CONCAT(name)
         FROM
             phonebook_map
         WHERE
@@ -37,7 +54,7 @@ SELECT
     ) AS `name`,
     (
         SELECT
-            name
+            GROUP_CONCAT(company)
         FROM
             phonebook_map
         WHERE
@@ -53,8 +70,8 @@ SELECT
     qdescr,
     agent,
     position,
-    SEC_TO_TIME(hold) AS hold,
-    SEC_TO_TIME(duration) AS duration,
+    hold AS hold,
+    duration AS duration,
     ACTION AS result
 FROM
     report_queue

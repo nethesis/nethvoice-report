@@ -5,7 +5,7 @@ SELECT
     uniqCid AS uniqCid£num,
     num AS num£num
 FROM
-    summary_joinempty_{{ .Time.Group }}
+    data_summary_joinempty_{{ .Time.Group }}
 WHERE   TRUE
         {{ if and .Time.Interval.Start .Time.Interval.End }}
             AND period >= "{{ .Time.Interval.Start }}"
