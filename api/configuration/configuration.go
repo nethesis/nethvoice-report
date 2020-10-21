@@ -54,6 +54,7 @@ type Configuration struct {
 	ValuesPath             string          `json:"values_path"`
 	ViewsPath              string          `json:"views_path"`
 	PhonebookPath          string          `json:"phonebook_path"`
+	RrdPath                string          `json:"rrd_path"`
 	UserAuthorizationsFile string          `json:"user_auth_file"`
 	DefaultFilter          models.Filter   `json:"default_filter"`
 	APIKey                 string          `json:"api_key"`

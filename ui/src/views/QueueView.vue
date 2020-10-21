@@ -13,7 +13,7 @@
         </div>
     </div>
     <div v-show="chart.data">
-      <div v-show="chart.data && chart.data.length == 1">
+      <div v-show="chart.data && chart.data.length < 2">
         <!-- no data, only query header is present -->
         <sui-message warning>
           <i class="exclamation triangle icon"></i>{{ $t("no_data_for_current_filter") }}
@@ -108,7 +108,19 @@ export default {
     retrieveQueryTree() {
       this.getQueryTree(
         (success) => {
-          this.queryTree = success.body.query_tree;
+          let queryTree = success.body.query_tree;
+
+          for (const section of Object.keys(queryTree)) {
+            for (const view of Object.keys(queryTree[section])) {
+              queryTree[section][view].forEach(function (query, index) {
+                const tokens = query.split(".");
+                const queryName = tokens[0];
+                const queryType = tokens[1];
+                this[index] = { name: queryName, type: queryType };
+              }, queryTree[section][view]);
+            }
+          }
+          this.queryTree = queryTree;
           this.initCharts();
         },
         (error) => {
@@ -119,26 +131,29 @@ export default {
     initCharts() {
       let charts = [];
 
-      this.queryNames = this.queryTree[this.$route.meta.section][
+      this.queries = this.queryTree[this.$route.meta.section][
         this.$route.meta.view
       ];
 
-      if (this.queryNames) {
-        for (const queryName of this.queryNames) {
+      if (this.queries) {
+        this.queries.forEach((query) => {
+          const queryName = query.name;
+          const queryType = query.type;
           const tokens = queryName.split("_");
           const position = parseInt(tokens[0]);
-          const type = tokens[1];
+          const chartType = tokens[1];
           const caption = tokens[2];
           charts.push({
             name: queryName,
             position: position,
-            type: type,
+            type: chartType,
+            queryType: queryType,
             caption: caption,
             data: null,
             message: null,
             details: null,
           });
-        }
+        });
         this.charts = charts.sort(this.sortByProperty("position"));
         this.$root.$emit("requestApplyFilter");
       } else {
@@ -156,6 +171,7 @@ export default {
           this.$route.meta.section,
           this.$route.meta.view,
           chart.name,
+          chart.queryType,
           (success) => {
             const result = success.body;
 

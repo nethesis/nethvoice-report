@@ -813,9 +813,6 @@ export default {
 
           if (phoneNumbers.length) {
             filterToApply.phones = phoneNumbers;
-
-            console.log("contact", contact.title); ////
-            console.log("phoneNumbers", phoneNumbers); ////
           }
         }
       }
@@ -969,8 +966,6 @@ export default {
       this.loader.saveSearch = true;
       let filterToSave = this.computeFilterToSave();
 
-      console.log("filterToSave", filterToSave); ////
-
       this.createSearch(
         {
           name: searchName,
@@ -1055,7 +1050,6 @@ export default {
       this.filterValues.choices = choices.sort(this.sortByProperty("text"));
     },
     retrievePhonebook() {
-      //// use local storage (with expiry)
       let phoneBook = this.get("reportPhoneBook");
 
       if (phoneBook && new Date().getTime() < phoneBook.expiry) {
