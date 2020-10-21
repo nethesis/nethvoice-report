@@ -20,7 +20,7 @@ func QueryRrd(rrdFilePath string, filter models.Filter, start time.Time, end tim
 		return "", errors.Wrap(errHostname, "error retrieving hostname")
 	}
 
-	rrdRootPath := configuration.Config.RrdRootPath
+	rrdRootPath := configuration.Config.RrdPath
 	var dbFile string
 	var rrdData [][]interface{}
 
