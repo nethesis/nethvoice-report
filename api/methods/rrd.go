@@ -1,7 +1,6 @@
 package methods
 
 import (
-	"encoding/json"
 	"fmt"
 	"math"
 	"os"
@@ -58,13 +57,13 @@ func QueryRrd(rrdFilePath string, filter models.Filter, start time.Time, end tim
 		var errRrd error
 		dbFile = fmt.Sprintf("%s/%s/%s", rrdRootPath, hostname, rrdFilePath)
 
-		rrdData, errRrd = fetchRrd(dbFile, start, end, graph) ////
+		rrdData, errRrd = fetchRrd(dbFile, start, end, graph)
 		if errRrd != nil {
 			return "", errRrd
 		}
 	}
 
-	data, errParse := ParseRrdResults(rrdData)
+	data, errParse := utils.ParseRrdResults(rrdData)
 	if errParse != nil {
 		return "", errParse
 	}
@@ -118,25 +117,4 @@ func fetchRrd(dbFile string, start time.Time, end time.Time, label string) ([][]
 		data = append(data, record)
 	}
 	return data, nil
-}
-
-func ParseRrdResults(rrdData [][]interface{}) (string, error) {
-	data := [][]string{}
-
-	for _, row := range rrdData {
-		record := []string{}
-
-		for _, value := range row {
-			record = append(record, fmt.Sprint(value))
-		}
-
-		// add record to data array
-		data = append(data, record)
-	}
-
-	// convert to json
-	dataJSON, _ := json.Marshal(data)
-
-	// return value
-	return string(dataJSON), nil
 }

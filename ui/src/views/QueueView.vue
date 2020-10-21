@@ -108,15 +108,11 @@ export default {
     retrieveQueryTree() {
       this.getQueryTree(
         (success) => {
-          console.log("success.body.query_tree", success.body.query_tree); ////
-
           let queryTree = success.body.query_tree;
 
           for (const section of Object.keys(queryTree)) {
             for (const view of Object.keys(queryTree[section])) {
               queryTree[section][view].forEach(function (query, index) {
-                // console.log("query", query) ////
-
                 const tokens = query.split(".");
                 const queryName = tokens[0];
                 const queryType = tokens[1];
@@ -125,9 +121,6 @@ export default {
             }
           }
           this.queryTree = queryTree;
-
-          console.log("this.queryTree", this.queryTree); ////
-
           this.initCharts();
         },
         (error) => {

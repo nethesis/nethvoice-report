@@ -208,3 +208,24 @@ func EpochToHumanDate(epochTime int) string {
 	tm := time.Unix(i, 0)
 	return tm.Format("2006-01-02 15:04:05")
 }
+
+func ParseRrdResults(rrdData [][]interface{}) (string, error) {
+	data := [][]string{}
+
+	for _, row := range rrdData {
+		record := []string{}
+
+		for _, value := range row {
+			record = append(record, fmt.Sprint(value))
+		}
+
+		// add record to data array
+		data = append(data, record)
+	}
+
+	// convert to json
+	dataJSON, _ := json.Marshal(data)
+
+	// return value
+	return string(dataJSON), nil
+}

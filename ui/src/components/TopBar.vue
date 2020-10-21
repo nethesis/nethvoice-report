@@ -107,7 +107,7 @@ export default {
   data() {
     return {
       showFilters: true,
-      title: this.$i18n.t(this.$route.meta.name) || "", //// i18n
+      title: this.$i18n.t(this.$route.meta.name) || "",
       openSettingsModal: false,
       officeHourStart: "",
       officeHourEnd: "",

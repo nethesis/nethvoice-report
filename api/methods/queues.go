@@ -84,8 +84,6 @@ func GetQueueReports(c *gin.Context) {
 
 	// data is cached, return immediately
 	if errCache == nil {
-		fmt.Println("got cached result for", graph, queryType) ////
-
 		c.Data(http.StatusOK, "application/json; charset=utf-8", []byte(data))
 		return
 	}
@@ -139,10 +137,6 @@ func executeSqlQuery(filter models.Filter, section string, view string, graph st
 	if errTpl != nil {
 		return "", errors.Wrap(errTpl, "invalid query template compiling")
 	}
-
-	fmt.Println("executing sql query:")                                                             ////
-	cleanQuery := strings.ReplaceAll(strings.ReplaceAll(queryString.String(), "\n", ""), "  ", " ") ////
-	fmt.Println(cleanQuery)                                                                         ////
 
 	// execute query
 	db := source.QueueInstance()
