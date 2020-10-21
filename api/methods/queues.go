@@ -31,11 +31,13 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"strings"
 	"text/template"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/pkg/errors"
 
 	"github.com/nethesis/nethvoice-report/api/cache"
 	"github.com/nethesis/nethvoice-report/api/configuration"
@@ -82,32 +84,28 @@ func GetQueueReports(c *gin.Context) {
 
 	// data is cached, return immediately
 	if errCache == nil {
+		fmt.Println("got cached result for", graph, queryType) ////
+
 		c.Data(http.StatusOK, "application/json; charset=utf-8", []byte(data))
 		return
 	}
 
 	// query result is not cached, execute query
 
-	queryFile := configuration.Config.QueryPath + "/" + section + "/" + view + "/" + graph
-
-	// check if query file exists
-	if _, errExists := os.Stat(queryFile); os.IsNotExist(errExists) {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "query file does not exists", "status": errExists.Error()})
-		return
-	}
-
 	var err error
 	var queryResult string
 
 	switch queryType {
 	case "sql":
-		queryResult, err = executeSqlQuery(queryFile, filter, section, view, graph, c)
+		queryResult, err = executeSqlQuery(filter, section, view, graph)
 		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"message": "error executing SQL query", "status": err.Error()})
 			return
 		}
 	default:
-		queryResult, err = executeRrdQuery(queryFile, filter, section, view, graph, c)
+		queryResult, err = executeRrdQuery(filter, section, view, graph)
 		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"message": "error executing RRD query", "status": err.Error()})
 			return
 		}
 	}
@@ -124,7 +122,13 @@ func GetQueueReports(c *gin.Context) {
 	c.Data(http.StatusOK, "application/json; charset=utf-8", []byte(queryResult))
 }
 
-func executeSqlQuery(queryFile string, filter models.Filter, section string, view string, graph string, c *gin.Context) (string, error) {
+func executeSqlQuery(filter models.Filter, section string, view string, graph string) (string, error) {
+	queryFile := configuration.Config.QueryPath + "/" + section + "/" + view + "/" + graph + ".sql"
+
+	// check if query file exists
+	if _, errExists := os.Stat(queryFile); os.IsNotExist(errExists) {
+		return "", errors.Wrap(errExists, "query file does not exists")
+	}
 
 	// parse template
 	q := template.Must(template.New(path.Base(queryFile)).Funcs(template.FuncMap{"ExtractStrings": utils.ExtractStrings}).Funcs(template.FuncMap{"ExtractPhones": utils.ExtractPhones}).Funcs(template.FuncMap{"ExtractOrigins": utils.ExtractOrigins}).Funcs(template.FuncMap{"ExtractSettings": utils.ExtractSettings}).ParseFiles(queryFile))
@@ -133,48 +137,64 @@ func executeSqlQuery(queryFile string, filter models.Filter, section string, vie
 	var queryString bytes.Buffer
 	errTpl := q.Execute(&queryString, &filter)
 	if errTpl != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "invalid query template compiling", "status": errTpl.Error()})
-		return "", errTpl
+		return "", errors.Wrap(errTpl, "invalid query template compiling")
 	}
+
+	fmt.Println("executing sql query:")                                                             ////
+	cleanQuery := strings.ReplaceAll(strings.ReplaceAll(queryString.String(), "\n", ""), "  ", " ") ////
+	fmt.Println(cleanQuery)                                                                         ////
 
 	// execute query
 	db := source.QueueInstance()
 	results, errQuery := db.Query(queryString.String())
 	if errQuery != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "invalid query execution", "status": errQuery.Error()})
-		return "", errQuery
+		return "", errors.Wrap(errQuery, "invalid query execution")
 	}
 
 	// close results
 	defer results.Close()
 
 	// parse results
-	data := utils.ParseResults(results)
+	data := utils.ParseSqlResults(results)
 	return data, nil
 }
 
-func executeRrdQuery(queryFile string, filter models.Filter, section string, view string, graph string, c *gin.Context) (string, error) {
-	rrdFile, errRead := ioutil.ReadFile(queryFile)
+func executeRrdQuery(filter models.Filter, section string, view string, graph string) (string, error) {
+	queryFile := configuration.Config.QueryPath + "/" + section + "/" + view + "/" + graph + ".rrd"
+
+	// check if query file exists
+	if _, errExists := os.Stat(queryFile); os.IsNotExist(errExists) {
+		return "", errExists
+	}
+
+	rrdFilePathContent, errRead := ioutil.ReadFile(queryFile)
 	if errRead != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "cannot open rrd file", "status": errRead.Error()})
-		return "", errRead
+		return "", errors.Wrap(errRead, "cannot open RRD file")
 	}
 
-	rrdFileString := string(rrdFile)
+	rrdFilePath := strings.TrimSpace(string(rrdFilePathContent))
+	zone, _ := time.Now().Zone()
 
-	fmt.Println("rrdFileString", rrdFileString) ////
+	officeHoursStart := utils.ExtractSettings("StartHour")
+	officeHoursEnd := utils.ExtractSettings("EndHour")
 
-	hostname, errHostname := os.Hostname()
-	if errHostname != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "cannot retrieve hostname", "status": errHostname.Error()})
-		return "", errHostname
+	dateTimeStart := filter.Time.Interval.Start + " " + officeHoursStart + " " + zone
+	dateTimeEnd := filter.Time.Interval.End + " " + officeHoursEnd + " " + zone
+
+	start, errTime := time.Parse("2006-01-02 15:04 MST", dateTimeStart)
+	if errTime != nil {
+		return "", errors.Wrap(errTime, "cannot parse time")
 	}
 
-	fmt.Println("==========================")
-	fmt.Println("==========================")
-	fmt.Println(hostname)
-	fmt.Println("==========================")
-	fmt.Println("==========================")
+	end, errTime := time.Parse("2006-01-02 15:04 MST", dateTimeEnd)
+	if errTime != nil {
+		return "", errors.Wrap(errTime, "cannot parse time")
+	}
 
-	return "", nil ////
+	results, errRrd := QueryRrd(rrdFilePath, filter, start, end, graph)
+	if errRrd != nil {
+		return "", errRrd
+	}
+
+	return results, nil
 }

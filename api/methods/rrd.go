@@ -1,41 +1,91 @@
 package methods
 
 import (
+	"encoding/json"
 	"fmt"
 	"math"
+	"os"
 	"strings"
 	"time"
 
+	"github.com/nethesis/nethvoice-report/api/configuration"
+	"github.com/nethesis/nethvoice-report/api/models"
+	"github.com/nethesis/nethvoice-report/api/utils"
+	"github.com/pkg/errors"
 	"github.com/ziutek/rrd"
 )
 
-/* Parameters
-field - valid values are "calls" or "agents"
-queue - queue number, eg 403
-*/
-func QueryQueueRRD(path string, field string, queue string, start time.Time, end time.Time) [][]interface{} { ////
-	var dbfile string
-	dbfile = fmt.Sprintf("%s/asterisk-queue_%s_%s/gauge-%s.rrd", path, field, queue, strings.Title(field))
-	return fetchRRD(dbfile, start, end)
+func QueryRrd(rrdFilePath string, filter models.Filter, start time.Time, end time.Time, graph string) (string, error) {
+	hostname, errHostname := os.Hostname()
+	if errHostname != nil {
+		return "", errors.Wrap(errHostname, "error retrieving hostname")
+	}
+
+	rrdRootPath := configuration.Config.RrdRootPath
+	var dbFile string
+	var rrdData [][]interface{}
+
+	// replace parameters in rrdFilePath (if any)
+
+	if strings.Contains(rrdFilePath, "?QUEUE") {
+
+		// execute RRD query for every queue in filter
+
+		if len(filter.Queues) == 0 {
+			return "[[\"!message\"], [\"queues field is required\"]]", nil
+		}
+
+		for i, queue := range filter.Queues {
+			rrdFilePathReplaced := strings.ReplaceAll(rrdFilePath, "?QUEUE", queue)
+
+			dbFile := fmt.Sprintf("%s/%s/%s", rrdRootPath, hostname, rrdFilePathReplaced)
+			results, errRrd := fetchRrd(dbFile, start, end, queue)
+			if errRrd != nil {
+				// log error and continue
+				utils.LogError(errRrd)
+			}
+
+			if i > 0 && len(results) > 0 {
+				// remove columns row before appending
+				results = results[1:]
+			}
+			rrdData = append(rrdData, results...)
+		}
+	} else {
+
+		// no parameters in query file path
+
+		var errRrd error
+		dbFile = fmt.Sprintf("%s/%s/%s", rrdRootPath, hostname, rrdFilePath)
+
+		rrdData, errRrd = fetchRrd(dbFile, start, end, graph) ////
+		if errRrd != nil {
+			return "", errRrd
+		}
+	}
+
+	data, errParse := ParseRrdResults(rrdData)
+	if errParse != nil {
+		return "", errParse
+	}
+	return data, nil
 }
 
-func QueryTotalCallsRRD(path string, start time.Time, end time.Time) [][]interface{} { ////
-	var dbfile string
-	dbfile = fmt.Sprintf("%s/asterisk-calls_total/gauge-Calls.rrd", path)
-	return fetchRRD(dbfile, start, end)
-}
-
-func fetchRRD(dbfile string, start time.Time, end time.Time) [][]interface{} {
+func fetchRrd(dbFile string, start time.Time, end time.Time, label string) ([][]interface{}, error) {
 	var data [][]interface{}
 
-	fetchRes, err := rrd.Fetch(dbfile, "AVERAGE", start, end, time.Second)
+	// fetch RRD data
+	fetchRes, err := rrd.Fetch(dbFile, "AVERAGE", start, end, time.Second)
 	if err != nil {
-		return data
+		return nil, errors.Wrap(err, "error fetching RRD data")
 	}
 	defer fetchRes.FreeValues()
 
+	// build columns
 	var columns []string
+	columns = append(columns, "label")
 	columns = append(columns, "timestamp")
+
 	for _, dsName := range fetchRes.DsNames {
 		columns = append(columns, dsName)
 	}
@@ -46,14 +96,19 @@ func fetchRRD(dbfile string, start time.Time, end time.Time) [][]interface{} {
 	}
 	data = append(data, tmp)
 
+	// build data records
 	row := 0
 	for ti := fetchRes.Start.Add(fetchRes.Step); ti.Before(end) || ti.Equal(end); ti = ti.Add(fetchRes.Step) {
 		var record []interface{}
-		record = append(record, int(ti.Unix()))
+		record = append(record, label)
+		timestamp := int(ti.Unix())
+		record = append(record, utils.EpochToHumanDate(timestamp))
+
 		for i := 0; i < len(fetchRes.DsNames); i++ {
 			v := fetchRes.ValueAt(i, row)
 			value := int(math.Round(v))
 
+			// set negative values (missing values) to zero
 			if value < 0 {
 				value = 0
 			}
@@ -62,6 +117,26 @@ func fetchRRD(dbfile string, start time.Time, end time.Time) [][]interface{} {
 		row++
 		data = append(data, record)
 	}
+	return data, nil
+}
 
-	return data
+func ParseRrdResults(rrdData [][]interface{}) (string, error) {
+	data := [][]string{}
+
+	for _, row := range rrdData {
+		record := []string{}
+
+		for _, value := range row {
+			record = append(record, fmt.Sprint(value))
+		}
+
+		// add record to data array
+		data = append(data, record)
+	}
+
+	// convert to json
+	dataJSON, _ := json.Marshal(data)
+
+	// return value
+	return string(dataJSON), nil
 }

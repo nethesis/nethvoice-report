@@ -28,7 +28,9 @@ import (
 	"fmt"
 	"os"
 	"reflect"
+	"strconv"
 	"strings"
+	"time"
 
 	"github.com/juliangruber/go-intersect"
 	"github.com/pkg/errors"
@@ -38,7 +40,7 @@ import (
 
 var excludedRoutes = [...]string{"/api/searches", "/api/filters/:section/:view"}
 
-func ParseResults(rows *sql.Rows) string {
+func ParseSqlResults(rows *sql.Rows) string {
 	// define data to return
 	data := [][]string{}
 
@@ -196,4 +198,13 @@ func ExtractSettings(settingName string) string {
 
 	// return value
 	return string(f.String())
+}
+
+func EpochToHumanDate(epochTime int) string {
+	i, err := strconv.ParseInt(strconv.Itoa(epochTime), 10, 64)
+	if err != nil {
+		return "-"
+	}
+	tm := time.Unix(i, 0)
+	return tm.Format("2006-01-02 15:04:05")
 }
