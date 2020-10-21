@@ -20,7 +20,7 @@ WHERE TRUE
     {{ end }}
     {{ if gt (len .Queues) 0 }}
         AND qname in ({{ ExtractStrings .Queues }})
-    {{ end }};
+    {{ end }}
     {{ if gt (len .Agents) 0 }}
         AND agent in ({{ ExtractStrings .Agents }})
     {{ end }}
@@ -28,8 +28,7 @@ WHERE TRUE
         AND cid in ({{ ExtractPhones .Phones true }})
     {{ end }}
 ORDER BY
-    period DESC
-;
+    period DESC;
 {{ else }}
 SELECT "timeIntervalStart and timeIntervalEnd are required" AS "!message";
 {{ end }}
