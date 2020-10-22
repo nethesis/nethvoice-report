@@ -206,35 +206,30 @@
             <sui-checkbox label toggle v-model="filter.nullCall" />
           </sui-form-field>
         </sui-grid>
-
         <sui-form-fields class="mg-top-md">
           <sui-button
             primary
             type="submit"
             icon="search"
             :disabled="loader.filter"
+            class="mr-15"
             >Search</sui-button
           >
-          <sui-button
-            type="button"
-            class="mg-right-sm"
-            @click.native="clearFilters()"
-            icon="eraser"
-            >Clear</sui-button
-          >
-          <sui-button
-            type="button"
-            @click.native="showSaveSearchModal(true)"
-            icon="save"
-            >Save search</sui-button
-          >
-          <sui-button
-            type="button"
-            :disabled="!selectedSearch"
-            @click.native="showOverwriteSearchModal(true)"
-            icon="edit"
-            >Overwrite search</sui-button
-          >
+          <sui-button-group>
+            <sui-button
+              type="button"
+              @click.native="showSaveSearchModal(true)"
+              icon="save"
+              >Save search</sui-button
+            >
+            <sui-button
+              type="button"
+              :disabled="!selectedSearch"
+              @click.native="showOverwriteSearchModal(true)"
+              icon="edit"
+              >Overwrite search</sui-button
+            >
+          </sui-button-group>
         </sui-form-fields>
       </sui-form>
 
@@ -321,6 +316,7 @@
     <FixedBar
       :filter="filter"
       :selectedSearch="selectedSearch"
+      :afterClear="afterClear"
       :showFilterTimeGroup="showFilterTimeGroup"
       :showFilterTime="showFilterTime"
       :showFilterQueue="showFilterQueue"
@@ -431,6 +427,7 @@ export default {
       ],
       phoneBook: [],
       queueReportViewFilterMap: null,
+      afterClear: false
     };
   },
   watch: {
@@ -499,6 +496,10 @@ export default {
       if (this.loader.filter == false) {
         this.applyFilters();
       }
+    });
+    this.$root.$on("clearFilters", () => {
+      this.clearFilters()
+      this.afterClear = true
     });
   },
   methods: {
@@ -1140,6 +1141,7 @@ export default {
       this.filter.origins = [];
       this.filter.caller = "";
       this.filter.contactName = "";
+      this.applyFilters()
     },
   },
   computed: {

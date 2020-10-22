@@ -63,7 +63,7 @@ export default {
   width: 45px;
   height: 45px;
   display: block;
-  right: 25px;
+  right: 23px;
   bottom: 18px;
   border: none;
   opacity: 0;

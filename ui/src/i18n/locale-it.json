@@ -27,7 +27,8 @@
       "caller_label": "Chiamante",
       "contact_name_label": "Nome contatto / Azienda",
       "null_call_label": "Chiamate nulle",
-      "reasons_label": "Ragione"
+      "reasons_label": "Ragione",
+      "clear_filters": "Cancella filtri"
     },
     "menu": {
       "dashboard": "Dashboard",

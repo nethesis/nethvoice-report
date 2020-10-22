@@ -156,8 +156,10 @@
             {{activeFilters.nullCall}}
           </span>
         </div>
+        <div class="clear-filters">
+          <a @click="clearFilters()">{{$t('filter.clear_filters')}}</a>
+        </div>
       </sui-container>
-      <div style="width: 10px; color:red;"></div>
     </div>
   </div>
 </template>
@@ -174,6 +176,7 @@ export default {
   props: [
     "filter",
     "selectedSearch",
+    "afterClear",
     "showFilterTimeGroup",
     "showFilterTime",
     "showFilterQueue",
@@ -237,12 +240,18 @@ export default {
           this.isFixed = false
         }
       }
+    },
+    clearFilters() {
+      this.$root.$emit("clearFilters")
     }
   },
   watch: {
     "filter": {
       handler: function () {
-        this.fixedBarUpdate = true
+        if (!this.afterClear) {
+          this.fixedBarUpdate = true
+          this.afterClear = false
+        }
       },
       deep: true
     },
@@ -311,7 +320,7 @@ export default {
 }
 
 .fixedbar {
-  padding: 7px 0px 4px 0px !important;
+  padding: 8px 0px 4px 0px !important;
   background: #ffffff;
   margin-top: 20px;
   min-height: 39px !important;
@@ -343,5 +352,11 @@ export default {
       font-size: 13px;
     }
   }
+}
+
+.clear-filters {
+  display: inline-block;
+  margin: 0px 10px;
+  cursor: pointer;
 }
 </style>

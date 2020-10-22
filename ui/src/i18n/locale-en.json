@@ -27,7 +27,8 @@
       "caller_label": "Caller",
       "contact_name_label": "Contact name / Company",
       "null_call_label": "Null call",
-      "reasons_label": "Reason"
+      "reasons_label": "Reason",
+      "clear_filters": "Clear all filters"
     },
     "menu": {
       "queue": "Queue report",
