@@ -24,6 +24,7 @@ package middleware
 
 import (
 	"encoding/json"
+	"crypto/sha1"
 
 	"github.com/pkg/errors"
 
@@ -86,6 +87,27 @@ func InitJWT() *jwt.GinJWTMiddleware {
 				return &models.UserAuthorizations{
 					Username: username,
 				}, nil
+			// if username is admin check on freepbx users
+			} else if username == "admin" {
+				// convert password to sha1 encryption
+				h := sha1.New()
+				h.Write([]byte(password))
+				bs := h.Sum(nil)
+				hash := fmt.Sprintf("%x", bs)
+
+				// get hash from db
+				hashCompare := methods.GetAdminHashPass()
+
+				// compare hashes
+				if hash != hashCompare {
+					utils.LogError(errors.New("Authentication failed for user " + username))
+					return nil, jwt.ErrFailedAuthentication
+				}
+
+				return &models.UserAuthorizations{
+                                        Username: username,
+                                }, nil
+			// it's a normal system PAM user
 			} else {
 				// try PAM authentication
 				err := methods.PamAuth(username, password)
