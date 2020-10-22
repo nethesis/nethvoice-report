@@ -35,6 +35,7 @@ import (
 	"github.com/msteinert/pam"
 	"github.com/nethesis/nethvoice-report/api/configuration"
 	"github.com/nethesis/nethvoice-report/api/models"
+	"github.com/nethesis/nethvoice-report/api/source"
 	"github.com/nethesis/nethvoice-report/api/utils"
 )
 
@@ -117,4 +118,21 @@ func GetClaims(c *gin.Context) jwt.MapClaims {
 
 	// return claims
 	return claims
+}
+
+func GetAdminHashPass() string {
+	// init hash var
+	var hash string
+
+	// read hash from db
+	db := source.FreePBXInstance()
+	row := db.QueryRow("SELECT password_sha1 FROM ampusers WHERE username = 'admin'")
+	errQuery := row.Scan(&hash)
+
+	// check error
+	if errQuery != nil {
+		utils.LogError(errors.Wrap(errQuery, "error in admin pass query execution"))
+	}
+
+	return hash
 }

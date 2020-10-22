@@ -34,6 +34,7 @@ import (
 
 var dbQ *sql.DB
 var dbP *sql.DB
+var dbF *sql.DB
 
 func QueueInstance() *sql.DB {
 	if dbQ == nil {
@@ -47,6 +48,13 @@ func PhonebookInstance() *sql.DB {
 		dbP = PhonebookInit()
 	}
 	return dbP
+}
+
+func FreePBXInstance() *sql.DB {
+        if dbF == nil {
+                dbF = FreePBXInit()
+        }
+        return dbF
 }
 
 func QueueInit() *sql.DB {
@@ -79,4 +87,20 @@ func PhonebookInit() *sql.DB {
 
 	// return db object
 	return db
+}
+
+func FreePBXInit() *sql.DB {
+        // define uri connection string
+        uri := configuration.Config.FreePBXDatabase.User + ":" + configuration.Config.FreePBXDatabase.Password + "@tcp(" + configuration.Config.FreePBXDatabase.Host + ":" + configuration.Config.FreePBXDatabase.Port + ")/" + configuration.Config.FreePBXDatabase.Name
+
+        // connect to database
+        db, err := sql.Open("mysql", uri+"?charset=utf8&parseTime=True")
+
+        // handle error
+        if err != nil {
+                utils.LogError(errors.Wrap(err, "error connecting to database"))
+        }
+
+        // return db object
+        return db
 }
