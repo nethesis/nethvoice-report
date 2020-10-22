@@ -103,7 +103,6 @@ export default {
       rows: [],
       hasDoubleHeader: false,
       doubleHeader: [],
-      subHeaders: [],
     };
   },
   watch: {
@@ -128,39 +127,25 @@ export default {
       }
     },
   },
-  // computed: { ////
-  // subHeaders: function () {
-  //   ////
-  //   let allSubHeaders = [];
-  //   this.doubleHeader.forEach((header) => {
-  //     if (header.subHeaders && header.subHeaders.length) {
-  //       allSubHeaders = allSubHeaders.concat(header.subHeaders);
-  //     }
-  //   });
-
-  //   console.log("allSubHeaders", allSubHeaders); ////
-
-  //   return allSubHeaders;
-  // },
-  // },
+  computed: {
+    subHeaders: function () {
+      const subHeaders = this.columns.filter((column) => {
+        return column.superHeader;
+      });
+      return subHeaders;
+    },
+  },
   methods: {
     parseColumns(rawColumns) {
       this.doubleHeader = [];
-      this.subHeaders = [];
       let columns = [];
 
       rawColumns.forEach((rawColumn) => {
         let column = {};
 
-        // console.log("rawColumn", rawColumn); ////
-
         // e.g. notProcessed$joinempty£num#hide
         var colRegex = /^(([^$£#]*)(\$))?([^$£#]+)£?([^$£#]*)(#hide)?$/g;
         var match = colRegex.exec(rawColumn);
-
-        // match.forEach((m, i) => { ////
-        //   console.log(i, m);
-        // });
 
         const superHeaderName = match[2];
         column.name = match[4];
@@ -174,7 +159,6 @@ export default {
               name: column.name,
               hidden: column.hidden,
             };
-            this.subHeaders.push(subHeader); //// subHeaders è un computed basatu su columns anizché dobuleHeader
 
             const headerFound = this.doubleHeader.find((h) => {
               return h.name == superHeaderName;
@@ -188,14 +172,12 @@ export default {
                 expanded: false,
                 expandible: column.hidden,
               };
-              subHeader.superHeader = superHeader; //// remove?
               column.superHeader = superHeader;
 
               this.doubleHeader.push(superHeader);
             } else {
               // add sub-header to existing primary header
               headerFound.subHeaders.push(subHeader);
-              subHeader.superHeader = headerFound; //// remove?
               column.superHeader = headerFound;
 
               if (column.hidden) {
@@ -212,8 +194,6 @@ export default {
     },
     toggleExpandHeader(header) {
       header.expanded = !header.expanded;
-
-      console.log("header.expanded", header.expanded); ////
     },
   },
 };
