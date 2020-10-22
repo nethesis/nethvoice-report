@@ -36,6 +36,7 @@ event_actions('nethvoice-report-update', qw(
 
 event_templates('nethvoice-report-update', qw(
 	/opt/nethvoice-report/api/conf.json
+    /etc/httpd/conf.d/default-virtualhost.inc
 ));
 
 event_services('nethvoice-report-update', qw(
