@@ -45,7 +45,7 @@ def parse_calls():
         line = line.decode()
         # skip empty line
         if re.match("^\s*$", line):
-            pass
+            continue
 
         matches = re.findall('^(\d+)\s+active\s+call.*$',line)
         if matches:
@@ -63,7 +63,7 @@ def parse_queues():
         line = line.decode()
         # skip empty line
         if re.match("^\s*$", line):
-            pass
+            continue
 
         # search for queue header (numeric only, skip queue with alphanumeric name)
         matches = re.findall('^([0-9]+)\s+has\s+(\d+)\s+call.*$', line)
@@ -75,19 +75,19 @@ def parse_queues():
 
             # initialize also agent dict to avoid later error
             agents[queue] = 0
-            pass
+            continue
 
         # search for empty queue
         if re.match('^\s+No Members$', line):
             if last_queue is not None:
                 agents[last_queue] = 0
-                pass
+                continue
 
         # search for member
         if "has taken" in line:
             if last_queue is not None:
                 agents[last_queue] = agents[last_queue] + 1
-                pass
+                continue
 
     return (agents, calls, calls_total)
 
