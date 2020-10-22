@@ -18,6 +18,7 @@
         <div class="mg-3-em">
           <router-view />
         </div>
+        <BackToTop scrollTop="400" />
       </div>
     </div>
     <!-- end logged view -->
@@ -28,6 +29,7 @@
 import Login from "./views/Login.vue";
 import LeftSidebar from "./components/LeftSidebar.vue";
 import TopBar from "./components/TopBar.vue";
+import BackToTop from "./components/BackToTop.vue";
 
 import LoginService from "./services/login";
 import StorageService from "./services/storage";
@@ -38,6 +40,7 @@ export default {
     Login: Login,
     LeftSidebar: LeftSidebar,
     TopBar: TopBar,
+    BackToTop: BackToTop
   },
   mixins: [LoginService, StorageService],
   mounted() {
