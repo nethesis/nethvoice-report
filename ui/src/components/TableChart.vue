@@ -6,7 +6,7 @@
         <sui-table-header-cell
           v-for="(column, index) in columns"
           v-bind:key="index"
-          >{{ $t(column) }}</sui-table-header-cell
+          >{{ $t(column.name) }}</sui-table-header-cell
         >
       </sui-table-row>
     </sui-table-header>
@@ -19,29 +19,72 @@
           v-for="(header, index) in doubleHeader"
           v-bind:key="index"
           :rowspan="header.subHeaders == null ? '2' : '1'"
-          :colspan="header.subHeaders ? header.subHeaders.length : '1'"
-          >{{ $t(header.name) }}</sui-table-header-cell
+          :colspan="
+            header.subHeaders && (header.expanded || !header.expandible)
+              ? header.subHeaders.length
+              : '1'
+          "
         >
+          {{ $t(header.name) }}
+          <a
+            href="#"
+            v-show="header.subHeaders && header.expandible"
+            @click="toggleExpandHeader(header)"
+          >
+            {{
+              header.expanded
+                ? "[" + $t("compress") + "]"
+                : "[" + $t("expand") + "]"
+            }}
+          </a>
+        </sui-table-header-cell>
       </sui-table-row>
       <!-- sub-header -->
       <sui-table-row>
         <sui-table-header-cell
+          v-show="
+            !header.superHeader || header.superHeader.expanded || !header.hidden
+          "
           v-for="(header, index) in subHeaders"
           v-bind:key="index"
-          >{{ $t(header) }}</sui-table-header-cell
+          >{{ $t(header.name) }}</sui-table-header-cell
         >
       </sui-table-row>
     </sui-table-header>
 
     <sui-table-body>
       <sui-table-row v-for="(row, index) in rows" v-bind:key="index">
-        <sui-table-cell v-for="(element, index) in row" v-bind:key="index">{{
-          element
-        }}</sui-table-cell>
-      </sui-table-row>
-      <!-- no data -->
-      <sui-table-row v-if="!rows.length">
-        <sui-table-cell :colspan="columns.length" class="no-data">{{ $t("no_data") }}</sui-table-cell>
+        <sui-table-cell
+          v-for="(element, index) in row"
+          v-show="
+            !columns[index].superHeader ||
+            columns[index].superHeader.expanded ||
+            !columns[index].hidden
+          "
+          v-bind:key="index"
+        >
+          <span v-if="columns[index].format == 'num'">
+            {{ element | formatNumber }}
+          </span>
+          <span v-else-if="columns[index].format == 'seconds'">
+            {{ element | formatTime }}
+          </span>
+          <span v-else-if="columns[index].format == 'percent'">
+            {{ element | formatPercentage }}
+          </span>
+          <span v-else-if="columns[index].format == 'label'">
+            {{ $t(element) }}
+          </span>
+          <span v-else-if="columns[index].format == 'monthDate'">
+            {{ element | formatMonthDate($i18n) }}
+          </span>
+          <span v-else-if="columns[index].format == 'weekDate'">
+            {{ element | formatWeekDate($i18n) }}
+          </span>
+          <span v-else>
+            {{ element }}
+          </span>
+        </sui-table-cell>
       </sui-table-row>
     </sui-table-body>
   </sui-table>
@@ -60,6 +103,7 @@ export default {
       rows: [],
       hasDoubleHeader: false,
       doubleHeader: [],
+      subHeaders: [],
     };
   },
   watch: {
@@ -69,20 +113,14 @@ export default {
         this.hasDoubleHeader = this.data[0].some((h) => {
           return h.includes("$");
         });
-        this.columns = this.data[0];
+        let rawColumns = this.data[0];
 
         if (this.data.length > 1) {
           this.rows = this.data.slice(1);
         } else {
           this.rows = [];
         }
-        this.formatData();
-
-        if (this.hasDoubleHeader) {
-          this.parseDoubleHeader();
-        } else {
-          this.doubleHeader = [];
-        }
+        this.parseColumns(rawColumns);
       } else {
         this.columns = [];
         this.rows = [];
@@ -90,77 +128,96 @@ export default {
       }
     },
   },
-  computed: {
-    subHeaders: function () {
-      let allSubHeaders = [];
-      this.doubleHeader.forEach((header) => {
-        if (header.subHeaders && header.subHeaders.length) {
-          allSubHeaders = allSubHeaders.concat(header.subHeaders);
-        }
-      });
-      return allSubHeaders;
-    },
-  },
+  // computed: { ////
+  // subHeaders: function () {
+  //   ////
+  //   let allSubHeaders = [];
+  //   this.doubleHeader.forEach((header) => {
+  //     if (header.subHeaders && header.subHeaders.length) {
+  //       allSubHeaders = allSubHeaders.concat(header.subHeaders);
+  //     }
+  //   });
+
+  //   console.log("allSubHeaders", allSubHeaders); ////
+
+  //   return allSubHeaders;
+  // },
+  // },
   methods: {
-    parseDoubleHeader() {
+    parseColumns(rawColumns) {
       this.doubleHeader = [];
+      this.subHeaders = [];
+      let columns = [];
 
-      this.columns.forEach((column) => {
-        if (column.includes("$")) {
-          const headers = column.split("$");
-          const primaryHeader = headers[0];
-          const subHeader = headers[1];
+      rawColumns.forEach((rawColumn) => {
+        let column = {};
 
-          const headerFound = this.doubleHeader.find((h) => {
-            return h.name == primaryHeader;
-          });
+        // console.log("rawColumn", rawColumn); ////
 
-          if (!headerFound) {
-            // add primary header and its sub-header
-            this.doubleHeader.push({
-              name: primaryHeader,
-              subHeaders: [subHeader],
+        // e.g. notProcessed$joinempty£num#hide
+        var colRegex = /^(([^$£#]*)(\$))?([^$£#]+)£?([^$£#]*)(#hide)?$/g;
+        var match = colRegex.exec(rawColumn);
+
+        // match.forEach((m, i) => { ////
+        //   console.log(i, m);
+        // });
+
+        const superHeaderName = match[2];
+        column.name = match[4];
+        column.format = match[5];
+        column.hidden = match[6] == "#hide";
+        columns.push(column);
+
+        if (this.hasDoubleHeader) {
+          if (superHeaderName) {
+            const subHeader = {
+              name: column.name,
+              hidden: column.hidden,
+            };
+            this.subHeaders.push(subHeader); //// subHeaders è un computed basatu su columns anizché dobuleHeader
+
+            const headerFound = this.doubleHeader.find((h) => {
+              return h.name == superHeaderName;
             });
+
+            if (!headerFound) {
+              // add primary header and its sub-header
+              const superHeader = {
+                name: superHeaderName,
+                subHeaders: [subHeader],
+                expanded: false,
+                expandible: column.hidden,
+              };
+              subHeader.superHeader = superHeader; //// remove?
+              column.superHeader = superHeader;
+
+              this.doubleHeader.push(superHeader);
+            } else {
+              // add sub-header to existing primary header
+              headerFound.subHeaders.push(subHeader);
+              subHeader.superHeader = headerFound; //// remove?
+              column.superHeader = headerFound;
+
+              if (column.hidden) {
+                headerFound.expandible = true;
+              }
+            }
           } else {
-            // add sub-header to existing primary header
-            headerFound.subHeaders.push(subHeader);
+            // add single header
+            this.doubleHeader.push({ name: column.name });
           }
-        } else {
-          // add single header
-          this.doubleHeader.push({ name: column, subHeaders: null });
         }
       });
+      this.columns = columns;
     },
-    formatData() {
-      const context = this;
+    toggleExpandHeader(header) {
+      header.expanded = !header.expanded;
 
-      // change columns and rows arrays while iterating on them
-      this.columns.forEach(function (column, colIndex) {
-        if (column.includes("£")) {
-          const tokens = column.split("£");
-          const columnName = tokens[0];
-          const format = tokens[1];
-
-          // remove format from column name
-          this[colIndex] = columnName;
-
-          // format cell value in all data rows
-          context.rows.forEach(function (row, rowIndex) {
-            this[rowIndex][colIndex] = context.formatValue(
-              this[rowIndex][colIndex],
-              format
-            );
-          }, context.rows);
-        }
-      }, this.columns);
+      console.log("header.expanded", header.expanded); ////
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.no-data {
-  text-align: center !important;
-  font-style: italic;
-}
 </style>

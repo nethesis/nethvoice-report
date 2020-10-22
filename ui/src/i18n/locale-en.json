@@ -116,6 +116,8 @@
     "queueName": "Queue name",
     "show_details": "Show details",
     "others": "Others",
-    "office_hours_description": "Office hours are used to display report charts. Some charts plot data only inside office hours (e.g. Queue report > Graphs > Average duration)"
+    "office_hours_description": "Office hours are used to display report charts. Some charts plot data only inside office hours (e.g. Queue report > Graphs > Average duration)",
+    "expand": "expand",
+    "compress": "compress"
   }
 }
