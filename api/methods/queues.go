@@ -95,7 +95,7 @@ func GetQueueReports(c *gin.Context) {
 
 	switch queryType {
 	case "sql":
-		queryResult, err = executeSqlQuery(filter, section, view, graph)
+		queryResult, err = executeSqlQuery(filter, section, view, graph, c)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"message": "error executing SQL query", "status": err.Error()})
 			return
@@ -120,12 +120,30 @@ func GetQueueReports(c *gin.Context) {
 	c.Data(http.StatusOK, "application/json; charset=utf-8", []byte(queryResult))
 }
 
-func executeSqlQuery(filter models.Filter, section string, view string, graph string) (string, error) {
+func executeSqlQuery(filter models.Filter, section string, view string, graph string, c *gin.Context) (string, error) {
 	queryFile := configuration.Config.QueryPath + "/" + section + "/" + view + "/" + graph + ".sql"
 
 	// check if query file exists
 	if _, errExists := os.Stat(queryFile); os.IsNotExist(errExists) {
 		return "", errors.Wrap(errExists, "query file does not exists")
+	}
+
+	// if no queue has been selected, restrict filter to allowed queues
+	if len(filter.Queues) == 0 {
+		allowedQueues, errQueues := GetAllowedQueues(c)
+		if errQueues != nil {
+			return "", errors.Wrap(errQueues, "cannot retrieve allowed queues")
+		}
+		filter.Queues = allowedQueues
+	}
+
+	// if no agent has been selected, restrict filter to allowed agents
+	if len(filter.Agents) == 0 {
+		allowedAgents, errAgents := GetAllowedAgents(c)
+		if errAgents != nil {
+			return "", errors.Wrap(errAgents, "cannot retrieve allowed agents")
+		}
+		filter.Agents = allowedAgents
 	}
 
 	// parse template

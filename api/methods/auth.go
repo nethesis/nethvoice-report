@@ -100,7 +100,7 @@ func GetUserAuthorizations(username string) (models.UserAuthorizations, error) {
 	return userAuthorizations, errors.New("username not found in authorizations file")
 }
 
-func GetAuthorizations(c *gin.Context) {
+func GetAuthorizations(c *gin.Context) { //// not used?
 	// get current user
 	user := GetClaims(c)["id"].(string)
 
@@ -135,4 +135,28 @@ func GetAdminHashPass() string {
 	}
 
 	return hash
+}
+
+func GetAllowedQueues(c *gin.Context) ([]string, error) {
+	// get current user
+	user := GetClaims(c)["id"].(string)
+
+	// get user auths
+	auths, err := GetUserAuthorizations(user)
+	if err != nil {
+		return nil, err
+	}
+	return auths.Queues, nil
+}
+
+func GetAllowedAgents(c *gin.Context) ([]string, error) {
+	// get current user
+	user := GetClaims(c)["id"].(string)
+
+	// get user auths
+	auths, err := GetUserAuthorizations(user)
+	if err != nil {
+		return nil, err
+	}
+	return auths.Agents, nil
 }
