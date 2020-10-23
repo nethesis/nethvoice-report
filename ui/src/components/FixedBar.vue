@@ -176,7 +176,6 @@ export default {
   props: [
     "filter",
     "selectedSearch",
-    "afterClear",
     "showFilterTimeGroup",
     "showFilterTime",
     "showFilterQueue",
@@ -198,7 +197,6 @@ export default {
       activeFilters: {},
       activeSelectedSearch: "",
       isFixed: false,
-      fixedBarUpdate: true,
       offsetTop: "",
       styleObject: {
         "min-height": "62px"
@@ -209,9 +207,6 @@ export default {
     this.$root.$on("applyFilters", () => {
       this.activeFilters = this.lodash.cloneDeep(this.filter)
       this.activeSelectedSearch = this.lodash.cloneDeep(this.selectedSearch)
-    })
-    this.$root.$on("toggleFilters", () => {
-      this.fixedBarUpdate = true
     })
     if (this.lodash.isEmpty(this.activeFilters)) {
       this.$root.$emit("applyFilters")
@@ -226,13 +221,12 @@ export default {
   methods: {
     scrollHandler(evt) {
       if (evt.target.attributes["views-wrapper"]) {
-        if (this.fixedBarUpdate) {
+        if (!this.isFixed) {
           let fixedbar = document.querySelector(".fixedbar")
           if (fixedbar !== null) {
             this.offsetTop = fixedbar.offsetTop
             this.styleObject["min-height"] = fixedbar.offsetHeight + fixedbar.style.marginTop
           }
-          this.fixedBarUpdate = false
         }
         if (this.offsetTop <= evt.target.scrollTop) {
           this.isFixed = true
@@ -246,15 +240,6 @@ export default {
     }
   },
   watch: {
-    "filter": {
-      handler: function () {
-        if (!this.afterClear) {
-          this.fixedBarUpdate = true
-          this.afterClear = false
-        }
-      },
-      deep: true
-    },
     "activeFilters.time.interval": function () {
       if (this.activeFilters.time && this.activeFilters.time.interval) {
         this.activeFilters.time.interval.start = this.formatDate(this.activeFilters.time.interval.start)
@@ -263,47 +248,47 @@ export default {
     },
     "activeFilters.queues": function () {
       if (this.activeFilters.queues && this.lodash.isArray(this.activeFilters.queues) && this.activeFilters.queues.length > 0) {
-        this.activeFilters.queues = this.activeFilters.queues.join(",")
+        this.activeFilters.queues = this.activeFilters.queues.join(", ")
       }
     },
     "activeFilters.groups": function () {
       if (this.activeFilters.groups && this.lodash.isArray(this.activeFilters.groups) && this.activeFilters.groups.length > 0) {
-        this.activeFilters.groups = this.activeFilters.groups.join(",")
+        this.activeFilters.groups = this.activeFilters.groups.join(", ")
       }
     },
     "activeFilters.agents": function () {
       if (this.activeFilters.agents && this.lodash.isArray(this.activeFilters.agents) && this.activeFilters.agents.length > 0) {
-        this.activeFilters.agents = this.activeFilters.agents.join(",")
+        this.activeFilters.agents = this.activeFilters.agents.join(", ")
       }
     },
     "activeFilters.reasons": function () {
       if (this.activeFilters.reasons && this.lodash.isArray(this.activeFilters.reasons) && this.activeFilters.reasons.length > 0) {
-        this.activeFilters.reasons = this.activeFilters.reasons.join(",")
+        this.activeFilters.reasons = this.activeFilters.reasons.join(", ")
       }
     },
     "activeFilters.results": function () {
       if (this.activeFilters.results && this.lodash.isArray(this.activeFilters.results) && this.activeFilters.results.length > 0) {
-        this.activeFilters.results = this.activeFilters.results.join(",")
+        this.activeFilters.results = this.activeFilters.results.join(", ")
       }
     },
     "activeFilters.ivrs": function () {
       if (this.activeFilters.ivrs && this.lodash.isArray(this.activeFilters.ivrs) && this.activeFilters.ivrs.length > 0) {
-        this.activeFilters.ivrs = this.activeFilters.ivrs.join(",")
+        this.activeFilters.ivrs = this.activeFilters.ivrs.join(", ")
       }
     },
     "activeFilters.choices": function () {
       if (this.activeFilters.choices && this.lodash.isArray(this.activeFilters.choices) && this.activeFilters.choices.length > 0) {
-        this.activeFilters.choices = this.activeFilters.choices.join(",")
+        this.activeFilters.choices = this.activeFilters.choices.join(", ")
       }
     },
     "activeFilters.origins": function () {
       if (this.activeFilters.origins && this.lodash.isArray(this.activeFilters.origins) && this.activeFilters.origins.length > 0) {
-        this.activeFilters.origins = this.activeFilters.origins.join(",")
+        this.activeFilters.origins = this.activeFilters.origins.join(", ")
       }
     },
     "activeFilters.destinations": function () {
       if (this.activeFilters.destinations && this.lodash.isArray(this.activeFilters.destinations) && this.activeFilters.destinations.length > 0) {
-        this.activeFilters.destinations = this.activeFilters.destinations.join(",")
+        this.activeFilters.destinations = this.activeFilters.destinations.join(", ")
       }
     }
   }

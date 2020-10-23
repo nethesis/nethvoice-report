@@ -316,7 +316,6 @@
     <FixedBar
       :filter="filter"
       :selectedSearch="selectedSearch"
-      :afterClear="afterClear"
       :showFilterTimeGroup="showFilterTimeGroup"
       :showFilterTime="showFilterTime"
       :showFilterQueue="showFilterQueue"
@@ -426,8 +425,7 @@ export default {
         { value: "10", text: "10 minutes" },
       ],
       phoneBook: [],
-      queueReportViewFilterMap: null,
-      afterClear: false
+      queueReportViewFilterMap: null
     };
   },
   watch: {
@@ -499,7 +497,6 @@ export default {
     });
     this.$root.$on("clearFilters", () => {
       this.clearFilters()
-      this.afterClear = true
     });
   },
   methods: {
