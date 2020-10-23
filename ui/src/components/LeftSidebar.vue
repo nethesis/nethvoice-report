@@ -1,5 +1,11 @@
 <template>
 <sui-menu is="sui-sidebar" id="docs-menu" inverted="true" vertical="true" animation="overlay" v-bind:visible="true">
+  <sui-menu-item>
+    <i class="user icon align-left mr-10 no-margin-left"></i>
+    <strong>
+      {{loggedUsername}}
+    </strong>
+  </sui-menu-item>
   <sui-menu-item class="report-switch-row">
     <!-- <sui-image :src="`/static/images/logo.png`" spaced="right" size="mini" /> -->
     <div class="report-switch-container">
@@ -95,6 +101,7 @@ export default {
       search: "",
       taggedRoutes: [],
       selectedReport: this.get("selectedReport") || 'queue',
+      loggedUsername: this.get("loggedUser").username
     }
   },
   watch: {
@@ -207,6 +214,10 @@ export default {
   height: 12px;
 }
 
+#docs-menu {
+  z-index: 10001;
+}
+
 #docs-menu:hover::-webkit-scrollbar-thumb {
   background-color: rgba(255, 255, 255, 0.25);
 }
@@ -217,5 +228,13 @@ export default {
 
 #docs-menu::-webkit-scrollbar-track {
   background-color: rgba(255, 255, 255, 0);
+}
+
+.align-left {
+  float: left !important;
+}
+
+.no-margin-left {
+  margin-left: 0px !important;
 }
 </style>

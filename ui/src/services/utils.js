@@ -32,7 +32,7 @@ var UtilService = {
           "default": ["time", "queue"],
         },
         "data": {
-          "summary": ["timeGroup", "time", "queue"],
+          "summary": ["timeGroup", "time", "queue", "agent"],
           "agent": ["timeGroup", "time", "queue", "agent"],
           "session": ["time", "queue", "reason", "agent"],
           "caller": ["timeGroup", "time", "queue", "caller", "contactName"],
@@ -85,6 +85,17 @@ var UtilService = {
           return value;
       }
     },
+    formatDate(date) {
+      let d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+      if (month.length < 2) 
+          month = '0' + month;
+      if (day.length < 2) 
+          day = '0' + day;
+      return [year, month, day].join('/');
+    }
   },
 };
 export default UtilService;

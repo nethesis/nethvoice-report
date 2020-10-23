@@ -1,7 +1,43 @@
-.component-body {
-    position: relative;
-    margin-left: 3em !important;
-    margin-right: 3em !important;
-    padding: 2em 0em 7em;
-    width: auto;
+.mb-5 {
+    margin-bottom: 5px !important;
+}
+
+.mb-10 {
+    margin-bottom: 10px !important;
+}
+
+.mb-15 {
+    margin-bottom: 15px !important;
+}
+
+.mb-20 {
+    margin-bottom: 20px !important;
+}
+
+.mt-5 {
+    margin-top: 5px !important;
+}
+
+.mt-10 {
+    margin-top: 10px !important;
+}
+
+.mt-15 {
+    margin-top: 15px !important;
+}
+
+.mt-20 {
+    margin-top: 210px !important;
+}
+
+.mr-10 {
+    margin-right: 10px !important;
+}
+
+.mr-15 {
+    margin-right: 15px !important;
+}
+
+.mr-20 {
+    margin-right: 20px !important;
 }

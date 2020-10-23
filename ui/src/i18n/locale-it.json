@@ -1,3 +1,39 @@
 {
-  "it": {}
+  "it": {
+    "filter": {
+      "group_by": "Raggruppato per",
+      "saved_search": "Ricerche salvate",
+      "delete_search": "Elimina ricerca",
+      "time_interval": "Intervallo temporale",
+      "yesterday": "Ieri",
+      "last_week": "Ultima settimana",
+      "last_month": "Ultimo mese",
+      "day": "Giorno",
+      "week": "Settimana",
+      "month": "Mese",
+      "year": "Anno",
+      "dates_placeholder": "Seleziona l'intervallo di date",
+      "dates_label": "Data inizio/fine",
+      "queues_label": "Code",
+      "groups_label": "Gruppi",
+      "agents_label": "Agenti",
+      "ivrs_label": "IVR",
+      "choices_label": "Scelta IVR",
+      "origins_label": "Origini",
+      "origins_placeholder": "CAP, distretto, provincia or regione",
+      "destinations_label": "Destinazioni",
+      "results_label": "Risultati",
+      "time_split_label": "Periodo",
+      "caller_label": "Chiamante",
+      "contact_name_label": "Nome contatto / Azienda",
+      "null_call_label": "Chiamate nulle",
+      "reasons_label": "Ragione",
+      "clear_filters": "Cancella filtri"
+    },
+    "menu": {
+      "dashboard": "Dashboard",
+      "filters": "Filtri",
+      "active_filters": "Filtri attivi"
+    }
+  }
 }
