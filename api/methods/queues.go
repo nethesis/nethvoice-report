@@ -186,12 +186,8 @@ func executeRrdQuery(filter models.Filter, section string, view string, graph st
 
 	rrdFilePath := strings.TrimSpace(string(rrdFilePathContent))
 	zone, _ := time.Now().Zone()
-
-	officeHoursStart := utils.ExtractSettings("StartHour")
-	officeHoursEnd := utils.ExtractSettings("EndHour")
-
-	dateTimeStart := filter.Time.Interval.Start + " " + officeHoursStart + " " + zone
-	dateTimeEnd := filter.Time.Interval.End + " " + officeHoursEnd + " " + zone
+	dateTimeStart := filter.Time.Interval.Start + " 00:00 " + zone
+	dateTimeEnd := filter.Time.Interval.End + " 23:59 " + zone
 
 	start, errTime := time.Parse("2006-01-02 15:04 MST", dateTimeStart)
 	if errTime != nil {
