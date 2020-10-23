@@ -13,7 +13,7 @@ SELECT
     reason
 FROM
     agentsessions
-WHERE TRUE
+WHERE reason NOT LIKE "Local/%" AND reason IS NOT NULL AND reason != "" 
     {{ if and .Time.Interval.Start .Time.Interval.End }}
         AND Date_format(From_unixtime(timestamp_in), "%Y-%m-%d %H:%i:%s") >= "{{ .Time.Interval.Start }}"
         AND Date_format(From_unixtime(timestamp_out), "%Y-%m-%d %H:%i:%s") <= "{{ .Time.Interval.End }}"
