@@ -83,7 +83,9 @@
     },
     "caption": {
       "test-total-calls-for-queue": "Total calls for queue",
-      "test-hourly-distribution": "Hourly distribution"
+      "test-hourly-distribution": "Hourly distribution",
+      "performance": "Performance",
+      "qos": "Quality of service (QoS)"
     },
     "month": {
       "january": "January",
@@ -118,6 +120,28 @@
     "others": "Others",
     "office_hours_description": "Office hours are used to display report charts. Some charts plot data only inside office hours (e.g. Queue report > Graphs > Average duration)",
     "expand": "Expand",
-    "compress": "Compress"
+    "collapse": "Collapse",
+    "period": "Period",
+    "queueDescription": "Queue description",
+    "incoming": "Incoming",
+    "processed": "Processed",
+    "notProcessed": "Not processed",
+    "tot": "Total",
+    "null": "Null",
+    "percentage": "Percentage",
+    "waiting": "Waiting",
+    "duration": "Duration",
+    "min": "Min",
+    "max": "Max",
+    "avg": "Average",
+    "failed": "Failed",
+    "timeout": "Timeout",
+    "exitempty": "ExitEmpty",
+    "exitkey": "ExitKey",
+    "full": "Full",
+    "joinempty": "JoinEmpty",
+    "responseTime": "Response time",
+    "answer": "Answer",
+    "60sec": "60 seconds"
   }
 }

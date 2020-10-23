@@ -33,7 +33,7 @@
           >
             {{
               header.expanded
-                ? "[" + $t("compress") + "]"
+                ? "[" + $t("collapse") + "]"
                 : "[" + $t("expand") + "]"
             }}
           </a>
