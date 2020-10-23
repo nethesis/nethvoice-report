@@ -15,7 +15,7 @@
         <!-- start topbar -->
         <TopBar />
         <!-- end topbar -->
-        <div>
+        <div class="mg-3-em">
           <router-view />
         </div>
         <BackToTop scrollTop="400" />
@@ -132,19 +132,23 @@ export default {
   margin-bottom: 2rem !important;
 }
 
-.table-chart {
-  width: 100%;
+.mg-3-em {
   margin: 3em;
 }
 
+.table-chart {
+  width: 95%;
+  margin: 0 2rem 2rem 2rem;
+}
+
 .line-chart {
-  width: 100%;
-  margin: 3em;
+  width: 95%;
+  margin: 0 2rem 2rem 2rem;
 }
 
 .pie-chart {
   max-width: 26rem;
-  margin: 3em;
+  margin: 0 2rem 3rem 2rem;
 }
 
 .loader-height {
@@ -155,7 +159,6 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  width: fit-content;
 }
 
 .show-details {
