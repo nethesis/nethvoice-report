@@ -194,4 +194,139 @@ CREATE TABLE performance_talk_time_total_90 AS
          AND asteriskcdrdb.cdr.billsec <= 90
   GROUP  BY Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'), 
             Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'), 
-            qname; 
+            qname;
+
+CREATE TABLE performance_talk_time_total_105 AS
+  SELECT Date_format(From_unixtime(timestamp_in), '%Y-%m-%d')  AS timestamp_in,
+         Date_format(From_unixtime(timestamp_out), '%Y-%m-%d') AS timestamp_out,
+         qname,
+         Count(*)                                              AS count
+  FROM   asteriskcdrdb.report_queue
+         JOIN asteriskcdrdb.cdr
+           ON asteriskcdrdb.cdr.uniqueid =
+              asteriskcdrdb.report_queue.timestamp_in
+  WHERE  asteriskcdrdb.report_queue.action = 'ANSWER'
+         AND asteriskcdrdb.cdr.disposition = 'ANSWERED'
+         AND asteriskcdrdb.cdr.billsec > 0
+         AND asteriskcdrdb.cdr.billsec <= 105
+  GROUP  BY Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
+            Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'),
+            qname;
+
+CREATE TABLE performance_talk_time_total_120 AS
+  SELECT Date_format(From_unixtime(timestamp_in), '%Y-%m-%d')  AS timestamp_in,
+         Date_format(From_unixtime(timestamp_out), '%Y-%m-%d') AS timestamp_out,
+         qname,
+         Count(*)                                              AS count
+  FROM   asteriskcdrdb.report_queue
+         JOIN asteriskcdrdb.cdr
+           ON asteriskcdrdb.cdr.uniqueid =
+              asteriskcdrdb.report_queue.timestamp_in
+  WHERE  asteriskcdrdb.report_queue.action = 'ANSWER'
+         AND asteriskcdrdb.cdr.disposition = 'ANSWERED'
+         AND asteriskcdrdb.cdr.billsec > 0
+         AND asteriskcdrdb.cdr.billsec <= 120
+  GROUP  BY Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
+            Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'),
+            qname;
+
+CREATE TABLE performance_talk_time_total_180 AS
+  SELECT Date_format(From_unixtime(timestamp_in), '%Y-%m-%d')  AS timestamp_in,
+         Date_format(From_unixtime(timestamp_out), '%Y-%m-%d') AS timestamp_out,
+         qname,
+         Count(*)                                              AS count
+  FROM   asteriskcdrdb.report_queue
+         JOIN asteriskcdrdb.cdr
+           ON asteriskcdrdb.cdr.uniqueid =
+              asteriskcdrdb.report_queue.timestamp_in
+  WHERE  asteriskcdrdb.report_queue.action = 'ANSWER'
+         AND asteriskcdrdb.cdr.disposition = 'ANSWERED'
+         AND asteriskcdrdb.cdr.billsec > 0
+         AND asteriskcdrdb.cdr.billsec <= 180
+  GROUP  BY Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
+            Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'),
+            qname;
+
+CREATE TABLE performance_talk_time_total_240 AS
+  SELECT Date_format(From_unixtime(timestamp_in), '%Y-%m-%d')  AS timestamp_in,
+         Date_format(From_unixtime(timestamp_out), '%Y-%m-%d') AS timestamp_out,
+         qname,
+         Count(*)                                              AS count
+  FROM   asteriskcdrdb.report_queue
+         JOIN asteriskcdrdb.cdr
+           ON asteriskcdrdb.cdr.uniqueid =
+              asteriskcdrdb.report_queue.timestamp_in
+  WHERE  asteriskcdrdb.report_queue.action = 'ANSWER'
+         AND asteriskcdrdb.cdr.disposition = 'ANSWERED'
+         AND asteriskcdrdb.cdr.billsec > 0
+         AND asteriskcdrdb.cdr.billsec <= 240
+  GROUP  BY Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
+            Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'),
+            qname;
+
+CREATE TABLE performance_talk_time_total_300 AS
+  SELECT Date_format(From_unixtime(timestamp_in), '%Y-%m-%d')  AS timestamp_in,
+         Date_format(From_unixtime(timestamp_out), '%Y-%m-%d') AS timestamp_out,
+         qname,
+         Count(*)                                              AS count
+  FROM   asteriskcdrdb.report_queue
+         JOIN asteriskcdrdb.cdr
+           ON asteriskcdrdb.cdr.uniqueid =
+              asteriskcdrdb.report_queue.timestamp_in
+  WHERE  asteriskcdrdb.report_queue.action = 'ANSWER'
+         AND asteriskcdrdb.cdr.disposition = 'ANSWERED'
+         AND asteriskcdrdb.cdr.billsec > 0
+         AND asteriskcdrdb.cdr.billsec <= 300
+  GROUP  BY Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
+            Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'),
+            qname;
+
+CREATE TABLE performance_talk_time_total_450 AS
+  SELECT Date_format(From_unixtime(timestamp_in), '%Y-%m-%d')  AS timestamp_in,
+         Date_format(From_unixtime(timestamp_out), '%Y-%m-%d') AS timestamp_out,
+         qname,
+         Count(*)                                              AS count
+  FROM   asteriskcdrdb.report_queue
+         JOIN asteriskcdrdb.cdr
+           ON asteriskcdrdb.cdr.uniqueid =
+              asteriskcdrdb.report_queue.timestamp_in
+  WHERE  asteriskcdrdb.report_queue.action = 'ANSWER'
+         AND asteriskcdrdb.cdr.disposition = 'ANSWERED'
+         AND asteriskcdrdb.cdr.billsec > 0
+         AND asteriskcdrdb.cdr.billsec <= 450
+  GROUP  BY Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
+            Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'),
+            qname;
+
+CREATE TABLE performance_talk_time_total_600 AS
+  SELECT Date_format(From_unixtime(timestamp_in), '%Y-%m-%d')  AS timestamp_in,
+         Date_format(From_unixtime(timestamp_out), '%Y-%m-%d') AS timestamp_out,
+         qname,
+         Count(*)                                              AS count
+  FROM   asteriskcdrdb.report_queue
+         JOIN asteriskcdrdb.cdr
+           ON asteriskcdrdb.cdr.uniqueid =
+              asteriskcdrdb.report_queue.timestamp_in
+  WHERE  asteriskcdrdb.report_queue.action = 'ANSWER'
+         AND asteriskcdrdb.cdr.disposition = 'ANSWERED'
+         AND asteriskcdrdb.cdr.billsec > 0
+         AND asteriskcdrdb.cdr.billsec <= 600
+  GROUP  BY Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
+            Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'),
+            qname;
+
+CREATE TABLE performance_talk_time_total_600p AS
+  SELECT Date_format(From_unixtime(timestamp_in), '%Y-%m-%d')  AS timestamp_in,
+         Date_format(From_unixtime(timestamp_out), '%Y-%m-%d') AS timestamp_out,
+         qname,
+         Count(*)                                              AS count
+  FROM   asteriskcdrdb.report_queue
+         JOIN asteriskcdrdb.cdr
+           ON asteriskcdrdb.cdr.uniqueid =
+              asteriskcdrdb.report_queue.timestamp_in
+  WHERE  asteriskcdrdb.report_queue.action = 'ANSWER'
+         AND asteriskcdrdb.cdr.disposition = 'ANSWERED'
+         AND asteriskcdrdb.cdr.billsec > 600
+  GROUP  BY Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
+            Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'),
+            qname;

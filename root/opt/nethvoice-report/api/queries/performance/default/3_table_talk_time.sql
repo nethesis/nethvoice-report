@@ -682,4 +682,532 @@ FROM   (SELECT "total"                           AS talkTime£label,
                {{ if gt (len .Queues) 0 }}
                AND qname in ({{ ExtractStrings .Queues }})
                {{ end }}),
+                   2) )                         AS percentage£percent
+        UNION
+        SELECT "105sec"                          AS talkTime£label,
+               (SELECT Sum(count) AS count
+                FROM   performance_talk_time_total_105
+                WHERE  true
+                       {{ if and .Time.Interval.Start .Time.Interval.End }}
+               {{ if eq .Time.Group "year" }}
+                        AND date_format(timestamp_in, "%Y") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "month" }}
+                        AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "week" }}
+                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        {{ else }}
+                        AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
+                        {{ end }}
+               {{ end }}
+               {{ if gt (len .Queues) 0 }}
+               AND qname in ({{ ExtractStrings .Queues }})
+               {{ end }}) AS duration£num,
+               ( Round((SELECT Sum(count) AS count
+                        FROM   performance_talk_time_total_105
+                        WHERE  true
+                               {{ if and .Time.Interval.Start .Time.Interval.End }}
+               {{ if eq .Time.Group "year" }}
+                        AND date_format(timestamp_in, "%Y") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "month" }}
+                        AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "week" }}
+                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        {{ else }}
+                        AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
+                        {{ end }}
+               {{ end }}
+               {{ if gt (len .Queues) 0 }}
+               AND qname in ({{ ExtractStrings .Queues }})
+               {{ end }}) * 100 /
+                       (SELECT Sum(count)
+                        FROM   performance_talk_time_total
+                        WHERE  true
+                               {{ if and .Time.Interval.Start .Time.Interval.End }}
+               {{ if eq .Time.Group "year" }}
+                        AND date_format(timestamp_in, "%Y") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "month" }}
+                        AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "week" }}
+                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        {{ else }}
+                        AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
+                        {{ end }}
+               {{ end }}
+               {{ if gt (len .Queues) 0 }}
+               AND qname in ({{ ExtractStrings .Queues }})
+               {{ end }}),
+                   2) )                         AS percentage£percent
+        UNION
+        SELECT "120sec"                          AS talkTime£label,
+               (SELECT Sum(count) AS count
+                FROM   performance_talk_time_total_120
+                WHERE  true
+                       {{ if and .Time.Interval.Start .Time.Interval.End }}
+               {{ if eq .Time.Group "year" }}
+                        AND date_format(timestamp_in, "%Y") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "month" }}
+                        AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "week" }}
+                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        {{ else }}
+                        AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
+                        {{ end }}
+               {{ end }}
+               {{ if gt (len .Queues) 0 }}
+               AND qname in ({{ ExtractStrings .Queues }})
+               {{ end }}) AS duration£num,
+               ( Round((SELECT Sum(count) AS count
+                        FROM   performance_talk_time_total_120
+                        WHERE  true
+                               {{ if and .Time.Interval.Start .Time.Interval.End }}
+               {{ if eq .Time.Group "year" }}
+                        AND date_format(timestamp_in, "%Y") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "month" }}
+                        AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "week" }}
+                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        {{ else }}
+                        AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
+                        {{ end }}
+               {{ end }}
+               {{ if gt (len .Queues) 0 }}
+               AND qname in ({{ ExtractStrings .Queues }})
+               {{ end }}) * 100 /
+                       (SELECT Sum(count)
+                        FROM   performance_talk_time_total
+                        WHERE  true
+                               {{ if and .Time.Interval.Start .Time.Interval.End }}
+               {{ if eq .Time.Group "year" }}
+                        AND date_format(timestamp_in, "%Y") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "month" }}
+                        AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "week" }}
+                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        {{ else }}
+                        AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
+                        {{ end }}
+               {{ end }}
+               {{ if gt (len .Queues) 0 }}
+               AND qname in ({{ ExtractStrings .Queues }})
+               {{ end }}),
+                   2) )                         AS percentage£percent
+        UNION
+        SELECT "180sec"                          AS talkTime£label,
+               (SELECT Sum(count) AS count
+                FROM   performance_talk_time_total_180
+                WHERE  true
+                       {{ if and .Time.Interval.Start .Time.Interval.End }}
+               {{ if eq .Time.Group "year" }}
+                        AND date_format(timestamp_in, "%Y") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "month" }}
+                        AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "week" }}
+                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        {{ else }}
+                        AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
+                        {{ end }}
+               {{ end }}
+               {{ if gt (len .Queues) 0 }}
+               AND qname in ({{ ExtractStrings .Queues }})
+               {{ end }}) AS duration£num,
+               ( Round((SELECT Sum(count) AS count
+                        FROM   performance_talk_time_total_180
+                        WHERE  true
+                               {{ if and .Time.Interval.Start .Time.Interval.End }}
+               {{ if eq .Time.Group "year" }}
+                        AND date_format(timestamp_in, "%Y") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "month" }}
+                        AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "week" }}
+                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        {{ else }}
+                        AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
+                        {{ end }}
+               {{ end }}
+               {{ if gt (len .Queues) 0 }}
+               AND qname in ({{ ExtractStrings .Queues }})
+               {{ end }}) * 100 /
+                       (SELECT Sum(count)
+                        FROM   performance_talk_time_total
+                        WHERE  true
+                               {{ if and .Time.Interval.Start .Time.Interval.End }}
+               {{ if eq .Time.Group "year" }}
+                        AND date_format(timestamp_in, "%Y") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "month" }}
+                        AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "week" }}
+                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        {{ else }}
+                        AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
+                        {{ end }}
+               {{ end }}
+               {{ if gt (len .Queues) 0 }}
+               AND qname in ({{ ExtractStrings .Queues }})
+               {{ end }}),
+                   2) )                         AS percentage£percent
+        UNION
+        SELECT "240sec"                          AS talkTime£label,
+               (SELECT Sum(count) AS count
+                FROM   performance_talk_time_total_240
+                WHERE  true
+                       {{ if and .Time.Interval.Start .Time.Interval.End }}
+               {{ if eq .Time.Group "year" }}
+                        AND date_format(timestamp_in, "%Y") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "month" }}
+                        AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "week" }}
+                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        {{ else }}
+                        AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
+                        {{ end }}
+               {{ end }}
+               {{ if gt (len .Queues) 0 }}
+               AND qname in ({{ ExtractStrings .Queues }})
+               {{ end }}) AS duration£num,
+               ( Round((SELECT Sum(count) AS count
+                        FROM   performance_talk_time_total_240
+                        WHERE  true
+                               {{ if and .Time.Interval.Start .Time.Interval.End }}
+               {{ if eq .Time.Group "year" }}
+                        AND date_format(timestamp_in, "%Y") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "month" }}
+                        AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "week" }}
+                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        {{ else }}
+                        AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
+                        {{ end }}
+               {{ end }}
+               {{ if gt (len .Queues) 0 }}
+               AND qname in ({{ ExtractStrings .Queues }})
+               {{ end }}) * 100 /
+                       (SELECT Sum(count)
+                        FROM   performance_talk_time_total
+                        WHERE  true
+                               {{ if and .Time.Interval.Start .Time.Interval.End }}
+               {{ if eq .Time.Group "year" }}
+                        AND date_format(timestamp_in, "%Y") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "month" }}
+                        AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "week" }}
+                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        {{ else }}
+                        AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
+                        {{ end }}
+               {{ end }}
+               {{ if gt (len .Queues) 0 }}
+               AND qname in ({{ ExtractStrings .Queues }})
+               {{ end }}),
+                   2) )                         AS percentage£percent
+        UNION
+        SELECT "300sec"                          AS talkTime£label,
+               (SELECT Sum(count) AS count
+                FROM   performance_talk_time_total_300
+                WHERE  true
+                       {{ if and .Time.Interval.Start .Time.Interval.End }}
+               {{ if eq .Time.Group "year" }}
+                        AND date_format(timestamp_in, "%Y") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "month" }}
+                        AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "week" }}
+                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        {{ else }}
+                        AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
+                        {{ end }}
+               {{ end }}
+               {{ if gt (len .Queues) 0 }}
+               AND qname in ({{ ExtractStrings .Queues }})
+               {{ end }}) AS duration£num,
+               ( Round((SELECT Sum(count) AS count
+                        FROM   performance_talk_time_total_300
+                        WHERE  true
+                               {{ if and .Time.Interval.Start .Time.Interval.End }}
+               {{ if eq .Time.Group "year" }}
+                        AND date_format(timestamp_in, "%Y") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "month" }}
+                        AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "week" }}
+                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        {{ else }}
+                        AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
+                        {{ end }}
+               {{ end }}
+               {{ if gt (len .Queues) 0 }}
+               AND qname in ({{ ExtractStrings .Queues }})
+               {{ end }}) * 100 /
+                       (SELECT Sum(count)
+                        FROM   performance_talk_time_total
+                        WHERE  true
+                               {{ if and .Time.Interval.Start .Time.Interval.End }}
+               {{ if eq .Time.Group "year" }}
+                        AND date_format(timestamp_in, "%Y") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "month" }}
+                        AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "week" }}
+                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        {{ else }}
+                        AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
+                        {{ end }}
+               {{ end }}
+               {{ if gt (len .Queues) 0 }}
+               AND qname in ({{ ExtractStrings .Queues }})
+               {{ end }}),
+                   2) )                         AS percentage£percent
+        UNION
+        SELECT "450sec"                          AS talkTime£label,
+               (SELECT Sum(count) AS count
+                FROM   performance_talk_time_total_450
+                WHERE  true
+                       {{ if and .Time.Interval.Start .Time.Interval.End }}
+               {{ if eq .Time.Group "year" }}
+                        AND date_format(timestamp_in, "%Y") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "month" }}
+                        AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "week" }}
+                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        {{ else }}
+                        AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
+                        {{ end }}
+               {{ end }}
+               {{ if gt (len .Queues) 0 }}
+               AND qname in ({{ ExtractStrings .Queues }})
+               {{ end }}) AS duration£num,
+               ( Round((SELECT Sum(count) AS count
+                        FROM   performance_talk_time_total_450
+                        WHERE  true
+                               {{ if and .Time.Interval.Start .Time.Interval.End }}
+               {{ if eq .Time.Group "year" }}
+                        AND date_format(timestamp_in, "%Y") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "month" }}
+                        AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "week" }}
+                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        {{ else }}
+                        AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
+                        {{ end }}
+               {{ end }}
+               {{ if gt (len .Queues) 0 }}
+               AND qname in ({{ ExtractStrings .Queues }})
+               {{ end }}) * 100 /
+                       (SELECT Sum(count)
+                        FROM   performance_talk_time_total
+                        WHERE  true
+                               {{ if and .Time.Interval.Start .Time.Interval.End }}
+               {{ if eq .Time.Group "year" }}
+                        AND date_format(timestamp_in, "%Y") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "month" }}
+                        AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "week" }}
+                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        {{ else }}
+                        AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
+                        {{ end }}
+               {{ end }}
+               {{ if gt (len .Queues) 0 }}
+               AND qname in ({{ ExtractStrings .Queues }})
+               {{ end }}),
+                   2) )                         AS percentage£percent
+        UNION
+        SELECT "600sec"                          AS talkTime£label,
+               (SELECT Sum(count) AS count
+                FROM   performance_talk_time_total_600
+                WHERE  true
+                       {{ if and .Time.Interval.Start .Time.Interval.End }}
+               {{ if eq .Time.Group "year" }}
+                        AND date_format(timestamp_in, "%Y") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "month" }}
+                        AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "week" }}
+                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        {{ else }}
+                        AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
+                        {{ end }}
+               {{ end }}
+               {{ if gt (len .Queues) 0 }}
+               AND qname in ({{ ExtractStrings .Queues }})
+               {{ end }}) AS duration£num,
+               ( Round((SELECT Sum(count) AS count
+                        FROM   performance_talk_time_total_600
+                        WHERE  true
+                               {{ if and .Time.Interval.Start .Time.Interval.End }}
+               {{ if eq .Time.Group "year" }}
+                        AND date_format(timestamp_in, "%Y") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "month" }}
+                        AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "week" }}
+                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        {{ else }}
+                        AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
+                        {{ end }}
+               {{ end }}
+               {{ if gt (len .Queues) 0 }}
+               AND qname in ({{ ExtractStrings .Queues }})
+               {{ end }}) * 100 /
+                       (SELECT Sum(count)
+                        FROM   performance_talk_time_total
+                        WHERE  true
+                               {{ if and .Time.Interval.Start .Time.Interval.End }}
+               {{ if eq .Time.Group "year" }}
+                        AND date_format(timestamp_in, "%Y") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "month" }}
+                        AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "week" }}
+                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        {{ else }}
+                        AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
+                        {{ end }}
+               {{ end }}
+               {{ if gt (len .Queues) 0 }}
+               AND qname in ({{ ExtractStrings .Queues }})
+               {{ end }}),
+                   2) )                         AS percentage£percent
+        UNION
+        SELECT "600+sec"                          AS talkTime£label,
+               (SELECT Sum(count) AS count
+                FROM   performance_talk_time_total_600p
+                WHERE  true
+                       {{ if and .Time.Interval.Start .Time.Interval.End }}
+               {{ if eq .Time.Group "year" }}
+                        AND date_format(timestamp_in, "%Y") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "month" }}
+                        AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "week" }}
+                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        {{ else }}
+                        AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
+                        {{ end }}
+               {{ end }}
+               {{ if gt (len .Queues) 0 }}
+               AND qname in ({{ ExtractStrings .Queues }})
+               {{ end }}) AS duration£num,
+               ( Round((SELECT Sum(count) AS count
+                        FROM   performance_talk_time_total_600p
+                        WHERE  true
+                               {{ if and .Time.Interval.Start .Time.Interval.End }}
+               {{ if eq .Time.Group "year" }}
+                        AND date_format(timestamp_in, "%Y") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "month" }}
+                        AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "week" }}
+                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        {{ else }}
+                        AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
+                        {{ end }}
+               {{ end }}
+               {{ if gt (len .Queues) 0 }}
+               AND qname in ({{ ExtractStrings .Queues }})
+               {{ end }}) * 100 /
+                       (SELECT Sum(count)
+                        FROM   performance_talk_time_total
+                        WHERE  true
+                               {{ if and .Time.Interval.Start .Time.Interval.End }}
+               {{ if eq .Time.Group "year" }}
+                        AND date_format(timestamp_in, "%Y") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "month" }}
+                        AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
+                        {{ else if eq .Time.Group "week" }}
+                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        {{ else }}
+                        AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
+                        {{ end }}
+               {{ end }}
+               {{ if gt (len .Queues) 0 }}
+               AND qname in ({{ ExtractStrings .Queues }})
+               {{ end }}),
                    2) )                         AS percentage£percent) AS talkTime£labels;

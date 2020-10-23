@@ -4,7 +4,7 @@ SELECT
         qname,
         qdescr,
         time_{{ .Time.Division  }} AS `time£hourDate#pivot`,
-        total AS `total£num#sum`
+        total AS `{{ ExtractSettings "StartHour" }}-{{ ExtractSettings "EndHour" }}£num^sum_total`
 FROM    distribution_hour_total_{{ .Time.Group }}_{{ .Time.Division  }}
 WHERE   time_{{ .Time.Division  }} >= '{{ ExtractSettings "StartHour" }}' AND time_{{ .Time.Division  }} <= '{{ ExtractSettings "EndHour" }}'
         {{ if and .Time.Interval.Start .Time.Interval.End }}
