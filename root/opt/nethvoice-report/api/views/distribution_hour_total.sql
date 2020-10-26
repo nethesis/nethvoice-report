@@ -17,7 +17,7 @@ SELECT
                             From_unixtime (
                                    timestamp_in
                             )
-                     ) %(10 * 60) + (10 * 60)
+                     ) %(10 * 60)
               ),
               "%H:%i"
        ) AS time_10,
@@ -44,7 +44,7 @@ SELECT
                             From_unixtime (
                                    timestamp_in
                             )
-                     ) %(15 * 60) + (15 * 60)
+                     ) %(15 * 60)
               ),
               "%H:%i"
        ) AS time_15,
@@ -71,7 +71,7 @@ SELECT
                             From_unixtime (
                                    timestamp_in
                             )
-                     ) %(30 * 60) + (30 * 60)
+                     ) %(30 * 60)
               ),
               "%H:%i"
        ) AS time_30,
@@ -98,7 +98,7 @@ SELECT
                             From_unixtime (
                                    timestamp_in
                             )
-                     ) %(60 * 60) + (60 * 60)
+                     ) %(60 * 60)
               ),
               "%H:%i"
        ) AS time_60,
@@ -133,7 +133,7 @@ SELECT
                             From_unixtime (
                                    timestamp_in
                             )
-                     ) %(10 * 60) + (10 * 60)
+                     ) %(10 * 60)
               ),
               "%H:%i"
        ) AS time_10,
@@ -160,7 +160,7 @@ SELECT
                             From_unixtime (
                                    timestamp_in
                             )
-                     ) %(15 * 60) + (15 * 60)
+                     ) %(15 * 60)
               ),
               "%H:%i"
        ) AS time_15,
@@ -187,7 +187,7 @@ SELECT
                             From_unixtime (
                                    timestamp_in
                             )
-                     ) %(30 * 60) + (30 * 60)
+                     ) %(30 * 60)
               ),
               "%H:%i"
        ) AS time_30,
@@ -214,7 +214,7 @@ SELECT
                             From_unixtime (
                                    timestamp_in
                             )
-                     ) %(60 * 60) + (60 * 60)
+                     ) %(60 * 60)
               ),
               "%H:%i"
        ) AS time_60,
@@ -249,7 +249,7 @@ SELECT
                             From_unixtime (
                                    timestamp_in
                             )
-                     ) %(10 * 60) + (10 * 60)
+                     ) %(10 * 60)
               ),
               "%H:%i"
        ) AS time_10,
@@ -276,7 +276,7 @@ SELECT
                             From_unixtime (
                                    timestamp_in
                             )
-                     ) %(15 * 60) + (15 * 60)
+                     ) %(15 * 60)
               ),
               "%H:%i"
        ) AS time_15,
@@ -303,7 +303,7 @@ SELECT
                             From_unixtime (
                                    timestamp_in
                             )
-                     ) %(30 * 60) + (30 * 60)
+                     ) %(30 * 60)
               ),
               "%H:%i"
        ) AS time_30,
@@ -330,7 +330,7 @@ SELECT
                             From_unixtime (
                                    timestamp_in
                             )
-                     ) %(60 * 60) + (60 * 60)
+                     ) %(60 * 60)
               ),
               "%H:%i"
        ) AS time_60,
@@ -365,7 +365,7 @@ SELECT
                             From_unixtime (
                                    timestamp_in
                             )
-                     ) %(10 * 60) + (10 * 60)
+                     ) %(10 * 60)
               ),
               "%H:%i"
        ) AS time_10,
@@ -392,7 +392,7 @@ SELECT
                             From_unixtime (
                                    timestamp_in
                             )
-                     ) %(15 * 60) + (15 * 60)
+                     ) %(15 * 60)
               ),
               "%H:%i"
        ) AS time_15,
@@ -419,7 +419,7 @@ SELECT
                             From_unixtime (
                                    timestamp_in
                             )
-                     ) %(30 * 60) + (30 * 60)
+                     ) %(30 * 60)
               ),
               "%H:%i"
        ) AS time_30,
@@ -446,7 +446,7 @@ SELECT
                             From_unixtime (
                                    timestamp_in
                             )
-                     ) %(60 * 60) + (60 * 60)
+                     ) %(60 * 60)
               ),
               "%H:%i"
        ) AS time_60,
