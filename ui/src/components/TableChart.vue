@@ -107,15 +107,26 @@ export default {
   },
   watch: {
     data: function () {
-      if (this.data && this.data.length) {
+      let tableData = this.data;
+
+      if (tableData && tableData.length) {
+        // pre-process table data if it's a pivot table
+        const isPivotTable = tableData[0].some((h) => {
+          return h.includes("^pivot");
+        });
+
+        if (isPivotTable && tableData.length > 1) {
+          tableData = this.processPivotTable();
+        }
+
         // table has double header if at least one column header contains "$" character
-        this.hasDoubleHeader = this.data[0].some((h) => {
+        this.hasDoubleHeader = tableData[0].some((h) => {
           return h.includes("$");
         });
-        let rawColumns = this.data[0];
+        let rawColumns = tableData[0];
 
-        if (this.data.length > 1) {
-          this.rows = this.data.slice(1);
+        if (tableData.length > 1) {
+          this.rows = tableData.slice(1);
         } else {
           this.rows = [];
         }
@@ -144,8 +155,8 @@ export default {
         let column = {};
 
         // e.g. notProcessed$joinempty£num#hide
-        var colRegex = /^(([^$£#]*)(\$))?([^$£#]+)£?([^$£#]*)(#hide)?$/g;
-        var match = colRegex.exec(rawColumn);
+        const colRegex = /^(([^$£#]*)(\$))?([^$£#]+)£?([^$£#]*)(#hide)?$/g;
+        const match = colRegex.exec(rawColumn);
 
         const superHeaderName = match[2];
         column.name = match[4];
@@ -194,6 +205,161 @@ export default {
     },
     toggleExpandHeader(header) {
       header.expanded = !header.expanded;
+    },
+    processPivotTable() {
+      //// test with data holes (missing hours for some records)
+
+      let pivotColIndex = -1;
+      let groupedColIndex = -1;
+      let idColIndex = -1;
+      let pivotMatch;
+      let sumMatch;
+      let idMatch;
+      let pivotId; // e.g. queueName
+      let pivotFormat;
+      let superHeader;
+      let totalSubHeader;
+      let data = JSON.parse(JSON.stringify(this.data));
+      const originalColumns = data[0];
+      const originalRows = data.splice(1);
+
+      // look for id, pivot and sum column indexes
+
+      for (const [index, rawColumn] of originalColumns.entries()) {
+        idMatch = /([^^]+)\^id/.exec(rawColumn); //// is ^id needed?
+        if (idMatch) {
+          idColIndex = index;
+          pivotId = idMatch[1];
+          continue;
+        }
+
+        pivotMatch = /[^£#]+(£[^#]+)?\^pivot/.exec(rawColumn);
+        if (pivotMatch) {
+          pivotColIndex = index;
+
+          if (pivotMatch[1]) {
+            pivotFormat = pivotMatch[1];
+          } else {
+            pivotFormat = "";
+          }
+          continue;
+        }
+
+        sumMatch = /([^^]+)\^sum_(.+)/.exec(rawColumn);
+        if (sumMatch) {
+          groupedColIndex = index;
+          superHeader = sumMatch[1];
+          totalSubHeader = sumMatch[2];
+          continue;
+        }
+      }
+
+      // read pivot data from rows
+
+      let pivotColumnSet = new Set();
+
+      //// todo remove pivotMap??
+      let pivotMap = {}; // contains id -> column -> number (e.g. queueName -> hour -> numberOfCalls)
+
+      //// needed?
+      for (const row of originalRows) {
+        const id = row[idColIndex]; // e.g. "4444" (queueName)
+        const pivotColumn = row[pivotColIndex]; // e.g. "09:00"
+        const value = row[groupedColIndex]; // e.g. 147
+        pivotColumnSet.add(pivotColumn);
+
+        if (!pivotMap[id]) {
+          pivotMap[id] = {};
+
+          // add non-pivot data
+          for (const [colIndex, value] of row.entries()) {
+            if (
+              colIndex != idColIndex &&
+              colIndex != pivotColIndex &&
+              colIndex != groupedColIndex
+            ) {
+              const originalColumn = originalColumns[colIndex];
+              pivotMap[id][originalColumn] = value;
+            }
+          }
+        }
+        pivotMap[id][pivotColumn] = value;
+      }
+      const pivotColumnsList = Array.from(pivotColumnSet).sort();
+
+      console.log("pivotColumnsList", pivotColumnsList); ////
+
+      // process column headers
+
+      let processedColumns = [];
+      originalColumns.forEach((rawColumn, index) => {
+        if (index == pivotColIndex) {
+          // add sum column
+          processedColumns.push(superHeader + "$" + totalSubHeader);
+
+          // add pivot columns
+          for (let pivotColumn of pivotColumnsList) {
+            processedColumns.push(
+              superHeader + "$" + pivotColumn + pivotFormat + "#hide"
+            );
+          }
+        } else if (index == idColIndex) {
+          processedColumns.push(pivotId);
+        } else if (index != groupedColIndex) {
+          processedColumns.push(rawColumn);
+        }
+      });
+
+      console.log("processedColumns", processedColumns); ////
+
+      // process rows
+
+      let processedRows = [];
+      let currentPivotGroup;
+      let currentProcessedRow = [];
+      let groupedPivotValues = 0;
+
+      for (const row of originalRows) {
+        // detect when pivot group changes, i.e. when a non-pivot related column changes
+        let pivotGroup = "";
+        for (const [colIndex, value] of row.entries()) {
+          if (colIndex >= pivotColIndex) {
+            break;
+          } else {
+            pivotGroup += value;
+          }
+        }
+
+        if (!currentPivotGroup || pivotGroup != currentPivotGroup) {
+          // new pivot group
+
+          if (currentPivotGroup) {
+            currentProcessedRow[pivotColIndex] = groupedPivotValues;
+
+            // console.log("currentProcessedRow", currentProcessedRow); ////
+
+            processedRows.push(currentProcessedRow);
+          }
+
+          currentProcessedRow = [];
+          groupedPivotValues = 0;
+          currentPivotGroup = pivotGroup;
+
+          for (let colIndex = 0; colIndex < pivotColIndex; colIndex++) {
+            currentProcessedRow.push(row[colIndex]);
+          }
+          // temporary value for grouped pivot values
+          currentProcessedRow.push(0);
+        }
+
+        // add data to current pivot group
+
+        let pivotValue = parseInt(row[groupedColIndex]);
+        groupedPivotValues += pivotValue;
+        currentProcessedRow.push(pivotValue);
+      }
+
+      return [processedColumns].concat(processedRows);
     },
   },
 };

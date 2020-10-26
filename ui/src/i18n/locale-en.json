@@ -105,6 +105,7 @@
       "origins_field_is_required": "Select one or more Origins in filter to display this chart",
       "queues_field_is_required": "Select one or more Queues in filter to display this chart",
       "agents_field_is_required": "Select one or more Agents in filter to display this chart",
+      "ivrs_field_is_required": "Select one or more IVRs in filter to display this chart",
       "ivr_or_choice_fields_are_required": "Select one or more IVR or Choices in filter to display this chart",
       "timeIntervalStart_and_timeIntervalEnd_are_required": "Select a time interval to display this chart",
       "error_admin_empty": "The entered values are not valid"
