@@ -207,15 +207,10 @@ export default {
       header.expanded = !header.expanded;
     },
     processPivotTable() {
-      //// test with data holes (missing hours for some records)
-
       let pivotColIndex = -1;
       let groupedColIndex = -1;
-      let idColIndex = -1;
       let pivotMatch;
       let sumMatch;
-      let idMatch;
-      let pivotId; // e.g. queueName
       let pivotFormat;
       let superHeader;
       let totalSubHeader;
@@ -223,16 +218,9 @@ export default {
       const originalColumns = data[0];
       const originalRows = data.splice(1);
 
-      // look for id, pivot and sum column indexes
+      // look for pivot and sum column indexes
 
       for (const [index, rawColumn] of originalColumns.entries()) {
-        idMatch = /([^^]+)\^id/.exec(rawColumn); //// is ^id needed?
-        if (idMatch) {
-          idColIndex = index;
-          pivotId = idMatch[1];
-          continue;
-        }
-
         pivotMatch = /[^£#]+(£[^#]+)?\^pivot/.exec(rawColumn);
         if (pivotMatch) {
           pivotColIndex = index;
@@ -258,36 +246,31 @@ export default {
 
       let pivotColumnSet = new Set();
 
-      //// todo remove pivotMap??
-      let pivotMap = {}; // contains id -> column -> number (e.g. queueName -> hour -> numberOfCalls)
+      let pivotMap = {}; // contains pivotGroup -> pivotColumn -> number (e.g. 2019QueueNameQueueDescription -> hour -> numberOfCalls)
 
-      //// needed?
       for (const row of originalRows) {
-        const id = row[idColIndex]; // e.g. "4444" (queueName)
+        // detect when pivot group changes, i.e. when a non-pivot related column changes
+        let pivotGroup = "";
+        for (const [colIndex, value] of row.entries()) {
+          if (colIndex >= pivotColIndex) {
+            break;
+          } else {
+            pivotGroup += value;
+          }
+        }
+
         const pivotColumn = row[pivotColIndex]; // e.g. "09:00"
         const value = row[groupedColIndex]; // e.g. 147
         pivotColumnSet.add(pivotColumn);
 
-        if (!pivotMap[id]) {
-          pivotMap[id] = {};
-
-          // add non-pivot data
-          for (const [colIndex, value] of row.entries()) {
-            if (
-              colIndex != idColIndex &&
-              colIndex != pivotColIndex &&
-              colIndex != groupedColIndex
-            ) {
-              const originalColumn = originalColumns[colIndex];
-              pivotMap[id][originalColumn] = value;
-            }
-          }
+        if (!pivotMap[pivotGroup]) {
+          pivotMap[pivotGroup] = {};
         }
-        pivotMap[id][pivotColumn] = value;
-      }
-      const pivotColumnsList = Array.from(pivotColumnSet).sort();
 
-      console.log("pivotColumnsList", pivotColumnsList); ////
+        pivotMap[pivotGroup][pivotColumn] = value;
+      }
+
+      const pivotColumnsList = Array.from(pivotColumnSet).sort();
 
       // process column headers
 
@@ -303,14 +286,10 @@ export default {
               superHeader + "$" + pivotColumn + pivotFormat + "#hide"
             );
           }
-        } else if (index == idColIndex) {
-          processedColumns.push(pivotId);
         } else if (index != groupedColIndex) {
           processedColumns.push(rawColumn);
         }
       });
-
-      console.log("processedColumns", processedColumns); ////
 
       // process rows
 
@@ -318,6 +297,7 @@ export default {
       let currentPivotGroup;
       let currentProcessedRow = [];
       let groupedPivotValues = 0;
+      let pivotColumnIndex = 0;
 
       for (const row of originalRows) {
         // detect when pivot group changes, i.e. when a non-pivot related column changes
@@ -336,13 +316,16 @@ export default {
           if (currentPivotGroup) {
             currentProcessedRow[pivotColIndex] = groupedPivotValues;
 
-            // console.log("currentProcessedRow", currentProcessedRow); ////
-
+            while (pivotColumnIndex < pivotColumnsList.length) {
+              // fill missing data
+              currentProcessedRow.push(0);
+              pivotColumnIndex++;
+            }
             processedRows.push(currentProcessedRow);
           }
-
           currentProcessedRow = [];
           groupedPivotValues = 0;
+          pivotColumnIndex = 0;
           currentPivotGroup = pivotGroup;
 
           for (let colIndex = 0; colIndex < pivotColIndex; colIndex++) {
@@ -356,8 +339,31 @@ export default {
 
         let pivotValue = parseInt(row[groupedColIndex]);
         groupedPivotValues += pivotValue;
+
+        // insert pivot value under the related pivot column (data may contain data holes)
+
+        let pivotColumn = pivotColumnsList[pivotColumnIndex]; // e.g. 9:00
+
+        while (!pivotMap[pivotGroup][pivotColumn]) {
+          // fill missing data
+          currentProcessedRow.push(0);
+          pivotColumnIndex++;
+          pivotColumn = pivotColumnsList[pivotColumnIndex];
+        }
         currentProcessedRow.push(pivotValue);
+        pivotColumnIndex++;
       }
+
+      // add last processed row
+      currentProcessedRow[pivotColIndex] = groupedPivotValues;
+
+      while (pivotColumnIndex < pivotColumnsList.length) {
+        // fill missing data
+        currentProcessedRow.push(0);
+        pivotColumnIndex++;
+      }
+
+      processedRows.push(currentProcessedRow);
 
       return [processedColumns].concat(processedRows);
     },

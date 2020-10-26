@@ -1,7 +1,7 @@
 {{ if gt (len .IVRs) 0 }}
 SELECT
 	period AS period£{{ .Time.Group }}Date,
-	ivr_id AS `qname^id`,
+	ivr_id AS `qname`,
 	ivr_name,
 	choice,
 	time_{{ .Time.Division  }} AS `time£num^pivot`,

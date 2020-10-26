@@ -1,7 +1,7 @@
 {{ if gt (len .Agents) 0 }}
 SELECT
 	period AS period£{{ .Time.Group }}Date,
-	agentNum AS `qname^id`,
+	agentNum AS `qname`,
 	agentName,
 	time_{{ .Time.Division  }} AS `time£num^pivot`,
 	total AS `{{ ExtractSettings "StartHour" }}-{{ ExtractSettings "EndHour" }}^sum_total£num`
