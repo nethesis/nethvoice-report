@@ -34,6 +34,9 @@
       "dashboard": "Dashboard",
       "filters": "Filtri",
       "active_filters": "Filtri attivi"
+    },
+    "message": {
+      "error_admin_empty": "I valori inseriti non sono validi"
     }
   }
 }
