@@ -28,7 +28,13 @@
       "contact_name_label": "Contact name / Company",
       "null_call_label": "Null call",
       "reasons_label": "Reason",
-      "clear_filters": "Clear all filters"
+      "clear_filters": "Clear all filters",
+      "last_two_weeks": "Last 2 weeks",
+      "last_two_months": "Last 2 months",
+      "last_six_months": "Last 6 months",
+      "last_year": "Last year",
+      "last_two_years": "Last 2 years",
+      "last_three_years": "Last 3 years"
     },
     "menu": {
       "queue": "Queue report",
