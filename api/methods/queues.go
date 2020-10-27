@@ -183,20 +183,12 @@ func executeRrdQuery(filter models.Filter, section string, view string, graph st
 	if errRead != nil {
 		return "", errors.Wrap(errRead, "cannot open RRD file")
 	}
-
 	rrdFilePath := strings.TrimSpace(string(rrdFilePathContent))
-	zone, _ := time.Now().Zone()
-	dateTimeStart := filter.Time.Interval.Start + " 00:00 " + zone
-	dateTimeEnd := filter.Time.Interval.End + " 23:59 " + zone
 
-	start, errTime := time.Parse("2006-01-02 15:04 MST", dateTimeStart)
-	if errTime != nil {
-		return "", errors.Wrap(errTime, "cannot parse time")
-	}
-
-	end, errTime := time.Parse("2006-01-02 15:04 MST", dateTimeEnd)
-	if errTime != nil {
-		return "", errors.Wrap(errTime, "cannot parse time")
+	// adjust time interval for RRD query
+	start, end, err := utils.DatesTimeInterval(filter.Time.Interval.Start, filter.Time.Interval.End, filter.Time.Group)
+	if err != nil {
+		return "", errors.Wrap(err, "cannot retrieve time interval")
 	}
 
 	results, errRrd := QueryRrd(rrdFilePath, filter, start, end, graph)
