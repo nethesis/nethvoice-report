@@ -28,12 +28,21 @@
       "contact_name_label": "Nome contatto / Azienda",
       "null_call_label": "Chiamate nulle",
       "reasons_label": "Ragione",
-      "clear_filters": "Cancella filtri"
+      "clear_filters": "Cancella filtri",
+      "last_two_weeks": "Utime 2 settimane",
+      "last_two_months": "Ultimi 2 mesi",
+      "last_six_months": "Ultimi 6 mesi",
+      "last_year": "Ultimo anno",
+      "last_two_years": "Ultimi 2 anni",
+      "last_three_years": "Ultimi 3 anni"
     },
     "menu": {
       "dashboard": "Dashboard",
       "filters": "Filtri",
       "active_filters": "Filtri attivi"
+    },
+    "message": {
+      "error_admin_empty": "I valori inseriti non sono validi"
     }
   }
 }

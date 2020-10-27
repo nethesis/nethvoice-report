@@ -29,7 +29,7 @@ var UtilService = {
     getQueueReportViewFilterMap() {
       return {
         "dashboard": {
-          "default": ["time", "queue"],
+          "default": ["time", "queue", "agent"],
         },
         "data": {
           "summary": ["timeGroup", "time", "queue", "agent"],

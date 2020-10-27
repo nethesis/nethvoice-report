@@ -53,21 +53,26 @@
         <sui-modal-content>
           <sui-modal-description>
             <sui-form-fields>
-              <sui-form-field>
+              <sui-form-field :error="errors.admin && this._.isEmpty(officeHourStart)">
                 <label>Office hours start</label>
                 <vue-timepicker
+                  hide-clear-button
                   :minute-interval="5"
                   v-model="officeHourStart"
                 ></vue-timepicker>
               </sui-form-field>
-              <sui-form-field>
+              <sui-form-field :error="errors.admin && this._.isEmpty(officeHourEnd)">
                 <label>Office hours end</label>
                 <vue-timepicker
+                  hide-clear-button
                   :minute-interval="5"
                   v-model="officeHourEnd"
                 ></vue-timepicker>
               </sui-form-field>
             </sui-form-fields>
+            <sui-message error :visible="errors.admin">
+              <p>{{ $t("message.error_admin_empty") }}</p>
+            </sui-message>
             <span class="gray">{{ $t("office_hours_description") }}</span>
           </sui-modal-description>
         </sui-modal-content>
@@ -113,6 +118,9 @@ export default {
       loader: {
         saveSettings: false,
       },
+      errors: {
+        admin: false
+      }
     };
   },
   mounted() {
@@ -176,10 +184,26 @@ export default {
         }
       );
     },
+    resetErrors() {
+      this.errors.admin = false
+    },
     showSettingsModal(value) {
+      if (value) {
+        // on show modal
+        this.resetErrors()
+        this.getAdminSettings()
+      }
       this.openSettingsModal = value;
     },
     saveAdminSettings() {
+      // reset errors
+      this.resetErrors()
+      if (this._.isEmpty(this.officeHourStart) || this._.isEmpty(this.officeHourEnd)) {
+        // validate inputs
+        this.errors.admin = true
+        return
+      }
+      // apply changes
       this.loader.saveSettings = true;
       this.updateSettings(
         {

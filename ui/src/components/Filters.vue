@@ -35,7 +35,8 @@
               v-model="filter.time.group"
             />
           </sui-form-field>
-          <sui-form-field v-if="showFilterTime" width="six">
+          <!-- if time group is day -->
+          <sui-form-field v-if="(showFilterTime && filter.time.group == 'day') || (showFilterTime && !showFilterTimeGroup)" width="six">
             <label>{{$t('filter.time_interval')}}</label>
             <sui-button-group class="fluid">
               <sui-button
@@ -55,6 +56,78 @@
                 @click="selectTime('last_month')"
                 type="button"
                 >{{$t('filter.last_month')}}</sui-button
+              >
+            </sui-button-group>
+          </sui-form-field>
+          <!-- if time group is week -->
+          <sui-form-field v-if="showFilterTime && filter.time.group == 'week' && showFilterTimeGroup" width="seven">
+            <label>{{$t('filter.time_interval')}}</label>
+            <sui-button-group class="fluid">
+              <sui-button
+                :active="filter.time.range == 'last_week'"
+                @click="selectTime('last_week')"
+                type="button"
+                >{{$t('filter.last_week')}}</sui-button
+              >
+              <sui-button
+                :active="filter.time.range == 'last_two_weeks'"
+                @click="selectTime('last_two_weeks')"
+                type="button"
+                >{{$t('filter.last_two_weeks')}}</sui-button
+              >
+              <sui-button
+                :active="filter.time.range == 'last_month'"
+                @click="selectTime('last_month')"
+                type="button"
+                >{{$t('filter.last_month')}}</sui-button
+              >
+            </sui-button-group>
+          </sui-form-field>
+          <!-- if time group is month -->
+          <sui-form-field v-if="showFilterTime && filter.time.group == 'month' && showFilterTimeGroup" width="six">
+            <label>{{$t('filter.time_interval')}}</label>
+            <sui-button-group class="fluid">
+              <sui-button
+                :active="filter.time.range == 'last_month'"
+                @click="selectTime('last_month')"
+                type="button"
+                >{{$t('filter.last_month')}}</sui-button
+              >
+              <sui-button
+                :active="filter.time.range == 'last_two_months'"
+                @click="selectTime('last_two_months')"
+                type="button"
+                >{{$t('filter.last_two_months')}}</sui-button
+              >
+              <sui-button
+                :active="filter.time.range == 'last_six_months'"
+                @click="selectTime('last_six_months')"
+                type="button"
+                >{{$t('filter.last_six_months')}}</sui-button
+              >
+            </sui-button-group>
+          </sui-form-field>
+          <!-- if time group is year -->
+          <sui-form-field v-if="showFilterTime && filter.time.group == 'year' && showFilterTimeGroup" width="six">
+            <label>{{$t('filter.time_interval')}}</label>
+            <sui-button-group class="fluid">
+              <sui-button
+                :active="filter.time.range == 'last_year'"
+                @click="selectTime('last_year')"
+                type="button"
+                >{{$t('filter.last_year')}}</sui-button
+              >
+              <sui-button
+                :active="filter.time.range == 'last_two_years'"
+                @click="selectTime('last_two_years')"
+                type="button"
+                >{{$t('filter.last_two_years')}}</sui-button
+              >
+              <sui-button
+                :active="filter.time.range == 'last_three_years'"
+                @click="selectTime('last_three_years')"
+                type="button"
+                >{{$t('filter.last_three_years')}}</sui-button
               >
             </sui-button-group>
           </sui-form-field>
@@ -460,25 +533,38 @@ export default {
             this.filter.time.interval.end
           );
         }
-
-        if (
-          this.filter.time.interval.end.getTime() == this.getToday().getTime()
-        ) {
-          if (
-            this.filter.time.interval.start.getTime() ==
-            this.getYesterday().getTime()
-          ) {
-            this.filter.time.range = "yesterday";
-          } else if (
-            this.filter.time.interval.start.getTime() ==
-            this.getLastWeek().getTime()
-          ) {
-            this.filter.time.range = "last_week";
-          } else if (
-            this.filter.time.interval.start.getTime() ==
-            this.getLastMonth().getTime()
-          ) {
-            this.filter.time.range = "last_month";
+        if (this.filter.time.interval.end.getTime() == this.getToday().getTime()) {
+          // check time range starting from dates
+          switch (this.filter.time.interval.start.getTime()) {
+            case this.getYesterday().getTime():
+              this.filter.time.range = "yesterday";
+              break;
+            case this.getLastWeek().getTime():
+              this.filter.time.range = "last_week";
+              break;
+            case this.getLastTwoWeeks().getTime():
+              this.filter.time.range = "last_two_weeks";
+              break;
+            case this.getLastMonth().getTime():
+              this.filter.time.range = "last_month";
+              break;
+            case this.getLastTwoMonths().getTime():
+              this.filter.time.range = "last_two_months";
+              break;
+            case this.getLastSixMonths().getTime():
+              this.filter.time.range = "last_six_months";
+              break;
+            case this.getLastYear().getTime():
+              this.filter.time.range = "last_year";
+              break;
+            case this.getLastTwoYears().getTime():
+              this.filter.time.range = "last_two_years";
+              break;
+            case this.getLastThreeYears().getTime():
+              this.filter.time.range = "last_three_years";
+              break;
+            default:
+              break;
           }
         }
       }
@@ -782,13 +868,31 @@ export default {
       return today;
     },
     getYesterday() {
-      return this.addDays(this.getToday(), -1);
+      return moment().subtract(1, 'day').startOf('day').toDate();
     },
     getLastWeek() {
-      return this.addDays(this.getToday(), -7);
+      return moment().subtract(1, 'week').startOf('day').toDate();
+    },
+    getLastTwoWeeks() {
+      return moment().subtract(2, 'weeks').startOf('day').toDate();
     },
     getLastMonth() {
-      return this.addDays(this.getToday(), -30);
+      return moment().subtract(1, 'month').startOf('day').toDate();
+    },
+    getLastTwoMonths() {
+      return moment().subtract(2, 'months').startOf('day').toDate();
+    },
+    getLastSixMonths() {
+      return moment().subtract(6, 'months').startOf('day').toDate();
+    },
+    getLastYear() {
+      return moment().subtract(1, 'year').startOf('day').toDate();
+    },
+    getLastTwoYears() {
+      return moment().subtract(2, 'years').startOf('day').toDate();
+    },
+    getLastThreeYears() {
+      return moment().subtract(3, 'years').startOf('day').toDate();
     },
     selectTime(range) {
       this.filter.time.range = range;
@@ -803,17 +907,42 @@ export default {
           start: this.getLastWeek(),
           end: this.getToday(),
         };
+      } else if (range == "last_two_weeks") {
+        this.filter.time.interval = {
+          start: this.getLastTwoWeeks(),
+          end: this.getToday(),
+        };
       } else if (range == "last_month") {
         this.filter.time.interval = {
           start: this.getLastMonth(),
           end: this.getToday(),
         };
+      } else if (range == "last_two_months") {
+        this.filter.time.interval = {
+          start: this.getLastTwoMonths(),
+          end: this.getToday(),
+        };
+      } else if (range == "last_six_months") {
+        this.filter.time.interval = {
+          start: this.getLastSixMonths(),
+          end: this.getToday(),
+        };
+      } else if (range == "last_year") {
+        this.filter.time.interval = {
+          start: this.getLastYear(),
+          end: this.getToday(),
+        };
+      } else if (range == "last_two_years") {
+        this.filter.time.interval = {
+          start: this.getLastTwoYears(),
+          end: this.getToday(),
+        };
+      } else if (range == "last_three_years") {
+        this.filter.time.interval = {
+          start: this.getLastThreeYears(),
+          end: this.getToday(),
+        };
       }
-    },
-    addDays(date, days) {
-      var result = new Date(date);
-      result.setDate(result.getDate() + days);
-      return result;
     },
     applyFilters() {
       // save filter to local storage
