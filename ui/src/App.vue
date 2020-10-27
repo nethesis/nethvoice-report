@@ -146,6 +146,11 @@ export default {
   margin: 0 2rem 2rem 2rem;
 }
 
+.bar-chart {
+  width: 95%;
+  margin: 0 2rem 2rem 2rem;
+}
+
 .pie-chart {
   max-width: 26rem;
   margin: 0 2rem 3rem 2rem;
