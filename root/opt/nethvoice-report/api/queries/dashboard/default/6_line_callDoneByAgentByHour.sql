@@ -11,7 +11,7 @@ WHERE  time_60 >= '{{ ExtractSettings "StartHour" }}' AND time_60 <= '{{ Extract
         AND period <= "{{ .Time.Interval.End }}"
     {{ end }}
     {{ if gt (len .Agents) 0 }}
-            AND agent in ({{ ExtractStrings .Agents }})
+        AND agentName in ({{ ExtractStrings .Agents }})
     {{ end }}
 GROUP BY
     time_60,
