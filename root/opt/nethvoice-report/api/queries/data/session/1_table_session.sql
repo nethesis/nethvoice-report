@@ -13,7 +13,7 @@ SELECT
     reason
 FROM
     agentsessions
-WHERE reason NOT LIKE "Local/%" AND reason IS NOT NULL AND reason != "" 
+WHERE reason NOT LIKE "Local/%" AND reason IS NOT NULL AND reason != ""
     {{ if and .Time.Interval.Start .Time.Interval.End }}
         AND Date_format(From_unixtime(timestamp_in), "%Y-%m-%d %H:%i:%s") >= "{{ .Time.Interval.Start }}"
         AND Date_format(From_unixtime(timestamp_out), "%Y-%m-%d %H:%i:%s") <= "{{ .Time.Interval.End }}"
@@ -27,6 +27,9 @@ WHERE reason NOT LIKE "Local/%" AND reason IS NOT NULL AND reason != ""
             substring_index(substring_index(agent, '/', -2), '@', 1),
             substring_index(substring_index(agent, '/', -1), '-', 1)
         ) in ({{ ExtractStrings .Agents }})
+    {{ end }}
+    {{ if gt (len .Reasons) 0 }}
+        AND reason in ({{ ExtractStrings .Reasons }})
     {{ end }}
 ORDER BY
     qname,

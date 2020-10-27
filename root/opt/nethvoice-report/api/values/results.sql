@@ -1,1 +1,4 @@
-SELECT DISTINCT action FROM report_queue;
+SELECT
+    DISTINCT ACTION
+FROM
+    report_queue;

@@ -1,6 +1,6 @@
 {{ if and .Time.Interval.Start .Time.Interval.End }}
 SELECT
-    period AS time,
+    period AS `period£hourDate`,
     cid,
     name,
     company,
@@ -29,6 +29,9 @@ WHERE TRUE
     {{ end }}
     {{ if .Caller }}
         AND cid LIKE "{{ .Caller }}%"
+    {{ end }}
+    {{ if gt (len .Results) 0 }}
+        AND result in ({{ ExtractStrings .Results }})
     {{ end }}
 ORDER BY
     period DESC;
