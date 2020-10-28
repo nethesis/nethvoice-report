@@ -190,6 +190,10 @@ export default {
   z-index: 11000 !important;
 }
 
+.icon.cursor-default {
+  cursor: default !important;
+}
+
 .masthead.topbar {
   padding: 14px 0px 15px 0px !important;
   min-height: 65px;

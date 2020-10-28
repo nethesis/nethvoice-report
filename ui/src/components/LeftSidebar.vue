@@ -1,7 +1,7 @@
 <template>
 <sui-menu is="sui-sidebar" id="docs-menu" inverted="true" vertical="true" animation="overlay" v-bind:visible="true">
   <sui-menu-item>
-    <i class="user icon align-left mr-10 no-margin-left"></i>
+    <i class="user icon align-left mr-10 no-margin-left cursor-default"></i>
     <strong>
       {{loggedUsername}}
     </strong>
