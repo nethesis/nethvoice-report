@@ -11,10 +11,23 @@
   </div>
   <div v-show="dataAvailable">
     <div class="chart-container">
-      <div v-for="(chart, index) in charts" v-bind:key="index" :class="{'table-chart': chart.type == 'table', 'line-chart': chart.type == 'line', 'pie-chart': chart.type == 'pie', 'bar-chart': chart.type == 'bar'}">
-        <h4 is="sui-header">
-          {{ $t("caption." + chart.caption) }}
-        </h4>
+      <div
+        v-for="(chart, index) in charts" v-bind:key="index"
+        :id="`export_${index}`"
+        :class="{'table-chart': chart.type == 'table', 'line-chart': chart.type == 'line', 'pie-chart': chart.type == 'pie', 'bar-chart': chart.type == 'bar'}"
+      >
+        <div class="align-center">
+          <h4 is="sui-header" class="display-inline">
+            {{ $t("caption." + chart.caption) }}
+          </h4>
+          <ExportData
+            :data="chart.data"
+            :filename="$t(`caption.${chart.caption}`)"
+            :pdfElementContainerId="`#export_${index}`"
+            pdfElementHeaderClass=".header"
+            :type="chart.type"
+          />
+        </div>
         <div v-show="!chart.data">
             <sui-loader v-if="!chart.message" active centered inline class="loader-height" />
             <div v-else>
@@ -56,7 +69,6 @@
         </div>
       </div>
     </div>
-
     <!-- show details modal -->
     <sui-form @submit.prevent="hideDetailsModal()">
       <sui-modal v-if="chartDetails" v-model="openDetailsModal" size="tiny">
@@ -91,6 +103,7 @@ import TableChart from "../components/TableChart.vue";
 import LineChart from "../components/LineChart.vue";
 import BarChart from "../components/BarChart.vue";
 import PieChart from "../components/PieChart.vue";
+import ExportData from "../components/ExportData.vue";
 
 import QueriesService from "../services/queries";
 import StorageService from "../services/storage";
@@ -98,7 +111,7 @@ import UtilService from "../services/utils";
 
 export default {
   name: "QueueDashboard",
-  components: { TableChart, LineChart, BarChart, PieChart },
+  components: { TableChart, LineChart, BarChart, ExportData, PieChart },
   mixins: [StorageService, QueriesService, UtilService],
   data() {
     return {
@@ -237,7 +250,7 @@ export default {
     },
     hideDetailsModal() {
       this.openDetailsModal = false;
-    },
+    }
   },
 };
 </script>
