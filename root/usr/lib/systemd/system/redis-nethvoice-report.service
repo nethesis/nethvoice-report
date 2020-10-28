@@ -8,3 +8,5 @@ User=redis
 Group=asterisk
 RuntimeDirectory=redis-nethvoice-report
 RuntimeDirectoryMode=0755
+Restart=on-failure
+RestartSec=5
