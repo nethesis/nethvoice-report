@@ -108,7 +108,8 @@
       "ivrs_field_is_required": "Select one or more IVRs in filter to display this chart",
       "ivr_or_choice_fields_are_required": "Select one or more IVR or Choices in filter to display this chart",
       "timeIntervalStart_and_timeIntervalEnd_are_required": "Select a time interval to display this chart",
-      "error_admin_empty": "The entered values are not valid"
+      "error_admin_empty": "The entered values are not valid",
+      "caller_name_or_company_fields_are_required": "Select a Caller or a Contact name / Company in filter to display this chart"
     },
     "pagination": {
       "page": "page",
