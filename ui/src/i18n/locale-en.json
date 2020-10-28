@@ -110,6 +110,11 @@
       "timeIntervalStart_and_timeIntervalEnd_are_required": "Select a time interval to display this chart",
       "error_admin_empty": "The entered values are not valid"
     },
+    "pagination": {
+      "page": "page",
+      "of": "of",
+      "per_page": "per page"
+    },
     "close": "Close",
     "save": "Save",
     "week": "Week",
