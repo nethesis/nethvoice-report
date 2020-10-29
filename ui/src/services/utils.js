@@ -44,7 +44,7 @@ var UtilService = {
           "default": ["timeGroup", "time", "queue"]
         },
         "distribution": {
-          "hourly": ["timeGroup", "time", "queue", "timeSplit", "agent", "destination", "ivr"],
+          "hourly": ["timeGroup", "time", "queue", "timeSplit", "agent", "ivr"],
           "geographic": ["timeGroup", "time", "queue", "origin"],
         },
         "graphs": {
