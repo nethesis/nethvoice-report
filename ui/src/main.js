@@ -45,7 +45,7 @@ Vue.http.interceptors.push(function () {
 
 Vue.use(VueI18n);
 Vue.use(PortalVue);
-Vue.use(VueLodash, { name: 'ldsh' , lodash: lodash });
+Vue.use(VueLodash, { name: 'ldsh', lodash: lodash });
 Vue.use(VueScrollTo)
 Vue.use(VCalendar);
 
