@@ -20,6 +20,22 @@ DROP TABLE IF EXISTS performance_talk_time_total_75;
 
 DROP TABLE IF EXISTS performance_talk_time_total_90;
 
+DROP TABLE IF EXISTS performance_talk_time_total_105;
+
+DROP TABLE IF EXISTS performance_talk_time_total_120;
+
+DROP TABLE IF EXISTS performance_talk_time_total_180;
+
+DROP TABLE IF EXISTS performance_talk_time_total_240;
+
+DROP TABLE IF EXISTS performance_talk_time_total_300;
+
+DROP TABLE IF EXISTS performance_talk_time_total_450;
+
+DROP TABLE IF EXISTS performance_talk_time_total_600;
+
+DROP TABLE IF EXISTS performance_talk_time_total_600p;
+
 CREATE TABLE performance_talk_time_total AS
 SELECT
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d') AS timestamp_in,
