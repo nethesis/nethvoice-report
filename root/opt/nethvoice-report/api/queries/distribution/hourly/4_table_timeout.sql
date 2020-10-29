@@ -1,7 +1,7 @@
 {{ if gt (len .Queues) 0 }}
 SELECT
         period AS period£{{ .Time.Group }}Date,
-        qname AS `qname`,
+        qname,
         qdescr,
         time_{{ .Time.Division  }} AS `time£num^pivot`,
         total AS `{{ ExtractSettings "StartHour" }}-{{ ExtractSettings "EndHour" }}^sum_total£num`
