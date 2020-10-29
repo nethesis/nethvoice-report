@@ -185,7 +185,7 @@ export default {
       hasDoubleHeader: false,
       doubleHeader: [],
       pagination: {
-        rowsPerPage: 10,
+        rowsPerPage: 25,
         rowsPerPageOptions: [10, 25, 50, 100],
         currentPage: 1,
         pageRows: [],
