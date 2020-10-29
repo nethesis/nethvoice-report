@@ -498,8 +498,11 @@ export default {
         this.rows.length / this.pagination.rowsPerPage
       );
 
-      // check currentPage boundaries
-      if (this.pagination.currentPage < 1) {
+      // validate currentPage
+      if (
+        isNaN(this.pagination.currentPage) ||
+        this.pagination.currentPage < 1
+      ) {
         this.pagination.currentPage = 1;
       } else if (this.pagination.currentPage > this.pagination.totalPages) {
         this.pagination.currentPage = this.pagination.totalPages;
