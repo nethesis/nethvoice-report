@@ -1,47 +1,58 @@
 <template lang="html">
 <div class="chart-container">
-  <div v-for="(chart, index) in charts" v-bind:key="index" :class="{'table-chart': chart.type == 'table', 'line-chart': chart.type == 'line', 'pie-chart': chart.type == 'pie', 'bar-chart': chart.type == 'bar'}">
-    <h4 is="sui-header">
-      {{ $t("caption." + chart.caption) }}
-    </h4>
-    <div v-show="!chart.data">
-        <sui-loader v-if="!chart.message" active centered inline class="loader-height" />
-        <div v-else>
+  <div v-show="!dataAvailable" class="ui placeholder segment report-data-not-available">
+    <div class="ui icon header">
+      <i class="frown outline icon mg-bottom-sm"></i>
+      {{ $t("come_back_tomorrow") }}
+    </div>
+    <div class="inline">
+      {{ $t("come_back_tomorrow_desc") }}
+    </div>
+  </div>
+  <div v-show="dataAvailable">
+    <div v-for="(chart, index) in charts" v-bind:key="index" :class="{'table-chart': chart.type == 'table', 'line-chart': chart.type == 'line', 'pie-chart': chart.type == 'pie', 'bar-chart': chart.type == 'bar'}">
+      <h4 is="sui-header">
+        {{ $t("caption." + chart.caption) }}
+      </h4>
+      <div v-show="!chart.data">
+          <sui-loader v-if="!chart.message" active centered inline class="loader-height" />
+          <div v-else>
+            <sui-message warning>
+              <i class="exclamation triangle icon"></i>{{ $t("message." + chart.message) }}
+            </sui-message>
+          </div>
+      </div>
+      <div v-show="chart.data">
+        <div v-show="chart.data && chart.data.length < 2">
+          <!-- no data, only query header is present -->
           <sui-message warning>
-            <i class="exclamation triangle icon"></i>{{ $t("message." + chart.message) }}
+            <i class="exclamation triangle icon"></i>{{ $t("no_data_for_current_filter") }}
           </sui-message>
         </div>
-    </div>
-    <div v-show="chart.data">
-      <div v-show="chart.data && chart.data.length < 2">
-        <!-- no data, only query header is present -->
-        <sui-message warning>
-          <i class="exclamation triangle icon"></i>{{ $t("no_data_for_current_filter") }}
-        </sui-message>
-      </div>
-      <div v-show="chart.data && chart.data.length > 1">
-        <!-- table chart -->
-        <div v-if="chart.type == 'table'">
-          <TableChart :caption="chart.caption" :data="chart.data" />
-        </div>
-        <!-- line chart -->
-        <div v-if="chart.type == 'line'">
-          <line-chart :data="chart.data" :caption="chart.caption"></line-chart>
-        </div>
-        <!-- bar chart -->
-        <div v-if="chart.type == 'bar'">
-          <bar-chart :data="chart.data" :caption="chart.caption" :type="chart.type"></bar-chart>
-        </div>
-        <!-- pie chart -->
-        <div v-if="chart.type == 'pie'">
-          <pie-chart :data="chart.data" :caption="chart.caption"></pie-chart>
+        <div v-show="chart.data && chart.data.length > 1">
+          <!-- table chart -->
+          <div v-if="chart.type == 'table'">
+            <TableChart :caption="chart.caption" :data="chart.data" />
+          </div>
+          <!-- line chart -->
+          <div v-if="chart.type == 'line'">
+            <line-chart :data="chart.data" :caption="chart.caption"></line-chart>
+          </div>
+          <!-- bar chart -->
+          <div v-if="chart.type == 'bar'">
+            <bar-chart :data="chart.data" :caption="chart.caption" :type="chart.type"></bar-chart>
+          </div>
+          <!-- pie chart -->
+          <div v-if="chart.type == 'pie'">
+            <pie-chart :data="chart.data" :caption="chart.caption"></pie-chart>
+          </div>
         </div>
       </div>
-    </div>
-    <div v-show="chart.details" class="show-details">
-      <sui-button type="button" size="tiny" icon="zoom" @click.native="showDetailsModal(chart)">
-        {{ $t("show_details") }}
-      </sui-button>
+      <div v-show="chart.details" class="show-details">
+        <sui-button type="button" size="tiny" icon="zoom" @click.native="showDetailsModal(chart)">
+          {{ $t("show_details") }}
+        </sui-button>
+      </div>
     </div>
   </div>
 
@@ -95,6 +106,7 @@ export default {
       MAX_PIE_ENTRIES: 8,
       openDetailsModal: false,
       chartDetails: null,
+      dataAvailable: true,
     };
   },
   mounted() {
@@ -102,6 +114,11 @@ export default {
 
     this.$root.$on("applyFilters", (filter) => {
       this.applyFilters(filter);
+    });
+
+    // event "dataNotAvailable" is triggered by $http interceptor if report tables don't exist yet
+    this.$root.$on("dataNotAvailable", () => {
+      this.dataAvailable = false;
     });
   },
   watch: {
@@ -134,35 +151,37 @@ export default {
       );
     },
     initCharts() {
-      let charts = [];
+      if (this.dataAvailable) {
+        let charts = [];
 
-      this.queries = this.queryTree[this.$route.meta.section][
-        this.$route.meta.view
-      ];
+        this.queries = this.queryTree[this.$route.meta.section][
+          this.$route.meta.view
+        ];
 
-      if (this.queries) {
-        this.queries.forEach((query) => {
-          const queryName = query.name;
-          const queryType = query.type;
-          const tokens = queryName.split("_");
-          const position = parseInt(tokens[0]);
-          const chartType = tokens[1];
-          const caption = tokens[2];
-          charts.push({
-            name: queryName,
-            position: position,
-            type: chartType,
-            queryType: queryType,
-            caption: caption,
-            data: null,
-            message: null,
-            details: null,
+        if (this.queries) {
+          this.queries.forEach((query) => {
+            const queryName = query.name;
+            const queryType = query.type;
+            const tokens = queryName.split("_");
+            const position = parseInt(tokens[0]);
+            const chartType = tokens[1];
+            const caption = tokens[2];
+            charts.push({
+              name: queryName,
+              position: position,
+              type: chartType,
+              queryType: queryType,
+              caption: caption,
+              data: null,
+              message: null,
+              details: null,
+            });
           });
-        });
-        this.charts = charts.sort(this.sortByProperty("position"));
-        this.$root.$emit("requestApplyFilter");
-      } else {
-        this.charts = [];
+          this.charts = charts.sort(this.sortByProperty("position"));
+          this.$root.$emit("requestApplyFilter");
+        } else {
+          this.charts = [];
+        }
       }
     },
     applyFilters(filter) {

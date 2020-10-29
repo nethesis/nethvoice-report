@@ -153,6 +153,8 @@
     "joinempty": "JoinEmpty",
     "responseTime": "Response time",
     "answer": "Answer",
-    "60sec": "60 seconds"
+    "60sec": "60 seconds",
+    "come_back_tomorrow": "No data available, please come back tomorrow",
+    "come_back_tomorrow_desc": "Report data are harvested and processed every night"
   }
 }

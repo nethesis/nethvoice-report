@@ -1,5 +1,5 @@
 <template>
-  <div :style="styleObject">
+  <div v-show="dataAvailable" :style="styleObject">
     <div class="fixedbar" :class="{ fixed: isFixed }">
       <sui-container>
         <strong class="activeFilters">{{$t('menu.active_filters')}}: </strong>
@@ -198,6 +198,7 @@ export default {
       activeSelectedSearch: "",
       isFixed: false,
       offsetTop: "",
+      dataAvailable: true,
       styleObject: {
         "min-height": "62px"
       }
@@ -214,6 +215,11 @@ export default {
     this.$nextTick(() => {
       window.addEventListener('scroll', this.scrollHandler, true)
     })
+
+    // event "dataNotAvailable" is triggered by $http interceptor if report tables don't exist yet
+    this.$root.$on("dataNotAvailable", () => {
+      this.dataAvailable = false;
+    });
   },
   destroyed() {
     window.removeEventListener('scroll', this.scrollHandler);
