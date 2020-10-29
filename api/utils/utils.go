@@ -33,6 +33,7 @@ import (
 	"time"
 
 	"github.com/juliangruber/go-intersect"
+	"github.com/nleeper/goment"
 	"github.com/pkg/errors"
 
 	"github.com/nethesis/nethvoice-report/api/configuration"
@@ -231,111 +232,66 @@ func ParseRrdResults(rrdData [][]interface{}) (string, error) {
 }
 
 func DatesTimeInterval(intervalStart string, intervalEnd string, timeGroup string) (time.Time, time.Time, error) {
-	hhmmStart := "00:00"
-	hhmmEnd := "23:59"
-	zone, _ := time.Now().Zone()
-	var dayStart string
-	var dayEnd string
+	var start, end *goment.Goment
+	var err error
 
 	switch timeGroup {
 	case "year":
-		dayStart = fmt.Sprintf("%s-01-01 %s %s", intervalStart, hhmmStart, zone)
-		dayEnd = fmt.Sprintf("%s-12-31 %s %s", intervalEnd, hhmmEnd, zone)
+		start, err = goment.New(intervalStart, "YYYY")
+		if err != nil {
+			return time.Time{}, time.Time{}, err
+		}
+		start = start.StartOf("year")
+
+		end, err = goment.New(intervalEnd, "YYYY")
+		if err != nil {
+			return time.Time{}, time.Time{}, err
+		}
+		end = end.EndOf("year")
 	case "month":
-		dayStart = fmt.Sprintf("%s-01 %s %s", intervalStart, hhmmStart, zone)
-		// get last day of month
-		tokens := strings.Split(intervalEnd, "-")
-		yearEnd, err := strconv.Atoi(tokens[0])
+		start, err = goment.New(intervalStart, "YYYY-MM")
 		if err != nil {
 			return time.Time{}, time.Time{}, err
 		}
-		monthEnd, err := strconv.Atoi(tokens[1])
+		start = start.StartOf("month")
+
+		end, err = goment.New(intervalEnd, "YYYY-MM")
 		if err != nil {
 			return time.Time{}, time.Time{}, err
 		}
-		daysInMonth := DaysInMonth(monthEnd, yearEnd)
-		dayEnd = fmt.Sprintf("%s-%d %s %s", intervalEnd, daysInMonth, hhmmEnd, zone)
+		end = end.EndOf("month")
 	case "week":
-		// interval start
-		tokens := strings.Split(intervalStart, "-")
-		yearStart, err := strconv.Atoi(tokens[0])
+		start, err = goment.New(intervalStart, "YYYY-WW")
 		if err != nil {
 			return time.Time{}, time.Time{}, err
 		}
-		weekStart, err := strconv.Atoi(tokens[1])
-		if err != nil {
-			return time.Time{}, time.Time{}, err
-		}
-		timeDayStart := WeekStart(yearStart, weekStart, 0, 0)
+		start = start.StartOf("week")
 
-		// interval end
-		tokens = strings.Split(intervalEnd, "-")
-		yearEnd, err := strconv.Atoi(tokens[0])
+		end, err = goment.New(intervalEnd, "YYYY-WW")
 		if err != nil {
 			return time.Time{}, time.Time{}, err
 		}
-		weekEnd, err := strconv.Atoi(tokens[1])
-		if err != nil {
-			return time.Time{}, time.Time{}, err
-		}
-		timeDayEnd := WeekEnd(yearEnd, weekEnd, 23, 59)
-
-		return timeDayStart, timeDayEnd, nil
+		end = end.EndOf("week")
+		end.SetHour(23)
+		end.SetMinute(59)
+		end.SetSecond(59)
 	case "day":
-		dayStart = fmt.Sprintf("%s %s %s", intervalStart, hhmmStart, zone)
-		dayEnd = fmt.Sprintf("%s %s %s", intervalEnd, hhmmEnd, zone)
+		start, err = goment.New(intervalStart, "YYYY-MM-DD")
+		if err != nil {
+			return time.Time{}, time.Time{}, err
+		}
+		start = start.StartOf("day")
 
+		end, err = goment.New(intervalEnd, "YYYY-MM-DD")
+		if err != nil {
+			return time.Time{}, time.Time{}, err
+		}
+		end = end.EndOf("day")
 	default:
 		return time.Time{}, time.Time{}, errors.New("unknown timeGroup: " + timeGroup)
 	}
 
-	start, err := time.Parse("2006-01-02 15:04 MST", dayStart)
-	if err != nil {
-		return time.Time{}, time.Time{}, err
-	}
+	// convert from goment to time
 
-	end, err := time.Parse("2006-01-02 15:04 MST", dayEnd)
-	if err != nil {
-		return time.Time{}, time.Time{}, err
-	}
-	return start, end, nil
-}
-
-func WeekEnd(year, week int, hour int, min int) time.Time {
-	start := WeekStart(year, week, hour, min)
-	end := start.AddDate(0, 0, 6)
-	return end
-}
-
-func WeekStart(year, week int, hour int, min int) time.Time {
-	// Start from the middle of the year:
-	t := time.Date(year, 7, 1, hour, min, 0, 0, time.Now().Location())
-
-	// Roll back to Monday:
-	if wd := t.Weekday(); wd == time.Sunday {
-		t = t.AddDate(0, 0, -6)
-	} else {
-		t = t.AddDate(0, 0, -int(wd)+1)
-	}
-
-	// Difference in weeks:
-	_, w := t.ISOWeek()
-	t = t.AddDate(0, 0, (week-w)*7)
-
-	return t
-}
-
-func DaysInMonth(month, year int) int {
-	switch time.Month(month) {
-	case time.April, time.June, time.September, time.November:
-		return 30
-	case time.February:
-		if year%4 == 0 && (year%100 != 0 || year%400 == 0) {
-			// leap year
-			return 29
-		}
-		return 28
-	default:
-		return 31
-	}
+	return start.ToTime(), end.ToTime(), nil
 }
