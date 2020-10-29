@@ -769,8 +769,8 @@ export default {
           this.saveToLocalStorageWithExpiry(
             this.reportFilterValuesStorageName,
             this.filterValues,
-            10
-          ); //// TODO use 8 * 60 (i.e. 8 hours)
+            8 * 60 // 8 hours
+          );
 
           // set selected values in filter
           this.setFilterSelection(this.defaultFilter, false);
@@ -1241,8 +1241,8 @@ export default {
             this.saveToLocalStorageWithExpiry(
               "reportPhoneBook",
               this.phoneBook,
-              10
-            ); //// TODO use 8 * 60 (i.e. 8 hours)
+              8 * 60 // 8 hours
+            );
           },
           (error) => {
             console.error(error.body);
