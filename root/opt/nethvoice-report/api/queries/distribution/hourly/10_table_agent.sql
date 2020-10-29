@@ -14,7 +14,7 @@ WHERE   time_{{ .Time.Division  }} >= '{{ ExtractSettings "StartHour" }}' AND ti
         {{ if gt (len .Agents) 0 }}
             AND agentName in ({{ ExtractStrings .Agents }})
         {{ end }}
-GROUP BY period, time_{{ .Time.Division }},qdescr
+GROUP BY period, time_{{ .Time.Division }}
 ORDER BY period, agentNum, time_{{ .Time.Division }}
 {{ else }}
 SELECT "agents field is required" AS "!message";

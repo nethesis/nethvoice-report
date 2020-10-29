@@ -18,7 +18,7 @@ WHERE   time_{{ .Time.Division  }} >= '{{ ExtractSettings "StartHour" }}' AND ti
         {{ if gt (len .IVRs) 0 }}
             AND ivr_name in ({{ ExtractStrings .IVRs }})
         {{ end }}
-GROUP BY period, time_{{ .Time.Division }},qdescr
+GROUP BY period, time_{{ .Time.Division }}
 ORDER BY period, ivr_id, time_{{ .Time.Division }}
 {{ else }}
 SELECT "ivrs field is required" AS "!message";

@@ -15,7 +15,7 @@ WHERE  time_60 >= '{{ ExtractSettings "StartHour" }}' AND time_60 <= '{{ Extract
     {{ end }}
 GROUP BY
     time_60,
-    agent
+    agentName
 ORDER BY
     agent,
     time_60;
