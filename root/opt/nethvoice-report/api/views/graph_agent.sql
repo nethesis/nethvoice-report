@@ -1,12 +1,12 @@
-DROP TABLE IF EXISTS graph_agent_aswer_year;
+DROP TABLE IF EXISTS graph_agent_answer_year;
 
-DROP TABLE IF EXISTS graph_agent_aswer_month;
+DROP TABLE IF EXISTS graph_agent_answer_month;
 
-DROP TABLE IF EXISTS graph_agent_aswer_week;
+DROP TABLE IF EXISTS graph_agent_answer_week;
 
-DROP TABLE IF EXISTS graph_agent_aswer_day;
+DROP TABLE IF EXISTS graph_agent_answer_day;
 
-CREATE TABLE graph_agent_aswer_year AS
+CREATE TABLE graph_agent_answer_year AS
 SELECT
     Date_format(From_unixtime(timestamp_in), "%Y") AS period,
     qname,
@@ -27,7 +27,7 @@ ORDER BY
     qdescr,
     agent;
 
-CREATE TABLE graph_agent_aswer_month AS
+CREATE TABLE graph_agent_answer_month AS
 SELECT
     Date_format(From_unixtime(timestamp_in), "%Y-%m") AS period,
     qname,
@@ -48,7 +48,7 @@ ORDER BY
     qdescr,
     agent;
 
-CREATE TABLE graph_agent_aswer_week AS
+CREATE TABLE graph_agent_answer_week AS
 SELECT
     Date_format(From_unixtime(timestamp_in), "%Y-%u") AS period,
     qname,
@@ -69,7 +69,7 @@ ORDER BY
     qdescr,
     agent;
 
-CREATE TABLE graph_agent_aswer_day AS
+CREATE TABLE graph_agent_answer_day AS
 SELECT
     Date_format(From_unixtime(timestamp_in), "%Y-%m-%d") AS period,
     qname,
@@ -90,15 +90,15 @@ ORDER BY
     qdescr,
     agent;
 
-DROP TABLE IF EXISTS graph_agent_noaswer_year;
+DROP TABLE IF EXISTS graph_agent_noanswer_year;
 
-DROP TABLE IF EXISTS graph_agent_noaswer_month;
+DROP TABLE IF EXISTS graph_agent_noanswer_month;
 
-DROP TABLE IF EXISTS graph_agent_noaswer_week;
+DROP TABLE IF EXISTS graph_agent_noanswer_week;
 
-DROP TABLE IF EXISTS graph_agent_noaswer_day;
+DROP TABLE IF EXISTS graph_agent_noanswer_day;
 
-CREATE TABLE graph_agent_noaswer_year AS
+CREATE TABLE graph_agent_noanswer_year AS
 SELECT
     Date_format(From_unixtime(timestamp_in), "%Y") AS period,
     qname,
@@ -119,7 +119,7 @@ ORDER BY
     qdescr,
     agent;
 
-CREATE TABLE graph_agent_noaswer_month AS
+CREATE TABLE graph_agent_noanswer_month AS
 SELECT
     Date_format(From_unixtime(timestamp_in), "%Y-%m") AS period,
     qname,
@@ -140,7 +140,7 @@ ORDER BY
     qdescr,
     agent;
 
-CREATE TABLE graph_agent_noaswer_week AS
+CREATE TABLE graph_agent_noanswer_week AS
 SELECT
     Date_format(From_unixtime(timestamp_in), "%Y-%u") AS period,
     qname,
@@ -161,7 +161,7 @@ ORDER BY
     qdescr,
     agent;
 
-CREATE TABLE graph_agent_noaswer_day AS
+CREATE TABLE graph_agent_noanswer_day AS
 SELECT
     Date_format(From_unixtime(timestamp_in), "%Y-%m-%d") AS period,
     qname,

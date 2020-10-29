@@ -75,5 +75,6 @@ SELECT
     ACTION AS result
 FROM
     report_queue
+WHERE agent != "NONE"
 ORDER BY
     period DESC;

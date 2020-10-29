@@ -4,7 +4,7 @@ SELECT
     agent,
     Sum(total) AS total£num
 FROM
-    graph_agent_aswer_{{ .Time.Group }}
+    graph_agent_answer_{{ .Time.Group }}
 WHERE  TRUE
     {{ if and .Time.Interval.Start .Time.Interval.End }}
         AND period >= "{{ .Time.Interval.Start }}"
