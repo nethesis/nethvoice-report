@@ -109,7 +109,7 @@
             <span is="sui-menu-item" class="small-pad"
               >{{ pagination.firstRowIndex + 1 }} -
               {{ Math.min(pagination.lastRowIndex, rows.length) }}
-              {{ $t("pagination.of") }} {{ rows.length }}</span
+              {{ $t("pagination.of") }} {{ rows.length | formatNumber }}</span
             >
           </sui-menu>
 
@@ -152,7 +152,7 @@
               v-model="pagination.currentPage"
             />
             <span is="sui-menu-item" class="small-pad"
-              >{{ $t("pagination.of") }} {{ pagination.totalPages }}</span
+              >{{ $t("pagination.of") }} {{ pagination.totalPages | formatNumber}}</span
             >
           </sui-menu>
           <sui-menu pagination>
