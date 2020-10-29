@@ -11,7 +11,7 @@ SELECT
        Date_format(time, "%Y") AS period,
        Date_format(
               Sec_to_time(
-                     Time_to_sec(time) - Time_to_sec(time) % (10 * 60) + (10 * 60)
+                     Time_to_sec(time) - Time_to_sec(time) % (10 * 60)
               ),
               "%H:%i"
        ) AS time_10,
@@ -40,7 +40,7 @@ SELECT
        Date_format(time, "%Y") AS period,
        Date_format(
               Sec_to_time(
-                     Time_to_sec(time) - Time_to_sec(time) % (15 * 60) + (15 * 60)
+                     Time_to_sec(time) - Time_to_sec(time) % (15 * 60)
               ),
               "%H:%i"
        ) AS time_15,
@@ -69,7 +69,7 @@ SELECT
        Date_format(time, "%Y") AS period,
        Date_format(
               Sec_to_time(
-                     Time_to_sec(time) - Time_to_sec(time) % (30 * 60) + (30 * 60)
+                     Time_to_sec(time) - Time_to_sec(time) % (30 * 60)
               ),
               "%H:%i"
        ) AS time_30,
@@ -98,7 +98,7 @@ SELECT
        Date_format(time, "%Y") AS period,
        Date_format(
               Sec_to_time(
-                     Time_to_sec(time) - Time_to_sec(time) % (60 * 60) + (60 * 60)
+                     Time_to_sec(time) - Time_to_sec(time) % (60 * 60)
               ),
               "%H:%i"
        ) AS time_60,
@@ -135,7 +135,7 @@ SELECT
        Date_format(time, "%Y-%m") AS period,
        Date_format(
               Sec_to_time(
-                     Time_to_sec(time) - Time_to_sec(time) % (10 * 60) + (10 * 60)
+                     Time_to_sec(time) - Time_to_sec(time) % (10 * 60)
               ),
               "%H:%i"
        ) AS time_10,
@@ -164,7 +164,7 @@ SELECT
        Date_format(time, "%Y-%m") AS period,
        Date_format(
               Sec_to_time(
-                     Time_to_sec(time) - Time_to_sec(time) % (15 * 60) + (15 * 60)
+                     Time_to_sec(time) - Time_to_sec(time) % (15 * 60)
               ),
               "%H:%i"
        ) AS time_15,
@@ -193,7 +193,7 @@ SELECT
        Date_format(time, "%Y-%m") AS period,
        Date_format(
               Sec_to_time(
-                     Time_to_sec(time) - Time_to_sec(time) % (30 * 60) + (30 * 60)
+                     Time_to_sec(time) - Time_to_sec(time) % (30 * 60)
               ),
               "%H:%i"
        ) AS time_30,
@@ -222,7 +222,7 @@ SELECT
        Date_format(time, "%Y-%m") AS period,
        Date_format(
               Sec_to_time(
-                     Time_to_sec(time) - Time_to_sec(time) % (60 * 60) + (60 * 60)
+                     Time_to_sec(time) - Time_to_sec(time) % (60 * 60)
               ),
               "%H:%i"
        ) AS time_60,
@@ -259,7 +259,7 @@ SELECT
        Date_format(time, "%Y-%u") AS period,
        Date_format(
               Sec_to_time(
-                     Time_to_sec(time) - Time_to_sec(time) % (10 * 60) + (10 * 60)
+                     Time_to_sec(time) - Time_to_sec(time) % (10 * 60)
               ),
               "%H:%i"
        ) AS time_10,
@@ -288,7 +288,7 @@ SELECT
        Date_format(time, "%Y-%u") AS period,
        Date_format(
               Sec_to_time(
-                     Time_to_sec(time) - Time_to_sec(time) % (15 * 60) + (15 * 60)
+                     Time_to_sec(time) - Time_to_sec(time) % (15 * 60)
               ),
               "%H:%i"
        ) AS time_15,
@@ -317,7 +317,7 @@ SELECT
        Date_format(time, "%Y-%u") AS period,
        Date_format(
               Sec_to_time(
-                     Time_to_sec(time) - Time_to_sec(time) % (30 * 60) + (30 * 60)
+                     Time_to_sec(time) - Time_to_sec(time) % (30 * 60)
               ),
               "%H:%i"
        ) AS time_30,
@@ -346,7 +346,7 @@ SELECT
        Date_format(time, "%Y-%u") AS period,
        Date_format(
               Sec_to_time(
-                     Time_to_sec(time) - Time_to_sec(time) % (60 * 60) + (60 * 60)
+                     Time_to_sec(time) - Time_to_sec(time) % (60 * 60)
               ),
               "%H:%i"
        ) AS time_60,
@@ -383,7 +383,7 @@ SELECT
        Date_format(time, "%Y-%m-%d") AS period,
        Date_format(
               Sec_to_time(
-                     Time_to_sec(time) - Time_to_sec(time) % (10 * 60) + (10 * 60)
+                     Time_to_sec(time) - Time_to_sec(time) % (10 * 60)
               ),
               "%H:%i"
        ) AS time_10,
@@ -412,7 +412,7 @@ SELECT
        Date_format(time, "%Y-%m-%d") AS period,
        Date_format(
               Sec_to_time(
-                     Time_to_sec(time) - Time_to_sec(time) % (15 * 60) + (15 * 60)
+                     Time_to_sec(time) - Time_to_sec(time) % (15 * 60)
               ),
               "%H:%i"
        ) AS time_15,
@@ -441,7 +441,7 @@ SELECT
        Date_format(time, "%Y-%m-%d") AS period,
        Date_format(
               Sec_to_time(
-                     Time_to_sec(time) - Time_to_sec(time) % (30 * 60) + (30 * 60)
+                     Time_to_sec(time) - Time_to_sec(time) % (30 * 60)
               ),
               "%H:%i"
        ) AS time_30,
@@ -470,7 +470,7 @@ SELECT
        Date_format(time, "%Y-%m-%d") AS period,
        Date_format(
               Sec_to_time(
-                     Time_to_sec(time) - Time_to_sec(time) % (60 * 60) + (60 * 60)
+                     Time_to_sec(time) - Time_to_sec(time) % (60 * 60)
               ),
               "%H:%i"
        ) AS time_60,

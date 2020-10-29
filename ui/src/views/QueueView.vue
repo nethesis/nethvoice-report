@@ -1,6 +1,6 @@
 <template lang="html">
 <div class="chart-container">
-  <div v-for="(chart, index) in charts" v-bind:key="index" :class="{'table-chart': chart.type == 'table', 'line-chart': chart.type == 'line', 'pie-chart': chart.type == 'pie'}">
+  <div v-for="(chart, index) in charts" v-bind:key="index" :class="{'table-chart': chart.type == 'table', 'line-chart': chart.type == 'line', 'pie-chart': chart.type == 'pie', 'bar-chart': chart.type == 'bar'}">
     <h4 is="sui-header">
       {{ $t("caption." + chart.caption) }}
     </h4>
@@ -27,6 +27,10 @@
         <!-- line chart -->
         <div v-if="chart.type == 'line'">
           <line-chart :data="chart.data" :caption="chart.caption"></line-chart>
+        </div>
+        <!-- bar chart -->
+        <div v-if="chart.type == 'bar'">
+          <bar-chart :data="chart.data" :caption="chart.caption" :type="chart.type"></bar-chart>
         </div>
         <!-- pie chart -->
         <div v-if="chart.type == 'pie'">
@@ -72,6 +76,7 @@
 <script>
 import TableChart from "../components/TableChart.vue";
 import LineChart from "../components/LineChart.vue";
+import BarChart from "../components/BarChart.vue";
 import PieChart from "../components/PieChart.vue";
 
 import QueriesService from "../services/queries";
@@ -80,7 +85,7 @@ import UtilService from "../services/utils";
 
 export default {
   name: "QueueDashboard",
-  components: { TableChart, LineChart, PieChart },
+  components: { TableChart, LineChart, BarChart, PieChart },
   mixins: [StorageService, QueriesService, UtilService],
   data() {
     return {

@@ -64,11 +64,6 @@ func main() {
 	api.Use(middleware.InstanceJWT().MiddlewareFunc())
 	{
 
-		authorizations := api.Group("/authorizations")
-		{
-			authorizations.GET("", methods.GetAuthorizations)
-		}
-
 		filters := api.Group("/filters/:section/:view")
 		{
 			filters.GET("", methods.GetDefaultFilter)

@@ -1,9 +1,9 @@
 <script>
-import { Line } from "vue-chartjs";
+import { Bar } from "vue-chartjs";
 import UtilService from "../services/utils";
 
 export default {
-  extends: Line,
+  extends: Bar,
   mixins: [UtilService],
   props: {
     type: {

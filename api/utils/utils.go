@@ -33,6 +33,7 @@ import (
 	"time"
 
 	"github.com/juliangruber/go-intersect"
+	"github.com/nleeper/goment"
 	"github.com/pkg/errors"
 
 	"github.com/nethesis/nethvoice-report/api/configuration"
@@ -228,4 +229,69 @@ func ParseRrdResults(rrdData [][]interface{}) (string, error) {
 
 	// return value
 	return string(dataJSON), nil
+}
+
+func DatesTimeInterval(intervalStart string, intervalEnd string, timeGroup string) (time.Time, time.Time, error) {
+	var start, end *goment.Goment
+	var err error
+
+	switch timeGroup {
+	case "year":
+		start, err = goment.New(intervalStart, "YYYY")
+		if err != nil {
+			return time.Time{}, time.Time{}, err
+		}
+		start = start.StartOf("year")
+
+		end, err = goment.New(intervalEnd, "YYYY")
+		if err != nil {
+			return time.Time{}, time.Time{}, err
+		}
+		end = end.EndOf("year")
+	case "month":
+		start, err = goment.New(intervalStart, "YYYY-MM")
+		if err != nil {
+			return time.Time{}, time.Time{}, err
+		}
+		start = start.StartOf("month")
+
+		end, err = goment.New(intervalEnd, "YYYY-MM")
+		if err != nil {
+			return time.Time{}, time.Time{}, err
+		}
+		end = end.EndOf("month")
+	case "week":
+		start, err = goment.New(intervalStart, "YYYY-WW")
+		if err != nil {
+			return time.Time{}, time.Time{}, err
+		}
+		start = start.StartOf("week")
+
+		end, err = goment.New(intervalEnd, "YYYY-WW")
+		if err != nil {
+			return time.Time{}, time.Time{}, err
+		}
+		end = end.EndOf("week")
+		end.SetHour(23)
+		end.SetMinute(59)
+		end.SetSecond(59)
+	case "day":
+		start, err = goment.New(intervalStart, "YYYY-MM-DD")
+		if err != nil {
+			return time.Time{}, time.Time{}, err
+		}
+		start = start.StartOf("day")
+
+		end, err = goment.New(intervalEnd, "YYYY-MM-DD")
+		if err != nil {
+			return time.Time{}, time.Time{}, err
+		}
+		end = end.EndOf("day")
+	default:
+		return time.Time{}, time.Time{}, errors.New("unknown timeGroup: " + timeGroup)
+	}
+
+	// convert from goment to time
+
+	return start.ToTime(), end.ToTime(), nil
 }

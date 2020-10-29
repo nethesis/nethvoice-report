@@ -40,7 +40,7 @@
           "queues": [],
           "groups": [],
 	        "time": \{
-            "group": "year",
+            "group": "day",
             "division": "60",
             "range": "yesterday",
             "interval": \{

@@ -29,7 +29,7 @@ var UtilService = {
     getQueueReportViewFilterMap() {
       return {
         "dashboard": {
-          "default": ["time", "queue", "agent"],
+          "default": ["time", "queue", "agent", "ivr", "choice"],
         },
         "data": {
           "summary": ["timeGroup", "time", "queue", "agent"],
@@ -44,7 +44,7 @@ var UtilService = {
           "default": ["timeGroup", "time", "queue"]
         },
         "distribution": {
-          "hourly": ["timeGroup", "time", "queue", "timeSplit", "agent", "destination", "ivr"],
+          "hourly": ["timeGroup", "time", "queue", "timeSplit", "agent", "ivr"],
           "geographic": ["timeGroup", "time", "queue", "origin"],
         },
         "graphs": {
@@ -95,6 +95,88 @@ var UtilService = {
       if (day.length < 2) 
           day = '0' + day;
       return [year, month, day].join('/');
+    },
+    lineOrBarChartWatchData(that) {
+      if (that.data && that.data.length > 1) {
+        that.parseData();
+      }
+    },
+    lineOrBarChartParseData(that) {
+      that.labels = [];
+      that.datasets = [];
+
+      // remove first element (query columns)
+      const rows = that.data.filter((_, i) => i !== 0);
+
+      // build a data structure (datasetMap) like this:
+      // {
+      //   datasetName: {2018: 0, 2019: 18, 2020: 4}
+      //   otherDatasetName: {2018: 0, 2019: 39, 2020: 210}
+      //   yetAnotherDataset: {2018: 0, 2019: 526, 2020: 28}
+      // }
+
+      let labelSet = new Set();
+      let datasetNameSet = new Set();
+      let datasetMap = {};
+
+      rows.forEach((row) => {
+        datasetNameSet.add(row[0]);
+        labelSet.add(row[1]);
+      });
+
+      datasetNameSet.forEach((datasetName) => {
+        datasetMap[datasetName] = {};
+      });
+
+      rows.forEach((row) => {
+        const datasetName = row[0];
+        const label = row[1];
+        const value = parseFloat(row[2]);
+
+        datasetMap[datasetName][label] = value;
+      });
+
+      that.labels = Array.from(labelSet).sort();
+
+      // add missing data with zero values
+
+      for (const [datasetName, data] of Object.entries(datasetMap)) {
+        const labels = Object.keys(data);
+        let missingLabels = that.labels.filter((l) => !labels.includes(l));
+
+        missingLabels.forEach((missingLabel) => {
+          datasetMap[datasetName][missingLabel] = 0;
+        });
+      }
+
+      // initialize bar chart data
+
+      Object.entries(datasetMap).forEach(([datasetName, data], index) => {
+        const sortedLabels = Object.keys(data).sort();
+        let datasetValues = [];
+
+        sortedLabels.forEach((label) => {
+          datasetValues.push(data[label]);
+        });
+
+        const color = that.colors[index % that.colors.length];
+
+        that.datasets.push({
+          label: datasetName,
+          data: datasetValues,
+          borderColor: color,
+          backgroundColor: color,
+          fill: false,
+        });
+      });
+      that.renderBarChart();
+    },
+    renderLineOrBarChart(that) {
+      const chartData = {
+        labels: that.labels,
+        datasets: that.datasets,
+      };
+      that.renderChart(chartData, that.options);
     }
   },
 };

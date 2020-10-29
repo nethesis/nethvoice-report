@@ -25,7 +25,6 @@ package methods
 import (
 	"encoding/json"
 	"io/ioutil"
-	"net/http"
 
 	"github.com/pkg/errors"
 
@@ -100,18 +99,6 @@ func GetUserAuthorizations(username string) (models.UserAuthorizations, error) {
 	return userAuthorizations, errors.New("username not found in authorizations file")
 }
 
-func GetAuthorizations(c *gin.Context) {
-	// get current user
-	user := GetClaims(c)["id"].(string)
-
-	// get user auths
-	auths, _ := GetUserAuthorizations(user)
-
-	// return authorizations
-	c.JSON(http.StatusOK, gin.H{"authorizations": auths})
-
-}
-
 func GetClaims(c *gin.Context) jwt.MapClaims {
 	// extract claims from jwt gin context
 	claims := jwt.ExtractClaims(c)
@@ -135,4 +122,28 @@ func GetAdminHashPass() string {
 	}
 
 	return hash
+}
+
+func GetAllowedQueues(c *gin.Context) ([]string, error) {
+	// get current user
+	user := GetClaims(c)["id"].(string)
+
+	// get user auths
+	auths, err := GetUserAuthorizations(user)
+	if err != nil {
+		return nil, err
+	}
+	return auths.Queues, nil
+}
+
+func GetAllowedAgents(c *gin.Context) ([]string, error) {
+	// get current user
+	user := GetClaims(c)["id"].(string)
+
+	// get user auths
+	auths, err := GetUserAuthorizations(user)
+	if err != nil {
+		return nil, err
+	}
+	return auths.Agents, nil
 }

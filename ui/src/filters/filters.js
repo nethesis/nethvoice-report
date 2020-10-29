@@ -14,8 +14,9 @@ var Filters = {
 
         return [year, month, day].join('-');
     },
-    getMonthNames() {
-        return [
+    formatMonthDate(value, i18n) {
+        // value: e.g. "2020-10"
+        const monthNames = [
             "january",
             "february",
             "march",
@@ -28,14 +29,11 @@ var Filters = {
             "october",
             "november",
             "december"
-        ]
-    },
-    formatMonthDate(value, i18n) {
-        // value: e.g. "2020-10"
+        ];
         const tokens = value.split("-");
         const year = tokens[0];
         const monthNum = tokens[1];
-        const monthI18nKey = "month." + this.getMonthNames()[monthNum - 1];
+        const monthI18nKey = "month." + monthNames[monthNum - 1];
         const month = i18n ? i18n.t(monthI18nKey) : monthI18nKey;
         return month + " " + year;
     },
@@ -55,13 +53,12 @@ var Filters = {
         return num.toLocaleString();
     },
     formatPercentage(value) {
-        const numFormatted = this.formatNumber(value);
+        const num = parseFloat(value);
 
-        if (!numFormatted || numFormatted == "-") {
+        if (isNaN(num)) {
             return "-";
-        } else {
-            return numFormatted + " %";
         }
+        return num.toLocaleString() + " %";
     },
     formatTime: function (value) {
         if (!value || value.length == 0) {

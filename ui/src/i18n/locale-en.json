@@ -83,7 +83,9 @@
     },
     "caption": {
       "test-total-calls-for-queue": "Total calls for queue",
-      "test-hourly-distribution": "Hourly distribution"
+      "test-hourly-distribution": "Hourly distribution",
+      "performance": "Performance",
+      "qos": "Quality of service (QoS)"
     },
     "month": {
       "january": "January",
@@ -103,9 +105,16 @@
       "origins_field_is_required": "Select one or more Origins in filter to display this chart",
       "queues_field_is_required": "Select one or more Queues in filter to display this chart",
       "agents_field_is_required": "Select one or more Agents in filter to display this chart",
+      "ivrs_field_is_required": "Select one or more IVRs in filter to display this chart",
       "ivr_or_choice_fields_are_required": "Select one or more IVR or Choices in filter to display this chart",
       "timeIntervalStart_and_timeIntervalEnd_are_required": "Select a time interval to display this chart",
-      "error_admin_empty": "The entered values are not valid"
+      "error_admin_empty": "The entered values are not valid",
+      "caller_name_or_company_fields_are_required": "Select a Caller or a Contact name / Company in filter to display this chart"
+    },
+    "pagination": {
+      "page": "page",
+      "of": "of",
+      "per_page": "per page"
     },
     "close": "Close",
     "save": "Save",
@@ -116,6 +125,30 @@
     "queueName": "Queue name",
     "show_details": "Show details",
     "others": "Others",
-    "office_hours_description": "Office hours are used to display report charts. Some charts plot data only inside office hours (e.g. Queue report > Graphs > Average duration)"
+    "office_hours_description": "Office hours are used to display report charts. Some charts plot data only inside office hours (e.g. Queue report > Graphs > Average duration)",
+    "expand": "Expand",
+    "collapse": "Collapse",
+    "period": "Period",
+    "queueDescription": "Queue description",
+    "incoming": "Incoming",
+    "processed": "Processed",
+    "notProcessed": "Not processed",
+    "tot": "Total",
+    "null": "Null",
+    "percentage": "Percentage",
+    "waiting": "Waiting",
+    "duration": "Duration",
+    "min": "Min",
+    "max": "Max",
+    "avg": "Average",
+    "failed": "Failed",
+    "timeout": "Timeout",
+    "exitempty": "ExitEmpty",
+    "exitkey": "ExitKey",
+    "full": "Full",
+    "joinempty": "JoinEmpty",
+    "responseTime": "Response time",
+    "answer": "Answer",
+    "60sec": "60 seconds"
   }
 }

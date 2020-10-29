@@ -119,6 +119,10 @@ export default {
   margin-right: 1rem !important;
 }
 
+.mg-right-xl {
+  margin-right: 4rem !important;
+}
+
 .ui.multiple.search.dropdown > input.search {
   width: 100% !important;
 }
@@ -142,6 +146,11 @@ export default {
 }
 
 .line-chart {
+  width: 95%;
+  margin: 0 2rem 2rem 2rem;
+}
+
+.bar-chart {
   width: 95%;
   margin: 0 2rem 2rem 2rem;
 }
@@ -185,6 +194,10 @@ export default {
   z-index: 11000 !important;
 }
 
+.icon.cursor-default {
+  cursor: default !important;
+}
+
 .masthead.topbar {
   padding: 14px 0px 15px 0px !important;
   min-height: 65px;
@@ -205,5 +218,53 @@ export default {
       margin-top: -2px;
     }
   }
+}
+
+.ui.pagination.menu.no-border {
+  box-shadow: none;
+  border: 0;
+  background: initial;
+}
+
+.ui.input.current-page > input {
+  width: 4rem;
+  text-align: center;
+}
+
+.ui.selection.dropdown.rows-per-page {
+  width: 5.5rem;
+  min-width: 0;
+}
+
+.ui.pagination.menu .item.select-rows-per-page {
+  padding-left: 0.4rem;
+  padding-right: 0.4rem;
+  min-width: 0;
+}
+
+.ui.menu .dropdown.item.select-rows-per-page .menu {
+  min-width: 10.5rem;
+}
+
+.menu-item-padding.ui.dropdown {
+  padding-left: 0;
+}
+
+.ui.menu .item.small-pad {
+  padding-left: 0.8rem;
+  padding-right: 0.8rem;
+}
+
+.ui.menu .item.select-rows-per-page>i.dropdown.icon {
+  margin: 0;
+}
+
+.ui.menu .ui.dropdown .menu>.item .icon:not(.dropdown).check {
+  float: right !important;
+  margin-right: 0 !important;
+}
+
+.no-border.ui.menu .item:before {
+  background: none;
 }
 </style>

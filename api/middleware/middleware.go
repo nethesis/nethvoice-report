@@ -23,8 +23,8 @@
 package middleware
 
 import (
-	"encoding/json"
 	"crypto/sha1"
+	"encoding/json"
 
 	"github.com/pkg/errors"
 
@@ -62,8 +62,8 @@ func InitJWT() *jwt.GinJWTMiddleware {
 	authMiddleware, errDefine := jwt.New(&jwt.GinJWTMiddleware{
 		Realm:       "queue-report",
 		Key:         []byte(configuration.Config.Secret),
-		Timeout:     time.Hour * 4, //// set production timeout
-		MaxRefresh:  time.Hour * 4, //// set production max refresh
+		Timeout:     time.Hour * 12,
+		MaxRefresh:  time.Hour * 24 * 30, // a month
 		IdentityKey: identityKey,
 		Authenticator: func(c *gin.Context) (interface{}, error) {
 			// check login credentials exists
@@ -87,7 +87,7 @@ func InitJWT() *jwt.GinJWTMiddleware {
 				return &models.UserAuthorizations{
 					Username: username,
 				}, nil
-			// if username is admin check on freepbx users
+				// if username is admin check on freepbx users
 			} else if username == "admin" {
 				// convert password to sha1 encryption
 				h := sha1.New()
@@ -105,9 +105,9 @@ func InitJWT() *jwt.GinJWTMiddleware {
 				}
 
 				return &models.UserAuthorizations{
-                                        Username: username,
-                                }, nil
-			// it's a normal system PAM user
+					Username: username,
+				}, nil
+				// it's a normal system PAM user
 			} else {
 				// try PAM authentication
 				err := methods.PamAuth(username, password)

@@ -4,8 +4,8 @@ SELECT
 	ivr_id,
 	ivr_name,
 	choice,
-	time_{{ .Time.Division  }} AS `time£hourDate#pivot`,
-	total AS `{{ ExtractSettings "StartHour" }}-{{ ExtractSettings "EndHour" }}£num^sum_total`
+	time_{{ .Time.Division  }} AS `time£num^pivot`,
+	total AS `{{ ExtractSettings "StartHour" }}-{{ ExtractSettings "EndHour" }}^sum_total£num`
 FROM	distribution_hour_ivr_{{ .Time.Group }}_{{ .Time.Division  }}
 WHERE   time_{{ .Time.Division  }} >= '{{ ExtractSettings "StartHour" }}' AND time_{{ .Time.Division  }} <= '{{ ExtractSettings "EndHour" }}'
         {{ if and .Time.Interval.Start .Time.Interval.End }}
