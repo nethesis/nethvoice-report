@@ -1,33 +1,27 @@
 DROP TABLE IF EXISTS phonebook_map;
 
 CREATE TABLE phonebook_map AS
-SELECT
-    DISTINCT name,
-    company,
-    homephone,
-    workphone,
-    cellphone
+SELECT DISTINCT
+   name,
+   company,
+   homephone,
+   workphone,
+   cellphone
 FROM
-    phonebook.phonebook
+   phonebook.phonebook
 WHERE
-    (
-        name IS NOT NULL
-        OR name != ""
-    )
-    AND (
-        homephone IS NOT NULL
-        OR homephone != ""
-    )
-    AND (
-        workphone IS NOT NULL
-        OR workphone != ""
-    )
-    AND (
-        cellphone IS NOT NULL
-        OR cellphone != ""
-    )
+   (
+      name IS NOT NULL
+      OR name != ""
+   )
+   AND
+   (
+      homephone IS NOT NULL
+      OR workphone IS NOT NULL
+      OR cellphone IS NOT NULL
+   )
 ORDER BY
-    name;
+   name;
 
 DROP TABLE IF EXISTS data_call;
 
