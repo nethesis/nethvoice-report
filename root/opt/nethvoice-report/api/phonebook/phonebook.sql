@@ -1,9 +1,9 @@
 SELECT DISTINCT
-   COALESCE(name, ''),
-   COALESCE(company, ''),
-   COALESCE(homephone, ''),
-   COALESCE(workphone, ''),
-   COALESCE(cellphone, '')
+   COALESCE(name, '') AS name,
+   COALESCE(company, '') AS company,
+   COALESCE(homephone, '') AS homephone,
+   COALESCE(workphone, '') AS workphone,
+   COALESCE(cellphone, '') AS cellphone
 FROM
    phonebook
 WHERE
