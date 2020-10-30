@@ -9,6 +9,7 @@ After=redis-rspamd.service
 [Service]
 ExecStart=/opt/nethvoice-report/api/api
 User=asterisk
+Group=asterisk
 Restart=on-failure
 RestartSec=5
 
