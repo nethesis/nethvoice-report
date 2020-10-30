@@ -84,14 +84,23 @@ func executeReportPhonebook() {
 	for rows.Next() {
 		// define fields
 		var name string
+		var company string
 		var homephone string
 		var workphone string
 		var cellphone string
 
 		// handle scan error
-		errScan := rows.Scan(&name, &homephone, &workphone, &cellphone)
+		errScan := rows.Scan(&name, &company, &homephone, &workphone, &cellphone)
 		if errScan != nil {
 			helper.FatalError(errors.Wrap(errScan, "Error in query scan fields"))
+		}
+
+		if name != "" && company != "" {
+			name = name + " | " + company
+		}
+
+		if name == "" && company != "" {
+			name = company
 		}
 
 		// handle phone numbers

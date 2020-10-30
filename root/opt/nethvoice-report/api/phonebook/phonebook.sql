@@ -1,26 +1,23 @@
-SELECT
-    DISTINCT name,
-    homephone,
-    workphone,
-    cellphone
+SELECT DISTINCT
+   COALESCE(name, ''),
+   COALESCE(company, ''),
+   COALESCE(homephone, ''),
+   COALESCE(workphone, ''),
+   COALESCE(cellphone, '')
 FROM
-    phonebook
+   phonebook
 WHERE
-    (
-        name IS NOT NULL
-        OR name != ""
-    )
-    AND (
-        homephone IS NOT NULL
-        OR homephone != ""
-    )
-    AND (
-        workphone IS NOT NULL
-        OR workphone != ""
-    )
-    AND (
-        cellphone IS NOT NULL
-        OR cellphone != ""
-    )
+   (
+      name IS NOT NULL
+      OR name != ""
+      OR company IS NOT NULL
+      OR company != ""
+   )
+   AND
+   (
+      homephone IS NOT NULL
+      OR workphone IS NOT NULL
+      OR cellphone IS NOT NULL
+   )
 ORDER BY
-    name;
+   name;

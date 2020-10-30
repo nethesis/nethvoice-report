@@ -2,17 +2,19 @@ DROP TABLE IF EXISTS phonebook_map;
 
 CREATE TABLE phonebook_map AS
 SELECT DISTINCT
-   name,
-   company,
-   homephone,
-   workphone,
-   cellphone
+   COALESCE(name, ''),
+   COALESCE(company, ''),
+   COALESCE(homephone, ''),
+   COALESCE(workphone, ''),
+   COALESCE(cellphone, '')
 FROM
    phonebook.phonebook
 WHERE
    (
       name IS NOT NULL
       OR name != ""
+      OR company IS NOT NULL
+      OR company != ""
    )
    AND
    (
