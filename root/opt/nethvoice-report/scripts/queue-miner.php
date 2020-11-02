@@ -48,19 +48,6 @@ $sqls[] = "INSERT IGNORE INTO queue_log_history (time,callid,queuename,agent,eve
 # Delete queue_log
 $sqls[] = "DELETE FROM queue_log WHERE UNIX_TIMESTAMP(time) < ?";
 
-// Create queue_failed table if it doesn't exists
-$sqls[] = "
-    CREATE TABLE IF NOT EXISTS `queue_failed` (
-      `cid` varchar(100) NOT NULL DEFAULT '',
-      `name` varchar(80) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-      `company` varchar(80) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-      `action` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-      `time` INT(11) NOT NULL DEFAULT 0,
-      `direction` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-      `qname` varchar(32) NOT NULL DEFAULT '',
-      `event` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
-    ) ENGINE=InnoDB AUTO_INCREMENT=398433 DEFAULT CHARSET=utf8";
-
 if (!empty($sqls)) {
     foreach ($sqls as $sql) {
         try {
