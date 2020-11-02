@@ -112,3 +112,14 @@ CREATE TABLE if not exists ivr_choice (
   choice varchar(10) NOT NULL,
   INDEX UNIQUEID_INDEX (uniqueid)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `queue_failed` (
+  `cid` varchar(100) NOT NULL DEFAULT '',
+  `name` varchar(80) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `company` varchar(80) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `action` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `time` INT(11) NOT NULL DEFAULT 0,
+  `direction` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `qname` varchar(32) NOT NULL DEFAULT '',
+  `event` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8";
