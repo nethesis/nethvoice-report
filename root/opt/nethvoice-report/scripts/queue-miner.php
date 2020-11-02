@@ -210,6 +210,97 @@ function do_time_queries($start_ts,$end_ts) {
 
     $sqls[] = "UPDATE report_queue SET cid = (SELECT cid FROM report_queue_callers WHERE report_queue_callers.timestamp_in = report_queue.timestamp_in LIMIT 1) WHERE cid IS NULL AND timestamp_in > $start_ts";
 
+    $sqls[] = "
+        INSERT INTO `queue_failed` (`cid`,`name`,`company`,`action`,`time`,`direction`,`qname`,`event`)
+            SELECT
+                cid, name, company, action, UNIX_TIMESTAMP(time) as time, direction, queuename,
+                IF (event = '', action, event) AS event
+            FROM
+            (
+                SELECT
+                    time,
+                    queuename,
+                    'IN' AS direction,
+                    'TIMEOUT' AS action,
+                    CAST(data1 AS UNSIGNED) AS position,
+                    CAST(data2 AS UNSIGNED) AS duration,
+                    CAST(data3 AS UNSIGNED) AS hold,
+                    (
+                        SELECT DISTINCT(data2)
+                        FROM asteriskcdrdb.queue_log_history z
+                        WHERE z.event = 'ENTERQUEUE' AND z.callid=a.callid
+                    ) AS cid,
+                    (
+                        SELECT DISTINCT(cdr.cnam)
+                        FROM asteriskcdrdb.cdr cdr
+                        WHERE cdr.uniqueid = a.callid GROUP BY cdr.uniqueid
+                    ) AS name,
+                    (
+                    SELECT DISTINCT(cdr.ccompany)
+                    FROM asteriskcdrdb.cdr cdr
+                    WHERE cdr.uniqueid = a.callid GROUP BY cdr.uniqueid
+                    ) AS company,
+                    agent,
+                    event
+                FROM asteriskcdrdb.queue_log_history a
+                WHERE event IN ('ABANDON', 'EXITWITHTIMEOUT', 'EXITWITHKEY', 'EXITEMPTY', 'FULL', 'JOINEMPTY', 'JOINUNAVAIL')
+                AND UNIX_TIMESTAMP(time) > $start_ts AND UNIX_TIMESTAMP(time) < $end_ts
+
+                UNION ALL
+
+                SELECT time,
+                    queuename,
+                    'IN' AS direction,
+                    'DONE' AS action,
+                    CAST(data3 AS UNSIGNED) AS position,
+                    CAST(data2 AS UNSIGNED) AS duration,
+                    CAST(data1 AS UNSIGNED) AS hold,
+                    (
+                        SELECT DISTINCT(data2)
+                        FROM asteriskcdrdb.queue_log_history z
+                        WHERE z.event='ENTERQUEUE' AND z.callid=a.callid
+                    ) AS cid,
+                    (
+                        SELECT DISTINCT(cdr.cnam)
+                        FROM asteriskcdrdb.cdr cdr
+                        WHERE cdr.uniqueid = a.callid GROUP BY cdr.uniqueid
+                    ) AS name,
+                    (
+                        SELECT DISTINCT(cdr.ccompany)
+                        FROM asteriskcdrdb.cdr cdr
+                        WHERE cdr.uniqueid = a.callid GROUP BY cdr.uniqueid
+                    ) AS company,
+                    agent,
+                    event
+                FROM asteriskcdrdb.queue_log_history a
+                WHERE event IN ('COMPLETEAGENT', 'COMPLETECALLER')
+                AND UNIX_TIMESTAMP(time) > $start_ts AND UNIX_TIMESTAMP(time) < $end_ts
+
+                UNION ALL
+
+                SELECT calldate AS time,
+                    l.queuename as queuename,
+                    'OUT' AS direction,
+                    IF (disposition='ANSWERED', 'DONE', disposition) AS action,
+                    0 AS position,
+                    0 AS duration,
+                    0 AS hold,
+                    dst AS cid,
+                    cnam AS name,
+                    ccompany AS company,
+                    accountcode AS agent,
+                    ''
+                FROM cdr c
+                INNER JOIN asteriskcdrdb.queue_log_history l ON c.dst=l.data2
+                WHERE l.event='ENTERQUEUE'
+                AND UNIX_TIMESTAMP(calldate) > $start_ts AND UNIX_TIMESTAMP(calldate) < $end_ts
+                AND UNIX_TIMESTAMP(time) > $start_ts AND UNIX_TIMESTAMP(time) < $end_ts
+                ORDER BY time DESC
+            ) queue_recall
+            WHERE action != 'DONE'
+            GROUP BY cid, queuename
+            ORDER BY time DESC";
+
     foreach ($sqls as $sql) {
         try {
            $cdrdb->query($sql);
