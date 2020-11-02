@@ -34,7 +34,11 @@
       "last_six_months": "Last 6 months",
       "last_year": "Last year",
       "last_two_years": "Last 2 years",
-      "last_three_years": "Last 3 years"
+      "last_three_years": "Last 3 years",
+      "area_code": "Area code",
+      "district": "District",
+      "province": "Province",
+      "region": "Region"
     },
     "menu": {
       "queue": "Queue report",

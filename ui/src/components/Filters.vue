@@ -3,7 +3,7 @@
     <sui-container v-if="this.showFiltersForm">
       <sui-form class="filters-form" @submit.prevent="applyFilters">
         <sui-form-fields v-if="savedSearches.length" class="mg-bottom-md">
-          <sui-form-field width="six">
+          <sui-form-field width="four">
             <sui-dropdown
               :placeholder="$t('filter.saved_search')"
               search
@@ -36,7 +36,7 @@
             />
           </sui-form-field>
           <!-- if time group is day -->
-          <sui-form-field v-if="(showFilterTime && filter.time.group == 'day') || (showFilterTime && !showFilterTimeGroup)" width="six">
+          <sui-form-field v-if="(showFilterTime && filter.time.group == 'day') || (showFilterTime && !showFilterTimeGroup)" width="five">
             <label>{{$t('filter.time_interval')}}</label>
             <sui-button-group class="fluid">
               <sui-button
@@ -60,7 +60,7 @@
             </sui-button-group>
           </sui-form-field>
           <!-- if time group is week -->
-          <sui-form-field v-if="showFilterTime && filter.time.group == 'week' && showFilterTimeGroup" width="seven">
+          <sui-form-field v-if="showFilterTime && filter.time.group == 'week' && showFilterTimeGroup" width="five">
             <label>{{$t('filter.time_interval')}}</label>
             <sui-button-group class="fluid">
               <sui-button
@@ -84,7 +84,7 @@
             </sui-button-group>
           </sui-form-field>
           <!-- if time group is month -->
-          <sui-form-field v-if="showFilterTime && filter.time.group == 'month' && showFilterTimeGroup" width="six">
+          <sui-form-field v-if="showFilterTime && filter.time.group == 'month' && showFilterTimeGroup" width="five">
             <label>{{$t('filter.time_interval')}}</label>
             <sui-button-group class="fluid">
               <sui-button
@@ -108,7 +108,7 @@
             </sui-button-group>
           </sui-form-field>
           <!-- if time group is year -->
-          <sui-form-field v-if="showFilterTime && filter.time.group == 'year' && showFilterTimeGroup" width="six">
+          <sui-form-field v-if="showFilterTime && filter.time.group == 'year' && showFilterTimeGroup" width="five">
             <label>{{$t('filter.time_interval')}}</label>
             <sui-button-group class="fluid">
               <sui-button
@@ -131,7 +131,7 @@
               >
             </sui-button-group>
           </sui-form-field>
-          <sui-form-field width="four">
+          <sui-form-field width="three">
             <label>{{$t('filter.dates_label')}}</label>
             <v-date-picker
               mode="range"
@@ -143,7 +143,7 @@
           </sui-form-field>
         </sui-form-fields>
 
-        <sui-grid>
+        <sui-grid class="fields">
           <sui-form-field v-if="showFilterQueue" width="four">
             <label>{{$t('filter.queues_label')}}</label>
             <sui-dropdown
@@ -221,7 +221,7 @@
               v-model="filter.choices"
             />
           </sui-form-field>
-          <sui-form-field v-if="showFilterOrigin" width="six">
+          <sui-form-field v-if="showFilterOrigin" width="four">
             <label>{{$t('filter.origins_label')}}</label>
             <sui-dropdown
               multiple
@@ -232,7 +232,7 @@
               v-model="filter.origins"
             />
           </sui-form-field>
-          <sui-form-field v-if="showFilterDestination" width="six">
+          <sui-form-field v-if="showFilterDestination" width="four">
             <label>{{$t('filter.destinations_label')}}</label>
             <sui-dropdown
               multiple
@@ -260,7 +260,7 @@
               v-model="filter.caller"
             />
           </sui-form-field>
-          <sui-form-field v-if="showFilterContactName" width="six">
+          <sui-form-field v-if="showFilterContactName" width="four">
             <label>{{$t('filter.contact_name_label')}}</label>
             <sui-search
               :searchFields="['title', 'cleanName']"
@@ -701,51 +701,29 @@ export default {
 
           // origins
           if (this.defaultFilter.origins) {
-            let areaCodeSet = new Set();
-            let districtSet = new Set();
-            let provinceSet = new Set();
-            let regionSet = new Set();
-
-            this.defaultFilter.origins.forEach((origin) => {
-              const tokens = origin.split(",");
-              areaCodeSet.add(tokens[0]);
-              districtSet.add(tokens[1]);
-              provinceSet.add(tokens[2]);
-              regionSet.add(tokens[3]);
-            });
-
             let areaCodes = [];
-            areaCodeSet.forEach((areaCode) => {
-              areaCodes.push({
-                value: "areaCode_" + areaCode,
-                text: areaCode + " (Area code)",
-              }); //// i18n
-            });
-
             let districts = [];
-            districtSet.forEach((district) => {
-              districts.push({
-                value: "district_" + district,
-                text: district + " (District)",
-              }); //// i18n
-            });
-
             let provinces = [];
-            provinceSet.forEach((province) => {
-              provinces.push({
-                value: "province_" + province,
-                text: province + " (Province)",
-              }); //// i18n
-            });
-
             let regions = [];
-            regionSet.forEach((region) => {
+            this.defaultFilter.origins.forEach((origin) => {
+              const tokens = origin.split(",")
+              areaCodes.push({
+                value: "areaCode_" + tokens[0],
+                text: `${tokens[0]} (${this.$t("filter.area_code")} ${tokens[1]})`
+              })
+              districts.push({
+                value: "district_" + tokens[1],
+                text: `${tokens[1]} (${this.$t("filter.district")})`
+              })
+              provinces.push({
+                value: "province_" + tokens[2],
+                text: `${tokens[2]} (${this.$t("filter.province")})`
+              })
               regions.push({
-                value: "region_" + region,
-                text: region + " (Region)",
-              }); //// i18n
-            });
-
+                value: "region_" + tokens[3],
+                text: `${tokens[3]} (${this.$t("filter.region")})`
+              })
+            })
             this.filterValues.origins = areaCodes
               .concat(districts)
               .concat(provinces)
@@ -1330,6 +1308,12 @@ export default {
 .filters-form {
   text-align: left;
   margin-top: 30px;
+  .fluid.ui.buttons {
+    min-height: 38px;
+  }
+  .ui.negative.button {
+    min-height: 38px;
+  }
 }
 
 .view-title {

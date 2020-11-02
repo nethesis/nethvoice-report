@@ -34,7 +34,11 @@
       "last_six_months": "Ultimi 6 mesi",
       "last_year": "Ultimo anno",
       "last_two_years": "Ultimi 2 anni",
-      "last_three_years": "Ultimi 3 anni"
+      "last_three_years": "Ultimi 3 anni",
+      "area_code": "Prefisso",
+      "district": "Comune",
+      "province": "Provincia",
+      "region": "Regione"
     },
     "menu": {
       "dashboard": "Dashboard",
