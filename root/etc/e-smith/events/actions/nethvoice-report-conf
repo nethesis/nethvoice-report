@@ -37,9 +37,5 @@ password=$(perl -e "use NethServer::Password; print NethServer::Password::store(
 # flush privileges
 /usr/bin/mysql --defaults-file=/root/.my.cnf -e "FLUSH PRIVILEGES"
 
-# precalculate some data to use report immediately
-/opt/nethvoice-report/tasks/tasks phonebook
-/opt/nethvoice-report/tasks/tasks values
-
 # expand user auth file
 scl enable rh-php56 /var/lib/asterisk/bin/retrieve_conf
