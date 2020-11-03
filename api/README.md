@@ -14,16 +14,20 @@ where:
 
 Each query result has a particular syntax that is a convention between APIs and UI useful to format well the reports.
 
-Each columns can have this syntax:
+## Table charts
+
+SQL queries can generate table charts with one, two or three header layers. Header layers are useful to organize and group related columns.
+A SQL query that generate a table chart must output column names that follow this syntax:
 ```
-<group>$<column_name>£<type>#<hide>^<pivot>
+<top_header>$<middle_header>$<column_name>£<type>#^<pivot>
 ```
 where:
-- **group**$: it defines if the column with the same <group> must be grouped inside UI with a special table header
+- **top_header**$: it defines the text on the first header layer. Used only if the table has three header layers
+- **middle_header**$: it defines the text on the second header layer. Used only if the table has two header layers
 - **column_name**: it defines the name of the column that must be internationalized
-- **type**: it defines the type of the fields. Type: *num*, *seconds*, *label*, *year*, *month*, *week*, *day*, *hour*
-- **hide**: if present collapses the column
-- **pivot** if presente, turn the field of the column in a pivot table
+- **type**: it defines the type of column data and how it should be formatted. Types: *num*, *seconds*, *label*, *year*, *month*, *week*, *day*, *hour*
+- **#**: if present, the column is initially collapsed. A button to expand it is provided on its super-header
+- **pivot** if present, coloumn data on the various rows of the table are transformed into a set of columns. A pivot column generates a table with two header layers. If **pivotGroup** is used instead of **pivot** column data are considered as time data in the format HH:mm and organized in a header layer with the various hours of the day; a table with three header layers is generated. See [Distribution/Hourly queries](https://github.com/nethesis/nethvoice-report/tree/master/root/opt/nethvoice-report/api/queries/distribution/hourly) for examples
 
 
 # Views
