@@ -74,7 +74,7 @@
             <sui-message error :visible="errors.admin">
               <p>{{ $t("message.error_admin_empty") }}</p>
             </sui-message>
-            <span class="gray">{{ $t("office_hours_description") }}</span>
+            <span class="gray">{{ $t("message.office_hours_description") }}</span>
           </sui-modal-description>
         </sui-modal-content>
         <sui-modal-actions>

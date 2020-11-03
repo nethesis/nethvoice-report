@@ -18,10 +18,10 @@
       button
       pointing="top right"
     >
-      {{ $t("export") }}
+      {{ $t("command.export") }}
       <sui-dropdown-menu>
-        <sui-dropdown-item @click="exportToCSV()">{{ $t("export_csv") }}</sui-dropdown-item>
-        <sui-dropdown-item v-if="isPdf" @click="exportToPDF('canvas')">{{ $t("export_pdf") }}
+        <sui-dropdown-item @click="exportToCSV()">{{ $t("command.export_csv") }}</sui-dropdown-item>
+        <sui-dropdown-item v-if="isPdf" @click="exportToPDF('canvas')">{{ $t("command.export_pdf") }}
         </sui-dropdown-item>
       </sui-dropdown-menu>
     </sui-dropdown>

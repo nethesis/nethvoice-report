@@ -3,10 +3,10 @@
   <div v-show="!dataAvailable" class="ui placeholder segment report-data-not-available">
     <div class="ui icon header">
       <i class="frown outline icon mg-bottom-sm"></i>
-      {{ $t("come_back_tomorrow") }}
+      {{ $t("message.come_back_tomorrow") }}
     </div>
     <div class="inline">
-      {{ $t("come_back_tomorrow_desc") }}
+      {{ $t("message.come_back_tomorrow_desc") }}
     </div>
   </div>
   <div v-show="dataAvailable">
@@ -42,7 +42,7 @@
           <div v-show="chart.data && chart.data.length < 2">
             <!-- no data, only query header is present -->
             <sui-message warning>
-              <i class="exclamation triangle icon"></i>{{ $t("no_data_for_current_filter") }}
+              <i class="exclamation triangle icon"></i>{{ $t("message.no_data_for_current_filter") }}
             </sui-message>
           </div>
           <div v-show="chart.data && chart.data.length > 1">
@@ -66,7 +66,7 @@
         </div>
         <div v-show="chart.details" class="show-details">
           <sui-button type="button" size="tiny" icon="zoom" @click.native="showDetailsModal(chart)">
-            {{ $t("show_details") }}
+            {{ $t("command.show_details") }}
           </sui-button>
         </div>
       </div>
@@ -91,7 +91,7 @@
         </sui-modal-content>
         <sui-modal-actions>
           <sui-button type="submit" primary>
-            {{ $t("close") }}
+            {{ $t("command.close") }}
           </sui-button>
         </sui-modal-actions>
       </sui-modal>

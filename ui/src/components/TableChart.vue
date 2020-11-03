@@ -18,7 +18,7 @@
             "
             :colspan="header.subHeaders ? header.colSpan : '1'"
           >
-            {{ $t(header.name) }}
+            {{ $t("table." + header.name) }}
             <a
               href="#"
               v-show="header.subHeaders && header.expandible"
@@ -26,8 +26,8 @@
             >
               {{
                 header.expanded
-                  ? "[" + $t("collapse") + "]"
-                  : "[" + $t("expand") + "]"
+                  ? "[" + $t("table.collapse") + "]"
+                  : "[" + $t("table.expand") + "]"
               }}
             </a>
           </sui-table-header-cell>
@@ -41,7 +41,7 @@
             :rowspan="tripleHeader && !header.subHeaders.length ? '2' : '1'"
             :colspan="header.colSpan"
           >
-            {{ $t(header.name) }}
+            {{ $t("table." + header.name) }}
             <a
               href="#"
               v-show="header.subHeaders && header.expandible"
@@ -49,8 +49,8 @@
             >
               {{
                 header.expanded
-                  ? "[" + $t("collapse") + "]"
-                  : "[" + $t("expand") + "]"
+                  ? "[" + $t("table.collapse") + "]"
+                  : "[" + $t("table.expand") + "]"
               }}
             </a></sui-table-header-cell
           >
@@ -62,8 +62,13 @@
             v-for="(header, index) in bottomHeaders"
             v-show="header.visible"
             v-bind:key="index"
-            >{{ $t(header.name) }}</sui-table-header-cell
           >
+            {{
+              $te("table." + header.name)
+                ? $t("table." + header.name)
+                : header.name
+            }}
+          </sui-table-header-cell>
         </sui-table-row>
       </sui-table-header>
 
@@ -90,8 +95,10 @@
             >
               {{ element | formatPercentage }}
             </span>
-            <span v-else-if="columns[index] && columns[index].format == 'label'">
-              {{ $t(element) }}
+            <span
+              v-else-if="columns[index] && columns[index].format == 'label'"
+            >
+              {{ $t("table." + element) }}
             </span>
             <span
               v-else-if="columns[index] && columns[index].format == 'monthDate'"
@@ -121,7 +128,10 @@
             </sui-menu>
 
             <sui-menu pagination class="mg-right-xl">
-              <sui-dropdown class="item select-rows-per-page" direction="upward">
+              <sui-dropdown
+                class="item select-rows-per-page"
+                direction="upward"
+              >
                 <sui-dropdown-menu>
                   <sui-dropdown-item
                     v-for="(value, index) in pagination.rowsPerPageOptions"
@@ -175,7 +185,11 @@
         </sui-table-row>
       </sui-table-footer>
     </sui-table>
-    <HorizontalScrollers :visible="true" :containerId="`#container_${chartKey}`" :chartData="data" />
+    <HorizontalScrollers
+      :visible="true"
+      :containerId="`#container_${chartKey}`"
+      :chartData="data"
+    />
   </div>
 </template>
 
@@ -188,7 +202,7 @@ export default {
   name: "TableChart",
   props: ["caption", "data", "chartKey"],
   mixins: [UtilService, StorageService],
-  components: {HorizontalScrollers},
+  components: { HorizontalScrollers },
   data() {
     return {
       ROWS_PER_PAGE_KEY: "tableChartRowsPerPage",
