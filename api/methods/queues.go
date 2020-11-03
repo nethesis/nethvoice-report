@@ -191,7 +191,7 @@ func executeRrdQuery(filter models.Filter, section string, view string, graph st
 		return "", errors.Wrap(err, "cannot retrieve time interval")
 	}
 
-	results, errRrd := QueryRrd(rrdFilePath, filter, start, end, graph)
+	results, errRrd := QueryRrd(rrdFilePath, filter, start, end)
 	if errRrd != nil {
 		return "", errRrd
 	}

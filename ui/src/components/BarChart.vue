@@ -55,7 +55,7 @@ export default {
     },
   },
   methods: {
-    renderBarChart() {
+    render() {
       this.renderLineOrBarChart(this);
     },
     parseData() {

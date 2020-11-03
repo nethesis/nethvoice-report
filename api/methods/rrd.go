@@ -14,7 +14,7 @@ import (
 	"github.com/ziutek/rrd"
 )
 
-func QueryRrd(rrdFilePath string, filter models.Filter, start time.Time, end time.Time, graph string) (string, error) {
+func QueryRrd(rrdFilePath string, filter models.Filter, start time.Time, end time.Time) (string, error) {
 	hostname, errHostname := os.Hostname()
 	if errHostname != nil {
 		return "", errors.Wrap(errHostname, "error retrieving hostname")
@@ -57,7 +57,7 @@ func QueryRrd(rrdFilePath string, filter models.Filter, start time.Time, end tim
 		var errRrd error
 		dbFile = fmt.Sprintf("%s/%s/%s", rrdRootPath, hostname, rrdFilePath)
 
-		rrdData, errRrd = fetchRrd(dbFile, start, end, graph)
+		rrdData, errRrd = fetchRrd(dbFile, start, end, "dataset")
 		if errRrd != nil {
 			return "", errRrd
 		}

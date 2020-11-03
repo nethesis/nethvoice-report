@@ -149,7 +149,7 @@ var UtilService = {
         });
       }
 
-      // initialize bar chart data
+      // initialize chart data
 
       Object.entries(datasetMap).forEach(([datasetName, data], index) => {
         const sortedLabels = Object.keys(data).sort();
@@ -162,14 +162,14 @@ var UtilService = {
         const color = that.colors[index % that.colors.length];
 
         that.datasets.push({
-          label: datasetName,
+          label: this._.upperFirst(datasetName),
           data: datasetValues,
           borderColor: color,
           backgroundColor: color,
           fill: false,
         });
       });
-      that.renderBarChart();
+      that.render();
     },
     renderLineOrBarChart(that) {
       const chartData = {
