@@ -126,6 +126,16 @@ func ExtractStrings(v []string) string {
 	return "\"" + result + "\""
 }
 
+func PivotGroup(timeDivisionString string) string {
+	timeDivision, _ := strconv.Atoi(timeDivisionString)
+
+	if timeDivision > 0 && timeDivision < 60 {
+		return "Group"
+	} else {
+		return ""
+	}
+}
+
 func ExtractPhones(p []string, plain bool) string {
 	// declare numbers array
 	var numbers []string
