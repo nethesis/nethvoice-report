@@ -21,3 +21,12 @@ Login requests are handled by `Authenticator` and `PayloadFunc` functions in `mi
 - Authorization check is performed to ensure that client can access requested report
 
 Report requests are handled by `IdentityHandler` and `Authorizator` functions in `middleware.go`
+
+### Enable debug on api daemon
+
+As default, the api daemon runs using `GIN_MODE=release`.
+
+To switch on debug mode, just execute:
+```
+echo GIN_MODE=debug > /etc/sysconfig/nethvoice-report
+```
