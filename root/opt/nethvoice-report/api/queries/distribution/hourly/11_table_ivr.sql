@@ -4,7 +4,7 @@ SELECT
 	ivr_id,
 	ivr_name,
 	choice,
-	time_{{ .Time.Division  }} AS `time£num^pivot`,
+	time_{{ .Time.Division  }} AS `time£num^pivot{{ PivotGroup .Time.Division }}`,
 	total AS `{{ ExtractSettings "StartHour" }}-{{ ExtractSettings "EndHour" }}^sum_total£num`
 FROM	distribution_hour_ivr_{{ .Time.Group }}_{{ .Time.Division  }}
 WHERE   time_{{ .Time.Division  }} >= '{{ ExtractSettings "StartHour" }}' AND time_{{ .Time.Division  }} <= '{{ ExtractSettings "EndHour" }}'

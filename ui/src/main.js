@@ -23,16 +23,29 @@ Vue.use(SuiVue);
 Vue.use(VueResource);
 Vue.http.interceptors.push(function () {
   return function (response) {
-    // if authentication token has expired, show login page
     if (response.status == 401 && response.body && response.body.message == "Token is expired") {
+      // authentication token has expired, show login page
       this.$root.$emit("logout");
+    } else if (response.status == 400 && response.body && response.body.status) {
+      const match = /Table '(.+)' doesn't exist/.exec(response.body.status);
+
+      if (match && match[1]) {
+        // a table used in a query does not exist
+        this.$root.nonexistentTables.add(match[1]);
+        const numNonexistentTables = this.$root.nonexistentTables.size;
+
+        if (numNonexistentTables > this.$root.maxNonexistentTables) {
+          // report data are not yet available
+          this.$root.$emit("dataNotAvailable");
+        }
+      }
     }
   };
 });
 
 Vue.use(VueI18n);
 Vue.use(PortalVue);
-Vue.use(VueLodash, { name: 'ldsh' , lodash: lodash });
+Vue.use(VueLodash, { name: 'ldsh', lodash: lodash });
 Vue.use(VueScrollTo)
 Vue.use(VCalendar);
 
@@ -52,6 +65,8 @@ new Vue({
     this.currentLocale = langConf.locale;
     this.currentView = "";
     this.config = window.CONFIG;
+    this.nonexistentTables = new Set();
+    this.maxNonexistentTables = 2;
   },
   render: (h) => h(App),
 }).$mount("#app");

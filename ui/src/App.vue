@@ -132,32 +132,36 @@ export default {
   padding-left: 7px;
 }
 
+.mg-bottom-sm {
+  margin-bottom: 1rem !important;
+}
+
 .mg-bottom-md {
   margin-bottom: 2rem !important;
 }
 
 .mg-3-em {
-  margin: 3em;
+  margin: 0 3em 3em;
 }
 
 .table-chart {
   width: 95%;
-  margin: 0 2rem 2rem 2rem;
+  margin: 2rem;
 }
 
 .line-chart {
   width: 95%;
-  margin: 0 2rem 2rem 2rem;
+  margin: 2rem;
 }
 
 .bar-chart {
   width: 95%;
-  margin: 0 2rem 2rem 2rem;
+  margin: 2rem;
 }
 
 .pie-chart {
   max-width: 26rem;
-  margin: 0 2rem 3rem 2rem;
+  margin: 2rem 2rem 3rem 2rem;
 }
 
 .loader-height {
@@ -266,5 +270,9 @@ export default {
 
 .no-border.ui.menu .item:before {
   background: none;
+}
+
+.report-data-not-available {
+  width: 100%;
 }
 </style>

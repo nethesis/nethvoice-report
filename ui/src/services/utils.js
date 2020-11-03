@@ -87,13 +87,13 @@ var UtilService = {
     },
     formatDate(date) {
       let d = new Date(date),
-      month = '' + (d.getMonth() + 1),
-      day = '' + d.getDate(),
-      year = d.getFullYear();
-      if (month.length < 2) 
-          month = '0' + month;
-      if (day.length < 2) 
-          day = '0' + day;
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+      if (month.length < 2)
+        month = '0' + month;
+      if (day.length < 2)
+        day = '0' + day;
       return [year, month, day].join('/');
     },
     lineOrBarChartWatchData(that) {
@@ -177,7 +177,22 @@ var UtilService = {
         datasets: that.datasets,
       };
       that.renderChart(chartData, that.options);
-    }
+    },
+    parseTableChartHeader(rawColumn) {
+      const colRegex = /^([^$£#]+)(?:£([^$£#]+))?(?:\$([^$£#]+)(?:£([^$£#]+))?(#)?)?(?:\$([^$£#]+)(?:£([^$£#]+))?(#)?)?$/;
+      const match = colRegex.exec(rawColumn);
+
+      return {
+        topHeaderName: match[1],
+        topHeaderFormat: match[2],
+        middleHeaderName: match[3],
+        middleHeaderFormat: match[4],
+        middleHeaderHidable: match[5],
+        bottomHeaderName: match[6],
+        bottomHeaderFormat: match[7],
+        bottomHeaderHidable: match[8],
+      };
+    },
   },
 };
 export default UtilService;

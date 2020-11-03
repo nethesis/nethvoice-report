@@ -1,29 +1,21 @@
 <template>
-  <sui-table celled selectable striped :class="{ structured: hasDoubleHeader }">
-    <!-- single header -->
-    <sui-table-header v-if="!hasDoubleHeader">
+  <sui-table celled selectable striped class="structured">
+    <sui-table-header>
+      <!-- top header -->
       <sui-table-row>
         <sui-table-header-cell
-          v-for="(column, index) in columns"
+          v-for="(header, index) in topHeaders"
           v-bind:key="index"
-          >{{ $t(column.name) }}</sui-table-header-cell
-        >
-      </sui-table-row>
-    </sui-table-header>
-
-    <!-- double header table -->
-    <sui-table-header v-else>
-      <!-- primary header -->
-      <sui-table-row>
-        <sui-table-header-cell
-          v-for="(header, index) in doubleHeader"
-          v-bind:key="index"
-          :rowspan="header.subHeaders == null ? '2' : '1'"
-          :colspan="
-            header.subHeaders && (header.expanded || !header.expandible)
-              ? header.subHeaders.length
-              : '1'
+          :rowspan="
+            singleHeader ||
+            (doubleHeader && header.subHeaders.length) ||
+            (tripleHeader && header.subHeaders.length)
+              ? '1'
+              : doubleHeader && !header.subHeaders.length
+              ? '2'
+              : '3'
           "
+          :colspan="header.subHeaders ? header.colSpan : '1'"
         >
           {{ $t(header.name) }}
           <a
@@ -39,16 +31,35 @@
           </a>
         </sui-table-header-cell>
       </sui-table-row>
-      <!-- sub-header -->
-      <sui-table-row>
+      <!-- middle header -->
+      <sui-table-row v-if="middleHeaders.length">
         <sui-table-header-cell
-          v-show="
-            header &&
-            (!header.superHeader ||
-              header.superHeader.expanded ||
-              !header.hidden)
-          "
-          v-for="(header, index) in subHeaders"
+          v-for="(header, index) in middleHeaders"
+          v-show="header.visible"
+          v-bind:key="index"
+          :rowspan="tripleHeader && !header.subHeaders.length ? '2' : '1'"
+          :colspan="header.colSpan"
+        >
+          {{ $t(header.name) }}
+          <a
+            href="#"
+            v-show="header.subHeaders && header.expandible"
+            @click="toggleExpandHeader(header)"
+          >
+            {{
+              header.expanded
+                ? "[" + $t("collapse") + "]"
+                : "[" + $t("expand") + "]"
+            }}
+          </a></sui-table-header-cell
+        >
+      </sui-table-row>
+
+      <!-- bottom header -->
+      <sui-table-row v-if="bottomHeaders.length">
+        <sui-table-header-cell
+          v-for="(header, index) in bottomHeaders"
+          v-show="header.visible"
           v-bind:key="index"
           >{{ $t(header.name) }}</sui-table-header-cell
         >
@@ -62,12 +73,7 @@
       >
         <sui-table-cell
           v-for="(element, index) in row"
-          v-show="
-            columns[index] &&
-            (!columns[index].superHeader ||
-              columns[index].superHeader.expanded ||
-              !columns[index].hidden)
-          "
+          v-show="columns[index] && columns[index].visible"
           v-bind:key="index"
         >
           <span v-if="columns[index] && columns[index].format == 'num'">
@@ -109,7 +115,7 @@
             <span is="sui-menu-item" class="small-pad"
               >{{ pagination.firstRowIndex + 1 }} -
               {{ Math.min(pagination.lastRowIndex, rows.length) }}
-              {{ $t("pagination.of") }} {{ rows.length }}</span
+              {{ $t("pagination.of") }} {{ rows.length | formatNumber }}</span
             >
           </sui-menu>
 
@@ -152,7 +158,8 @@
               v-model="pagination.currentPage"
             />
             <span is="sui-menu-item" class="small-pad"
-              >{{ $t("pagination.of") }} {{ pagination.totalPages }}</span
+              >{{ $t("pagination.of") }}
+              {{ pagination.totalPages | formatNumber }}</span
             >
           </sui-menu>
           <sui-menu pagination>
@@ -182,8 +189,9 @@ export default {
       ROWS_PER_PAGE_KEY: "tableChartRowsPerPage",
       columns: [],
       rows: [],
-      hasDoubleHeader: false,
-      doubleHeader: [],
+      topHeaders: [],
+      middleHeaders: [],
+      bottomHeaders: [],
       pagination: {
         rowsPerPage: 25,
         rowsPerPageOptions: [10, 25, 50, 100],
@@ -217,10 +225,6 @@ export default {
           tableData = this.processPivotTable();
         }
 
-        // table has double header if at least one column header contains "$" character
-        this.hasDoubleHeader = tableData[0].some((h) => {
-          return h.includes("$");
-        });
         let rawColumns = tableData[0];
 
         if (tableData.length > 1) {
@@ -233,77 +237,183 @@ export default {
       } else {
         this.columns = [];
         this.rows = [];
-        this.doubleHeader = [];
       }
     },
   },
   computed: {
-    subHeaders: function () {
-      const subHeaders = this.columns.filter((column) => {
-        return column.superHeader;
-      });
-      return subHeaders;
+    singleHeader: function () {
+      return !this.middleHeaders.length && !this.bottomHeaders.length;
+    },
+    doubleHeader: function () {
+      return this.middleHeaders.length && !this.bottomHeaders.length;
+    },
+    tripleHeader: function () {
+      return !!(this.middleHeaders.length && this.bottomHeaders.length);
     },
   },
   methods: {
     parseColumns(rawColumns) {
-      this.doubleHeader = [];
       let columns = [];
+      let topHeaders = [];
+      let middleHeaders = [];
+      let bottomHeaders = [];
 
-      rawColumns.forEach((rawColumn) => {
-        let column = {};
+      rawColumns.forEach((rawColumn, index) => {
+        let topHeader;
+        let middleHeader;
+        let bottomHeader;
 
-        // e.g. notProcessed$joinempty£num#hide
-        const colRegex = /^(([^$£#]*)(\$))?([^$£#]+)£?([^$£#]*)(#hide)?$/g;
-        const match = colRegex.exec(rawColumn);
+        // examples of valid column names:
+        // "queueName" -> simple column
+        // "total£num" -> column with numeric format
+        // "processed$total" -> "total" is a sub-header of "processed"
+        // "processed$failed#" -> "failed" is a sub-header of "processed", but it is initially hidden; it will be shown when "processed" is expanded
+        // "09:00-18:00$09:00-10:00$09:15" -> "09:15" ia a sub-header of "09:00-10:00", that is a sub-header of "09:00-18:00"
 
-        const superHeaderName = match[2];
-        column.name = match[4];
-        column.format = match[5];
-        column.hidden = match[6] == "#hide";
-        columns.push(column);
+        const column = this.parseTableChartHeader(rawColumn);
 
-        if (this.hasDoubleHeader) {
-          if (superHeaderName) {
-            const subHeader = {
-              name: column.name,
-              hidden: column.hidden,
+        topHeader = topHeaders.find((header) => {
+          return header.name == column.topHeaderName;
+        });
+
+        if (!topHeader) {
+          // create top header
+          topHeader = {
+            name: column.topHeaderName,
+            rawColumnName: rawColumn,
+            format: column.topHeaderFormat,
+            expanded: false,
+            expandible: false,
+            subHeaders: [],
+            subSubHeaders: [],
+            colNumber: index,
+            colSpan: 0,
+            hidable: false,
+            visible: true,
+          };
+          topHeaders.push(topHeader);
+        }
+
+        if (column.middleHeaderName) {
+          middleHeader = middleHeaders.find((header) => {
+            return (
+              header.name == column.middleHeaderName &&
+              header.superHeader.name == column.topHeaderName
+            );
+          });
+
+          if (!middleHeader) {
+            // create middle header
+            middleHeader = {
+              name: column.middleHeaderName,
+              rawColumnName: rawColumn,
+              format: column.middleHeaderFormat,
+              expanded: false,
+              expandible: false,
+              subHeaders: [],
+              superHeader: topHeader,
+              colNumber: index,
+              colSpan: 0,
+              hidable: false,
+              visible: true,
             };
-
-            const headerFound = this.doubleHeader.find((h) => {
-              return h.name == superHeaderName;
-            });
-
-            if (!headerFound) {
-              // add primary header and its sub-header
-              const superHeader = {
-                name: superHeaderName,
-                subHeaders: [subHeader],
-                expanded: false,
-                expandible: column.hidden,
-              };
-              column.superHeader = superHeader;
-
-              this.doubleHeader.push(superHeader);
-            } else {
-              // add sub-header to existing primary header
-              headerFound.subHeaders.push(subHeader);
-              column.superHeader = headerFound;
-
-              if (column.hidden) {
-                headerFound.expandible = true;
-              }
-            }
-          } else {
-            // add single header
-            this.doubleHeader.push({ name: column.name });
+            middleHeaders.push(middleHeader);
           }
+          topHeader.subHeaders.push(middleHeader);
+
+          if (column.middleHeaderHidable) {
+            middleHeader.hidable = true;
+            middleHeader.visible = false;
+            topHeader.expandible = true;
+          } else {
+            topHeader.colSpan++;
+          }
+        }
+
+        if (column.bottomHeaderName) {
+          // create bottom header
+          bottomHeader = {
+            name: column.bottomHeaderName,
+            rawColumnName: rawColumn,
+            format: column.bottomHeaderFormat,
+            superHeader: middleHeader,
+            superSuperHeader: topHeader,
+            hidable: false,
+            visible: middleHeader.visible,
+            colNumber: index,
+          };
+          bottomHeaders.push(bottomHeader);
+          middleHeader.subHeaders.push(bottomHeader);
+          topHeader.subSubHeaders.push(bottomHeader);
+
+          if (column.bottomHeaderHidable) {
+            bottomHeader.hidable = true;
+            bottomHeader.visible = false;
+            middleHeader.expandible = true;
+          } else {
+            middleHeader.colSpan++;
+          }
+        }
+
+        // add header to table columns
+
+        if (bottomHeader) {
+          columns.push(bottomHeader);
+        } else if (middleHeader) {
+          columns.push(middleHeader);
+        } else {
+          columns.push(topHeader);
         }
       });
       this.columns = columns;
+      this.topHeaders = topHeaders;
+      this.middleHeaders = middleHeaders;
+      this.bottomHeaders = bottomHeaders;
+    },
+    expandHeader(header) {
+      // set col span
+      header.colSpan = header.subHeaders.length;
+
+      if (header.subSubHeaders && header.subSubHeaders.length) {
+        header.colSpan += header.subSubHeaders.length;
+      }
+
+      // set sub headers visible
+      header.subHeaders.forEach((subHeader) => {
+        subHeader.visible = true;
+        this.columns[subHeader.colNumber].visible = true;
+      });
+    },
+    collapseHeader(header) {
+      let colSpan = 0;
+
+      // set sub headers not visible
+      header.subHeaders.forEach((subHeader) => {
+        if (subHeader.hidable) {
+          subHeader.visible = false;
+          this.columns[subHeader.colNumber].visible = false;
+        } else {
+          colSpan++;
+        }
+
+        // recursively collapse sub header
+        if (subHeader.expandible) {
+          subHeader.expanded = false;
+          this.collapseHeader(subHeader);
+        }
+      });
+
+      // set col span
+      header.colSpan = colSpan;
     },
     toggleExpandHeader(header) {
       header.expanded = !header.expanded;
+
+      if (header.expanded) {
+        this.expandHeader(header);
+      } else {
+        this.collapseHeader(header);
+      }
     },
     processPivotTable() {
       let pivotColIndex = -1;
@@ -313,14 +423,23 @@ export default {
       let pivotFormat;
       let superHeader;
       let totalSubHeader;
+      let hoursHeader = false;
       let data = JSON.parse(JSON.stringify(this.data));
       const originalColumns = data[0];
       const originalRows = data.splice(1);
 
       // look for pivot and sum column indexes
 
+      // e.g. double header
+      // "time£num^pivot" -> pivot column. Every pivot value in original table will become a column
+      // "09:00-18:00^sum_total£num" -> group column. A double header will be created, with "09:00-18:00" as super-header, and "total£num" and pivot values as sub-headers
+
+      // e.g. triple header (additional hours header)
+      // "time£num^pivot*" -> pivot column. Every pivot value in original table will become a column. "*" means that pivot values must be time intervals organized in sub-headers, e.g. "11:00-12:00" as super-header, and "11:00-11:15", "11:15-11:30", "11:30-11:45", "11:45-12:00" as sub-headers
+      // "09:00-18:00^sum_total£num" -> group column. An additional hours header will be created, with "09:00-18:00" as super-header, and "total£num" and pivot hours (e.g. "11:00-12:00", "12:00-13:00") as sub-headers
+
       for (const [index, rawColumn] of originalColumns.entries()) {
-        pivotMatch = /[^£#]+(£[^#]+)?\^pivot/.exec(rawColumn);
+        pivotMatch = /^[^£#]+(£[^#]+)?\^pivot(Group)?$/.exec(rawColumn);
         if (pivotMatch) {
           pivotColIndex = index;
 
@@ -328,6 +447,10 @@ export default {
             pivotFormat = pivotMatch[1];
           } else {
             pivotFormat = "";
+          }
+
+          if (pivotMatch[2]) {
+            hoursHeader = true;
           }
           continue;
         }
@@ -341,11 +464,24 @@ export default {
         }
       }
 
+      if (hoursHeader) {
+        return this.processPivotTableWithHoursHeader(
+          originalColumns,
+          originalRows,
+          pivotColIndex,
+          groupedColIndex,
+          pivotFormat,
+          superHeader,
+          totalSubHeader
+        );
+      }
+
       // read pivot data from rows
 
       let pivotColumnSet = new Set();
 
-      let pivotMap = {}; // contains pivotGroup -> pivotColumn -> number (e.g. 2019QueueNameQueueDescription -> hour -> numberOfCalls)
+      // contains pivotGroup -> pivotColumn -> number (e.g. 2019QueueNameQueueDescription -> hour -> numberOfCalls)
+      let pivotMap = {};
 
       for (const row of originalRows) {
         // detect when pivot group changes, i.e. when a non-pivot related column changes
@@ -358,7 +494,7 @@ export default {
           }
         }
 
-        const pivotColumn = row[pivotColIndex]; // e.g. "09:00"
+        const pivotColumn = row[pivotColIndex]; // e.g. "09:15"
         const value = row[groupedColIndex]; // e.g. 147
         pivotColumnSet.add(pivotColumn);
 
@@ -382,7 +518,7 @@ export default {
           // add pivot columns
           for (let pivotColumn of pivotColumnsList) {
             processedColumns.push(
-              superHeader + "$" + pivotColumn + pivotFormat + "#hide"
+              superHeader + "$" + pivotColumn + pivotFormat + "#"
             );
           }
         } else if (index != groupedColIndex) {
@@ -427,6 +563,7 @@ export default {
           pivotColumnIndex = 0;
           currentPivotGroup = pivotGroup;
 
+          // non-pivot cells are left untouched
           for (let colIndex = 0; colIndex < pivotColIndex; colIndex++) {
             currentProcessedRow.push(row[colIndex]);
           }
@@ -461,8 +598,184 @@ export default {
         currentProcessedRow.push(0);
         pivotColumnIndex++;
       }
-
       processedRows.push(currentProcessedRow);
+      return [processedColumns].concat(processedRows);
+    },
+    processPivotTableWithHoursHeader(
+      originalColumns,
+      originalRows,
+      pivotColIndex,
+      groupedColIndex,
+      pivotFormat,
+      superHeader,
+      totalSubHeader
+    ) {
+      // e.g:
+      // {
+      //   "09:00": Set() [ "09:00", "09:15", "09:30", "09:45" ],
+      //   "10:00": Set() [ "10:00", "10:15", "10:30", "10:45" ],
+      //   "11:00": Set() [ "11:00", "11:15", "11:30", "11:45" ],
+      //   ....
+      // }
+      let hoursMap = {};
+
+      // e.g: [ 09:00, 10:00, 11:00, ... ]
+      let hoursList;
+
+      // e.g:
+      // {
+      //   "09:00": [ "09:00", "09:15", "09:30", "09:45" ],
+      //   "10:00": [ "10:00", "10:15", "10:30", "10:45" ],
+      //   "11:00": [ "11:00", "11:15", "11:30", "11:45" ],
+      //   ...
+      // }
+      let hoursMapSorted = {};
+
+      // contains pivotGroup -> hour -> pivotColumn -> number (e.g. 2019QueueNameQueueDescription -> 09:00 -> 09:45 -> 2345)
+      let pivotMap = {};
+
+      // contains totals for every hour and for all hours grouped
+      let totalsMap = {};
+
+      // contains the list of non pivot columns, organized by pivot group
+      // e.g:
+      // {
+      //   2019FirstQueueNameFirstQueueDescription: [ "2019", "FirstQueueName", "FirstQueueDescription"],
+      //   2019SecondQueueNameSecondQueueDescription: [ "2019", "SecondQueueName", "SecondQueueDescription"],
+      //   ...
+      // }
+      let nonPivotColumnsMap = {};
+
+      // read pivot data from rows
+
+      for (const row of originalRows) {
+        // detect when pivot group changes, i.e. when a non-pivot related column changes
+
+        let pivotGroup = "";
+        let nonPivotColumns = [];
+
+        for (const [colIndex, value] of row.entries()) {
+          if (colIndex >= pivotColIndex) {
+            nonPivotColumnsMap[pivotGroup] = nonPivotColumns;
+            break;
+          } else {
+            pivotGroup += value;
+            nonPivotColumns.push(value);
+          }
+        }
+
+        const pivotColumn = row[pivotColIndex]; // e.g. "09:45"
+        const pivotValue = parseInt(row[groupedColIndex]); // e.g. 2345
+
+        // organize pivot columns by hour (e.g. "09:00", "09:15", "09:30", "09:45" go under the header "09:00")
+
+        const hour = pivotColumn.slice(0, 2) + ":00";
+
+        // add pivot column to hoursMap
+
+        if (!hoursMap[hour]) {
+          hoursMap[hour] = new Set();
+        }
+        hoursMap[hour].add(pivotColumn);
+
+        // add pivot value to pivotMap
+
+        if (!pivotMap[pivotGroup]) {
+          pivotMap[pivotGroup] = {};
+        }
+
+        if (!pivotMap[pivotGroup][hour]) {
+          pivotMap[pivotGroup][hour] = {};
+        }
+        pivotMap[pivotGroup][hour][pivotColumn] = pivotValue;
+
+        // add pivot value to totalsMap (all hours and single hour)
+
+        if (!totalsMap[pivotGroup]) {
+          totalsMap[pivotGroup] = {};
+          totalsMap[pivotGroup][superHeader] = 0;
+        }
+        totalsMap[pivotGroup][superHeader] += pivotValue;
+
+        if (!totalsMap[pivotGroup][hour]) {
+          totalsMap[pivotGroup][hour] = 0;
+        }
+        totalsMap[pivotGroup][hour] += pivotValue;
+      }
+
+      hoursList = Object.keys(hoursMap).sort();
+
+      // build hoursMapSorted
+      for (const [hour, hourSet] of Object.entries(hoursMap)) {
+        hoursMapSorted[hour] = Array.from(hourSet).sort();
+      }
+
+      // process column headers
+
+      let processedColumns = [];
+
+      originalColumns.forEach((rawColumn, index) => {
+        if (index < pivotColIndex) {
+          processedColumns.push(rawColumn);
+        } else if (index == pivotColIndex) {
+          // add sum column
+          processedColumns.push(superHeader + "$" + totalSubHeader);
+
+          // add pivot hours header
+          for (let hour of hoursList) {
+            processedColumns.push(
+              superHeader + "$" + hour + "#$" + totalSubHeader
+            );
+
+            hoursMap[hour].forEach((pivotColumn) => {
+              processedColumns.push(
+                superHeader +
+                  "$" +
+                  hour +
+                  "#$" +
+                  pivotColumn +
+                  pivotFormat +
+                  "#"
+              );
+            });
+          }
+        }
+      });
+
+      // process rows
+
+      let processedRows = [];
+
+      const pivotGroupsList = Object.keys(pivotMap).sort();
+
+      pivotGroupsList.forEach((pivotGroup) => {
+        let processedRow = [];
+
+        // non-pivot columns
+        processedRow.push(...nonPivotColumnsMap[pivotGroup]);
+
+        // all hours total
+        processedRow.push(totalsMap[pivotGroup][superHeader]);
+
+        hoursList.forEach((hour) => {
+          // hour total
+          processedRow.push(totalsMap[pivotGroup][hour]);
+
+          hoursMapSorted[hour].forEach((pivotColumn) => {
+            // pivotColumn e.g. "09:45"
+            if (
+              pivotMap[pivotGroup][hour] &&
+              pivotMap[pivotGroup][hour][pivotColumn]
+            ) {
+              processedRow.push(pivotMap[pivotGroup][hour][pivotColumn]);
+            } else {
+              // missing data
+              processedRow.push(0);
+            }
+          });
+        });
+        processedRows.push(processedRow);
+      });
 
       return [processedColumns].concat(processedRows);
     },

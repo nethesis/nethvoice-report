@@ -952,15 +952,15 @@ export default {
         }
       }
 
-      // set group by day if "Group by time" field is hidden
+      // set group by day if "Group by time" field is hidden or empty
 
-      if (!this.showFilterTimeGroup) {
+      if (!this.showFilterTimeGroup || !filterToApply.time.group) {
         filterToApply.time.group = "day";
       }
 
-      // set splity by 1 hour if "Split by time" field is hidden
+      // set splity by 1 hour if "Split by time" field is hidden or empty
 
-      if (!this.showFilterTimeSplit) {
+      if (!this.showFilterTimeSplit || !filterToApply.time.division) {
         filterToApply.time.division = "60";
       }
 

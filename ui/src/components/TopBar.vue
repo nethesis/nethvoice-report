@@ -35,6 +35,7 @@
             v-on:click="toggleFilters()"
             class="filter-button"
             :active="showFilters"
+            :disabled="!dataAvailable"
             :content="$t('menu.filters')"
             icon="filter"
           />
@@ -115,6 +116,7 @@ export default {
       officeHourStart: "",
       officeHourEnd: "",
       isAdmin: false,
+      dataAvailable: true,
       loader: {
         saveSettings: false,
       },
@@ -139,6 +141,12 @@ export default {
     // event "logout" is triggered by $http interceptor if token has expired
     this.$root.$on("logout", () => {
       this.doLogout();
+    });
+
+    // event "dataNotAvailable" is triggered by $http interceptor if report tables don't exist yet
+    this.$root.$on("dataNotAvailable", () => {
+      this.showFilters = false;
+      this.dataAvailable = false;
     });
   },
   watch: {
@@ -165,9 +173,11 @@ export default {
       this.$forceUpdate();
     },
     toggleFilters: function () {
-      this.showFilters = !this.showFilters;
-      this.set("showFilters", this.showFilters);
-      this.$root.$emit("toggleFilters");
+      if (this.dataAvailable) {
+        this.showFilters = !this.showFilters;
+        this.set("showFilters", this.showFilters);
+        this.$root.$emit("toggleFilters");
+      }
     },
     doLogout() {
       this.execLogout(

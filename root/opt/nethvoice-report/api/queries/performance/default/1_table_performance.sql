@@ -17,11 +17,11 @@ SELECT p_a_d.period AS period£{{ .Time.Group }}Date,
                 FROM   performance_total_{{ .Time.Group }}
                 WHERE  period = p_a_d.period
                        AND qname = p_a_d.qname),
-           2) )                                       AS `processed$percentage£percent#hide`,
+           2) )                                       AS `processed$percentageTot£percent#`,
        (SELECT count
         FROM   performance_good_{{ .Time.Group }}
         WHERE  period = p_a_d.period
-               AND qname = p_a_d.qname)               AS `processed$60sec£num#hide`,
+               AND qname = p_a_d.qname)               AS `processed$60sec£num#`,
        ( Round((SELECT count
                 FROM   performance_good_{{ .Time.Group }}
                 WHERE  period = p_a_d.period
@@ -31,7 +31,7 @@ SELECT p_a_d.period AS period£{{ .Time.Group }}Date,
                                                          WHERE
                period = p_a_d.period
                AND qname =
-           p_a_d.qname), 2) )                         AS `processed$percentage£percent#hide`,
+           p_a_d.qname), 2) )                         AS `processed$percentage60sec£percent#`,
        Sum((SELECT COALESCE(Sum(count), 0)
             FROM   performance_failed_{{ .Time.Group }}
             WHERE  period = p_a_d.period
@@ -84,11 +84,11 @@ SELECT p_a_d.period AS period£{{ .Time.Group }}Date,
                        performance_total_{{ .Time.Group }}
                                                                     WHERE
                        period = p_a_d.period
-                       AND qname = p_a_d.qname), 2) ) AS `notProcessed$percentage£percent#hide`,
+                       AND qname = p_a_d.qname), 2) ) AS `notProcessed$percentageTot£percent#`,
        (SELECT Sum(count)
         FROM   performance_failed_{{ .Time.Group }}
         WHERE  period = p_a_d.period
-               AND qname = p_a_d.qname)               AS `notProcessed$failed£num#hide`,
+               AND qname = p_a_d.qname)               AS `notProcessed$failed£num#`,
        ( Round((SELECT Sum(count)
                 FROM   performance_failed_{{ .Time.Group }}
                 WHERE  period = p_a_d.period
@@ -98,11 +98,11 @@ SELECT p_a_d.period AS period£{{ .Time.Group }}Date,
                                                          WHERE
                period = p_a_d.period
                AND qname =
-           p_a_d.qname), 2) )                         AS `notProcessed$percentage£percent#hide`,
+           p_a_d.qname), 2) )                         AS `notProcessed$percentageFailed£percent#`,
        (SELECT Sum(count)
         FROM   performance_timeout_{{ .Time.Group }}
         WHERE  period = p_a_d.period
-               AND qname = p_a_d.qname)               AS `notProcessed$timeout£num#hide`,
+               AND qname = p_a_d.qname)               AS `notProcessed$timeout£num#`,
        ( Round((SELECT Sum(count)
                 FROM   performance_timeout_{{ .Time.Group }}
                 WHERE  period = p_a_d.period
@@ -112,11 +112,11 @@ SELECT p_a_d.period AS period£{{ .Time.Group }}Date,
                                                          WHERE
                period = p_a_d.period
                AND qname =
-           p_a_d.qname), 2) )                         AS `notProcessed$percentage£percent#hide`,
+           p_a_d.qname), 2) )                         AS `notProcessed$percentageTimeout£percent#`,
        (SELECT Sum(count)
         FROM   performance_exitempty_{{ .Time.Group }}
         WHERE  period = p_a_d.period
-               AND qname = p_a_d.qname)               AS `notProcessed$exitempty£num#hide`,
+               AND qname = p_a_d.qname)               AS `notProcessed$exitempty£num#`,
        ( Round((SELECT Sum(count)
                 FROM   performance_exitempty_{{ .Time.Group }}
                 WHERE  period = p_a_d.period
@@ -126,11 +126,11 @@ SELECT p_a_d.period AS period£{{ .Time.Group }}Date,
                                                          WHERE
                period = p_a_d.period
                AND qname =
-           p_a_d.qname), 2) )                         AS `notProcessed$percentage£percent#hide`,
+           p_a_d.qname), 2) )                         AS `notProcessed$percentageExitEmpty£percent#`,
        (SELECT Sum(count)
         FROM   performance_exitkey_{{ .Time.Group }}
         WHERE  period = p_a_d.period
-               AND qname = p_a_d.qname)               AS `notProcessed$exitkey£num#hide`,
+               AND qname = p_a_d.qname)               AS `notProcessed$exitkey£num#`,
        ( Round((SELECT Sum(count)
                 FROM   performance_exitkey_{{ .Time.Group }}
                 WHERE  period = p_a_d.period
@@ -140,11 +140,11 @@ SELECT p_a_d.period AS period£{{ .Time.Group }}Date,
                                                          WHERE
                period = p_a_d.period
                AND qname =
-           p_a_d.qname), 2) )                         AS `notProcessed$percentage£percent#hide`,
+           p_a_d.qname), 2) )                         AS `notProcessed$percentageExitKey£percent#`,
        (SELECT Sum(count)
         FROM   performance_full_{{ .Time.Group }}
         WHERE  period = p_a_d.period
-               AND qname = p_a_d.qname)               AS `notProcessed$full£num#hide`,
+               AND qname = p_a_d.qname)               AS `notProcessed$full£num#`,
        ( Round((SELECT Sum(count)
                 FROM   performance_full_{{ .Time.Group }}
                 WHERE  period = p_a_d.period
@@ -154,11 +154,11 @@ SELECT p_a_d.period AS period£{{ .Time.Group }}Date,
                                                          WHERE
                period = p_a_d.period
                AND qname =
-           p_a_d.qname), 2) )                         AS `notProcessed$percentage£percent#hide`,
+           p_a_d.qname), 2) )                         AS `notProcessed$percentageFull£percent#`,
        (SELECT Sum(count)
         FROM   performance_joinempty_{{ .Time.Group }}
         WHERE  period = p_a_d.period
-               AND qname = p_a_d.qname)               AS `notProcessed$joinempty£num#hide`,
+               AND qname = p_a_d.qname)               AS `notProcessed$joinempty£num#`,
        ( Round((SELECT Sum(count)
                 FROM   performance_joinempty_{{ .Time.Group }}
                 WHERE  period = p_a_d.period
@@ -168,7 +168,7 @@ SELECT p_a_d.period AS period£{{ .Time.Group }}Date,
                                                          WHERE
                period = p_a_d.period
                AND qname =
-           p_a_d.qname), 2) )                         AS `notProcessed$percentage£percent#hide`,
+           p_a_d.qname), 2) )                         AS `notProcessed$percentageJoinEmpty£percent#`,
        (SELECT Sum(count)
         FROM   performance_null_{{ .Time.Group }}
         WHERE  period = p_a_d.period
@@ -182,7 +182,7 @@ SELECT p_a_d.period AS period£{{ .Time.Group }}Date,
                                                          WHERE
                period = p_a_d.period
                AND qname =
-           p_a_d.qname), 2) )                         AS `null$percentage£percent`,
+           p_a_d.qname), 2) )                         AS `null$percentageTot£percent`,
        p_a_d.min_hold                                 AS `waiting$min£seconds`,
        p_a_d.max_hold                                 AS `waiting$max£seconds`,
        p_a_d.avg_hold                                 AS `waiting$avg£seconds`,
