@@ -17,7 +17,7 @@
         :class="{'table-chart': chart.type == 'table', 'line-chart': chart.type == 'line', 'pie-chart': chart.type == 'pie', 'bar-chart': chart.type == 'bar'}"
       >
         <div class="align-center h-20">
-          <h4 is="sui-header" class="display-inline">
+          <h4 is="sui-header" class="chart-caption">
             {{ $t("caption." + chart.caption) }}
           </h4>
         </div>
@@ -258,6 +258,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+<<<<<<< HEAD
 .table-container {
   overflow-y: hidden;
   overflow-x: auto;
@@ -265,5 +266,10 @@ export default {
 .export-container {
   position: relative;
   height: 12px;
+=======
+.chart-caption {
+  display: inline-block;
+  margin-bottom: 1rem !important;
+>>>>>>> 4dd5378... ui. fix chart caption style
 }
 </style>
