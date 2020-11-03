@@ -6,7 +6,7 @@
       @click="exportToCSV()"
       class="custom-btn"
       basic
-      :content="$t('export_csv')"
+      :content="$t('command.export_csv')"
       icon="download"
     />
     <!-- dropdown for csv and pdf export -->
