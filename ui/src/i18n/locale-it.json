@@ -45,8 +45,14 @@
       "filters": "Filtri",
       "active_filters": "Filtri attivi"
     },
+    "caption": {
+      "load": "Load"
+    },
     "message": {
       "error_admin_empty": "I valori inseriti non sono validi"
-    }
+    },
+    "export_csv": "Esporta CSV",
+    "export_pdf": "Esporta PDF",
+    "export": "Esporta"
   }
 }

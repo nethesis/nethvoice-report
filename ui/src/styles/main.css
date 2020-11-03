@@ -41,3 +41,19 @@
 .mr-20 {
     margin-right: 20px !important;
 }
+
+.align-center {
+    text-align: center !important;
+}
+
+.display-inline {
+    display: inline-block;
+}
+
+.right-floated {
+    float: right !important;
+}
+
+.mt-10m {
+    margin-top: -10px;
+}

@@ -155,6 +155,9 @@
     "answer": "Answer",
     "60sec": "60 seconds",
     "come_back_tomorrow": "Data not available, please come back tomorrow",
-    "come_back_tomorrow_desc": "Report data are harvested and processed every night"
+    "come_back_tomorrow_desc": "Report data are harvested and processed every night",
+    "export_csv": "Export CSV",
+    "export_pdf": "Export PDF",
+    "export": "Export"
   }
 }
