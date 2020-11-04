@@ -2,7 +2,6 @@ package methods
 
 import (
 	"fmt"
-	"math"
 	"os"
 	"strings"
 	"time"
@@ -105,13 +104,12 @@ func fetchRrd(dbFile string, start time.Time, end time.Time, label string) ([][]
 
 		for i := 0; i < len(fetchRes.DsNames); i++ {
 			v := fetchRes.ValueAt(i, row)
-			value := int(math.Round(v))
 
 			// set negative values (missing values) to zero
-			if value < 0 {
-				value = 0
+			if v < 0 {
+				v = 0
 			}
-			record = append(record, value)
+			record = append(record, v)
 		}
 		row++
 		data = append(data, record)
