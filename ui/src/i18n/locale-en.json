@@ -160,7 +160,9 @@
       "avg_duration": "Average duration",
       "login": "Login",
       "pause": "Pause",
-      "effective": "Effective"
+      "effective": "Effective",
+      "comune": "District",
+      "prefisso": "Area code"
     },
     "command": {
       "close": "Close",

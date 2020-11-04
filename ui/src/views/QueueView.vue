@@ -109,7 +109,7 @@ export default {
       queryTree: null,
       queryNames: [],
       charts: [],
-      MAX_PIE_ENTRIES: 8,
+      MAX_CHART_ENTRIES: 8,
       openDetailsModal: false,
       chartDetails: null,
       dataAvailable: true,
@@ -216,10 +216,7 @@ export default {
               chart.data = result;
 
               // show details button for pie chart with a lot of entries
-              if (
-                chart.type == "pie" &&
-                result.length > this.MAX_PIE_ENTRIES + 1
-              ) {
+              if (this.tooMuchData(chart)) {
                 chart.details = true;
               }
             }
@@ -228,6 +225,25 @@ export default {
             console.error(error.body);
           }
         );
+      }
+    },
+    tooMuchData(chart) {
+      if (chart.type == "pie") {
+        return chart.data.length > this.MAX_CHART_ENTRIES;
+      } else if (chart.type == "line" || chart.type == "bar") {
+        // remove first element (query columns)
+        const rows = chart.data.filter((_, i) => i !== 0);
+        const datasetSet = new Set();
+
+        for (let row of rows) {
+          datasetSet.add(row[0]);
+
+          if (datasetSet.size > this.MAX_CHART_ENTRIES) {
+            return true;
+          }
+        }
+      } else {
+        return false;
       }
     },
     showDetailsModal(chart) {

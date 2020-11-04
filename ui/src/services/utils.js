@@ -106,7 +106,10 @@ var UtilService = {
       that.datasets = [];
 
       // remove first element (query columns)
-      const rows = that.data.filter((_, i) => i !== 0);
+      let rows = that.data.filter((_, i) => i !== 0);
+
+      // if there are too many datasets, keep only most relevant ones
+      rows = that.checkTooManyDataLineOrBarChart(rows, that);
 
       // build a data structure (datasetMap) like this:
       // {
@@ -193,6 +196,77 @@ var UtilService = {
         bottomHeaderHidable: match[8],
       };
     },
+    checkTooManyDataLineOrBarChart(rows, that) {
+      const datasetSet = new Set();
+      let tooMany = false;
+
+      for (let row of rows) {
+        datasetSet.add(row[0]);
+
+        if (datasetSet.size > that.MAX_ENTRIES) {
+          tooMany = true;
+          break;
+        }
+      }
+
+      if (!tooMany) {
+        // return all input rows
+        return rows;
+      } else {
+        // too many entries, merge some of them
+        return that.mergeMinorEntriesLineOrBarChart(rows, that);
+      }
+    },
+    mergeMinorEntriesLineOrBarChart(rows, that) {
+      let datasetTotalMap = {};
+
+      rows.forEach((row) => {
+        const datasetName = row[0];
+        const datasetValue = Number(row[2]);
+
+        if (datasetTotalMap[datasetName] === undefined) {
+          datasetTotalMap[datasetName] = 0;
+        }
+        datasetTotalMap[datasetName] += datasetValue;
+      });
+
+      const datasetTotalList = Object.keys(datasetTotalMap).map((datasetName) => {
+        return { name: datasetName, total: datasetTotalMap[datasetName] }
+      });
+
+      // sort
+      const datasetTotalListSorted = datasetTotalList.sort(that.sortByProperty("total")).reverse();
+
+      // extract most relevant datasets
+      const topDatasetNames = datasetTotalListSorted.filter((_, i) => i < that.MAX_ENTRIES - 1).map(dataset => dataset.name);
+      let topDatasetsRows = [];
+      let others = {};
+
+      rows.forEach(row => {
+        const datasetName = row[0];
+
+        if (topDatasetNames.includes(datasetName)) {
+          topDatasetsRows.push(row);
+        } else {
+          // put data into "Others" dataset
+          const label = row[1];
+          const value = Number(row[2]);
+
+          if (others[label] === undefined) {
+            others[label] = 0;
+          }
+          others[label] += value;
+        }
+      });
+
+      let othersRows = [];
+
+      for (const [label, value] of Object.entries(others)) {
+        othersRows.push([that.$i18n.t("misc.others"), label, value]);
+      }
+
+      return topDatasetsRows.concat(othersRows);
+    }
   },
 };
 export default UtilService;
