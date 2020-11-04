@@ -12,6 +12,5 @@ WHERE  TRUE
         AND agentName in ({{ ExtractStrings .Agents }})
     {{ end }}
 GROUP BY
-    agent,
-    period
+    agent
 ORDER BY total£num desc, agent
