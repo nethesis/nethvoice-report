@@ -52,15 +52,7 @@ export default {
   },
   watch: {
     data: function () {
-      this.lineOrBarChartWatchData(this);
-    },
-  },
-  methods: {
-    render() {
-      this.renderLineOrBarChart(this);
-    },
-    parseData() {
-      this.lineOrBarChartParseData(this);
+      this.watchDataLineOrBarChart(this);
     },
   },
 };

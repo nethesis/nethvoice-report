@@ -96,12 +96,12 @@ var UtilService = {
         day = '0' + day;
       return [year, month, day].join('/');
     },
-    lineOrBarChartWatchData(that) {
-      if (that.data && that.data.length > 1) {
-        that.parseData();
+    watchDataLineOrBarChart(that) {
+      if (!that.data || that.data.length <= 1) {
+        // no data
+        return;
       }
-    },
-    lineOrBarChartParseData(that) {
+
       that.labels = [];
       that.datasets = [];
 
@@ -172,9 +172,9 @@ var UtilService = {
           fill: false,
         });
       });
-      that.render();
-    },
-    renderLineOrBarChart(that) {
+
+      // render chart
+
       const chartData = {
         labels: that.labels,
         datasets: that.datasets,
@@ -266,7 +266,7 @@ var UtilService = {
       }
 
       return topDatasetsRows.concat(othersRows);
-    }
-  },
+    },
+  }
 };
 export default UtilService;
