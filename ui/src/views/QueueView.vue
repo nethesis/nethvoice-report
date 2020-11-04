@@ -16,10 +16,12 @@
         :id="`export_${index}`"
         :class="{'table-chart': chart.type == 'table', 'line-chart': chart.type == 'line', 'pie-chart': chart.type == 'pie', 'bar-chart': chart.type == 'bar'}"
       >
-        <div class="align-center">
+        <div class="align-center h-20">
           <h4 is="sui-header" class="display-inline">
             {{ $t("caption." + chart.caption) }}
           </h4>
+        </div>
+        <div class="export-container">
           <ExportData
             :data="chart.data"
             :filename="$t(`caption.${chart.caption}`)"
@@ -46,7 +48,7 @@
           <div v-show="chart.data && chart.data.length > 1">
             <!-- table chart -->
             <div v-if="chart.type == 'table'">
-              <TableChart :caption="chart.caption" :data="chart.data" />
+              <TableChart :caption="chart.caption" :data="chart.data" :chartKey="`${index}`"/>
             </div>
             <!-- line chart -->
             <div v-if="chart.type == 'line'">
@@ -254,3 +256,14 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.table-container {
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+.export-container {
+  position: relative;
+  height: 12px;
+}
+</style>

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isVisible && data && data.length > 1" class="right-floated mt-10m">
+  <div v-if="isVisible && data && data.length > 1" class="right-floated mt-30m">
     <!-- button only csv if is table -->
     <sui-button
       v-if="type === 'table'"

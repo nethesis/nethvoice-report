@@ -1,189 +1,194 @@
 <template>
-  <sui-table celled selectable striped class="structured">
-    <sui-table-header>
-      <!-- top header -->
-      <sui-table-row>
-        <sui-table-header-cell
-          v-for="(header, index) in topHeaders"
-          v-bind:key="index"
-          :rowspan="
-            singleHeader ||
-            (doubleHeader && header.subHeaders.length) ||
-            (tripleHeader && header.subHeaders.length)
-              ? '1'
-              : doubleHeader && !header.subHeaders.length
-              ? '2'
-              : '3'
-          "
-          :colspan="header.subHeaders ? header.colSpan : '1'"
-        >
-          {{ $t(header.name) }}
-          <a
-            href="#"
-            v-show="header.subHeaders && header.expandible"
-            @click="toggleExpandHeader(header)"
+  <div :id="`container_${chartKey}`" class="table-container">
+    <sui-table celled selectable striped class="structured">
+      <sui-table-header>
+        <!-- top header -->
+        <sui-table-row>
+          <sui-table-header-cell
+            v-for="(header, index) in topHeaders"
+            v-bind:key="index"
+            :rowspan="
+              singleHeader ||
+              (doubleHeader && header.subHeaders.length) ||
+              (tripleHeader && header.subHeaders.length)
+                ? '1'
+                : doubleHeader && !header.subHeaders.length
+                ? '2'
+                : '3'
+            "
+            :colspan="header.subHeaders ? header.colSpan : '1'"
           >
-            {{
-              header.expanded
-                ? "[" + $t("collapse") + "]"
-                : "[" + $t("expand") + "]"
-            }}
-          </a>
-        </sui-table-header-cell>
-      </sui-table-row>
-      <!-- middle header -->
-      <sui-table-row v-if="middleHeaders.length">
-        <sui-table-header-cell
-          v-for="(header, index) in middleHeaders"
-          v-show="header.visible"
-          v-bind:key="index"
-          :rowspan="tripleHeader && !header.subHeaders.length ? '2' : '1'"
-          :colspan="header.colSpan"
-        >
-          {{ $t(header.name) }}
-          <a
-            href="#"
-            v-show="header.subHeaders && header.expandible"
-            @click="toggleExpandHeader(header)"
-          >
-            {{
-              header.expanded
-                ? "[" + $t("collapse") + "]"
-                : "[" + $t("expand") + "]"
-            }}
-          </a></sui-table-header-cell
-        >
-      </sui-table-row>
-
-      <!-- bottom header -->
-      <sui-table-row v-if="bottomHeaders.length">
-        <sui-table-header-cell
-          v-for="(header, index) in bottomHeaders"
-          v-show="header.visible"
-          v-bind:key="index"
-          >{{ $t(header.name) }}</sui-table-header-cell
-        >
-      </sui-table-row>
-    </sui-table-header>
-
-    <sui-table-body>
-      <sui-table-row
-        v-for="(row, index) in pagination.pageRows"
-        v-bind:key="index"
-      >
-        <sui-table-cell
-          v-for="(element, index) in row"
-          v-show="columns[index] && columns[index].visible"
-          v-bind:key="index"
-        >
-          <span v-if="columns[index] && columns[index].format == 'num'">
-            {{ element | formatNumber }}
-          </span>
-          <span
-            v-else-if="columns[index] && columns[index].format == 'seconds'"
-          >
-            {{ element | formatTime }}
-          </span>
-          <span
-            v-else-if="columns[index] && columns[index].format == 'percent'"
-          >
-            {{ element | formatPercentage }}
-          </span>
-          <span v-else-if="columns[index] && columns[index].format == 'label'">
-            {{ $t(element) }}
-          </span>
-          <span
-            v-else-if="columns[index] && columns[index].format == 'monthDate'"
-          >
-            {{ element | formatMonthDate($i18n) }}
-          </span>
-          <span
-            v-else-if="columns[index] && columns[index].format == 'weekDate'"
-          >
-            {{ element | formatWeekDate($i18n) }}
-          </span>
-          <span v-else>
-            {{ element }}
-          </span>
-        </sui-table-cell>
-      </sui-table-row>
-    </sui-table-body>
-    <sui-table-footer>
-      <sui-table-row>
-        <sui-table-header-cell :colspan="columns.length">
-          <sui-menu pagination class="no-border">
-            <span is="sui-menu-item" class="small-pad"
-              >{{ pagination.firstRowIndex + 1 }} -
-              {{ Math.min(pagination.lastRowIndex, rows.length) }}
-              {{ $t("pagination.of") }} {{ rows.length | formatNumber }}</span
+            {{ $t(header.name) }}
+            <a
+              href="#"
+              v-show="header.subHeaders && header.expandible"
+              @click="toggleExpandHeader(header)"
             >
-          </sui-menu>
+              {{
+                header.expanded
+                  ? "[" + $t("collapse") + "]"
+                  : "[" + $t("expand") + "]"
+              }}
+            </a>
+          </sui-table-header-cell>
+        </sui-table-row>
+        <!-- middle header -->
+        <sui-table-row v-if="middleHeaders.length">
+          <sui-table-header-cell
+            v-for="(header, index) in middleHeaders"
+            v-show="header.visible"
+            v-bind:key="index"
+            :rowspan="tripleHeader && !header.subHeaders.length ? '2' : '1'"
+            :colspan="header.colSpan"
+          >
+            {{ $t(header.name) }}
+            <a
+              href="#"
+              v-show="header.subHeaders && header.expandible"
+              @click="toggleExpandHeader(header)"
+            >
+              {{
+                header.expanded
+                  ? "[" + $t("collapse") + "]"
+                  : "[" + $t("expand") + "]"
+              }}
+            </a></sui-table-header-cell
+          >
+        </sui-table-row>
 
-          <sui-menu pagination class="mg-right-xl">
-            <sui-dropdown class="item select-rows-per-page">
-              <sui-dropdown-menu>
-                <sui-dropdown-item
-                  v-for="(value, index) in pagination.rowsPerPageOptions"
-                  v-bind:key="index"
-                  @click="setRowsPerPage(value)"
-                >
-                  <span class="mg-right-sm"
-                    >{{ value }} {{ $t("pagination.per_page") }}</span
+        <!-- bottom header -->
+        <sui-table-row v-if="bottomHeaders.length">
+          <sui-table-header-cell
+            v-for="(header, index) in bottomHeaders"
+            v-show="header.visible"
+            v-bind:key="index"
+            >{{ $t(header.name) }}</sui-table-header-cell
+          >
+        </sui-table-row>
+      </sui-table-header>
+
+      <sui-table-body>
+        <sui-table-row
+          v-for="(row, index) in pagination.pageRows"
+          v-bind:key="index"
+        >
+          <sui-table-cell
+            v-for="(element, index) in row"
+            v-show="columns[index] && columns[index].visible"
+            v-bind:key="index"
+          >
+            <span v-if="columns[index] && columns[index].format == 'num'">
+              {{ element | formatNumber }}
+            </span>
+            <span
+              v-else-if="columns[index] && columns[index].format == 'seconds'"
+            >
+              {{ element | formatTime }}
+            </span>
+            <span
+              v-else-if="columns[index] && columns[index].format == 'percent'"
+            >
+              {{ element | formatPercentage }}
+            </span>
+            <span v-else-if="columns[index] && columns[index].format == 'label'">
+              {{ $t(element) }}
+            </span>
+            <span
+              v-else-if="columns[index] && columns[index].format == 'monthDate'"
+            >
+              {{ element | formatMonthDate($i18n) }}
+            </span>
+            <span
+              v-else-if="columns[index] && columns[index].format == 'weekDate'"
+            >
+              {{ element | formatWeekDate($i18n) }}
+            </span>
+            <span v-else>
+              {{ element }}
+            </span>
+          </sui-table-cell>
+        </sui-table-row>
+      </sui-table-body>
+      <sui-table-footer>
+        <sui-table-row>
+          <sui-table-header-cell :colspan="columns.length">
+            <sui-menu pagination class="no-border">
+              <span is="sui-menu-item" class="small-pad"
+                >{{ pagination.firstRowIndex + 1 }} -
+                {{ Math.min(pagination.lastRowIndex, rows.length) }}
+                {{ $t("pagination.of") }} {{ rows.length | formatNumber }}</span
+              >
+            </sui-menu>
+
+            <sui-menu pagination class="mg-right-xl">
+              <sui-dropdown class="item select-rows-per-page" direction="upward">
+                <sui-dropdown-menu>
+                  <sui-dropdown-item
+                    v-for="(value, index) in pagination.rowsPerPageOptions"
+                    v-bind:key="index"
+                    @click="setRowsPerPage(value)"
                   >
-                  <sui-icon
-                    v-if="pagination.rowsPerPage == value"
-                    name="check"
-                  />
-                </sui-dropdown-item>
-              </sui-dropdown-menu>
-            </sui-dropdown>
-          </sui-menu>
+                    <span class="mg-right-sm"
+                      >{{ value }} {{ $t("pagination.per_page") }}</span
+                    >
+                    <sui-icon
+                      v-if="pagination.rowsPerPage == value"
+                      name="check"
+                    />
+                  </sui-dropdown-item>
+                </sui-dropdown-menu>
+              </sui-dropdown>
+            </sui-menu>
 
-          <sui-menu pagination>
-            <a is="sui-menu-item" icon @click="firstPage()">
-              <sui-icon name="left double angle" />
-            </a>
-            <a is="sui-menu-item" icon @click="previousPage()">
-              <sui-icon name="left angle" />
-            </a>
-          </sui-menu>
-          <sui-menu pagination class="no-border">
-            <span is="sui-menu-item" class="small-pad">{{
-              $t("pagination.page")
-            }}</span>
-            <sui-input
-              @blur="updatePagination()"
-              @keyup.enter="updatePagination()"
-              class="current-page"
-              v-model="pagination.currentPage"
-            />
-            <span is="sui-menu-item" class="small-pad"
-              >{{ $t("pagination.of") }}
-              {{ pagination.totalPages | formatNumber }}</span
-            >
-          </sui-menu>
-          <sui-menu pagination>
-            <a is="sui-menu-item" icon @click="nextPage()">
-              <sui-icon name="right angle" />
-            </a>
-            <a is="sui-menu-item" icon @click="lastPage()">
-              <sui-icon name="right double angle" />
-            </a>
-          </sui-menu>
-        </sui-table-header-cell>
-      </sui-table-row>
-    </sui-table-footer>
-  </sui-table>
+            <sui-menu pagination>
+              <a is="sui-menu-item" icon @click="firstPage()">
+                <sui-icon name="left double angle" />
+              </a>
+              <a is="sui-menu-item" icon @click="previousPage()">
+                <sui-icon name="left angle" />
+              </a>
+            </sui-menu>
+            <sui-menu pagination class="no-border">
+              <span is="sui-menu-item" class="small-pad">{{
+                $t("pagination.page")
+              }}</span>
+              <sui-input
+                @blur="updatePagination()"
+                @keyup.enter="updatePagination()"
+                class="current-page"
+                v-model="pagination.currentPage"
+              />
+              <span is="sui-menu-item" class="small-pad"
+                >{{ $t("pagination.of") }}
+                {{ pagination.totalPages | formatNumber }}</span
+              >
+            </sui-menu>
+            <sui-menu pagination>
+              <a is="sui-menu-item" icon @click="nextPage()">
+                <sui-icon name="right angle" />
+              </a>
+              <a is="sui-menu-item" icon @click="lastPage()">
+                <sui-icon name="right double angle" />
+              </a>
+            </sui-menu>
+          </sui-table-header-cell>
+        </sui-table-row>
+      </sui-table-footer>
+    </sui-table>
+    <HorizontalScrollers :visible="true" :containerId="`#container_${chartKey}`" :chartData="data" />
+  </div>
 </template>
 
 <script>
 import UtilService from "../services/utils";
 import StorageService from "../services/storage";
+import HorizontalScrollers from "../components/HorizontalScrollers.vue";
 
 export default {
   name: "TableChart",
-  props: ["caption", "data"],
+  props: ["caption", "data", "chartKey"],
   mixins: [UtilService, StorageService],
+  components: {HorizontalScrollers},
   data() {
     return {
       ROWS_PER_PAGE_KEY: "tableChartRowsPerPage",
@@ -835,4 +840,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.table-container {
+  position: relative;
+  .ui.pagination .select-rows-per-page .menu {
+    margin-bottom: 5px;
+    margin-left: -1px;
+  }
+  .table {
+    margin-bottom: 0px;
+    margin-top: 0px;
+  }
+}
 </style>
