@@ -24,6 +24,7 @@ package main
 
 import (
 	"flag"
+	"io/ioutil"
 	"net/http"
 
 	"github.com/gin-contrib/cors"
@@ -39,6 +40,11 @@ func main() {
 	ConfigFilePtr := flag.String("c", "/opt/nethvoice-report/api/conf.json", "Path to configuration file")
 	flag.Parse()
 	configuration.Init(ConfigFilePtr)
+
+	// disable log to stdout when running in release mode
+	if (gin.Mode() == gin.ReleaseMode) {
+		gin.DefaultWriter = ioutil.Discard
+	}
 
 	// init routers
 	router := gin.Default()
