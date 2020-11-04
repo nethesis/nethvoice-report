@@ -1,6 +1,13 @@
 <template>
   <div :id="`container_${chartKey}`" class="table-container">
-    <sui-table celled selectable striped class="structured">
+    <sui-table
+    celled
+    selectable
+    striped
+    :compact="minimal"
+    :collapsing="minimal"
+    class="structured"
+  >
       <sui-table-header>
         <!-- top header -->
         <sui-table-row>
@@ -200,7 +207,23 @@ import HorizontalScrollers from "../components/HorizontalScrollers.vue";
 
 export default {
   name: "TableChart",
-  props: ["caption", "data", "chartKey"],
+  props: {
+    caption: {
+      type: String,
+    },
+    data: {
+      type: Array,
+    },
+    minimal: {
+      type: Boolean,
+      default: function () {
+        return false;
+      },
+    },
+    chartKey: {
+     type: String,
+    }
+  },
   mixins: [UtilService, StorageService],
   components: { HorizontalScrollers },
   data() {
@@ -229,9 +252,29 @@ export default {
     if (rowsPerPage) {
       this.pagination.rowsPerPage = rowsPerPage;
     }
+
+    if (this.data) {
+      this.dataUpdated();
+    }
   },
   watch: {
     data: function () {
+      this.dataUpdated();
+    },
+  },
+  computed: {
+    singleHeader: function () {
+      return !this.middleHeaders.length && !this.bottomHeaders.length;
+    },
+    doubleHeader: function () {
+      return this.middleHeaders.length && !this.bottomHeaders.length;
+    },
+    tripleHeader: function () {
+      return !!(this.middleHeaders.length && this.bottomHeaders.length);
+    },
+  },
+  methods: {
+    dataUpdated() {
       let tableData = this.data;
 
       if (tableData && tableData.length) {
@@ -248,6 +291,7 @@ export default {
 
         if (tableData.length > 1) {
           this.rows = tableData.slice(1);
+          this.pagination.currentPage = 1;
           this.updatePagination();
         } else {
           this.rows = [];
@@ -258,19 +302,6 @@ export default {
         this.rows = [];
       }
     },
-  },
-  computed: {
-    singleHeader: function () {
-      return !this.middleHeaders.length && !this.bottomHeaders.length;
-    },
-    doubleHeader: function () {
-      return this.middleHeaders.length && !this.bottomHeaders.length;
-    },
-    tripleHeader: function () {
-      return !!(this.middleHeaders.length && this.bottomHeaders.length);
-    },
-  },
-  methods: {
     parseColumns(rawColumns) {
       let columns = [];
       let topHeaders = [];

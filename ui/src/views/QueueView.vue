@@ -73,21 +73,10 @@
     </div>
     <!-- show details modal -->
     <sui-form @submit.prevent="hideDetailsModal()">
-      <sui-modal v-if="chartDetails" v-model="openDetailsModal" size="tiny">
+      <sui-modal v-if="chartDetails" v-model="openDetailsModal" size="small">
         <sui-modal-header>{{ $t("caption." + chartDetails.caption) }}</sui-modal-header>
         <sui-modal-content scrolling ref="chartDetailsContent">
-          <sui-table compact celled selectable striped collapsing class="chart-details">
-            <sui-table-body>
-              <sui-table-row v-for="(entry, index) in chartDetails.details" v-bind:key="index">
-                <sui-table-cell>
-                  {{ entry[0] }}
-                </sui-table-cell>
-                <sui-table-cell>
-                  {{ entry[1] | formatNumber }}
-                </sui-table-cell>
-              </sui-table-row>
-            </sui-table-body>
-          </sui-table>
+          <TableChart :minimal="true" :caption="chartDetails.caption" :data="chartDetails.data" class="chart-details"/>
         </sui-modal-content>
         <sui-modal-actions>
           <sui-button type="submit" primary>
@@ -231,7 +220,7 @@ export default {
                 chart.type == "pie" &&
                 result.length > this.MAX_PIE_ENTRIES + 1
               ) {
-                chart.details = result.filter((_, i) => i !== 0);
+                chart.details = true;
               }
             }
           },
@@ -252,24 +241,28 @@ export default {
     },
     hideDetailsModal() {
       this.openDetailsModal = false;
-    }
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-<<<<<<< HEAD
 .table-container {
   overflow-y: hidden;
   overflow-x: auto;
 }
+
 .export-container {
   position: relative;
   height: 12px;
-=======
+}
+
 .chart-caption {
   display: inline-block;
   margin-bottom: 1rem !important;
->>>>>>> 4dd5378... ui. fix chart caption style
+}
+
+.ui.table.chart-details {
+  margin: 0 auto;
 }
 </style>
