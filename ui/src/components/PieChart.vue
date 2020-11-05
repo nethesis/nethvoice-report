@@ -86,7 +86,7 @@ export default {
     mergeMinorEntries(labels, values) {
       // assume entries are already sorted by backend in descending order
       labels = labels.filter((_, i) => i < this.MAX_ENTRIES - 1);
-      labels.push(this.$i18n.t("others"));
+      labels.push(this.$i18n.t("misc.others"));
       this.labels = labels;
       let firstValues = values.filter((_, i) => i < this.MAX_ENTRIES - 1);
 

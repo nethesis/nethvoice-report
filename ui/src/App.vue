@@ -176,11 +176,7 @@ export default {
 }
 
 .show-details {
-  margin-top: 0.5rem;
-}
-
-.ui.table.chart-details {
-  margin: 0 auto;
+  margin-top: 1rem;
 }
 
 .gray {
@@ -232,7 +228,7 @@ export default {
 }
 
 .ui.input.current-page > input {
-  width: 4rem;
+  width: 4rem !important;
   text-align: center;
 }
 

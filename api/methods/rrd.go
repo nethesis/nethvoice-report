@@ -2,7 +2,6 @@ package methods
 
 import (
 	"fmt"
-	"math"
 	"os"
 	"strings"
 	"time"
@@ -14,7 +13,7 @@ import (
 	"github.com/ziutek/rrd"
 )
 
-func QueryRrd(rrdFilePath string, filter models.Filter, start time.Time, end time.Time, graph string) (string, error) {
+func QueryRrd(rrdFilePath string, filter models.Filter, start time.Time, end time.Time) (string, error) {
 	hostname, errHostname := os.Hostname()
 	if errHostname != nil {
 		return "", errors.Wrap(errHostname, "error retrieving hostname")
@@ -57,7 +56,7 @@ func QueryRrd(rrdFilePath string, filter models.Filter, start time.Time, end tim
 		var errRrd error
 		dbFile = fmt.Sprintf("%s/%s/%s", rrdRootPath, hostname, rrdFilePath)
 
-		rrdData, errRrd = fetchRrd(dbFile, start, end, graph)
+		rrdData, errRrd = fetchRrd(dbFile, start, end, "dataset")
 		if errRrd != nil {
 			return "", errRrd
 		}
@@ -105,13 +104,12 @@ func fetchRrd(dbFile string, start time.Time, end time.Time, label string) ([][]
 
 		for i := 0; i < len(fetchRes.DsNames); i++ {
 			v := fetchRes.ValueAt(i, row)
-			value := int(math.Round(v))
 
 			// set negative values (missing values) to zero
-			if value < 0 {
-				value = 0
+			if v < 0 {
+				v = 0
 			}
-			record = append(record, value)
+			record = append(record, v)
 		}
 		row++
 		data = append(data, record)

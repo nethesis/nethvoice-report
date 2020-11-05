@@ -3,10 +3,10 @@
   <div v-show="!dataAvailable" class="ui placeholder segment report-data-not-available">
     <div class="ui icon header">
       <i class="frown outline icon mg-bottom-sm"></i>
-      {{ $t("come_back_tomorrow") }}
+      {{ $t("message.come_back_tomorrow") }}
     </div>
     <div class="inline">
-      {{ $t("come_back_tomorrow_desc") }}
+      {{ $t("message.come_back_tomorrow_desc") }}
     </div>
   </div>
   <div v-show="dataAvailable">
@@ -17,7 +17,7 @@
         :class="{'table-chart': chart.type == 'table', 'line-chart': chart.type == 'line', 'pie-chart': chart.type == 'pie', 'bar-chart': chart.type == 'bar'}"
       >
         <div class="align-center h-20">
-          <h4 is="sui-header" class="display-inline">
+          <h4 is="sui-header" class="chart-caption">
             {{ $t("caption." + chart.caption) }}
           </h4>
         </div>
@@ -42,7 +42,7 @@
           <div v-show="chart.data && chart.data.length < 2">
             <!-- no data, only query header is present -->
             <sui-message warning>
-              <i class="exclamation triangle icon"></i>{{ $t("no_data_for_current_filter") }}
+              <i class="exclamation triangle icon"></i>{{ $t("message.no_data_for_current_filter") }}
             </sui-message>
           </div>
           <div v-show="chart.data && chart.data.length > 1">
@@ -66,32 +66,21 @@
         </div>
         <div v-show="chart.details" class="show-details">
           <sui-button type="button" size="tiny" icon="zoom" @click.native="showDetailsModal(chart)">
-            {{ $t("show_details") }}
+            {{ $t("command.show_details") }}
           </sui-button>
         </div>
       </div>
     </div>
     <!-- show details modal -->
     <sui-form @submit.prevent="hideDetailsModal()">
-      <sui-modal v-if="chartDetails" v-model="openDetailsModal" size="tiny">
+      <sui-modal v-if="chartDetails" v-model="openDetailsModal" size="small">
         <sui-modal-header>{{ $t("caption." + chartDetails.caption) }}</sui-modal-header>
         <sui-modal-content scrolling ref="chartDetailsContent">
-          <sui-table compact celled selectable striped collapsing class="chart-details">
-            <sui-table-body>
-              <sui-table-row v-for="(entry, index) in chartDetails.details" v-bind:key="index">
-                <sui-table-cell>
-                  {{ entry[0] }}
-                </sui-table-cell>
-                <sui-table-cell>
-                  {{ entry[1] | formatNumber }}
-                </sui-table-cell>
-              </sui-table-row>
-            </sui-table-body>
-          </sui-table>
+          <TableChart :minimal="true" :caption="chartDetails.caption" :data="chartDetails.data" class="chart-details"/>
         </sui-modal-content>
         <sui-modal-actions>
           <sui-button type="submit" primary>
-            {{ $t("close") }}
+            {{ $t("command.close") }}
           </sui-button>
         </sui-modal-actions>
       </sui-modal>
@@ -120,7 +109,7 @@ export default {
       queryTree: null,
       queryNames: [],
       charts: [],
-      MAX_PIE_ENTRIES: 8,
+      MAX_CHART_ENTRIES: 8,
       openDetailsModal: false,
       chartDetails: null,
       dataAvailable: true,
@@ -227,11 +216,8 @@ export default {
               chart.data = result;
 
               // show details button for pie chart with a lot of entries
-              if (
-                chart.type == "pie" &&
-                result.length > this.MAX_PIE_ENTRIES + 1
-              ) {
-                chart.details = result.filter((_, i) => i !== 0);
+              if (this.tooMuchData(chart)) {
+                chart.details = true;
               }
             }
           },
@@ -239,6 +225,25 @@ export default {
             console.error(error.body);
           }
         );
+      }
+    },
+    tooMuchData(chart) {
+      if (chart.type == "pie") {
+        return chart.data.length > this.MAX_CHART_ENTRIES;
+      } else if (chart.type == "line" || chart.type == "bar") {
+        // remove first element (query columns)
+        const rows = chart.data.filter((_, i) => i !== 0);
+        const datasetSet = new Set();
+
+        for (let row of rows) {
+          datasetSet.add(row[0]);
+
+          if (datasetSet.size > this.MAX_CHART_ENTRIES) {
+            return true;
+          }
+        }
+      } else {
+        return false;
       }
     },
     showDetailsModal(chart) {
@@ -252,7 +257,7 @@ export default {
     },
     hideDetailsModal() {
       this.openDetailsModal = false;
-    }
+    },
   },
 };
 </script>
@@ -262,8 +267,18 @@ export default {
   overflow-y: hidden;
   overflow-x: auto;
 }
+
 .export-container {
   position: relative;
   height: 12px;
+}
+
+.chart-caption {
+  display: inline-block;
+  margin-bottom: 1rem !important;
+}
+
+.ui.table.chart-details {
+  margin: 0 auto;
 }
 </style>

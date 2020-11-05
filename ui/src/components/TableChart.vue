@@ -1,77 +1,97 @@
 <template>
   <div :id="`container_${chartKey}`" class="table-container">
-    <sui-table celled selectable striped class="structured">
-      <sui-table-header>
-        <!-- top header -->
-        <sui-table-row>
-          <sui-table-header-cell
-            v-for="(header, index) in topHeaders"
-            v-bind:key="index"
-            :rowspan="
-              singleHeader ||
-              (doubleHeader && header.subHeaders.length) ||
-              (tripleHeader && header.subHeaders.length)
-                ? '1'
-                : doubleHeader && !header.subHeaders.length
-                ? '2'
-                : '3'
-            "
-            :colspan="header.subHeaders ? header.colSpan : '1'"
+    <sui-table
+    celled
+    selectable
+    striped
+    :compact="minimal"
+    :collapsing="minimal"
+    class="structured"
+  >
+    <sui-table-header>
+      <!-- top header -->
+      <sui-table-row>
+        <sui-table-header-cell
+          v-for="(header, index) in topHeaders"
+          v-bind:key="index"
+          :rowspan="
+            singleHeader ||
+            (doubleHeader && header.subHeaders.length) ||
+            (tripleHeader && header.subHeaders.length)
+              ? '1'
+              : doubleHeader && !header.subHeaders.length
+              ? '2'
+              : '3'
+          "
+          :colspan="header.subHeaders ? header.colSpan : '1'"
+        >
+          {{
+            $te("table." + header.name)
+              ? $t("table." + header.name)
+              : header.name
+          }}
+          <a
+            href="#"
+            v-show="header.subHeaders && header.expandible"
+            @click="toggleExpandHeader(header)"
           >
-            {{ $t(header.name) }}
-            <a
-              href="#"
-              v-show="header.subHeaders && header.expandible"
-              @click="toggleExpandHeader(header)"
-            >
-              {{
-                header.expanded
-                  ? "[" + $t("collapse") + "]"
-                  : "[" + $t("expand") + "]"
-              }}
-            </a>
-          </sui-table-header-cell>
-        </sui-table-row>
-        <!-- middle header -->
-        <sui-table-row v-if="middleHeaders.length">
-          <sui-table-header-cell
-            v-for="(header, index) in middleHeaders"
-            v-show="header.visible"
-            v-bind:key="index"
-            :rowspan="tripleHeader && !header.subHeaders.length ? '2' : '1'"
-            :colspan="header.colSpan"
+            {{
+              header.expanded
+                ? "[" + $t("table.collapse") + "]"
+                : "[" + $t("table.expand") + "]"
+            }}
+          </a>
+        </sui-table-header-cell>
+      </sui-table-row>
+      <!-- middle header -->
+      <sui-table-row v-if="middleHeaders.length">
+        <sui-table-header-cell
+          v-for="(header, index) in middleHeaders"
+          v-show="header.visible"
+          v-bind:key="index"
+          :rowspan="tripleHeader && !header.subHeaders.length ? '2' : '1'"
+          :colspan="header.colSpan"
+        >
+          {{
+            $te("table." + header.name)
+              ? $t("table." + header.name)
+              : header.name
+          }}
+          <a
+            href="#"
+            v-show="header.subHeaders && header.expandible"
+            @click="toggleExpandHeader(header)"
           >
-            {{ $t(header.name) }}
-            <a
-              href="#"
-              v-show="header.subHeaders && header.expandible"
-              @click="toggleExpandHeader(header)"
-            >
-              {{
-                header.expanded
-                  ? "[" + $t("collapse") + "]"
-                  : "[" + $t("expand") + "]"
-              }}
-            </a></sui-table-header-cell
-          >
-        </sui-table-row>
+            {{
+              header.expanded
+                ? "[" + $t("table.collapse") + "]"
+                : "[" + $t("table.expand") + "]"
+            }}
+          </a></sui-table-header-cell
+        >
+      </sui-table-row>
 
-        <!-- bottom header -->
-        <sui-table-row v-if="bottomHeaders.length">
-          <sui-table-header-cell
-            v-for="(header, index) in bottomHeaders"
-            v-show="header.visible"
-            v-bind:key="index"
-            >{{ $t(header.name) }}</sui-table-header-cell
-          >
-        </sui-table-row>
-      </sui-table-header>
-
-      <sui-table-body>
-        <sui-table-row
-          v-for="(row, index) in pagination.pageRows"
+      <!-- bottom header -->
+      <sui-table-row v-if="bottomHeaders.length">
+        <sui-table-header-cell
+          v-for="(header, index) in bottomHeaders"
+          v-show="header.visible"
           v-bind:key="index"
         >
+          {{
+            $te("table." + header.name)
+              ? $t("table." + header.name)
+              : header.name
+          }}
+        </sui-table-header-cell>
+      </sui-table-row>
+    </sui-table-header>
+
+    <sui-table-body>
+      <sui-table-row
+        v-for="(row, index) in pagination.pageRows"
+        v-bind:key="index"
+      >
           <sui-table-cell
             v-for="(element, index) in row"
             v-show="columns[index] && columns[index].visible"
@@ -90,8 +110,10 @@
             >
               {{ element | formatPercentage }}
             </span>
-            <span v-else-if="columns[index] && columns[index].format == 'label'">
-              {{ $t(element) }}
+            <span
+              v-else-if="columns[index] && columns[index].format == 'label'"
+            >
+              {{ $t("table." + element) }}
             </span>
             <span
               v-else-if="columns[index] && columns[index].format == 'monthDate'"
@@ -121,7 +143,10 @@
             </sui-menu>
 
             <sui-menu pagination class="mg-right-xl">
-              <sui-dropdown class="item select-rows-per-page" direction="upward">
+              <sui-dropdown
+                class="item select-rows-per-page"
+                direction="upward"
+              >
                 <sui-dropdown-menu>
                   <sui-dropdown-item
                     v-for="(value, index) in pagination.rowsPerPageOptions"
@@ -175,7 +200,11 @@
         </sui-table-row>
       </sui-table-footer>
     </sui-table>
-    <HorizontalScrollers :visible="true" :containerId="`#container_${chartKey}`" :chartData="data" />
+    <HorizontalScrollers
+      :visible="true"
+      :containerId="`#container_${chartKey}`"
+      :chartData="data"
+    />
   </div>
 </template>
 
@@ -186,9 +215,25 @@ import HorizontalScrollers from "../components/HorizontalScrollers.vue";
 
 export default {
   name: "TableChart",
-  props: ["caption", "data", "chartKey"],
+  props: {
+    caption: {
+      type: String,
+    },
+    data: {
+      type: Array,
+    },
+    minimal: {
+      type: Boolean,
+      default: function () {
+        return false;
+      },
+    },
+    chartKey: {
+     type: String,
+    }
+  },
   mixins: [UtilService, StorageService],
-  components: {HorizontalScrollers},
+  components: { HorizontalScrollers },
   data() {
     return {
       ROWS_PER_PAGE_KEY: "tableChartRowsPerPage",
@@ -215,9 +260,29 @@ export default {
     if (rowsPerPage) {
       this.pagination.rowsPerPage = rowsPerPage;
     }
+
+    if (this.data) {
+      this.dataUpdated();
+    }
   },
   watch: {
     data: function () {
+      this.dataUpdated();
+    },
+  },
+  computed: {
+    singleHeader: function () {
+      return !this.middleHeaders.length && !this.bottomHeaders.length;
+    },
+    doubleHeader: function () {
+      return this.middleHeaders.length && !this.bottomHeaders.length;
+    },
+    tripleHeader: function () {
+      return !!(this.middleHeaders.length && this.bottomHeaders.length);
+    },
+  },
+  methods: {
+    dataUpdated() {
       let tableData = this.data;
 
       if (tableData && tableData.length) {
@@ -234,6 +299,7 @@ export default {
 
         if (tableData.length > 1) {
           this.rows = tableData.slice(1);
+          this.pagination.currentPage = 1;
           this.updatePagination();
         } else {
           this.rows = [];
@@ -244,19 +310,6 @@ export default {
         this.rows = [];
       }
     },
-  },
-  computed: {
-    singleHeader: function () {
-      return !this.middleHeaders.length && !this.bottomHeaders.length;
-    },
-    doubleHeader: function () {
-      return this.middleHeaders.length && !this.bottomHeaders.length;
-    },
-    tripleHeader: function () {
-      return !!(this.middleHeaders.length && this.bottomHeaders.length);
-    },
-  },
-  methods: {
     parseColumns(rawColumns) {
       let columns = [];
       let topHeaders = [];

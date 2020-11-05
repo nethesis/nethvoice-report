@@ -19,7 +19,7 @@
               :disabled="!selectedSearch"
               @click.native="showDeleteSearchModal(true)"
               icon="trash"
-              >{{$t('filter.delete_search')}}</sui-button
+              >{{$t('command.delete_search')}}</sui-button
             >
           </sui-form-field>
         </sui-form-fields>
@@ -293,14 +293,14 @@
               type="button"
               @click.native="showSaveSearchModal(true)"
               icon="save"
-              >Save search</sui-button
+              >{{ $t('command.save_search') }}</sui-button
             >
             <sui-button
               type="button"
               :disabled="!selectedSearch"
               @click.native="showOverwriteSearchModal(true)"
               icon="edit"
-              >Overwrite search</sui-button
+              >{{ $t('command.overwrite_search') }}</sui-button
             >
           </sui-button-group>
         </sui-form-fields>
@@ -309,10 +309,10 @@
       <!-- save search modal -->
       <sui-form @submit.prevent="validateSaveNewSearch()" :error="errorNewSearch">
         <sui-modal v-model="openSaveSearchModal" size="tiny">
-          <sui-modal-header>Save search</sui-modal-header>
+          <sui-modal-header>{{ $t('command.save_search') }}</sui-modal-header>
           <sui-modal-content>
             <sui-modal-description>
-              <p>Enter a name for your new saved search</p>
+              <p>{{ $t('message.enter_name_for_saved_search') }}</p>
               <sui-form-field>
                 <input placeholder="Search name" v-model="newSearchName" />
               </sui-form-field>
@@ -323,13 +323,13 @@
           </sui-modal-content>
           <sui-modal-actions>
             <sui-button type="button" @click.native="showSaveSearchModal(false)"
-              >Cancel</sui-button
+              >{{ $t('command.cancel') }}</sui-button
             >
             <sui-button
               type="submit"
               primary
               :loading="loader.saveSearch"
-              content="Save"
+              :content="$t('command.save')"
             ></sui-button>
           </sui-modal-actions>
         </sui-modal>
@@ -338,23 +338,22 @@
       <!-- overwrite search modal -->
       <sui-form @submit.prevent="saveSearch(selectedSearch)" warning>
         <sui-modal v-model="openOverwriteSearchModal" size="tiny">
-          <sui-modal-header>Overwrite search</sui-modal-header>
+          <sui-modal-header>{{ $t('command.overwrite_search') }}</sui-modal-header>
           <sui-modal-content>
             <sui-modal-description>
               <sui-message warning>
-                <i class="exclamation triangle icon"></i>You are about to
-                overwrite "{{ selectedSearch }}" search
+                <i class="exclamation triangle icon"></i> {{ $t("message.you_are_about_to_overwrite") }} <b>{{ selectedSearch }}</b>
               </sui-message>
-              <p>Are you sure?</p>
+              <p>{{ $t("message.are_you_sure") }}</p>
             </sui-modal-description>
           </sui-modal-content>
           <sui-modal-actions>
             <sui-button
               type="button"
               @click.native="showOverwriteSearchModal(false)"
-              >Cancel</sui-button
+              >{{ $t("command.cancel") }}</sui-button
             >
-            <sui-button type="submit" negative>Overwrite</sui-button>
+            <sui-button type="submit" negative>{{ $t('command.overwrite') }}</sui-button>
           </sui-modal-actions>
         </sui-modal>
       </sui-form>
@@ -362,25 +361,24 @@
       <!-- delete search modal -->
       <sui-form @submit.prevent="deleteSelectedSearch()" warning>
         <sui-modal v-model="openDeleteSearchModal" size="tiny">
-          <sui-modal-header>Delete search</sui-modal-header>
+          <sui-modal-header>{{ $t('command.delete_search') }}</sui-modal-header>
           <sui-modal-content>
             <sui-modal-description>
               <sui-message warning>
-                <i class="exclamation triangle icon"></i>You are about to delete
-                "{{ selectedSearch }}" search
+                <i class="exclamation triangle icon"></i> {{ $t("message.you_are_about_to_delete") }} <b>{{ selectedSearch }}</b>
               </sui-message>
-              <p>Are you sure?</p>
+              <p>{{ $t("message.are_you_sure") }}</p>
             </sui-modal-description>
           </sui-modal-content>
           <sui-modal-actions>
             <sui-button type="button" @click.native="showDeleteSearchModal(false)"
-              >Cancel</sui-button
+              >{{ $t("command.cancel") }}</sui-button
             >
             <sui-button
               negative
               type="submit"
               :loading="loader.deleteSearch"
-              content="Delete"
+              :content="$t('command.delete')"
             ></sui-button>
           </sui-modal-actions>
         </sui-modal>
@@ -596,8 +594,6 @@ export default {
         filterValues &&
         new Date().getTime() < filterValues.expiry
       ) {
-        console.log("reading filter from local storage"); ////
-
         // get object from local storage item
         filterValues = filterValues.item;
 
@@ -606,8 +602,6 @@ export default {
         // set selected values in filter
         this.setFilterSelection(filter, true);
       } else {
-        console.log("retrieving default filter from backend:"); ////
-
         this.retrieveDefaultFilter();
       }
     },
@@ -986,8 +980,6 @@ export default {
         ).format(dateFormat);
       }
 
-      console.log("filterToApply", filterToApply); ////
-
       // apply filters
       this.$root.$emit("applyFilters", filterToApply);
     },
@@ -1188,15 +1180,11 @@ export default {
       let phoneBook = this.get("reportPhoneBook");
 
       if (phoneBook && new Date().getTime() < phoneBook.expiry) {
-        console.log("reading phonebook from local storage"); ////
-
         // get object from local storage item
         phoneBook = phoneBook.item;
 
         this.phoneBook = phoneBook;
       } else {
-        console.log("retrieving phonebook from backend"); ////
-
         this.getPhonebook(
           (success) => {
             const phoneBook = success.body;

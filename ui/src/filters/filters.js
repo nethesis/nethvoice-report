@@ -42,7 +42,7 @@ var Filters = {
         const tokens = value.split("-");
         const year = tokens[0];
         const weekNum = parseInt(tokens[1]);
-        return (i18n ? i18n.t("week") : "week") + " " + weekNum + " " + year;
+        return (i18n ? i18n.t("misc.week") : "week") + " " + weekNum + " " + year;
     },
     formatNumber(value) {
         const num = parseFloat(value);

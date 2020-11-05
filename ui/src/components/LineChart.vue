@@ -27,6 +27,7 @@ export default {
   },
   data() {
     return {
+      MAX_ENTRIES: 8,
       labels: [],
       datasets: [],
       options: {
@@ -51,15 +52,7 @@ export default {
   },
   watch: {
     data: function () {
-      this.lineOrBarChartWatchData(this);
-    },
-  },
-  methods: {
-    renderBarChart() {
-      this.renderLineOrBarChart(this);
-    },
-    parseData() {
-      this.lineOrBarChartParseData(this);
+      this.watchDataLineOrBarChart(this);
     },
   },
 };

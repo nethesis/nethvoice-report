@@ -46,10 +46,6 @@
     text-align: center !important;
 }
 
-.display-inline {
-    display: inline-block;
-}
-
 .right-floated {
     float: right !important;
 }
