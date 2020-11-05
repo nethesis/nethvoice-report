@@ -100,6 +100,7 @@ export default {
   min-width: 550px;
   height: 100vh;
   overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 #nav {
