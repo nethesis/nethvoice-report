@@ -32,13 +32,13 @@ import (
 )
 
 type Configuration struct {
-	QueueDatabase struct {
+	CDRDatabase struct {
 		Host     string `json:"host"`
 		Port     string `json:"port"`
 		User     string `json:"user"`
 		Name     string `json:"name"`
 		Password string `json:"password"`
-	} `json:"queue_database"`
+	} `json:"cdr_database"`
 	PhonebookDatabase struct {
 		Host     string `json:"host"`
 		Port     string `json:"port"`
