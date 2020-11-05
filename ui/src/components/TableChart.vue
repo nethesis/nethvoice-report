@@ -63,13 +63,13 @@
             @click="toggleExpandHeader(header)"
           >
             {{
-              $te("table." + header.name)
-                ? $t("table." + header.name)
-                : header.name
+              header.expanded
+                ? "[" + $t("table.collapse") + "]"
+                : "[" + $t("table.expand") + "]"
             }}
-            </a>
-          </sui-table-header-cell>
-        </sui-table-row>
+          </a></sui-table-header-cell
+        >
+      </sui-table-row>
 
       <!-- bottom header -->
       <sui-table-row v-if="bottomHeaders.length">

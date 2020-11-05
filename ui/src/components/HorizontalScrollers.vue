@@ -100,12 +100,15 @@ export default {
     margin: auto;
   }
 }
+
 .right-scroller {
   right: 0;
 }
+
 .left-scroller {
   left: 0;
 }
+
 .scroller:hover {
   background: rgba(229,229,229,.85);
 }
