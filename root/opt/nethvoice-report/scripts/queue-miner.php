@@ -31,7 +31,7 @@ if (!$conf) {
     fputs(STDERR, "Can't read configuration file");
     exit(1);
 }
-$conf = $conf['queue_database'];
+$conf = $conf['cdr_database'];
 
 try {
     $cdrdb = new PDO("mysql:dbname={$conf['name']};host={$conf['host']}", $conf['user'], $conf['password']);

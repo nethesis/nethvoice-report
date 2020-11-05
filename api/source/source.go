@@ -59,7 +59,7 @@ func FreePBXInstance() *sql.DB {
 
 func QueueInit() *sql.DB {
 	// define uri connection string
-	uri := configuration.Config.QueueDatabase.User + ":" + configuration.Config.QueueDatabase.Password + "@tcp(" + configuration.Config.QueueDatabase.Host + ":" + configuration.Config.QueueDatabase.Port + ")/" + configuration.Config.QueueDatabase.Name
+	uri := configuration.Config.CDRDatabase.User + ":" + configuration.Config.CDRDatabase.Password + "@tcp(" + configuration.Config.CDRDatabase.Host + ":" + configuration.Config.CDRDatabase.Port + ")/" + configuration.Config.CDRDatabase.Name
 
 	// connect to database
 	db, err := sql.Open("mysql", uri+"?charset=utf8&parseTime=True&multiStatements=true")
