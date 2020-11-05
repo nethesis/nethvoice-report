@@ -27,7 +27,7 @@
         <sui-popup
           position="bottom center"
           class="labeled icon"
-          v-bind:content="toggleFiltersPopup"
+          v-bind:content="showFilters ? $t('menu.hide_filters') : $t('menu.show_filters')"
         >
           <a
             slot="trigger"
@@ -50,12 +50,12 @@
     <!-- settings modal -->
     <sui-form @submit.prevent="saveAdminSettings()">
       <sui-modal v-model="openSettingsModal" size="tiny">
-        <sui-modal-header>Settings</sui-modal-header>
+        <sui-modal-header>{{ $t('menu.settings') }}</sui-modal-header>
         <sui-modal-content>
           <sui-modal-description>
             <sui-form-fields>
               <sui-form-field :error="errors.admin && this._.isEmpty(officeHourStart)">
-                <label>Office hours start</label>
+                <label>{{ $t('misc.office_hours_start') }}</label>
                 <vue-timepicker
                   hide-clear-button
                   :minute-interval="5"
@@ -63,7 +63,7 @@
                 ></vue-timepicker>
               </sui-form-field>
               <sui-form-field :error="errors.admin && this._.isEmpty(officeHourEnd)">
-                <label>Office hours end</label>
+                <label>{{ $t('misc.office_hours_end') }}</label>
                 <vue-timepicker
                   hide-clear-button
                   :minute-interval="5"
@@ -79,13 +79,13 @@
         </sui-modal-content>
         <sui-modal-actions>
           <sui-button type="button" @click.native="showSettingsModal(false)"
-            >Cancel</sui-button
+            >{{ $t('command.cancel') }}</sui-button
           >
           <sui-button
             primary
             type="submit"
             :loading="loader.saveSettings"
-            content="Save"
+            :content="$t('command.save')"
           ></sui-button>
         </sui-modal-actions>
       </sui-modal>
@@ -242,13 +242,6 @@ export default {
           console.error(error.body);
         }
       );
-    },
-  },
-  computed: {
-    toggleFiltersPopup: function () {
-      return this.showFilters
-        ? this.$i18n.t("menu.hide_filters")
-        : this.$i18n.t("menu.show_filters");
     },
   },
 };

@@ -3,7 +3,6 @@
     "filter": {
       "group_by": "Group by",
       "saved_search": "Saved search",
-      "delete_search": "Delete search",
       "time_interval": "Time interval",
       "yesterday": "Yesterday",
       "last_week": "Last week",
@@ -86,6 +85,16 @@
       "login_again": "Please login again"
     },
     "caption": {
+      "callByQueueTotal": "Calls by queue",
+      "callByAgentTotal": "Calls by agent",
+      "callTotalByHour": "Calls by hour",
+      "callAnswersByHour": "Call answers by hour",
+      "callLostByHour": "Calls lost by hour",
+      "callDoneByAgentByHour": "Calls done by agents by hour",
+      "IVRChoicesByHour": "IVR choices by hour",
+      "uniqCid": "Unique CID",
+      "totalCalls": "Total calls",
+      "callsOnQueue": "Calls on queue",
       "performance": "Performance",
       "qos": "Quality of service (QoS)"
     },
@@ -104,6 +113,9 @@
       "december": "December"
     },
     "message": {
+      "are_you_sure": "Are you sure?",
+      "you_are_about_to_overwrite": "You are about to overwrite",
+      "you_are_about_to_delete": "You are about to delete",
       "origins_field_is_required": "Select one or more Origins in filter to display this chart",
       "queues_field_is_required": "Select one or more Queues in filter to display this chart",
       "agents_field_is_required": "Select one or more Agents in filter to display this chart",
@@ -115,7 +127,8 @@
       "no_data_for_current_filter": "No data for current filters",
       "office_hours_description": "Office hours are used to display report charts. Some charts plot data only inside office hours (e.g. Queue report > Graphs > Average duration)",
       "come_back_tomorrow": "Data not available, please come back tomorrow",
-      "come_back_tomorrow_desc": "Report data are harvested and processed every night"
+      "come_back_tomorrow_desc": "Report data are harvested and processed every night",
+      "enter_name_for_saved_search": "Enter a name for your new saved search"
     },
     "pagination": {
       "page": "page",
@@ -124,6 +137,8 @@
     },
     "table": {
       "total": "Total",
+      "tot": "Total",
+      "num": "Total",
       "agent": "Agent",
       "queueName": "Queue name",
       "qname": "Queue name",
@@ -135,7 +150,6 @@
       "incoming": "Incoming",
       "processed": "Processed",
       "notProcessed": "Not processed",
-      "tot": "Total",
       "null": "Null",
       "percentage": "Percentage",
       "waiting": "Waiting",
@@ -162,18 +176,32 @@
       "pause": "Pause",
       "effective": "Effective",
       "comune": "District",
-      "prefisso": "Area code"
+      "prefisso": "Area code",
+      "time": "Time",
+      "ivr_name": "IVR name",
+      "label": "Label",
+      "timestamp": "Timestamp",
+      "value": "Value"
     },
     "command": {
+      "save": "Save",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "overwrite": "Overwrite",
       "close": "Close",
       "show_details": "Show details",
       "export_csv": "Export CSV",
       "export_pdf": "Export PDF",
-      "export": "Export"
+      "export": "Export",
+      "save_search": "Save search",
+      "overwrite_search": "Overwrite search",
+      "delete_search": "Delete search"
     },
     "misc": {
       "week": "Week",
-      "others": "Others"
+      "others": "Others",
+      "office_hours_start": "Office hours start",
+      "office_hours_end": "Office hours end"
     }
   }
 }
