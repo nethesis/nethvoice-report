@@ -1,4 +1,10 @@
 import Vue from "vue"
+import lodash from 'lodash';
+import moment from "moment";
+import languages from "../i18n/lang";
+
+var locale = languages.initLang().locale;
+moment.locale(locale);
 
 var Filters = {
     formatDate(date) {
@@ -14,28 +20,10 @@ var Filters = {
 
         return [year, month, day].join('-');
     },
-    formatMonthDate(value, i18n) {
+    formatMonthDate(value) {
         // value: e.g. "2020-10"
-        const monthNames = [
-            "january",
-            "february",
-            "march",
-            "april",
-            "may",
-            "june",
-            "july",
-            "august",
-            "september",
-            "october",
-            "november",
-            "december"
-        ];
-        const tokens = value.split("-");
-        const year = tokens[0];
-        const monthNum = tokens[1];
-        const monthI18nKey = "month." + monthNames[monthNum - 1];
-        const month = i18n ? i18n.t(monthI18nKey) : monthI18nKey;
-        return month + " " + year;
+        const monthYear = moment(value, "YYYY-MM").format("MMMM YYYY");
+        return lodash.upperFirst(monthYear);
     },
     formatWeekDate(value, i18n) {
         // value: e.g. "2020-50"
@@ -61,27 +49,33 @@ var Filters = {
         return num.toLocaleString() + " %";
     },
     formatTime: function (value) {
-        if (!value || value.length == 0) {
+        if (value != 0 && (!value || value.length == 0)) {
             return '-'
         }
 
         var ret = "";
-        let hours = parseInt(Math.floor(value / 3600));
-        let minutes = parseInt(Math.floor((value - hours * 3600) / 60));
+        let days = parseInt(Math.floor(value / (3600 * 24)));
+        let hours = parseInt(Math.floor((value - days * (3600 * 24)) / 3600));
+        let minutes = parseInt(Math.floor((value - days * (3600 * 24) - hours * 3600) / 60));
         let seconds = parseInt((value - (hours * 3600 + minutes * 60)) % 60);
 
-        let dHours = hours > 9 ? hours : hours;
-        let dMins = minutes > 9 ? minutes : minutes;
-        let dSecs = seconds > 9 ? seconds : seconds;
-
-        ret = dSecs + "s";
-        if (minutes) {
-            ret = dMins + "m " + ret;
+        if (!days && !hours && !minutes && !seconds) {
+            return "0s";
+        } else {
+            if (seconds) {
+                ret = seconds + "s";
+            }
+            if (minutes) {
+                ret = minutes + "m " + ret;
+            }
+            if (hours) {
+                ret = hours + "h " + ret;
+            }
+            if (days) {
+                ret = days + "d " + ret;
+            }
+            return ret;
         }
-        if (hours) {
-            ret = dHours + "h " + ret;
-        }
-        return ret;
     },
 };
 
