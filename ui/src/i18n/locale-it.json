@@ -18,7 +18,7 @@
       "agents_label": "Agenti",
       "ivrs_label": "IVR",
       "choices_label": "Scelte IVR",
-      "origins_label": "Provenienza",
+      "origins_label": "Origine",
       "origins_placeholder": "Prefisso, zona, provincia o regione",
       "destinations_label": "Destinazioni",
       "results_label": "Risultati",
@@ -51,10 +51,10 @@
       "settings": "Settings",
       "login": "Login",
       "logout": "Logout",
-      "hide_filters": "Hide filters",
-      "show_filters": "Show filters",
-      "active_filters": "Active filters",
-      "filters": "Filters"
+      "hide_filters": "Nascondi filtri",
+      "show_filters": "Visualizza filtri",
+      "active_filters": "Filtri attivi",
+      "filters": "Filtri"
     },
     "data": {
       "summary": "Summary",
@@ -66,8 +66,8 @@
       "ivr": "IVR"
     },
     "distribution": {
-      "by_hour": "Hourly",
-      "by_geo": "Geographic"
+      "by_hour": "Oraria",
+      "by_geo": "Geografica"
     },
     "graphs": {
       "load": "Load",
@@ -152,9 +152,9 @@
       "cdr_not_available": "Il report CDR & Cost non è ancora disponibile, torna più tardi"
     },
     "pagination": {
-      "page": "page",
-      "of": "of",
-      "per_page": "per page"
+      "page": "pagina",
+      "of": "di",
+      "per_page": "per pagina"
     },
     "table": {
       "total": "Total",
