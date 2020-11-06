@@ -77,7 +77,7 @@ var UtilService = {
           // no formatting needed
           return value;
         case "monthDate":
-          return this.$options.filters.formatMonthDate(value, this.$i18n);
+          return this.$options.filters.formatMonthDate(value);
         case "weekDate":
           return this.$options.filters.formatWeekDate(value, this.$i18n);
         case "dayDate":

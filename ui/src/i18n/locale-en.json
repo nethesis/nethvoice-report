@@ -128,20 +128,6 @@
       "queueDuration": "Queue duration",
       "queueWait": "Queue wait"
     },
-    "month": {
-      "january": "January",
-      "february": "February",
-      "march": "March",
-      "april": "April",
-      "may": "May",
-      "june": "June",
-      "july": "July",
-      "august": "August",
-      "september": "September",
-      "october": "October",
-      "november": "November",
-      "december": "December"
-    },
     "message": {
       "are_you_sure": "Are you sure?",
       "you_are_about_to_overwrite": "You are about to overwrite",
