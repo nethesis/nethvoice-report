@@ -79,10 +79,10 @@
       "average_wait": "Average wait"
     },
     "login": {
-      "invalid_credentials": "Invalid credentials",
-      "invalid_user_pass_try": "Incorrect username or password",
-      "session_expired": "Your session has expired",
-      "login_again": "Please login again"
+      "invalid_credentials": "Credenziali non valide",
+      "invalid_user_pass_try": "Nome utente o password errati",
+      "session_expired": "La tua sessione è scaduta",
+      "login_again": "Per favore, accedere nuovamente"
     },
     "caption": {
       "callByQueueTotal": "Calls by queue",
@@ -259,18 +259,18 @@
       "avgHold": "Average wait"
     },
     "command": {
-      "save": "Save",
-      "delete": "Delete",
-      "cancel": "Cancel",
-      "overwrite": "Overwrite",
-      "close": "Close",
-      "show_details": "Show details",
-      "export_csv": "Export CSV",
-      "export_pdf": "Export PDF",
-      "export": "Export",
-      "save_search": "Save search",
-      "overwrite_search": "Overwrite search",
-      "delete_search": "Delete search"
+      "save": "Salva",
+      "delete": "Elimina",
+      "cancel": "Annulla",
+      "overwrite": "Sovrascrivi",
+      "close": "Chiudi",
+      "show_details": "Visualizza dettagli",
+      "export_csv": "Esporta CSV",
+      "export_pdf": "Esporta PDF",
+      "export": "Espora",
+      "save_search": "Salva ricerca",
+      "overwrite_search": "Sovrascrivi ricerca",
+      "delete_search": "Elimina ricerca"
     },
     "misc": {
       "week": "Settimana",
