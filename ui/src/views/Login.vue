@@ -1,44 +1,44 @@
 <template lang="html">
-<div class="background">
-  <sui-grid centered vertical-align="middle">
-    <sui-grid-column>
-      <sui-image size="huge" src="logo.png" />
-      <sui-divider hidden />
-      <sui-form v-on:submit.prevent="doLogin()" :error="error" :warning="sessionExpired">
-        <sui-segment stacked>
-          <sui-form-field>
-            <sui-input type="text" placeholder="Username" icon="user" icon-position="left" v-model="username" />
-          </sui-form-field>
-          <sui-form-field>
-            <sui-input type="password" placeholder="Password" icon="lock" icon-position="left" v-model="password" />
-          </sui-form-field>
-          <sui-message error>
-            <sui-message-header>
-              <i class="exclamation triangle icon"></i>
-              {{$t('login.invalid_credentials')}}
-            </sui-message-header>
-            <p>
-              {{$t('login.invalid_user_pass_try')}}.
-            </p>
-          </sui-message>
-          <sui-message warning>
-            <sui-message-header>
-              <i class="exclamation triangle icon"></i>
-              {{$t('login.session_expired')}}
-            </sui-message-header>
-            <p>
-              {{$t('login.login_again')}}.
-            </p>
-          </sui-message>
-          <sui-button size="large" color="green" fluid>
-            {{$t('menu.login')}}
-            <sui-loader :active="loading" class="mg-left-20" inline inverted size="tiny" />
-          </sui-button>
-        </sui-segment>
-      </sui-form>
-    </sui-grid-column>
-  </sui-grid>
-</div>
+  <div class="background">
+    <sui-grid centered vertical-align="middle">
+      <sui-grid-column>
+        <sui-image size="huge" src="logo.png" />
+        <sui-divider hidden />
+        <sui-form v-on:submit.prevent="doLogin()" :error="error" :warning="sessionExpired">
+          <sui-segment stacked>
+            <sui-form-field>
+              <sui-input type="text" placeholder="Username" icon="user" icon-position="left" v-model="username" />
+            </sui-form-field>
+            <sui-form-field>
+              <sui-input type="password" placeholder="Password" icon="lock" icon-position="left" v-model="password" />
+            </sui-form-field>
+            <sui-message error>
+              <sui-message-header>
+                <i class="exclamation triangle icon"></i>
+                {{$t('login.invalid_credentials')}}
+              </sui-message-header>
+              <p>
+                {{$t('login.invalid_user_pass_try')}}.
+              </p>
+            </sui-message>
+            <sui-message warning>
+              <sui-message-header>
+                <i class="exclamation triangle icon"></i>
+                {{$t('login.session_expired')}}
+              </sui-message-header>
+              <p>
+                {{$t('login.login_again')}}.
+              </p>
+            </sui-message>
+            <sui-button size="large" color="green" fluid>
+              {{$t('menu.login')}}
+              <sui-loader :active="loading" class="mg-left-20" inline inverted size="tiny" />
+            </sui-button>
+          </sui-segment>
+        </sui-form>
+      </sui-grid-column>
+    </sui-grid>
+  </div>
 </template>
 
 <script>
@@ -61,6 +61,10 @@ export default {
     this.$root.$on("logout", () => {
       this.sessionExpired = true;
     });
+    this.$nextTick(() => {
+      // set random background
+      document.querySelector('.background').style.background = `linear-gradient( rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.95) ), url(${this.getImgUrl()}) center center fixed`
+   })
   },
   methods: {
     doLogin() {
@@ -99,15 +103,22 @@ export default {
         }
       );
     },
+    getImgUrl() {
+      let n = Math.floor(Math.random() * (6 - 1) + 1),
+          images = require.context('../images/', false, /\.jpg$/)
+      return images('./' + n + ".jpg")
+    }
   },
 };
 </script>
 
 <style lang="css" scoped>
 .background {
-  background-color: #21ba45 !important;
+  background-color: #3f9c35 !important;
   height: 100vh;
-  margin: 1em 0;
+  position: absolute;
+  width: 100%;
+  background-size: 100% !important;
 }
 
 .grid {

@@ -1,6 +1,6 @@
 <template>
 <sui-menu is="sui-sidebar" id="docs-menu" inverted="true" vertical="true" animation="overlay" v-bind:visible="true">
-  <sui-menu-item>
+  <sui-menu-item class="white-color">
     <i class="user icon align-left mr-10 no-margin-left cursor-default"></i>
     <strong>
       {{loggedUsername}}
@@ -27,12 +27,12 @@
   </sui-menu-item>
 
   <div v-if="selectedReport == 'queue'">
-    <sui-menu-item :active="isActive('', true)">
-      <router-link is="sui-menu-header" to="/queue">{{$t("menu.dashboard")}}</router-link>
-      <span v-show="isTag('/queue/dashboard')" class="press-enter dot"></span>
-    </sui-menu-item>
+    <router-link class="item fw-6 menu-section" :class="isActive('/queue') ? 'active' : ''" to="/queue">
+      {{$t("menu.dashboard")}}
+      <span v-show="isTag('/queue')" class="press-enter dot no-margin-top"></span>
+    </router-link>
 
-    <sui-menu-item :active="isActive('data', true)">
+    <sui-menu-item class="menu-section" :active="isActive('data', true)">
       <sui-menu-header>{{$t("menu.data")}}</sui-menu-header>
       <sui-menu-menu>
         <span v-show="isTag('/queue/data/summary')" class="press-enter dot-small"></span>
@@ -52,12 +52,12 @@
       </sui-menu-menu>
     </sui-menu-item>
 
-    <sui-menu-item :active="isActive('/queue/performance')">
-      <router-link is="sui-menu-header" to="/queue/performance">{{$t("menu.performance")}}</router-link>
-      <span v-show="isTag('/queue/performance')" class="press-enter dot"></span>
-    </sui-menu-item>
+    <router-link class="item fw-6 menu-section" :class="isActive('/queue/performance') ? 'active' : ''" to="/queue/performance">
+      {{$t("menu.performance")}}
+      <span v-show="isTag('/queue/performance')" class="press-enter dot no-margin-top"></span>
+    </router-link>
 
-    <sui-menu-item :active="isActive('distribution', true)">
+    <sui-menu-item class="menu-section" :active="isActive('distribution', true)">
       <sui-menu-header>{{$t("menu.distribution")}}</sui-menu-header>
       <sui-menu-menu>
         <span v-show="isTag('/queue/distribution/hour')" class="press-enter dot-small"></span>
@@ -67,7 +67,7 @@
       </sui-menu-menu>
     </sui-menu-item>
 
-    <sui-menu-item :active="isActive('graphs', true)">
+    <sui-menu-item class="menu-section" :active="isActive('graphs', true)">
       <sui-menu-header>{{$t("menu.graphs")}}</sui-menu-header>
       <sui-menu-menu>
         <span v-show="isTag('/queue/graphs/load')" class="press-enter dot-small"></span>
@@ -237,4 +237,10 @@ export default {
 .no-margin-left {
   margin-left: 0px !important;
 }
+
+.ui.inverted.menu .link.item:active, .ui.inverted.menu a.item.active {
+  background: rgba(255,255,255,.08) !important;
+  color: #fff !important;
+}
+
 </style>
