@@ -44,6 +44,13 @@ export default {
       this.container.addEventListener('scroll', this.updateScrollers, true)
       // init scrollers
       this.updateVisibility()
+    }),
+    this.$root.$on("expandTable", (containerId) => {
+      if (containerId == this.containerId) {
+        this.$nextTick(() => {
+          this.updateVisibility()
+        })
+      }
     })
   },
   destroyed() {
@@ -75,7 +82,9 @@ export default {
   },
   watch: {
     "chartData": function () {
-      this.updateVisibility()
+      this.$nextTick(() => {
+        this.updateVisibility()
+      })
     }
   },
 }

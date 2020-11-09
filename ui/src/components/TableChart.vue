@@ -466,7 +466,7 @@ export default {
     },
     toggleExpandHeader(header) {
       header.expanded = !header.expanded;
-
+      this.$root.$emit("expandTable", `#container_${this.chartKey}`)
       if (header.expanded) {
         this.expandHeader(header);
       } else {
