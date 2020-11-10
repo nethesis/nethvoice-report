@@ -210,6 +210,8 @@
       "activity": "Activity",
       "load": "Load",
       "logonDays": "Logon days",
+      "logon": "Logon",
+      "afterwork": "Afterwork",
       "min_duration": "Min duration",
       "max_duration": "Max duration",
       "avg_duration": "Average duration",
