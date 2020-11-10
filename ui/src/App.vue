@@ -272,4 +272,14 @@ export default {
 .report-data-not-available {
   width: 100%;
 }
+
+.error-color {
+  color: #9f3a38 !important;
+}
+
+.time-interval-error input {
+  background-color: #fff6f6 !important;
+  color: #9f3a38 !important;
+  border-color: #e0b4b4 !important;
+}
 </style>

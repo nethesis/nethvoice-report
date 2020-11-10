@@ -33,7 +33,7 @@
         <!-- label: time interval value -->
         <div class="ui label" v-if="activeFilters.time && activeFilters.time.interval">
           <span class="field">
-            {{$t('filter.dates_label')}}:
+            {{$t('filter.time_interval')}}:
           </span>
           <span class="value">
             {{`${activeFilters.time.interval.start} - ${activeFilters.time.interval.end}`}}

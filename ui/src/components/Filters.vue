@@ -35,9 +35,11 @@
               v-model="filter.time.group"
             />
           </sui-form-field>
+        </sui-form-fields>
+        <sui-form-fields>
           <!-- if time group is day -->
-          <sui-form-field v-if="(showFilterTime && filter.time.group == 'day') || (showFilterTime && !showFilterTimeGroup)" width="five">
-            <label>{{$t('filter.time_interval')}}</label>
+          <sui-form-field v-if="(showFilterTime && filter.time.group == 'day') || (showFilterTime && !showFilterTimeGroup)">
+            <label>{{$t('filter.time_range')}}</label>
             <sui-button-group class="fluid">
               <sui-button
                 :active="filter.time.range == 'yesterday'"
@@ -60,8 +62,8 @@
             </sui-button-group>
           </sui-form-field>
           <!-- if time group is week -->
-          <sui-form-field v-if="showFilterTime && filter.time.group == 'week' && showFilterTimeGroup" width="five">
-            <label>{{$t('filter.time_interval')}}</label>
+          <sui-form-field v-if="showFilterTime && filter.time.group == 'week' && showFilterTimeGroup">
+            <label>{{$t('filter.time_range')}}</label>
             <sui-button-group class="fluid">
               <sui-button
                 :active="filter.time.range == 'last_week'"
@@ -84,8 +86,8 @@
             </sui-button-group>
           </sui-form-field>
           <!-- if time group is month -->
-          <sui-form-field v-if="showFilterTime && filter.time.group == 'month' && showFilterTimeGroup" width="five">
-            <label>{{$t('filter.time_interval')}}</label>
+          <sui-form-field v-if="showFilterTime && filter.time.group == 'month' && showFilterTimeGroup">
+            <label>{{$t('filter.time_range')}}</label>
             <sui-button-group class="fluid">
               <sui-button
                 :active="filter.time.range == 'last_month'"
@@ -108,8 +110,8 @@
             </sui-button-group>
           </sui-form-field>
           <!-- if time group is year -->
-          <sui-form-field v-if="showFilterTime && filter.time.group == 'year' && showFilterTimeGroup" width="five">
-            <label>{{$t('filter.time_interval')}}</label>
+          <sui-form-field v-if="showFilterTime && filter.time.group == 'year' && showFilterTimeGroup">
+            <label>{{$t('filter.time_range')}}</label>
             <sui-button-group class="fluid">
               <sui-button
                 :active="filter.time.range == 'last_year'"
@@ -131,18 +133,33 @@
               >
             </sui-button-group>
           </sui-form-field>
-          <sui-form-field width="three">
-            <label>{{$t('filter.dates_label')}}</label>
-            <v-date-picker
-              mode="range"
-              v-model="filter.time.interval"
-              :input-props='{ placeholder: $t("filter.dates_placeholder") }'
-              :available-dates="{ start: null, end: new Date() }"
-              :masks="{ input: 'YYYY/MM/DD' }"
-            />
+          <sui-form-field>
+            <label :class="{ 'error-color': errorTimeInterval }">{{$t('filter.time_interval')}}</label>
+            <!-- time interval start -->
+            <date-picker
+              v-model="filter.time.interval.start"
+              :type="showFilterTimeHour ? 'datetime' : filter.time.group == 'day' ? 'date' : filter.time.group == 'week' ? 'week' : filter.time.group == 'month' ? 'month' : 'year'"
+              :placeholder="$t('filter.time_interval_start_placeholder')"
+              :clearable="false"
+              :show-second="false"
+              :disabled-date="fromToday"
+              :class="{ 'time-interval-error': errorTimeInterval }"
+              :formatter="momentFormatter"
+            ></date-picker>
+            <sui-icon name="right arrow time-filter" />
+            <!-- time interval end -->
+            <date-picker
+              v-model="filter.time.interval.end"
+              :type="showFilterTimeHour ? 'datetime' : filter.time.group == 'day' ? 'date' : filter.time.group == 'week' ? 'week' : filter.time.group == 'month' ? 'month' : 'year'"
+              :placeholder="$t('filter.time_interval_end_placeholder')"
+              :clearable="false"
+              :show-second="false"
+              :disabled-date="fromToday"
+              :class="{ 'time-interval-error': errorTimeInterval }"
+              :formatter="momentFormatter"
+            ></date-picker>
           </sui-form-field>
         </sui-form-fields>
-
         <sui-grid class="fields">
           <sui-form-field v-if="showFilterQueue" width="four">
             <label>{{$t('filter.queues_label')}}</label>
@@ -414,13 +431,16 @@ import UtilService from "../services/utils";
 import SearchService from "../services/searches";
 import PhonebookService from "../services/phonebook";
 import FixedBar from "../components/FixedBar.vue";
+import DatePicker from 'vue2-datepicker';
+import 'vue2-datepicker/index.css';
 
 import moment from "moment";
 
 export default {
   name: "Filters",
   components: {
-    FixedBar: FixedBar
+    FixedBar: FixedBar,
+    DatePicker: DatePicker
   },
   mixins: [
     LoginService,
@@ -477,6 +497,7 @@ export default {
       openDeleteSearchModal: false,
       newSearchName: "",
       errorNewSearch: false,
+      errorTimeInterval: false,
       errorMessage: "",
       loader: {
         filter: true,
@@ -496,14 +517,36 @@ export default {
         { value: "10", text: "10 minutes" },
       ],
       phoneBook: [],
-      queueReportViewFilterMap: null
+      queueReportViewFilterMap: null,
+      momentFormatter: {
+        stringify: (date) => {
+          const dateFormat = this.getDateFormat();
+          return date ? moment(date).format(dateFormat) : ''
+        },
+        parse: (value) => {
+          const dateFormat = this.getDateFormat();
+          return value ? moment(value, dateFormat).toDate() : null
+        },
+        getWeek(date) {
+          return moment(date).isoWeek();
+        },
+      },
     };
   },
   watch: {
     $route: function () {
+      // sort saved searches
       if (this.savedSearches) {
         this.mapSavedSearches(this.savedSearches);
       }
+
+      // reset time group if "Group by" filter is not shown
+      if (!this.showFilterTimeGroup) {
+        this.filter.time.group = "day";
+      }
+    },
+    "filter.time.group": function () { ////
+      console.log("this.filter.time.group", this.filter.time.group); ////
     },
     selectedSearch: function () {
       this.setFilterValuesFromSearch();
@@ -531,6 +574,11 @@ export default {
             this.filter.time.interval.end
           );
         }
+
+        if (!this.validateTimeInterval()) {
+          return;
+        }
+
         if (this.filter.time.interval.end.getTime() == this.getToday().getTime()) {
           // check time range starting from dates
           switch (this.filter.time.interval.start.getTime()) {
@@ -777,8 +825,17 @@ export default {
       } else {
         this.filter.time.interval = filter.time.interval;
       }
+
       this.filter.time.group = filter.time.group;
+      if (!this.showFilterTimeGroup || !this.filter.time.group) {
+        this.filter.time.group = "day";
+      }
+
       this.filter.time.division = filter.time.division;
+      if (!this.showFilterTimeSplit || !this.filter.time.division) {
+        this.filter.time.division = "60";
+      }
+
       this.selectTime(filter.time.range);
 
       // null call
@@ -839,84 +896,176 @@ export default {
       today.setHours(0, 0, 0, 0);
       return today;
     },
-    getYesterday() {
-      return moment().subtract(1, 'day').startOf('day').toDate();
+    getYesterday(startOrEnd="start") {
+      const yesterday = moment().subtract(1, 'day');
+
+      if (startOrEnd == "start") {
+        return yesterday.startOf('day').toDate();
+      } else {
+        return yesterday.endOf('day').toDate();
+      }
     },
-    getLastWeek() {
-      return moment().subtract(1, 'week').startOf('day').toDate();
+    getLastWeek(startOrEnd) {
+      const aWeekAgo = moment().subtract(1, 'week');
+
+      if (startOrEnd == "start") {
+        return aWeekAgo.startOf('day').toDate();
+      } else {
+        return aWeekAgo.endOf('day').toDate();
+      }
     },
-    getLastTwoWeeks() {
-      return moment().subtract(2, 'weeks').startOf('day').toDate();
+    getLastTwoWeeks(startOrEnd) {
+      const twoWeeksAgo = moment().subtract(2, 'weeks');
+
+      if (startOrEnd == "start") {
+        return twoWeeksAgo.startOf('day').toDate();
+      } else {
+        return twoWeeksAgo.endOf('day').toDate();
+      }
     },
-    getLastMonth() {
-      return moment().subtract(1, 'month').startOf('day').toDate();
+    getLastMonth(startOrEnd) {
+      const aMonthAgo = moment().subtract(1, 'month');
+
+      if (startOrEnd == "start") {
+        return aMonthAgo.startOf('day').toDate();
+      } else {
+        return aMonthAgo.endOf('day').toDate();
+      }
     },
-    getLastTwoMonths() {
-      return moment().subtract(2, 'months').startOf('day').toDate();
+    getLastTwoMonths(startOrEnd) {
+      const twoMonthsAgo = moment().subtract(2, 'months');
+
+      if (startOrEnd == "start") {
+        return twoMonthsAgo.startOf('day').toDate();
+      } else {
+        return twoMonthsAgo.endOf('day').toDate();
+      }
     },
-    getLastSixMonths() {
-      return moment().subtract(6, 'months').startOf('day').toDate();
+    getLastSixMonths(startOrEnd) {
+      const sixMonthsAgo = moment().subtract(6, 'months');
+
+      if (startOrEnd == "start") {
+        return sixMonthsAgo.startOf('day').toDate();
+      } else {
+        return sixMonthsAgo.endOf('day').toDate();
+      }
     },
-    getLastYear() {
-      return moment().subtract(1, 'year').startOf('day').toDate();
+    getLastYear(startOrEnd) {
+      const aYearAgo = moment().subtract(1, 'year');
+
+      if (startOrEnd == "start") {
+        return aYearAgo.startOf('day').toDate();
+      } else {
+        return aYearAgo.endOf('day').toDate();
+      }
     },
-    getLastTwoYears() {
-      return moment().subtract(2, 'years').startOf('day').toDate();
+    getLastTwoYears(startOrEnd) {
+      const twoYearsAgo = moment().subtract(2, 'years');
+
+      if (startOrEnd == "start") {
+        return twoYearsAgo.startOf('day').toDate();
+      } else {
+        return twoYearsAgo.endOf('day').toDate();
+      }
     },
-    getLastThreeYears() {
-      return moment().subtract(3, 'years').startOf('day').toDate();
+    getLastThreeYears(startOrEnd) {
+      const threeYearsAgo = moment().subtract(3, 'years');
+
+      if (startOrEnd == "start") {
+        return threeYearsAgo.startOf('day').toDate();
+      } else {
+        return threeYearsAgo.endOf('day').toDate();
+      }
     },
     selectTime(range) {
+      this.errorTimeInterval = false;
       this.filter.time.range = range;
 
       if (range == "yesterday") {
         this.filter.time.interval = {
-          start: this.getYesterday(),
-          end: this.getToday(),
+          start: this.getYesterday("start"),
+          end: this.getYesterday("end"),
         };
       } else if (range == "last_week") {
         this.filter.time.interval = {
-          start: this.getLastWeek(),
-          end: this.getToday(),
+          start: this.getLastWeek("start"),
+          end: this.getYesterday("end"),
         };
       } else if (range == "last_two_weeks") {
         this.filter.time.interval = {
-          start: this.getLastTwoWeeks(),
-          end: this.getToday(),
+          start: this.getLastTwoWeeks("start"),
+          end: this.getYesterday("end"),
         };
       } else if (range == "last_month") {
         this.filter.time.interval = {
-          start: this.getLastMonth(),
-          end: this.getToday(),
+          start: this.getLastMonth("start"),
+          end: this.getYesterday("end"),
         };
       } else if (range == "last_two_months") {
         this.filter.time.interval = {
-          start: this.getLastTwoMonths(),
-          end: this.getToday(),
+          start: this.getLastTwoMonths("start"),
+          end: this.getYesterday("end"),
         };
       } else if (range == "last_six_months") {
         this.filter.time.interval = {
-          start: this.getLastSixMonths(),
-          end: this.getToday(),
+          start: this.getLastSixMonths("start"),
+          end: this.getYesterday("end"),
         };
       } else if (range == "last_year") {
         this.filter.time.interval = {
-          start: this.getLastYear(),
-          end: this.getToday(),
+          start: this.getLastYear("start"),
+          end: this.getYesterday("end"),
         };
       } else if (range == "last_two_years") {
         this.filter.time.interval = {
-          start: this.getLastTwoYears(),
-          end: this.getToday(),
+          start: this.getLastTwoYears("start"),
+          end: this.getYesterday("end"),
         };
       } else if (range == "last_three_years") {
         this.filter.time.interval = {
-          start: this.getLastThreeYears(),
-          end: this.getToday(),
+          start: this.getLastThreeYears("start"),
+          end: this.getYesterday("end"),
         };
       }
     },
+    validateTimeInterval() {
+      this.errorTimeInterval = false;
+
+      // check time interval is not empty
+
+      if (!this.filter.time.interval.start || !this.filter.time.interval.end) {
+        this.errorTimeInterval = true;
+        return false;
+      }
+
+      // check date format
+
+      const dateFormat = this.getDateFormat();
+
+      let formatStartValid = moment(this.filter.time.interval.start, dateFormat, true).isValid();
+      let formatEndValid = moment(this.filter.time.interval.end, dateFormat, true).isValid();
+
+      if (!formatStartValid || !formatEndValid) {
+        this.errorTimeInterval = true;
+        return false;
+      }
+
+      // check time interval start is not after time interval end
+
+      const start = moment(this.filter.time.interval.start).format(dateFormat);
+      const end = moment(this.filter.time.interval.end).format(dateFormat);
+
+      if (moment(start).isAfter(moment(end))) {
+        this.errorTimeInterval = true;
+        return false;
+      }
+      return true;
+    },
     applyFilters() {
+      if (!this.validateTimeInterval()) {
+        return;
+      }
+
       // save filter to local storage
       this.set(this.reportFilterStorageName, this.filter);
 
@@ -946,32 +1095,10 @@ export default {
         }
       }
 
-      // set group by day if "Group by time" field is hidden or empty
-
-      if (!this.showFilterTimeGroup || !filterToApply.time.group) {
-        filterToApply.time.group = "day";
-      }
-
-      // set splity by 1 hour if "Split by time" field is hidden or empty
-
-      if (!this.showFilterTimeSplit || !filterToApply.time.division) {
-        filterToApply.time.division = "60";
-      }
-
       // format time interval
 
       if (filterToApply.time.interval) {
-        let dateFormat = "";
-
-        if (filterToApply.time.group == "year") {
-          dateFormat = "YYYY";
-        } else if (filterToApply.time.group == "month") {
-          dateFormat = "YYYY-MM";
-        } else if (filterToApply.time.group == "week") {
-          dateFormat = "YYYY-WW";
-        } else if (filterToApply.time.group == "day") {
-          dateFormat = "YYYY-MM-DD";
-        }
+        const dateFormat = this.getDateFormat();
         filterToApply.time.interval.start = moment(
           filterToApply.time.interval.start
         ).format(dateFormat);
@@ -998,7 +1125,7 @@ export default {
 
       if (!this.newSearchName) {
         this.errorNewSearch = true;
-        this.errorMessage = "Search name is required";
+        this.errorMessage = this.$i18n.t('message.search_name_required');
         return;
       }
 
@@ -1008,14 +1135,13 @@ export default {
 
       if (exists) {
         this.errorNewSearch = true;
-        this.errorMessage = "A search with the same name already exists";
+        this.errorMessage = this.$i18n.t('message.search_name_already_exist');
         return;
       }
 
       if (!/^[a-zA-Z][a-zA-Z0-9 -,/]+$/.test(this.newSearchName)) {
         this.errorNewSearch = true;
-        this.errorMessage =
-          "Search name must begin with a letter and contain only letters, spaces, numbers and dashes";
+        this.errorMessage = this.$i18n.t('message.search_name_validation');
         return;
       }
       this.saveSearch(this.newSearchName);
@@ -1062,11 +1188,11 @@ export default {
       }
 
       if (!this.showFilterTimeGroup) {
-        filterToSave.time.group = "";
+        filterToSave.time.group = "day";
       }
 
       if (!this.showFilterTimeSplit) {
-        filterToSave.time.division = "";
+        filterToSave.time.division = "60";
       }
 
       if (!this.showFilterCaller) {
@@ -1235,6 +1361,32 @@ export default {
       this.filter.contactName = "";
       this.applyFilters()
     },
+    fromToday(date) {
+      return date > this.getYesterday('end');
+    },
+    getDateFormat() {
+      let dateFormat = "";
+
+      switch (this.filter.time.group) {
+        case "year":
+          dateFormat = "YYYY";
+          break;
+        case "month":
+          dateFormat = "YYYY-MM";
+          break;
+        case "week":
+          dateFormat = "GGGG-[W]WW";
+          break;
+        case "day":
+          if (this.showFilterTimeHour) {
+            dateFormat = "YYYY-MM-DD HH:mm";
+          } else {
+            dateFormat = "YYYY-MM-DD";
+          }
+          break;
+      }
+      return dateFormat;
+    },
   },
   computed: {
     showFilterTime: function () {
@@ -1245,6 +1397,9 @@ export default {
     },
     showFilterTimeSplit: function () {
       return this.isFilterInView("timeSplit");
+    },
+    showFilterTimeHour: function () {
+      return this.isFilterInView("hour");
     },
     showFilterAgent: function () {
       return this.isFilterInView("agent");
@@ -1320,5 +1475,15 @@ export default {
 .filters-form .ui.grid {
   margin-top: 1rem;
   margin-bottom: 0;
+}
+
+.ui.input.time-filter {
+  width: auto !important;
+}
+
+i.icon.time-filter {
+  margin: 0 .25rem;
+  position: relative;
+  top: 0.5rem;
 }
 </style>

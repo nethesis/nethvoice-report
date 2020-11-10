@@ -2,7 +2,6 @@ import Vue from "vue";
 import VueResource from "vue-resource";
 import VueI18n from "vue-i18n";
 import PortalVue from "portal-vue";
-import VCalendar from 'v-calendar';
 import VueLodash from 'vue-lodash';
 import lodash from 'lodash';
 import VueScrollTo from 'vue-scrollto';
@@ -47,7 +46,6 @@ Vue.use(VueI18n);
 Vue.use(PortalVue);
 Vue.use(VueLodash, { name: 'ldsh', lodash: lodash });
 Vue.use(VueScrollTo)
-Vue.use(VCalendar);
 
 // configure i18n
 var langConf = languages.initLang();
