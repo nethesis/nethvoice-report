@@ -303,7 +303,7 @@
             icon="search"
             :disabled="loader.filter"
             class="mr-15"
-            >Search</sui-button
+            >{{ $t('command.search') }}</sui-button
           >
           <sui-button-group>
             <sui-button
