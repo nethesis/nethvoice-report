@@ -30,7 +30,9 @@ var Filters = {
         const tokens = value.split("-");
         const year = tokens[0];
         const weekNum = parseInt(tokens[1]);
-        return (i18n ? i18n.t("misc.week") : "week") + " " + weekNum + " " + year;
+        const firstDay = moment().year(year).week(weekNum).day(0).format('YYYY-MM-DD');
+        const lastDay = moment().year(year).week(weekNum).day(6).format('YYYY-MM-DD');
+        return (i18n ? i18n.t("misc.week") : "week") + " " + weekNum + " (" + firstDay + " - " + lastDay + ")";
     },
     formatNumber(value) {
         const num = parseFloat(value);

@@ -69,3 +69,15 @@
 .h-30 {
     height: 30px;
 }
+
+.no-margin-top {
+    margin-top: 0px;
+}
+
+.fw-6 {
+    font-weight: 600 !important;
+}
+
+.white-color {
+    color: white !important;
+}
