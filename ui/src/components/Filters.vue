@@ -545,9 +545,6 @@ export default {
         this.filter.time.group = "day";
       }
     },
-    "filter.time.group": function () { ////
-      console.log("this.filter.time.group", this.filter.time.group); ////
-    },
     selectedSearch: function () {
       this.setFilterValuesFromSearch();
     },
