@@ -13,9 +13,10 @@ CREATE TABLE data_agent_year AS
          t1.qdescr AS qdescr, 
          t2.logon  AS logon, 
          t2.work   AS login, 
-         t2.pause  AS pause, 
+         t2.pause  AS pause,
          answered, 
-         unanswered, 
+         unanswered,
+         afterwork,	
          totcall, 
          min_duration, 
          max_duration, 
@@ -24,7 +25,12 @@ CREATE TABLE data_agent_year AS
                  qname, 
                  qdescr, 
                  Sum(IF(action = 'ANSWER', 1, 0))               AS answered, 
-                 Sum(IF(action = 'RINGNOANSWER', 1, 0))         AS unanswered, 
+                 Sum(IF(action = 'RINGNOANSWER', 1, 0))         AS unanswered,
+	         Sum(IF(action = 'ANSWER', 1, 0)) * (
+		     SELECT data
+		     FROM asterisk.queues_details
+		     WHERE keyword = "wrapuptime" and id = report_queue_agents.qname
+		 )						AS afterwork,
                  Sum(duration)                                  AS totcall, 
                  Max(duration)                                  AS max_duration, 
                  Min(Nullif(duration, 0))                       AS min_duration, 
@@ -61,9 +67,10 @@ CREATE TABLE data_agent_month AS
          t1.qdescr AS qdescr, 
          t2.logon  AS logon, 
          t2.work   AS login, 
-         t2.pause  AS pause, 
+         t2.pause  AS pause,
          answered, 
-         unanswered, 
+         unanswered,
+         afterwork,	
          totcall, 
          min_duration, 
          max_duration, 
@@ -72,7 +79,12 @@ CREATE TABLE data_agent_month AS
                  qname, 
                  qdescr, 
                  Sum(IF(action = 'ANSWER', 1, 0))               AS answered, 
-                 Sum(IF(action = 'RINGNOANSWER', 1, 0))         AS unanswered, 
+                 Sum(IF(action = 'RINGNOANSWER', 1, 0))         AS unanswered,
+	         Sum(IF(action = 'ANSWER', 1, 0)) * (
+                     SELECT data
+                     FROM asterisk.queues_details
+                     WHERE keyword = "wrapuptime" and id = report_queue_agents.qname
+                 )                                              AS afterwork,
                  Sum(duration)                                  AS totcall, 
                  Max(duration)                                  AS max_duration, 
                  Min(Nullif(duration, 0))                       AS min_duration, 
@@ -111,7 +123,8 @@ CREATE TABLE data_agent_week AS
          t2.work   AS login, 
          t2.pause  AS pause, 
          answered, 
-         unanswered, 
+         unanswered,
+         afterwork,
          totcall, 
          min_duration, 
          max_duration, 
@@ -120,7 +133,12 @@ CREATE TABLE data_agent_week AS
                  qname, 
                  qdescr, 
                  Sum(IF(action = 'ANSWER', 1, 0))               AS answered, 
-                 Sum(IF(action = 'RINGNOANSWER', 1, 0))         AS unanswered, 
+                 Sum(IF(action = 'RINGNOANSWER', 1, 0))         AS unanswered,
+	         Sum(IF(action = 'ANSWER', 1, 0)) * (
+                     SELECT data
+                     FROM asterisk.queues_details
+                     WHERE keyword = "wrapuptime" and id = report_queue_agents.qname
+                 )                                              AS afterwork,
                  Sum(duration)                                  AS totcall, 
                  Max(duration)                                  AS max_duration, 
                  Min(Nullif(duration, 0))                       AS min_duration, 
@@ -160,7 +178,8 @@ CREATE TABLE data_agent_day AS
          t2.work   AS login, 
          t2.pause  AS pause, 
          answered, 
-         unanswered, 
+         unanswered,
+         afterwork,
          totcall, 
          min_duration, 
          max_duration, 
@@ -169,7 +188,12 @@ CREATE TABLE data_agent_day AS
                  qname, 
                  qdescr, 
                  Sum(IF(action = 'ANSWER', 1, 0))               AS answered, 
-                 Sum(IF(action = 'RINGNOANSWER', 1, 0))         AS unanswered, 
+                 Sum(IF(action = 'RINGNOANSWER', 1, 0))         AS unanswered,
+	         Sum(IF(action = 'ANSWER', 1, 0)) * (
+                     SELECT data
+                     FROM asterisk.queues_details
+                     WHERE keyword = "wrapuptime" and id = report_queue_agents.qname
+                 )                                              AS afterwork,
                  Sum(duration)                                  AS totcall, 
                  Max(duration)                                  AS max_duration, 
                  Min(Nullif(duration, 0))                       AS min_duration, 

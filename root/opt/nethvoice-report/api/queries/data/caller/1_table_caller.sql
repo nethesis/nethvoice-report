@@ -1,7 +1,5 @@
 {{ if not (and .Time.Interval.Start .Time.Interval.End) }}
  SELECT "timeIntervalStart and timeIntervalEnd are required" AS "!message";
-{{ else if not (or .Caller (gt (len .Phones) 0) )}}
- SELECT "caller name or company fields are required" AS "!message";
 {{ else }}
 SELECT
     period AS `period£{{ .Time.Group }}Date`,

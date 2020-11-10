@@ -10,10 +10,10 @@ SELECT
     Date_format(From_unixtime(timestamp_in), "%Y-%m-%d %H:%i:%s") AS start£hourDate,
     Date_format(From_unixtime(timestamp_out), "%Y-%m-%d %H:%i:%s") AS end£hourDate,
     (timestamp_out - timestamp_in) AS duration£seconds,
-    reason
+    IF(action = 'logon', "", reason) as reason
 FROM
     agentsessions
-WHERE reason NOT LIKE "Local/%" AND reason IS NOT NULL AND reason != ""
+WHERE TRUE
     {{ if and .Time.Interval.Start .Time.Interval.End }}
         AND Date_format(From_unixtime(timestamp_in), "%Y-%m-%d %H:%i:%s") >= "{{ .Time.Interval.Start }}"
         AND Date_format(From_unixtime(timestamp_out), "%Y-%m-%d %H:%i:%s") <= "{{ .Time.Interval.End }}"
