@@ -256,7 +256,7 @@ DROP TABLE IF EXISTS distribution_hour_joinempty_week_60;
 
 CREATE TABLE distribution_hour_joinempty_week_10 AS
 SELECT
-       Date_format(From_unixtime(timestamp_in), "%Y-%u") AS period,
+       Date_format(From_unixtime(timestamp_in), "%x-W%v") AS period,
        qname,
        qdescr,
        Date_format(
@@ -285,7 +285,7 @@ ORDER BY
 
 CREATE TABLE distribution_hour_joinempty_week_15 AS
 SELECT
-       Date_format(From_unixtime(timestamp_in), "%Y-%u") AS period,
+       Date_format(From_unixtime(timestamp_in), "%x-W%v") AS period,
        qname,
        qdescr,
        Date_format(
@@ -314,7 +314,7 @@ ORDER BY
 
 CREATE TABLE distribution_hour_joinempty_week_30 AS
 SELECT
-       Date_format(From_unixtime(timestamp_in), "%Y-%u") AS period,
+       Date_format(From_unixtime(timestamp_in), "%x-W%v") AS period,
        qname,
        qdescr,
        Date_format(
@@ -343,7 +343,7 @@ ORDER BY
 
 CREATE TABLE distribution_hour_joinempty_week_60 AS
 SELECT
-       Date_format(From_unixtime(timestamp_in), "%Y-%u") AS period,
+       Date_format(From_unixtime(timestamp_in), "%x-W%v") AS period,
        qname,
        qdescr,
        Date_format(

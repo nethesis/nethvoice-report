@@ -50,7 +50,7 @@ ORDER BY
 
 CREATE TABLE graph_agent_answer_week AS
 SELECT
-    Date_format(From_unixtime(timestamp_in), "%Y-%u") AS period,
+    Date_format(From_unixtime(timestamp_in), "%x-W%v") AS period,
     qname,
     qdescr,
     agent,
@@ -142,7 +142,7 @@ ORDER BY
 
 CREATE TABLE graph_agent_noanswer_week AS
 SELECT
-    Date_format(From_unixtime(timestamp_in), "%Y-%u") AS period,
+    Date_format(From_unixtime(timestamp_in), "%x-W%v") AS period,
     qname,
     qdescr,
     agent,

@@ -34,9 +34,9 @@ var UtilService = {
         "data": {
           "summary": ["timeGroup", "time", "queue", "agent"],
           "agent": ["timeGroup", "time", "queue", "agent"],
-          "session": ["time", "queue", "reason", "agent"],
+          "session": ["time", "hour", "queue", "reason", "agent"],
           "caller": ["timeGroup", "time", "queue", "caller", "contactName"],
-          "call": ["time", "queue", "caller", "contactName", "agent", "result"],
+          "call": ["time", "hour", "queue", "caller", "contactName", "agent", "result"],
           "lost_call": ["timeGroup", "time", "queue", "caller", "contactName", "reason"],
           "ivr": ["timeGroup", "time", "ivr", "choice"]
         },

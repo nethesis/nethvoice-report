@@ -44,7 +44,7 @@ ORDER BY
 
 CREATE TABLE performance_null_week AS
 SELECT
-    Date_format(From_unixtime(timestamp_in), "%Y-%u") AS period,
+    Date_format(From_unixtime(timestamp_in), "%x-W%v") AS period,
     qname,
     Count(id) AS count
 FROM

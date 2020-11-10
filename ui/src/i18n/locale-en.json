@@ -4,6 +4,7 @@
       "group_by": "Group by",
       "saved_search": "Saved search",
       "time_interval": "Time interval",
+      "time_range": "Time range",
       "yesterday": "Yesterday",
       "last_week": "Last week",
       "last_month": "Last month",
@@ -11,8 +12,8 @@
       "week": "Week",
       "month": "Month",
       "year": "Year",
-      "dates_placeholder": "Select the date range",
-      "dates_label": "Date start/end",
+      "time_interval_start_placeholder": "Start date",
+      "time_interval_end_placeholder": "End date",
       "queues_label": "Queues",
       "groups_label": "Groups",
       "agents_label": "Agents",
@@ -37,7 +38,8 @@
       "area_code": "Area code",
       "district": "District",
       "province": "Province",
-      "region": "Region"
+      "region": "Region",
+      "time_start_end": "Time start/end"
     },
     "menu": {
       "queue": "Queue report",
@@ -144,7 +146,12 @@
       "office_hours_description": "Office hours are used to display report charts. Some charts plot data only inside office hours (e.g. Queue report > Graphs > Average duration)",
       "come_back_tomorrow": "Data not available, please come back tomorrow",
       "come_back_tomorrow_desc": "Report data are harvested and processed every night",
-      "enter_name_for_saved_search": "Enter a name for your new saved search"
+      "enter_name_for_saved_search": "Enter a name for your new saved search",
+      "search_name_required": "Search name is required",
+      "search_name_already_exist": "A search with the same name already exists",
+      "search_name_validation": "Search name must begin with a letter and contain only letters, spaces, numbers and dashes",
+      "coming_soon": "Coming soon",
+      "cdr_not_available": "CDR & Cost report is not available yet, please come back later"
     },
     "pagination": {
       "page": "page",
@@ -203,6 +210,8 @@
       "activity": "Activity",
       "load": "Load",
       "logonDays": "Logon days",
+      "logon": "Logon",
+      "afterwork": "Afterwork",
       "min_duration": "Min duration",
       "max_duration": "Max duration",
       "avg_duration": "Average duration",
@@ -262,6 +271,7 @@
       "save": "Save",
       "delete": "Delete",
       "cancel": "Cancel",
+      "search": "Search",
       "overwrite": "Overwrite",
       "close": "Close",
       "show_details": "Show details",

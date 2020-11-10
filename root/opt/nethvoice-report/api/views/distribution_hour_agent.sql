@@ -344,7 +344,7 @@ DROP TABLE IF EXISTS distribution_hour_agent_week_60;
 
 CREATE TABLE distribution_hour_agent_week_10 AS
 SELECT
-       Date_format(calldate, "%Y-%u") AS period,
+       Date_format(calldate, "%x-W%v") AS period,
        src AS agentNum,
        (
               SELECT
@@ -384,7 +384,7 @@ ORDER BY
 
 CREATE TABLE distribution_hour_agent_week_15 AS
 SELECT
-       Date_format(calldate, "%Y-%u") AS period,
+       Date_format(calldate, "%x-W%v") AS period,
        src AS agentNum,
        (
               SELECT
@@ -424,7 +424,7 @@ ORDER BY
 
 CREATE TABLE distribution_hour_agent_week_30 AS
 SELECT
-       Date_format(calldate, "%Y-%u") AS period,
+       Date_format(calldate, "%x-W%v") AS period,
        src AS agentNum,
        (
               SELECT
@@ -464,7 +464,7 @@ ORDER BY
 
 CREATE TABLE distribution_hour_agent_week_60 AS
 SELECT
-       Date_format(calldate, "%Y-%u") AS period,
+       Date_format(calldate, "%x-W%v") AS period,
        src AS agentNum,
        (
               SELECT

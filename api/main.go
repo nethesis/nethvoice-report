@@ -42,14 +42,14 @@ func main() {
 	configuration.Init(ConfigFilePtr)
 
 	// disable log to stdout when running in release mode
-	if (gin.Mode() == gin.ReleaseMode) {
+	if gin.Mode() == gin.ReleaseMode {
 		gin.DefaultWriter = ioutil.Discard
 	}
 
 	// init routers
 	router := gin.Default()
 
-	// cors //// remove before release
+	// cors //// use configuration / env variable
 	// router.Use(cors.Default())
 	corsConf := cors.DefaultConfig()
 	corsConf.AllowHeaders = []string{"Authorization", "Content-Type"}

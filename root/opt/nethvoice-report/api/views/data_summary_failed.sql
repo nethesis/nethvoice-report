@@ -64,7 +64,7 @@ ORDER BY
 
 CREATE TABLE data_summary_failed_week AS
 SELECT
-       Date_format(From_unixtime(timestamp_in), "%Y-%u") AS period,
+       Date_format(From_unixtime(timestamp_in), "%x-W%v") AS period,
        qname,
        Count(DISTINCT cid) AS uniqCid,
        Count(id) AS num,

@@ -125,7 +125,7 @@ CREATE TABLE data_agent_week AS
                  Max(duration)                                  AS max_duration, 
                  Min(Nullif(duration, 0))                       AS min_duration, 
                  Avg(duration)                                  AS avg_duration, 
-                 Date_format(From_unixtime(timestamp_in), '%Y-%u') AS period 
+                 Date_format(From_unixtime(timestamp_in), '%x-W%v') AS period 
           FROM   report_queue_agents 
           GROUP  BY agent, 
                     period, 
@@ -140,7 +140,7 @@ CREATE TABLE data_agent_week AS
                                                 AS pause, 
                       Count(DISTINCT( Date(From_unixtime(timestamp_in)) )) 
                                                 AS logon, 
-                      Date_format(From_unixtime(timestamp_in), '%Y-%u') 
+                      Date_format(From_unixtime(timestamp_in), '%x-W%v') 
                                                 AS period 
                FROM   agentsessions 
                GROUP  BY agent, 

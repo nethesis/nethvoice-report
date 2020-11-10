@@ -256,7 +256,7 @@ DROP TABLE IF EXISTS distribution_hour_ivr_week_60;
 
 CREATE TABLE distribution_hour_ivr_week_10 AS
 SELECT
-       Date_format(time, "%Y-%u") AS period,
+       Date_format(time, "%x-W%v") AS period,
        Date_format(
               Sec_to_time(
                      Time_to_sec(time) - Time_to_sec(time) % (10 * 60)
@@ -285,7 +285,7 @@ ORDER BY
 
 CREATE TABLE distribution_hour_ivr_week_15 AS
 SELECT
-       Date_format(time, "%Y-%u") AS period,
+       Date_format(time, "%x-W%v") AS period,
        Date_format(
               Sec_to_time(
                      Time_to_sec(time) - Time_to_sec(time) % (15 * 60)
@@ -314,7 +314,7 @@ ORDER BY
 
 CREATE TABLE distribution_hour_ivr_week_30 AS
 SELECT
-       Date_format(time, "%Y-%u") AS period,
+       Date_format(time, "%x-W%v") AS period,
        Date_format(
               Sec_to_time(
                      Time_to_sec(time) - Time_to_sec(time) % (30 * 60)
@@ -343,7 +343,7 @@ ORDER BY
 
 CREATE TABLE distribution_hour_ivr_week_60 AS
 SELECT
-       Date_format(time, "%Y-%u") AS period,
+       Date_format(time, "%x-W%v") AS period,
        Date_format(
               Sec_to_time(
                      Time_to_sec(time) - Time_to_sec(time) % (60 * 60)

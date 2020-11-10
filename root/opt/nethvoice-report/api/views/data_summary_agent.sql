@@ -70,7 +70,7 @@ GROUP BY
 
 CREATE TABLE data_summary_agent_week AS
 SELECT
-       Date_format(calldate, "%Y-%u") AS period,
+       Date_format(calldate, "%x-W%v") AS period,
        src AS agentNum,
        (
               SELECT
