@@ -46,7 +46,7 @@ GROUP BY
 
 CREATE TABLE performance_wait_duration_week AS
 SELECT
-    Date_format(From_unixtime(timestamp_in), "%Y-%u") AS period,
+    Date_format(From_unixtime(timestamp_in), "%x-W%v") AS period,
     qname,
     Max(hold) AS max_hold,
     Min(hold) AS min_hold,

@@ -12,8 +12,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -36,8 +36,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -57,8 +57,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -78,8 +78,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -102,8 +102,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -123,8 +123,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -144,8 +144,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -168,8 +168,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -189,8 +189,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -210,8 +210,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -234,8 +234,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -255,8 +255,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -276,8 +276,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -300,8 +300,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -321,8 +321,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -342,8 +342,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -366,8 +366,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -387,8 +387,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -408,8 +408,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -432,8 +432,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -453,8 +453,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -474,8 +474,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -498,8 +498,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -519,8 +519,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -540,8 +540,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -564,8 +564,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -585,8 +585,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -606,8 +606,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -630,8 +630,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -651,8 +651,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -672,8 +672,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -696,8 +696,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -717,8 +717,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -738,8 +738,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -762,8 +762,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -783,8 +783,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -804,8 +804,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -828,8 +828,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -849,8 +849,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -870,8 +870,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -894,8 +894,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -915,8 +915,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -936,8 +936,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -960,8 +960,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -981,8 +981,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -1002,8 +1002,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -1026,8 +1026,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -1047,8 +1047,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -1068,8 +1068,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -1092,8 +1092,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -1113,8 +1113,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -1134,8 +1134,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -1158,8 +1158,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -1179,8 +1179,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"
@@ -1200,8 +1200,8 @@ FROM   (SELECT "total"                           AS talkTime£label,
                         AND date_format(timestamp_in, "%Y-%m") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m") <= "{{ .Time.Interval.End }}"
                         {{ else if eq .Time.Group "week" }}
-                        AND date_format(timestamp_in, "%Y-%u") >= "{{ .Time.Interval.Start }}"
-                        AND date_format(timestamp_out, "%Y-%u") <= "{{ .Time.Interval.End }}"
+                        AND date_format(timestamp_in, "%x-W%v") >= "{{ .Time.Interval.Start }}"
+                        AND date_format(timestamp_out, "%x-W%v") <= "{{ .Time.Interval.End }}"
                         {{ else }}
                         AND date_format(timestamp_in, "%Y-%m-%d") >= "{{ .Time.Interval.Start }}"
                         AND date_format(timestamp_out, "%Y-%m-%d") <= "{{ .Time.Interval.End }}"

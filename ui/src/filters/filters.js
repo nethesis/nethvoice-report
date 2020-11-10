@@ -27,7 +27,7 @@ var Filters = {
     },
     formatWeekDate(value, i18n) {
         // value: e.g. "2020-50"
-        const tokens = value.split("-");
+        const tokens = value.split("-W");
         const year = tokens[0];
         const weekNum = parseInt(tokens[1]);
         const firstDay = moment().year(year).week(weekNum).day(0).format('YYYY-MM-DD');

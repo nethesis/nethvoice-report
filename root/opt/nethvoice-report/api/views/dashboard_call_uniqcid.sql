@@ -36,7 +36,7 @@ ORDER BY
 
 CREATE TABLE dashboard_call_uniqcid_week AS
 SELECT
-    Date_format(From_unixtime(timestamp_in), "%Y-%u") AS period,
+    Date_format(From_unixtime(timestamp_in), "%x-W%v") AS period,
     qname,
     qdescr,
     Count(DISTINCT cid) AS total

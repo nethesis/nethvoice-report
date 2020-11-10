@@ -52,7 +52,7 @@ ORDER BY
 
 CREATE TABLE dashboard_call_byagent_week AS
 SELECT
-    Date_format(From_unixtime(timestamp_in), "%Y-%u") AS period,
+    Date_format(From_unixtime(timestamp_in), "%x-W%v") AS period,
     IF(
         locate('@', agent) > 0,
         substring_index(substring_index(agent, '/', -2), '@', 1),

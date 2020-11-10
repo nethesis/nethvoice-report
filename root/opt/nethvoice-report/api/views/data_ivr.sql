@@ -50,7 +50,7 @@ ORDER BY
 
 CREATE TABLE data_ivr_week AS
 SELECT
-    DATE_FORMAT(time, "%Y-%u") AS period,
+    DATE_FORMAT(time, "%x-W%v") AS period,
     data3 AS ivr_id,
     data4 AS ivr_name,
     data2 AS choice,
