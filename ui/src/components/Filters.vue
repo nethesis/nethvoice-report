@@ -763,11 +763,12 @@ export default {
                 text: `${tokens[3]} (${this.$t("filter.region")})`
               })
             })
-            this.filterValues.origins = areaCodes
+            let arr = areaCodes
               .concat(districts)
               .concat(provinces)
               .concat(regions)
               .sort(this.sortByProperty("text"));
+            this.filterValues.origins = Array.from(new Map(arr.map(item => [item.value, item])).values())
           }
 
           // destinations

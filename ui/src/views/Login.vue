@@ -63,7 +63,7 @@ export default {
     });
     this.$nextTick(() => {
       // set random background
-      document.querySelector('.background').style.background = `linear-gradient( rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.95) ), url(${this.getImgUrl()}) center center fixed`
+      document.querySelector('.background').style.background = `linear-gradient( rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.95) ), url(${this.getImgUrl()}) no-repeat center center fixed`
    })
   },
   methods: {
@@ -118,7 +118,7 @@ export default {
   height: 100vh;
   position: absolute;
   width: 100%;
-  background-size: 100% !important;
+  background-size: cover !important;
 }
 
 .grid {
