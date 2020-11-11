@@ -83,7 +83,14 @@ func GetDefaultFilter(c *gin.Context) {
 
 	// check error for default filter
 	if errCache != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "error reading values for filter from cache", "status": errCache.Error()})
+		errCacheMessage := errCache.Error()
+
+		if errCacheMessage == "redis: nil" {
+			// filter values not present in cache
+			c.JSON(http.StatusNotFound, gin.H{"message": "filter values not present in cache", "status": errCacheMessage})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"message": "error reading values for filter from cache", "status": errCacheMessage})
+		}
 		return
 	}
 

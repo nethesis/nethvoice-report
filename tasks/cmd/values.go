@@ -68,6 +68,7 @@ func executeReportValues() {
 		if filepath.Ext(path) != ".sql" {
 			return nil
 		}
+		helper.LogDebug("\nExecuting query %s", path)
 
 		// get value name
 		value := filepath.Base(path)

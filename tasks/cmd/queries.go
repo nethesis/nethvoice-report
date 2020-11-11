@@ -176,7 +176,13 @@ func executeQuery(queryName string, filter models.Filter, section string, view s
 		return "", errors.Wrap(err, "Error marshalling filter")
 	}
 	filterEncoded := url.QueryEscape(string(filterString))
-	requestUrl := fmt.Sprintf("%s/queues/%s/%s?filter=%s&graph=%s", configuration.Config.APIEndpoint, section, view, filterEncoded, queryName)
+
+	// get query type
+	tokens := strings.Split(queryName, ".")
+	queryName = tokens[0]
+	queryType := tokens[1]
+
+	requestUrl := fmt.Sprintf("%s/queues/%s/%s?filter=%s&graph=%s&type=%s", configuration.Config.APIEndpoint, section, view, filterEncoded, queryName, queryType)
 
 	// create request
 	req, err := http.NewRequest("GET", requestUrl, nil)
