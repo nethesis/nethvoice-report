@@ -282,4 +282,8 @@ export default {
   color: #9f3a38 !important;
   border-color: #e0b4b4 !important;
 }
+
+.no-margin {
+  margin: 0 !important;
+}
 </style>

@@ -55,7 +55,8 @@
       "hide_filters": "Hide filters",
       "show_filters": "Show filters",
       "active_filters": "Active filters",
-      "filters": "Filters"
+      "filters": "Filters",
+      "color_scheme": "Color scheme"
     },
     "data": {
       "summary": "Summary",

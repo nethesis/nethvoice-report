@@ -20,6 +20,8 @@ import "./styles/main.css";
 
 import "./filters/filters";
 
+import "chartjs-plugin-colorschemes"
+
 Vue.config.productionTip = false;
 Vue.use(SuiVue);
 
@@ -60,6 +62,7 @@ new Vue({
     filtersReady: false,
     phoneBook: [],
     reversePhoneBook: {},
+    colorScheme: "",
   },
   render: (h) => h(App),
 }).$mount("#app");

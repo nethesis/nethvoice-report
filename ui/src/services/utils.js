@@ -154,7 +154,7 @@ var UtilService = {
 
       // initialize chart data
 
-      Object.entries(datasetMap).forEach(([datasetName, data], index) => {
+      Object.entries(datasetMap).forEach(([datasetName, data]) => {
         const sortedLabels = Object.keys(data).sort();
         let datasetValues = [];
 
@@ -162,13 +162,9 @@ var UtilService = {
           datasetValues.push(data[label]);
         });
 
-        const color = that.colors[index % that.colors.length];
-
         that.datasets.push({
           label: this._.upperFirst(datasetName),
           data: datasetValues,
-          borderColor: color,
-          backgroundColor: color,
           fill: false,
         });
       });
@@ -179,7 +175,8 @@ var UtilService = {
         labels: that.labels,
         datasets: that.datasets,
       };
-      that.renderChart(chartData, that.options);
+      that.chartData = chartData;
+      that.renderChart(that.chartData, that.options);
     },
     parseTableChartHeader(rawColumn) {
       const colRegex = /^([^$£#]+)(?:£([^$£#]+))?(?:\$([^$£#]+)(?:£([^$£#]+))?(#)?)?(?:\$([^$£#]+)(?:£([^$£#]+))?(#)?)?$/;

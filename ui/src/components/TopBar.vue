@@ -2,6 +2,24 @@
   <div class="masthead topbar">
     <sui-container>
       <sui-menu floated="right">
+        <sui-dropdown
+          class="item"
+          icon="paint brush no-margin"
+        >
+          <sui-dropdown-menu class="color-scheme">
+            <sui-dropdown-item
+              v-for="(colorScheme, index) in colorSchemes"
+              v-bind:key="index"
+              @click="setColorScheme(colorScheme)"
+            >
+              <span>{{ $t('menu.color_scheme') }} {{ index +1 }}</span>
+              <sui-icon
+                v-if="colorScheme == $root.colorScheme"
+                name="check"
+              />
+            </sui-dropdown-item>
+          </sui-dropdown-menu>
+        </sui-dropdown>
         <sui-popup
           v-if="isAdmin"
           position="bottom center"
@@ -110,6 +128,7 @@ export default {
   mixins: [LoginService, StorageService, SettingsService],
   data() {
     return {
+      COLOR_SCHEME_STORAGE_NAME: "reportColorScheme",
       showFilters: true,
       title: this.$i18n.t(this.$route.meta.name) || "",
       openSettingsModal: false,
@@ -117,6 +136,18 @@ export default {
       officeHourEnd: "",
       isAdmin: false,
       dataAvailable: true,
+      colorSchemes: [
+        "tableau.Classic10",
+        "brewer.DarkTwo8",
+        "brewer.SetOne8",
+        "tableau.MillerStone11",
+        "brewer.Accent8",
+        "tableau.GreenOrangeTeal12",
+        "brewer.RdYlGn8",
+        "brewer.PiYG8",
+        "brewer.PRGn8",
+        "tableau.PurplePinkGray12",
+      ],
       loader: {
         saveSettings: false,
       },
@@ -148,6 +179,8 @@ export default {
       this.showFilters = false;
       this.dataAvailable = false;
     });
+
+    this.retrieveColorScheme();
   },
   watch: {
     $route: function () {
@@ -243,6 +276,24 @@ export default {
         }
       );
     },
+    retrieveColorScheme() {
+      let colorScheme = this.get(this.COLOR_SCHEME_STORAGE_NAME);
+
+      if (colorScheme) {
+        this.$root.colorScheme = colorScheme;
+      } else {
+        this.$root.colorScheme = this.colorSchemes[0];
+
+        // save to local storage
+        this.set(this.COLOR_SCHEME_STORAGE_NAME, this.$root.colorScheme);
+      }
+    },
+    setColorScheme(colorScheme) {
+      this.$root.colorScheme = colorScheme;
+
+      // save to local storage
+      this.set(this.COLOR_SCHEME_STORAGE_NAME, this.$root.colorScheme);
+    }
   },
 };
 </script>
@@ -260,5 +311,9 @@ export default {
 
 .component-head-menu {
   margin: 3rem 0rem 0rem !important;
+}
+
+.ui.menu .dropdown.item .menu.color-scheme {
+  min-width: 11.5rem;
 }
 </style>
