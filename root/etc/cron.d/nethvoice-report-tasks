@@ -1,14 +1,8 @@
-# Launch queuereport update script at night
-59 22 * * *  asterisk /opt/nethvoice-report/scripts/queue-miner.php
-
-# precalculate views for queries
-00 00 * * *	asterisk /opt/nethvoice-report/tasks/tasks views
+# Launch miners and tasks at night
+59 22 * * *  asterisk /opt/nethvoice-report/scripts/queue-miner.php && /opt/nethvoice-report/tasks/tasks views && /opt/nethvoice-report/tasks/tasks queries
 
 # precalculate phonebook numbers during night
 10 00 * * *     asterisk /opt/nethvoice-report/tasks/tasks phonebook
 
 # precalculate filter values during night
 20 00 * * *     asterisk /opt/nethvoice-report/tasks/tasks values
-
-# precalculate queries during night
-30 00 * * *	asterisk /opt/nethvoice-report/tasks/tasks queries
