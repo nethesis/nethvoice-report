@@ -1,5 +1,6 @@
 SELECT
-    Concat(Group_concat(DISTINCT prefisso SEPARATOR '-'), ",", comune, ",", provincia, ",", regione)
+    Group_concat(DISTINCT prefisso, ",", comune, ",", provincia, ",", regione)
 FROM
     zone
-GROUP BY comune;
+GROUP BY prefisso
+ORDER BY comune;
