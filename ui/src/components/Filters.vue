@@ -795,6 +795,11 @@ export default {
         },
         (error) => {
           console.error(error.body);
+
+          if (error.status == 404) {
+            // filter values not present in cache, come back tomorrow
+            this.$root.$emit("dataNotAvailable");
+          }
         }
       );
     },
