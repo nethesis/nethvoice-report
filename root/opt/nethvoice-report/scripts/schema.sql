@@ -122,4 +122,4 @@ CREATE TABLE IF NOT EXISTS `queue_failed` (
   `direction` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `qname` varchar(32) NOT NULL DEFAULT '',
   `event` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
-) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
