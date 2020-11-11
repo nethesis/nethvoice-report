@@ -1,5 +1,5 @@
 # Launch queuereport update script at night
-01 23 * * *  asterisk /opt/nethvoice-report/scripts/queue-miner.php
+59 22 * * *  asterisk /opt/nethvoice-report/scripts/queue-miner.php
 
 # precalculate views for queries
 00 00 * * *	asterisk /opt/nethvoice-report/tasks/tasks views
