@@ -28,6 +28,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -83,10 +84,14 @@ func executeReportValues() {
 
 		// execute query
 		db := source.QueueInstance()
+		start := time.Now()
 		rows, errQuery := db.Query(string(queryString))
 		if errQuery != nil {
 			return errors.Wrap(errQuery, "Error in query execution")
 		}
+
+		duration := time.Since(start)
+		helper.LogDebug("%s completed in %s", value, duration)
 
 		// define results
 		var results []string

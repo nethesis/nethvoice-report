@@ -26,6 +26,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -61,6 +62,7 @@ func executeReportViews() {
 		if filepath.Ext(path) != ".sql" {
 			return nil
 		}
+		helper.LogDebug("\nExecuting query %s", path)
 
 		// get value name
 		value := filepath.Base(path)
@@ -75,10 +77,14 @@ func executeReportViews() {
 
 		// execute query
 		db := source.QueueInstance()
+		start := time.Now()
 		rows, errQuery := db.Query(string(queryString))
 		if errQuery != nil {
 			return errors.Wrap(errQuery, "Error in query execution: "+viewsPath+"/"+value)
 		}
+
+		duration := time.Since(start)
+		helper.LogDebug("%s completed in %s", value, duration)
 
 		// close results
 		defer rows.Close()
