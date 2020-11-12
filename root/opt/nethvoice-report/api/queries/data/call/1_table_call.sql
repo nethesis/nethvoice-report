@@ -2,8 +2,8 @@
 SELECT
     period AS `period£hourDate`,
     cid,
-    name,
-    company,
+    name AS `name£phonebookName`,
+    company AS `company£phonebookCompany`,
     qname,
     qdescr,
     agent,

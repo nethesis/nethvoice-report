@@ -4,8 +4,8 @@
 SELECT
     period AS `period£{{ .Time.Group }}Date`,
     cid,
-    name,
-    company,
+    name AS `name£phonebookName`,
+    company AS `company£phonebookCompany`,
     qname,
     qdescr,
     `total` AS `results$total£num`,
@@ -27,7 +27,7 @@ SELECT
     avg_position AS `position$avg_position£seconds`,
     max_position AS `position$max_position£seconds#`
 FROM
-    data_caller_{{ .Time.Group }}_name_company
+    data_caller_{{ .Time.Group }}
 WHERE   TRUE
     {{ if and .Time.Interval.Start .Time.Interval.End }}
         AND period >= "{{ .Time.Interval.Start }}"
