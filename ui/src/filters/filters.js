@@ -79,6 +79,35 @@ var Filters = {
             return ret;
         }
     },
+    reversePhonebookLookup: function (phoneNumber, field, root) {
+        // field is either "name" or "company"
+
+        if (!root.reversePhoneBook[phoneNumber]) {
+            // search phone number in phonebook
+            const contactFound = root.phoneBook.find(contact => {
+                // flatten phone numbers data structure and search phone number
+                const phoneFound = [].concat(...Object.values(contact.phones)).find(phone => {
+                    return phone == phoneNumber;
+                });
+                return phoneFound;
+            });
+
+            if (contactFound) {
+                // add entry to reverse phonebook
+                root.reversePhoneBook[phoneNumber] = {
+                    "name": contactFound.title.split(" | ")[0],
+                    "company": contactFound.company,
+                }
+            } else {
+                // phone number not present in phonebook
+                root.reversePhoneBook[phoneNumber] = {
+                    "name": "-",
+                    "company": "-",
+                }
+            }
+        }
+        return root.reversePhoneBook[phoneNumber][field];
+    }
 };
 
 for (var f in Filters) {

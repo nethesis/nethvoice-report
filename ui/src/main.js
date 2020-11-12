@@ -58,6 +58,8 @@ new Vue({
   },
   data: {
     filtersReady: false,
+    phoneBook: [],
+    reversePhoneBook: {},
   },
   render: (h) => h(App),
 }).$mount("#app");
