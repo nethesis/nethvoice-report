@@ -4,8 +4,8 @@
 SELECT
     period AS `period£{{ .Time.Group }}Date`,
     cid,
-    name AS `name£phonebookName`,
-    company AS `company£phonebookCompany`,
+    cid AS `name£phonebookName`,
+    cid AS `company£phonebookCompany`,
     qname,
     qdescr,
     `total` AS `results$total£num`,

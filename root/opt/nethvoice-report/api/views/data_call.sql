@@ -30,8 +30,6 @@ SELECT
         '%Y-%m-%d %H:%i:%s'
     ) AS period,
     cid,
-    "name",
-    "company",
     qname,
     qdescr,
     agent,
@@ -54,8 +52,6 @@ SELECT
         '%Y-%m-%d %H:%i:%s'
     ) AS period,
     cid,
-    "name",
-    "company",
     qname,
     qdescr,
     agent,

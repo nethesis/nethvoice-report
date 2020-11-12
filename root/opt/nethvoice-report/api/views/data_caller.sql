@@ -33,8 +33,6 @@ CREATE TABLE data_caller_year AS
 SELECT
     Date_format(From_unixtime(timestamp_in), "%Y") AS `period`,
     cid,
-    "name",
-    "company",
     qname,
     qdescr,
     count(id) AS `total`,
@@ -86,8 +84,6 @@ CREATE TABLE data_caller_month AS
 SELECT
     Date_format(From_unixtime(timestamp_in), "%Y-%m") AS `period`,
     cid,
-    "name",
-    "company",
     qname,
     qdescr,
     count(id) AS `total`,
@@ -139,8 +135,6 @@ CREATE TABLE data_caller_week AS
 SELECT
     Date_format(From_unixtime(timestamp_in), "%x-W%v") AS `period`,
     cid,
-    "name",
-    "company",
     qname,
     qdescr,
     count(id) AS `total`,
@@ -192,8 +186,6 @@ CREATE TABLE IF NOT EXISTS data_caller_day AS
 SELECT
     Date_format(From_unixtime(timestamp_in), "%Y-%m-%d") AS `period`,
     cid,
-    "name",
-    "company",
     qname,
     qdescr,
     count(id) AS `total`,
@@ -247,8 +239,6 @@ INSERT IGNORE INTO data_caller_day
 SELECT
     Date_format(From_unixtime(timestamp_in), "%Y-%m-%d") AS `period`,
     cid,
-    "name",
-    "company",
     qname,
     qdescr,
     count(id) AS `total`,
