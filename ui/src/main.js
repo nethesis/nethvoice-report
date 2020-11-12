@@ -56,5 +56,8 @@ new Vue({
     this.currentView = "";
     this.config = window.CONFIG;
   },
+  data: {
+    filtersReady: false,
+  },
   render: (h) => h(App),
 }).$mount("#app");

@@ -116,21 +116,25 @@ export default {
     };
   },
   mounted() {
-    this.retrieveQueryTree();
-
-    this.$root.$on("applyFilters", (filter) => {
-      this.applyFilters(filter);
-    });
-
     // event "dataNotAvailable" is triggered by $http interceptor if report tables don't exist yet
     this.$root.$on("dataNotAvailable", () => {
       this.dataAvailable = false;
+    });
+
+    this.$root.$on("applyFilters", (filter) => {
+      this.applyFilters(filter);
     });
   },
   watch: {
     $route: function () {
       this.initCharts();
     },
+    "$root.filtersReady": function () {
+      // $root.filtersReady is set to true when filters have been loaded
+      if (this.$root.filtersReady) {
+        this.retrieveQueryTree();
+      }
+    }
   },
   methods: {
     retrieveQueryTree() {

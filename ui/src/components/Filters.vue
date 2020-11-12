@@ -872,6 +872,9 @@ export default {
       }
 
       this.loader.filter = false;
+
+      // notify QueueView that queries can now be executed
+      this.$root.filtersReady = true;
     },
     getSavedSearches(searchToSelect) {
       this.getSearches(
