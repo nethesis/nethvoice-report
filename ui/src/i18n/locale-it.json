@@ -37,7 +37,7 @@
       "area_code": "Prefisso",
       "district": "Zona",
       "province": "Provincia",
-      "region": "Regione"
+      "region": "Regione",
     },
     "menu": {
       "queue": "Report Code",
@@ -94,7 +94,7 @@
       "IVRChoicesByHour": "Scelte IVR per Orario",
       "uniqCid": "Chiamanti Univoci",
       "totalCalls": "Totale Chiamate",
-      "callsOnQueue": "Calls on queue",
+      "callsOnQueue": "Chiamate in coda",
       "good": "Chiamate Evase",
       "failed": "Chiamate Abbandonate",
       "timeout": "Chiamate in Timeout",
