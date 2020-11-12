@@ -144,7 +144,12 @@
       "office_hours_description": "L'orario di ufficio viene utilizzato per visualizzre i grafici. Alcuni grafici tracciano i dati solo durante l'orario di ufficio (es. Report Code > Grafici > Durata Media)",
       "come_back_tomorrow": "Dati non disponibili, per favore riprovare domani",
       "come_back_tomorrow_desc": "I dati vengono raccolti ed elaborati ogni notte",
-      "enter_name_for_saved_search": "Inserire un nome per la nuova ricerca salvata"
+      "enter_name_for_saved_search": "Inserire un nome per la nuova ricerca salvata",
+      "search_name_required": "Il nome della ricerca è obbligatorio",
+      "search_name_already_exist": "Esiste già una ricerca con questo nome",
+      "search_name_validation": "Il nome della ricerca deve iniziare con una lettera e contenere solamente lettere, spazi, numeri e trattini",
+      "coming_soon": "Coming soon",
+      "cdr_not_available": "Il report CDR & Cost non è ancora disponibile, torna più tardi"
     },
     "pagination": {
       "page": "pagina",
