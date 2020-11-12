@@ -659,8 +659,10 @@ export default {
 
           // queues
           if (this.defaultFilter.queues) {
-            let queues = this.defaultFilter.queues.map((queue) => {
-              return { value: queue, text: queue };
+            let queues = this.defaultFilter.queues.map((queueName) => {
+              const match = /[^(]+\((.+)\)/.exec(queueName);
+              const queueNumber = match[1];
+              return { value: queueNumber, text: queueName };
             });
             this.filterValues.queues = queues.sort(this.sortByProperty("text"));
           }

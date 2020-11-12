@@ -14,8 +14,6 @@
       "year": "Anno",
       "time_interval_start_placeholder": "Data inizio",
       "time_interval_end_placeholder": "Data fine",
-      "dates_placeholder": "Selezionare l'intervallo di date",
-      "dates_label": "Data inizio/fine",
       "queues_label": "Code",
       "groups_label": "Gruppi",
       "agents_label": "Agenti",
