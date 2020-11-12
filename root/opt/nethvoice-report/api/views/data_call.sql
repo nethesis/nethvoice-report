@@ -40,6 +40,7 @@ SELECT
 FROM
     report_queue
 WHERE agent != "NONE"
+GROUP BY period, cid, qname
 ORDER BY
     period DESC;
 
@@ -63,5 +64,6 @@ FROM
     report_queue
 WHERE agent != "NONE"
       AND Date_format(From_unixtime(timestamp_in), "%Y-%m-%d") = Date_format(NOW(), "%Y-%m-%d")
+GROUP BY period, cid, qname
 ORDER BY
     period DESC;

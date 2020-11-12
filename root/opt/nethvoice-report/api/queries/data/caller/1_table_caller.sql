@@ -23,9 +23,9 @@ SELECT
     min_duration AS `duration$min_duration£seconds#`,
     avg_duration AS `duration$avg_duration£seconds`,
     max_duration AS `duration$max_duration£seconds#`,
-    min_position AS `position$min_position£seconds#`,
-    avg_position AS `position$avg_position£seconds`,
-    max_position AS `position$max_position£seconds#`
+    min_position AS `position$min_position£num#`,
+    avg_position AS `position$avg_position£num`,
+    max_position AS `position$max_position£num#`
 FROM
     data_caller_{{ .Time.Group }}
 WHERE   TRUE
