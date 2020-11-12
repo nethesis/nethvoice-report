@@ -129,29 +129,6 @@
       "queueWait": "Attesa in Coda"
     },
     "message": {
-<<<<<<< HEAD
-      "are_you_sure": "Are you sure?",
-      "you_are_about_to_overwrite": "You are about to overwrite",
-      "you_are_about_to_delete": "You are about to delete",
-      "origins_field_is_required": "Select one or more Origins in filter to display this chart",
-      "queues_field_is_required": "Select one or more Queues in filter to display this chart",
-      "agents_field_is_required": "Select one or more Agents in filter to display this chart",
-      "ivrs_field_is_required": "Select one or more IVRs in filter to display this chart",
-      "ivr_or_choice_fields_are_required": "Select one or more IVR or Choices in filter to display this chart",
-      "timeIntervalStart_and_timeIntervalEnd_are_required": "Select a time interval to display this chart",
-      "error_admin_empty": "The entered values are not valid",
-      "caller_name_or_company_fields_are_required": "Select a Caller or a Contact name / Company in filter to display this chart",
-      "no_data_for_current_filter": "No data for current filters",
-      "office_hours_description": "Office hours are used to display report charts. Some charts plot data only inside office hours (e.g. Queue report > Graphs > Average duration)",
-      "come_back_tomorrow": "Data not available, please come back tomorrow",
-      "come_back_tomorrow_desc": "Report data are harvested and processed every night",
-      "enter_name_for_saved_search": "Enter a name for your new saved search",
-      "search_name_required": "Il nome della ricerca è obbligatorio",
-      "search_name_already_exist": "Esiste già una ricerca con questo nome",
-      "search_name_validation": "Il nome della ricerca deve iniziare con una lettera e contenere solamente lettere, spazi, numeri e trattini",
-      "coming_soon": "Coming soon",
-      "cdr_not_available": "Il report CDR & Cost non è ancora disponibile, torna più tardi"
-=======
       "are_you_sure": "Sei sicuro?",
       "you_are_about_to_overwrite": "Stai per sovrascrivere",
       "you_are_about_to_delete": "Stai per cancellare",
@@ -168,7 +145,6 @@
       "come_back_tomorrow": "Dati non disponibili, per favore riprovare domani",
       "come_back_tomorrow_desc": "I dati vengono raccolti ed elaborati ogni notte",
       "enter_name_for_saved_search": "Inserire un nome per la nuova ricerca salvata"
->>>>>>> ce5538e... Italian translation: fourth batch (#45)
     },
     "pagination": {
       "page": "pagina",
