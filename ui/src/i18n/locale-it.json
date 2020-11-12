@@ -210,6 +210,8 @@
       "activity": "Attività",
       "load": "Carico",
       "logonDays": "Giorni Lavorativi",
+      "logon": "Lavorativo",
+      "afterwork": "Fuori orario",
       "min_duration": "Durata Minima",
       "max_duration": "Durata Massima",
       "avg_duration": "Durata Media",
