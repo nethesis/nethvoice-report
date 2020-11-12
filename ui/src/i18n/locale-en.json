@@ -38,8 +38,7 @@
       "area_code": "Area code",
       "district": "District",
       "province": "Province",
-      "region": "Region",
-      "time_start_end": "Time start/end"
+      "region": "Region"
     },
     "menu": {
       "queue": "Queue report",
