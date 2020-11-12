@@ -1,6 +1,6 @@
 {{ if gt (len .Agents) 0 }}
 SELECT
-    CONCAT(agentName, " (", agentNum, ")") AS agent,
+    agentName AS agent,
     time_60 AS `time£hourDate`,
     Sum(total) AS `num£num`
 FROM

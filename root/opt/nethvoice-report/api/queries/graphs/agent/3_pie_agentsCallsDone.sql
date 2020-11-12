@@ -1,5 +1,5 @@
 SELECT
-    CONCAT(agentName, " (", agentNum, ")") AS agent,
+    agentName AS agent,
     Sum(total) AS total£num
 FROM
     distribution_hour_agent_{{ .Time.Group }}_60

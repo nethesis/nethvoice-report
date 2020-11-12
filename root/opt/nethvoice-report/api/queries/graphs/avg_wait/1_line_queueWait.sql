@@ -1,7 +1,7 @@
 {{ if gt (len .Queues) 0  }}
 SELECT CONCAT(qdescr, " (", qname, ")") AS qdescr,
        time_{{ .Time.Division  }} AS time£hourDate,
-       Avg(avg_hold) AS avgHold£num
+       Avg(avg_hold) AS avgHold£seconds
 FROM   graph_queue_hold_{{ .Time.Division }}
 WHERE  time_{{ .Time.Division  }} >= '{{ ExtractSettings "StartHour" }}' AND time_{{ .Time.Division  }} <= '{{ ExtractSettings "EndHour" }}'
         {{ if and .Time.Interval.Start .Time.Interval.End }}

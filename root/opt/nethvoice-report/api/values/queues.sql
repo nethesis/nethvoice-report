@@ -1,4 +1,4 @@
 SELECT
-    DISTINCT queuename
+    DISTINCT CONCAT(qdescr, " (", qname, ")")
 FROM
-    queue_log_history;
+    report_queue;
