@@ -125,6 +125,16 @@
             >
               {{ element | formatWeekDate($i18n) }}
             </span>
+            <span
+              v-else-if="columns[index] && columns[index].format == 'phonebookName'"
+            >
+              {{ element | reversePhonebookLookup('name', $root) }}
+            </span>
+            <span
+              v-else-if="columns[index] && columns[index].format == 'phonebookCompany'"
+            >
+              {{ element | reversePhonebookLookup('company', $root) }}
+            </span>
             <span v-else>
               {{ element }}
             </span>

@@ -309,7 +309,7 @@
             <label>{{$t('filter.contact_name_label')}}</label>
             <sui-search
               :searchFields="['title', 'cleanName']"
-              :source="phoneBook"
+              :source="$root.phoneBook"
               ref="filterContactName"
               :placeholder="$t('filter.contact_name_label')"
               :fullTextSearch="'exact'"
@@ -541,7 +541,6 @@ export default {
         { value: "15", text: "15 minutes" },
         { value: "10", text: "10 minutes" },
       ],
-      phoneBook: [],
       queueReportViewFilterMap: null,
       momentFormatter: {
         stringify: (date) => {
@@ -1102,7 +1101,7 @@ export default {
 
       // retrieve contact name phones
       if (this.filter.contactName) {
-        const contact = this.phoneBook.find((c) => {
+        const contact = this.$root.phoneBook.find((c) => {
           return c.title == this.filter.contactName;
         });
 
@@ -1337,30 +1336,38 @@ export default {
         // get object from local storage item
         phoneBook = phoneBook.item;
 
-        this.phoneBook = phoneBook;
+        this.$root.phoneBook = phoneBook;
       } else {
         this.getPhonebook(
           (success) => {
             const phoneBook = success.body;
-            this.phoneBook = [];
+            this.$root.phoneBook = [];
 
             for (const [contactName, contactPhones] of Object.entries(
               phoneBook
             )) {
+              // extract company
+              let company = "";
+              const match = /[^|]+\| (.+)/.exec(contactName);
+              if (match && match[1]) {
+                company = match[1];
+              }
+
               const cleanName = contactName
                 .replace(/[^a-zA-Z0-9]/g, "")
                 .toLowerCase();
-              this.phoneBook.push({
+              this.$root.phoneBook.push({
                 title: contactName,
                 phones: contactPhones,
                 cleanName: cleanName,
+                company: company,
               });
             }
 
             // save phonebook to local storage (with expiry)
             this.saveToLocalStorageWithExpiry(
               "reportPhoneBook",
-              this.phoneBook,
+              this.$root.phoneBook,
               8 * 60 // 8 hours
             );
           },
