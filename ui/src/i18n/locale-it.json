@@ -127,7 +127,8 @@
       "region": "Regione",
       "queuePosition": "Posizione Coda",
       "queueDuration": "Durata Chiamata",
-      "queueWait": "Attesa in Coda"
+      "queueWait": "Attesa in Coda",
+      "lostCall": "Chiamate non gestite"
     },
     "message": {
       "are_you_sure": "Sei sicuro?",
@@ -141,7 +142,7 @@
       "timeIntervalStart_and_timeIntervalEnd_are_required": "Selezionare un intervallo di tempo per visualizzare questo grafico",
       "error_admin_empty": "I valori inseriti non sono corretti",
       "caller_name_or_company_fields_are_required": "Selezionare un Chiamante o un Nome / Azienda per visualizzare questo grafico",
-      "no_data_for_current_filter": "Nessun data per i filtri correnti",
+      "no_data_for_current_filter": "Nessun dato per i filtri correnti",
       "office_hours_description": "L'orario di ufficio viene utilizzato per visualizzre i grafici. Alcuni grafici tracciano i dati solo durante l'orario di ufficio (es. Report Code > Grafici > Durata Media)",
       "come_back_tomorrow": "Dati non disponibili, per favore riprovare domani",
       "come_back_tomorrow_desc": "I dati vengono raccolti ed elaborati ogni notte",

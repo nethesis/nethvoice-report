@@ -127,7 +127,8 @@
       "region": "Region",
       "queuePosition": "Queue position",
       "queueDuration": "Queue duration",
-      "queueWait": "Queue wait"
+      "queueWait": "Queue wait",
+      "lostCall": "Lost calls"
     },
     "message": {
       "are_you_sure": "Are you sure?",
