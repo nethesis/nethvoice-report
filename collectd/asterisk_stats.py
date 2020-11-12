@@ -21,6 +21,7 @@
 import collectd
 import re
 import subprocess
+import locale
 
 def log_debug(msg):
     global CONFIG
@@ -33,6 +34,9 @@ def configure_callback(conf):
     for node in conf.children:
         CONFIG[node.key] = node.values[0]
 
+    # make sure Popen output is UTF-8
+    locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
+
     # set custom interval
     log_debug('Setting interval %d' % int(CONFIG['Interval']))
     collectd.register_read(read_callback, int(CONFIG['Interval']))
@@ -42,7 +46,7 @@ def parse_calls():
     cmd = ["/sbin/asterisk", "-rx", "core show channels"]
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
     for line in proc.stdout.readlines():
-        line = line.decode()
+        line = line.decode('utf-8')
         # skip empty line
         if re.match("^\s*$", line):
             continue
@@ -60,7 +64,7 @@ def parse_queues():
     cmd = ["/sbin/asterisk", "-rx", "queue show"]
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
     for line in proc.stdout.readlines():
-        line = line.decode()
+        line = line.decode('utf-8')
         # skip empty line
         if re.match("^\s*$", line):
             continue
