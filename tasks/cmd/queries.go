@@ -29,6 +29,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -226,34 +227,7 @@ func executeReportQueries() {
 		helper.FatalError(err)
 	}
 
-	// step 1: default filters
-	helper.LogDebug("\nExecuting queries with default filters")
-
-	for section, views := range queryTree {
-		for view, queries := range views {
-			helper.LogDebug("\n[VIEW]: %s/%s", section, view)
-
-			// get default filter for current section/view
-			filter, err := getDefaultFilter(section, view, jwtToken)
-			if err != nil {
-				helper.LogError(errors.Wrap(err, fmt.Sprintf("error retrieving default filter, skipping all queries in %s/%s", section, view)))
-				continue
-			}
-
-			// exectue queries of current section/view
-			for _, queryName := range queries {
-				helper.LogDebug("\n    [QUERY]: %s [FILTER]: %#v", queryName, filter)
-				_, err := executeQuery(queryName, filter, section, view, jwtToken)
-
-				if err != nil {
-					helper.LogError(errors.Wrap(err, fmt.Sprintf("[QUERY]: %s [FILTER]: %#v", queryName, filter)))
-					continue
-				}
-			}
-		}
-	}
-
-	// step 2: saved searches
+	// get saved searches
 	searches, err := getSearchesFromCache()
 	if err != nil {
 		helper.FatalError(err)
@@ -269,12 +243,16 @@ func executeReportQueries() {
 		// exectue queries of section/view
 		for _, queryName := range queryNames {
 			helper.LogDebug("\n    [QUERY]: %s [SEARCH]: %#v", queryName, search)
+			start := time.Now()
 			_, err := executeQuery(queryName, search.Filter, section, view, jwtToken)
 
 			if err != nil {
 				helper.LogError(errors.Wrap(err, fmt.Sprintf("[QUERY]: %s [SEARCH]: %#v", queryName, search)))
 				continue
 			}
+
+			duration := time.Since(start)
+			helper.LogDebug("    %s completed in %s", queryName, duration)
 		}
 	}
 }
