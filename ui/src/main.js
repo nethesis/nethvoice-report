@@ -6,6 +6,10 @@ import VueLodash from 'vue-lodash';
 import lodash from 'lodash';
 import VueScrollTo from 'vue-scrollto';
 
+import DatePicker from 'vue2-datepicker';
+import 'vue2-datepicker/index.css';
+
+
 import App from "./App.vue";
 import router from "./router";
 import languages from "./i18n/lang";
@@ -33,6 +37,7 @@ Vue.use(VueI18n);
 Vue.use(PortalVue);
 Vue.use(VueLodash, { name: 'ldsh', lodash: lodash });
 Vue.use(VueScrollTo)
+Vue.use(DatePicker)
 
 // configure i18n
 var langConf = languages.initLang();

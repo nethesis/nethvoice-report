@@ -136,9 +136,23 @@
           <sui-form-field>
             <label :class="{ 'error-color': errorTimeInterval }">{{$t('filter.time_interval')}}</label>
             <!-- time interval start -->
+            <!-- datetime -->
             <date-picker
+              v-show="showFilterTimeHour"
               v-model="filter.time.interval.start"
-              :type="showFilterTimeHour ? 'datetime' : filter.time.group == 'day' ? 'date' : filter.time.group == 'week' ? 'week' : filter.time.group == 'month' ? 'month' : 'year'"
+              type="datetime"
+              :placeholder="$t('filter.time_interval_start_placeholder')"
+              :clearable="false"
+              :show-second="false"
+              :disabled-date="fromToday"
+              :class="{ 'time-interval-error': errorTimeInterval }"
+              :formatter="momentFormatter"
+            ></date-picker>
+            <!-- date / week / month / year -->
+            <date-picker
+              v-show="!showFilterTimeHour"
+              v-model="filter.time.interval.start"
+              :type="!showFilterTimeGroup || filter.time.group == 'day' ? 'date' : filter.time.group == 'week' ? 'week' : filter.time.group == 'month' ? 'month' : 'year'"
               :placeholder="$t('filter.time_interval_start_placeholder')"
               :clearable="false"
               :show-second="false"
@@ -148,9 +162,23 @@
             ></date-picker>
             <sui-icon name="right arrow time-filter" />
             <!-- time interval end -->
+            <!-- datetime -->
             <date-picker
+              v-show="showFilterTimeHour"
               v-model="filter.time.interval.end"
-              :type="showFilterTimeHour ? 'datetime' : filter.time.group == 'day' ? 'date' : filter.time.group == 'week' ? 'week' : filter.time.group == 'month' ? 'month' : 'year'"
+              type="datetime"
+              :placeholder="$t('filter.time_interval_end_placeholder')"
+              :clearable="false"
+              :show-second="false"
+              :disabled-date="fromToday"
+              :class="{ 'time-interval-error': errorTimeInterval }"
+              :formatter="momentFormatter"
+            ></date-picker>
+            <!-- date / week / month / year -->
+            <date-picker
+              v-show="!showFilterTimeHour"
+              v-model="filter.time.interval.end"
+              :type="!showFilterTimeGroup || filter.time.group == 'day' ? 'date' : filter.time.group == 'week' ? 'week' : filter.time.group == 'month' ? 'month' : 'year'"
               :placeholder="$t('filter.time_interval_end_placeholder')"
               :clearable="false"
               :show-second="false"
@@ -431,16 +459,13 @@ import UtilService from "../services/utils";
 import SearchService from "../services/searches";
 import PhonebookService from "../services/phonebook";
 import FixedBar from "../components/FixedBar.vue";
-import DatePicker from 'vue2-datepicker';
-import 'vue2-datepicker/index.css';
 
 import moment from "moment";
 
 export default {
   name: "Filters",
   components: {
-    FixedBar: FixedBar,
-    DatePicker: DatePicker
+    FixedBar: FixedBar
   },
   mixins: [
     LoginService,
@@ -538,11 +563,6 @@ export default {
       // sort saved searches
       if (this.savedSearches) {
         this.mapSavedSearches(this.savedSearches);
-      }
-
-      // reset time group if "Group by" filter is not shown
-      if (!this.showFilterTimeGroup) {
-        this.filter.time.group = "day";
       }
     },
     selectedSearch: function () {
@@ -1371,8 +1391,9 @@ export default {
     },
     getDateFormat() {
       let dateFormat = "";
+      const timeGroup = this.showFilterTimeGroup ? this.filter.time.group : "day";
 
-      switch (this.filter.time.group) {
+      switch (timeGroup) {
         case "year":
           dateFormat = "YYYY";
           break;
