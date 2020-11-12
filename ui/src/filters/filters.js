@@ -82,10 +82,7 @@ var Filters = {
     reversePhonebookLookup: function (phoneNumber, field, root) {
         // field is either "name" or "company"
 
-        if (root.reversePhoneBook[phoneNumber]) {
-            // phone number found in reverse phonebook
-            return root.reversePhoneBook[phoneNumber][field];
-        } else {
+        if (!root.reversePhoneBook[phoneNumber]) {
             // search phone number in phonebook
             const contactFound = root.phoneBook.find(contact => {
                 // flatten phone numbers data structure and search phone number
