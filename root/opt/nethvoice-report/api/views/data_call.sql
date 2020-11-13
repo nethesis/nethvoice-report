@@ -42,7 +42,7 @@ FROM
 WHERE agent != "NONE"
 GROUP BY period, cid, qname
 ORDER BY
-    period DESC;
+    period;
 
 ALTER TABLE data_call ADD UNIQUE (period,cid,qname);
 
@@ -63,7 +63,7 @@ SELECT
 FROM
     report_queue
 WHERE agent != "NONE"
-      AND Date_format(From_unixtime(timestamp_in), "%Y-%m-%d") = Date_format(NOW(), "%Y-%m-%d")
+      AND Date_format(From_unixtime(timestamp_in), "%Y-%m-%d") = Date_format(NOW() - INTERVAL 1 DAY, "%Y-%m-%d")
 GROUP BY period, cid, qname
 ORDER BY
-    period DESC;
+    period;
