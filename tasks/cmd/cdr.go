@@ -60,7 +60,7 @@ func executeReportCDR() {
 	var maxYear int
 
 	// define db instance
-	db := source.QueueInstance()
+	db := source.CDRInstance()
 
 	// get min and max year
 	rowMinMax := db.QueryRow("SELECT year(min(calldate)), year(max(calldate)) FROM cdr")
