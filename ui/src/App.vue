@@ -11,7 +11,9 @@
     <div v-if="isLogged">
       <!-- start leftsidebar -->
       <LeftSidebar />
-      <div views-wrapper="true" class="docs-container">
+      <!-- mobile topbar -->
+      <MobileTopBar />
+      <div views-wrapper="true" class="docs-container" @click="hideSidebar()">
         <!-- start topbar -->
         <TopBar />
         <!-- end topbar -->
@@ -30,7 +32,7 @@ import Login from "./views/Login.vue";
 import LeftSidebar from "./components/LeftSidebar.vue";
 import TopBar from "./components/TopBar.vue";
 import BackToTop from "./components/BackToTop.vue";
-
+import MobileTopBar from "./components/MobileTopBar.vue";
 import LoginService from "./services/login";
 import StorageService from "./services/storage";
 
@@ -40,7 +42,8 @@ export default {
     Login: Login,
     LeftSidebar: LeftSidebar,
     TopBar: TopBar,
-    BackToTop: BackToTop
+    BackToTop: BackToTop,
+    MobileTopBar: MobileTopBar
   },
   mixins: [LoginService, StorageService],
   mounted() {
@@ -60,6 +63,11 @@ export default {
         document.body.classList.add("show");
       }
     );
+
+    // handle viewport width
+    this.$nextTick(() => {
+      window.addEventListener('resize', this.resizeHandler, true)
+    })
   },
   data() {
     return {
@@ -73,11 +81,36 @@ export default {
     didLogout() {
       this.isLogged = false;
     },
+    hideSidebar() {
+      if (window.innerWidth < this.$mobileBound) {
+        document.querySelector("#docs-menu").style.transform = "translateX(-270px)"
+        this.$root.$emit("sidebarHide");
+      }
+    },
+    resizeHandler() {
+      let sidebar = document.querySelector("#docs-menu")
+      if ((window.innerWidth > this.$mobileBound) && (sidebar.style.transform == "translateX(-270px)")) {
+        sidebar.style.transform = "translateX(0px)"
+      }
+    }
   },
 };
 </script>
 
 <style lang="scss">
+
+@import "./styles/theming.scss";
+
+body {
+  min-width: 421px !important;
+
+  @media only screen and (max-width: $mobile-bound) {
+    & {
+      height: calc(100% - 40px) !important;
+    }
+  }
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -97,10 +130,18 @@ export default {
 .docs-container {
   margin-left: 260px;
   width: calc(100% - 260px);
-  min-width: 550px;
   height: 100vh;
   overflow-y: scroll;
   overflow-x: hidden;
+
+  @media only screen and (max-width: $mobile-bound) {
+    & {
+      margin-top: 40px;
+      height: calc(100vh - 40px);
+      margin-left: 0px;
+      width: calc(100%);
+    }
+  }
 }
 
 #nav {
@@ -219,6 +260,13 @@ export default {
       margin-top: -2px;
     }
   }
+
+  @media only screen and (max-width: $mobile-bound) {
+     & {
+      border-bottom: 1px solid rgba(34, 36, 38, 0.15);
+      box-shadow: -2px 1px 2px 0 rgba(34, 36, 38, 0.15) !important;
+    }
+  }
 }
 
 .ui.pagination.menu.no-border {
@@ -230,6 +278,10 @@ export default {
 .ui.input.current-page > input {
   width: 4rem !important;
   text-align: center;
+}
+
+.ui.selection.dropdown {
+  min-width: min-content !important;
 }
 
 .ui.selection.dropdown.rows-per-page {
@@ -285,5 +337,17 @@ export default {
 
 .no-margin {
   margin: 0 !important;
+}
+
+.filters-form .mx-datepicker input {
+  height: 38px !important;
+  margin-top: -2px !important;
+}
+
+.mx-datepicker-main {
+  margin-top: 5px;
+  border-radius: .28571429rem !important;
+  color: rgba(0,0,0,.87) !important;
+  font-weight: 600;
 }
 </style>

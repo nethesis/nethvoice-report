@@ -1,5 +1,5 @@
 <template>
-  <div v-show="mustShow">
+  <div v-show="mustShow" class="scrollers-container">
     <div v-show="showLeftScroller" @click="scrollTo('left')" class="scroller left-scroller">
       <sui-icon name="chevron left" />
     </div>
@@ -120,5 +120,13 @@ export default {
 
 .scroller:hover {
   background: rgba(229,229,229,.85);
+}
+
+.scrollers-container {
+  @media only screen and (max-width: 767px) {
+    & {
+      display: none;
+    }
+  }
 }
 </style>

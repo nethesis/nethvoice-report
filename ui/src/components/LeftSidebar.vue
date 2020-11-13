@@ -1,5 +1,5 @@
 <template>
-<sui-menu is="sui-sidebar" id="docs-menu" inverted="true" vertical="true" animation="overlay" v-bind:visible="true">
+<sui-menu is="sui-sidebar" id="docs-menu" inverted="true" vertical="true" animation="overlay" @click="handlePropagation($event)" v-bind:visible="true">
   <sui-menu-item class="white-color">
     <i class="user icon align-left mr-10 no-margin-left cursor-default"></i>
     <strong>
@@ -135,12 +135,18 @@ export default {
     },
     clearText() {
       this.search = "";
+    },
+    handlePropagation(event) {
+      event.stopPropagation()
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+
+@import "../styles/theming.scss";
+
 .menu {
   text-align: left;
 }
@@ -216,6 +222,12 @@ export default {
 
 #docs-menu {
   z-index: 10001;
+
+  @media only screen and (max-width: $mobile-bound) {
+    & {
+      top: 40px !important;
+    }
+  }
 }
 
 #docs-menu:hover::-webkit-scrollbar-thumb {
@@ -241,6 +253,14 @@ export default {
 .ui.inverted.menu .link.item:active, .ui.inverted.menu a.item.active {
   background: rgba(255,255,255,.08) !important;
   color: #fff !important;
+}
+
+#docs-menu {
+  @media only screen and (max-width: $mobile-bound) {
+    & {
+      transform: translateX(-270px);
+    }
+  } 
 }
 
 </style>

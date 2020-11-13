@@ -2,7 +2,7 @@
   <div class="masthead topbar">
     <sui-container>
       <sui-menu floated="right">
-        <sui-dropdown class="item top right pointing" icon="paint brush no-margin">
+        <sui-dropdown class="item top floating pointing" icon="paint brush no-margin">
           <sui-dropdown-menu class="color-scheme">
             <sui-dropdown-item
               v-for="(colorScheme, index) in colorSchemes"
@@ -423,7 +423,14 @@ export default {
 </script>
 
 <style lang="scss">
+
+.topbar .top.floating.dropdown .menu {
+  left: -60px !important;
+}
+
 .filter-button {
+  width: calc(100% + 1px);
+  
   .icon {
     margin-right: 10px !important;
   }
@@ -449,5 +456,11 @@ export default {
 
 .ui.menu:not(.vertical) .right.item, .ui.menu:not(.vertical) .right.menu {
   border-right: 1px solid rgba(34,36,38,.15);
+}
+
+.filters-form .ui.multiple.search.dropdown>.text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>
