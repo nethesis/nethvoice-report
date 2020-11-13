@@ -157,7 +157,7 @@ func executeSqlQuery(filter models.Filter, section string, view string, graph st
 	}
 
 	// execute query
-	db := source.QueueInstance()
+	db := source.CDRInstance()
 	results, errQuery := db.Query(queryString.String())
 	if errQuery != nil {
 		return "", errors.Wrap(errQuery, "invalid query execution")
