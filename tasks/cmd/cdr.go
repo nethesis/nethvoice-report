@@ -26,6 +26,9 @@ import (
 	//"io/ioutil"
 	//"os"
 	//"path/filepath"
+	"path"
+	"bytes"
+	"text/template"
 	"fmt"
 	"strconv"
 	"strings"
@@ -33,7 +36,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 
-	//"github.com/nethesis/nethvoice-report/api/configuration"
+	"github.com/nethesis/nethvoice-report/api/configuration"
 	"github.com/nethesis/nethvoice-report/api/source"
 	"github.com/nethesis/nethvoice-report/tasks/helper"
 )
@@ -53,11 +56,30 @@ func init() {
 	RootCmd.AddCommand(cdrCmd)
 }
 
+// Define objects and utilities
+type CDRObj struct {
+	Year int
+	Month int
+}
+
+func yearMap(year int) string {
+	return fmt.Sprintf("%d", year)
+}
+
+func monthMap(month int) string {
+	return fmt.Sprintf("%02d", month)
+}
+
 // Entry point for "cdr" command
 func executeReportCDR() {
 	// define vars
 	var minYear int
 	var maxYear int
+	var objTemplate CDRObj
+
+	// define template path
+	templateY := configuration.Config.CDR.TemplatePath.Year
+	templateM := configuration.Config.CDR.TemplatePath.Month
 
 	// define db instance
 	db := source.CDRInstance()
@@ -74,17 +96,27 @@ func executeReportCDR() {
 	// loop years
 	for y := minYear; y <= maxYear; y++ {
 		// create query for i year
-		queryY := []string{
-			" CREATE TABLE IF NOT EXISTS `cdr_" + strconv.Itoa(y) + "` AS ",
-			" SELECT * ",
-			" FROM cdr ",
-			" WHERE " + fmt.Sprintf(" date_format(calldate, '%s') = '%d' ", "%Y", y),
+		var queryY bytes.Buffer
+		objTemplate.Year = y
+		objTemplate.Month = 0
+
+		tplY := template.Must(template.New(path.Base(templateY)).Funcs(template.FuncMap{"YearMap": yearMap}).Funcs(template.FuncMap{"MonthMap": monthMap}).ParseFiles(templateY))
+		errTpl := tplY.Execute(&queryY, &objTemplate)
+		if errTpl != nil {
+			helper.FatalError(errors.Wrap(errTpl, "invalid query template compiling"))
 		}
 
+		//queryY := []string{
+		//	" CREATE TABLE IF NOT EXISTS `cdr_" + strconv.Itoa(y) + "` AS ",
+		//	" SELECT * ",
+		//	" FROM cdr ",
+		//	" WHERE " + fmt.Sprintf(" date_format(calldate, '%s') = '%d' ", "%Y", y),
+		//}
+
 		// execute query
-		rowsY, errQueryY := db.Query(strings.Join(queryY, " "))
+		rowsY, errQueryY := db.Query(queryY.String())
 		if errQueryY != nil {
-			helper.FatalError(errors.Wrap(errQueryY, "Error in query [year] execution: " + strings.Join(queryY, " ")))
+			helper.FatalError(errors.Wrap(errQueryY, "Error in query [year] execution: " + queryY.String()))
 		}
 
 		// close results

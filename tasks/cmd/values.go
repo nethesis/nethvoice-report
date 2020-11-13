@@ -58,7 +58,7 @@ func init() {
 // Entry point for "values" command
 func executeReportValues() {
 	// define values path
-	valuesPath := configuration.Config.ValuesPath
+	valuesPath := configuration.Config.Queue.ValuesPath
 
 	// define filter
 	var valuesFilter models.Filter

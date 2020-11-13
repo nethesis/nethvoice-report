@@ -34,7 +34,7 @@ import (
 // Return the list of queries for the report, organized by section and view
 func GetQueryTree(c *gin.Context) {
 	queryMap := make(map[string]map[string][]string)
-	queryPath := configuration.Config.QueryPath
+	queryPath := configuration.Config.Queue.QueryPath
 
 	// get all .sql files inside query path, including subdirectories
 	err := filepath.Walk(queryPath, func(path string, info os.FileInfo, err error) error {
