@@ -23,15 +23,11 @@
 package cmd
 
 import (
-	//"io/ioutil"
-	//"os"
-	//"path/filepath"
 	"path"
 	"bytes"
 	"text/template"
 	"fmt"
 	"strconv"
-	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -75,6 +71,8 @@ func executeReportCDR() {
 	// define vars
 	var minYear int
 	var maxYear int
+	var minMonth int
+	var maxMonth int
 	var objTemplate CDRObj
 
 	// define template path
@@ -95,7 +93,7 @@ func executeReportCDR() {
 
 	// loop years
 	for y := minYear; y <= maxYear; y++ {
-		// create query for i year
+		// create query for y year
 		var queryY bytes.Buffer
 		objTemplate.Year = y
 		objTemplate.Month = 0
@@ -106,12 +104,7 @@ func executeReportCDR() {
 			helper.FatalError(errors.Wrap(errTpl, "invalid query template compiling"))
 		}
 
-		//queryY := []string{
-		//	" CREATE TABLE IF NOT EXISTS `cdr_" + strconv.Itoa(y) + "` AS ",
-		//	" SELECT * ",
-		//	" FROM cdr ",
-		//	" WHERE " + fmt.Sprintf(" date_format(calldate, '%s') = '%d' ", "%Y", y),
-		//}
+		helper.LogDebug("\nExecuting query %s for [%d]:\n%s", templateY, y, queryY.String())
 
 		// execute query
 		rowsY, errQueryY := db.Query(queryY.String())
@@ -122,64 +115,38 @@ func executeReportCDR() {
 		// close results
 		rowsY.Close()
 
+		// get min and max year
+		rowMinMax = db.QueryRow("SELECT month(min(calldate)), month(max(calldate)) FROM `cdr_" + strconv.Itoa(y)  + "`")
+		errQueryMinMax = rowMinMax.Scan(&minMonth, &maxMonth)
+
+		// check errors
+		if errQueryMinMax != nil {
+			helper.FatalError(errors.Wrap(errQueryMinMax, "error getting min and max month"))
+		}
+
 		// loop months
-		for m := 1; m <= 12; m++ {
+		for m := minMonth; m <= maxMonth; m++ {
 			// create query for m month
-			queryM := []string{
-				" CREATE TABLE IF NOT EXISTS `cdr_" + strconv.Itoa(y) + "-" + fmt.Sprintf("%02d", m) + "m` AS ",
-				" SELECT * ",
-				" FROM cdr_" + strconv.Itoa(y),
-				" WHERE " + fmt.Sprintf(" date_format(calldate, '%s') = '%02d' ", "%m", m),
+			var queryM bytes.Buffer
+			objTemplate.Year = y
+			objTemplate.Month = m
+
+			tplM := template.Must(template.New(path.Base(templateM)).Funcs(template.FuncMap{"YearMap": yearMap}).Funcs(template.FuncMap{"MonthMap": monthMap}).ParseFiles(templateM))
+			errTpl := tplM.Execute(&queryM, &objTemplate)
+			if errTpl != nil {
+				helper.FatalError(errors.Wrap(errTpl, "invalid query template compiling"))
 			}
 
+			helper.LogDebug("\nExecuting query %s for [%d-%d]:\n%s", templateM, y, m, queryM.String())
+
 			// execute query
-			rowsM, errQueryM := db.Query(strings.Join(queryM, " "))
+			rowsM, errQueryM := db.Query(queryM.String())
 			if errQueryM != nil {
-				helper.FatalError(errors.Wrap(errQueryM, "Error in query [month] execution: " + strings.Join(queryM, " ")))
+				helper.FatalError(errors.Wrap(errQueryM, "Error in query [month] execution: " + queryM.String()))
 			}
 
 			// close results
 			rowsM.Close()
-
-			// loop days
-			for d := 1; d <= 31; d++ {
-				// create query for d day
-				queryD := []string{
-					" CREATE TABLE IF NOT EXISTS `cdr_" + strconv.Itoa(y) + "-" + fmt.Sprintf("%02d", m) + "-" + fmt.Sprintf("%02d", d) + "` AS ",
-					" SELECT * ",
-					" FROM `cdr_" + strconv.Itoa(y) + "-" + fmt.Sprintf("%02d", m) + "m` ",
-					" WHERE " + fmt.Sprintf(" date_format(calldate, '%s') = '%d-%02d-%02d' ", "%Y-%m-%d", y, m, d),
-				}
-
-				// execute query
-				rowsD, errQueryD := db.Query(strings.Join(queryD, " "))
-				if errQueryD != nil {
-					helper.FatalError(errors.Wrap(errQueryD, "Error in query [day] execution: " + strings.Join(queryD, " ")))
-				}
-
-				// close results
-				rowsD.Close()
-			}
-		}
-
-		// loop weeks
-		for w := 1; w <= 53; w++ {
-			// create query for w week
-			queryW := []string{
-				" CREATE TABLE IF NOT EXISTS `cdr_" + strconv.Itoa(y) + "-" + fmt.Sprintf("%02d", w)  + "w` AS ",
-				" SELECT * ",
-				" FROM cdr_" + strconv.Itoa(y),
-				" WHERE " + fmt.Sprintf(" date_format(calldate, '%s') = '%02d' ", "%u", w),
-			}
-
-			// execute query
-                        rowsW, errQueryW := db.Query(strings.Join(queryW, " "))
-                        if errQueryW != nil {
-                                helper.FatalError(errors.Wrap(errQueryW, "Error in query [week] execution: " + strings.Join(queryW, " ")))
-                        }
-
-                        // close results
-                        rowsW.Close()
 		}
 	}
 }
