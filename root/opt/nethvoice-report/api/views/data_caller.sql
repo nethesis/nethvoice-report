@@ -278,7 +278,7 @@ FROM
 WHERE
     cid IS NOT NULL
     AND cid != ""
-    AND Date_format(From_unixtime(timestamp_in), "%Y-%m-%d") = Date_format(NOW(), "%Y-%m-%d")
+    AND Date_format(From_unixtime(timestamp_in), "%Y-%m-%d") = Date_format(NOW() - INTERVAL 1 DAY, "%Y-%m-%d")
 GROUP BY
     cid,
     period,
