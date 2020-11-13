@@ -24,11 +24,17 @@ export default {
     return {
       labels: [],
       values: [],
+      chartData: {},
       options: {
         responsive: true,
         maintainAspectRatio: false,
         legend: {
           position: "right",
+        },
+        plugins: {
+          colorschemes: {
+            scheme: this.$root.colorScheme,
+          },
         },
       },
       MAX_ENTRIES: 8,
@@ -57,6 +63,10 @@ export default {
         this.renderPieChart();
       }
     },
+    "$root.colorScheme": function () {
+      this.options.plugins.colorschemes.scheme = this.$root.colorScheme;
+      this.renderChart(this.chartData, this.options);
+    }
   },
   methods: {
     renderPieChart() {
@@ -65,23 +75,12 @@ export default {
         datasets: [
           {
             label: this.$i18n.t("caption." + this.caption),
-            backgroundColor: [
-              "#d2e6f5",
-              "#a6ceec",
-              "#79b5e2",
-              "#4d9dd9",
-              "#2185d0",
-              "#1a6aa6",
-              "#134f7c",
-              "#0d3553",
-              "#061a29",
-            ],
-            borderColor: "#2185d0",
             data: this.values,
           },
         ],
       };
-      this.renderChart(chartData, this.options);
+      this.chartData = chartData;
+      this.renderChart(this.chartData, this.options);
     },
     mergeMinorEntries(labels, values) {
       // assume entries are already sorted by backend in descending order

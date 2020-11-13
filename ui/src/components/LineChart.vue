@@ -30,29 +30,28 @@ export default {
       MAX_ENTRIES: 8,
       labels: [],
       datasets: [],
+      chartData: {},
       options: {
         responsive: true,
         maintainAspectRatio: false,
         legend: {
           position: "right",
         },
+        plugins: {
+          colorschemes: {
+            scheme: this.$root.colorScheme,
+          },
+        },
       },
-      colors: [
-        "#2185d0",
-        "#134f7c",
-        "#79b5e2",
-        "#061a29",
-        "#d2e6f5",
-        "#0d3553",
-        "#a6ceec",
-        "#4d9dd9",
-        "#1a6aa6",
-      ],
     };
   },
   watch: {
     data: function () {
       this.watchDataLineOrBarChart(this);
+    },
+    "$root.colorScheme": function () {
+      this.options.plugins.colorschemes.scheme = this.$root.colorScheme;
+      this.renderChart(this.chartData, this.options);
     },
   },
 };
