@@ -12,7 +12,7 @@
               v-bind:key="index"
               @click="setColorScheme(colorScheme)"
             >
-              <span>{{ $t('menu.color_scheme') }} {{ index +1 }}</span>
+              <span v-for="n in 8" v-bind:key="n" class= "color-sample" :style="{backgroundColor: colors[colorScheme][n-1]}"></span>
               <sui-icon
                 v-if="colorScheme == $root.colorScheme"
                 name="check"
@@ -128,7 +128,6 @@ export default {
   mixins: [LoginService, StorageService, SettingsService],
   data() {
     return {
-      COLOR_SCHEME_STORAGE_NAME: "reportColorScheme",
       showFilters: true,
       title: this.$i18n.t(this.$route.meta.name) || "",
       openSettingsModal: false,
@@ -148,6 +147,18 @@ export default {
         "brewer.PRGn8",
         "tableau.PurplePinkGray12",
       ],
+      colors: {
+        "tableau.Classic10": ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf'],
+        "brewer.DarkTwo8": ['#1b9e77', '#d95f02', '#7570b3', '#e7298a', '#66a61e', '#e6ab02', '#a6761d', '#666666'],
+        "brewer.SetOne8": ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3', '#ff7f00', '#ffff33', '#a65628', '#f781bf'],
+        "tableau.MillerStone11": ['#4f6980', '#849db1', '#a2ceaa', '#638b66', '#bfbb60', '#f47942', '#fbb04e', '#b66353', '#d7ce9f', '#b9aa97', '#7e756d'],
+        "brewer.Accent8": ['#7fc97f', '#beaed4', '#fdc086', '#ffff99', '#386cb0', '#f0027f', '#bf5b17', '#666666'],
+        "tableau.GreenOrangeTeal12": ['#4e9f50', '#87d180', '#ef8a0c', '#fcc66d', '#3ca8bc', '#98d9e4', '#94a323', '#c3ce3d', '#a08400', '#f7d42a', '#26897e', '#8dbfa8'],
+        "brewer.RdYlGn8": ['#d73027', '#f46d43', '#fdae61', '#fee08b', '#d9ef8b', '#a6d96a', '#66bd63', '#1a9850'],
+        "brewer.PiYG8": ['#c51b7d', '#de77ae', '#f1b6da', '#fde0ef', '#e6f5d0', '#b8e186', '#7fbc41', '#4d9221'],
+        "brewer.PRGn8": ['#762a83', '#9970ab', '#c2a5cf', '#e7d4e8', '#d9f0d3', '#a6dba0', '#5aae61', '#1b7837'],
+        "tableau.PurplePinkGray12": ['#8074a8', '#c6c1f0', '#c46487', '#ffbed1', '#9c9290', '#c5bfbe', '#9b93c9', '#ddb5d5', '#7c7270', '#f498b6', '#b173a0', '#c799bc'],
+      },
       loader: {
         saveSettings: false,
       },
@@ -277,7 +288,7 @@ export default {
       );
     },
     retrieveColorScheme() {
-      let colorScheme = this.get(this.COLOR_SCHEME_STORAGE_NAME);
+      let colorScheme = this.get("reportColorScheme");
 
       if (colorScheme) {
         this.$root.colorScheme = colorScheme;
@@ -285,14 +296,14 @@ export default {
         this.$root.colorScheme = this.colorSchemes[0];
 
         // save to local storage
-        this.set(this.COLOR_SCHEME_STORAGE_NAME, this.$root.colorScheme);
+        this.set("reportColorScheme", this.$root.colorScheme);
       }
     },
     setColorScheme(colorScheme) {
       this.$root.colorScheme = colorScheme;
 
       // save to local storage
-      this.set(this.COLOR_SCHEME_STORAGE_NAME, this.$root.colorScheme);
+      this.set("reportColorScheme", this.$root.colorScheme);
     }
   },
 };
@@ -314,6 +325,12 @@ export default {
 }
 
 .ui.menu .dropdown.item .menu.color-scheme {
-  min-width: 11.5rem;
+  min-width: 12rem;
+}
+
+.color-sample {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
 }
 </style>
