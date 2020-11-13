@@ -121,7 +121,7 @@ func GetQueueReports(c *gin.Context) {
 }
 
 func executeSqlQuery(filter models.Filter, section string, view string, graph string, c *gin.Context) (string, error) {
-	queryFile := configuration.Config.QueryPath + "/" + section + "/" + view + "/" + graph + ".sql"
+	queryFile := configuration.Config.Queue.QueryPath + "/" + section + "/" + view + "/" + graph + ".sql"
 
 	// check if query file exists
 	if _, errExists := os.Stat(queryFile); os.IsNotExist(errExists) {
@@ -172,7 +172,7 @@ func executeSqlQuery(filter models.Filter, section string, view string, graph st
 }
 
 func executeRrdQuery(filter models.Filter, section string, view string, graph string) (string, error) {
-	queryFile := configuration.Config.QueryPath + "/" + section + "/" + view + "/" + graph + ".rrd"
+	queryFile := configuration.Config.Queue.QueryPath + "/" + section + "/" + view + "/" + graph + ".rrd"
 
 	// check if query file exists
 	if _, errExists := os.Stat(queryFile); os.IsNotExist(errExists) {
