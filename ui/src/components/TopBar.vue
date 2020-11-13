@@ -2,7 +2,7 @@
   <div class="masthead topbar">
     <sui-container>
       <sui-menu floated="right">
-        <sui-dropdown class="item" icon="paint brush no-margin">
+        <sui-dropdown class="item top right pointing" icon="paint brush no-margin">
           <sui-dropdown-menu class="color-scheme">
             <sui-dropdown-item
               v-for="(colorScheme, index) in colorSchemes"
@@ -445,5 +445,9 @@ export default {
   display: inline-block;
   width: 1rem;
   height: 1rem;
+}
+
+.ui.menu:not(.vertical) .right.item, .ui.menu:not(.vertical) .right.menu {
+  border-right: 1px solid rgba(34,36,38,.15);
 }
 </style>
