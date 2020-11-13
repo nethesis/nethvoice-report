@@ -45,7 +45,7 @@ func GetDefaultFilter(c *gin.Context) {
 	view := c.Param("view")
 
 	// override filter path
-	filterOverrideFile := configuration.Config.QueryPath + "/" + section + "/" + view + "/default_filter.json"
+	filterOverrideFile := configuration.Config.Queue.QueryPath + "/" + section + "/" + view + "/default_filter.json"
 
 	// define return filter
 	var defaultFilter models.Filter
