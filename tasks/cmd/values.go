@@ -83,7 +83,7 @@ func executeReportValues() {
 		}
 
 		// execute query
-		db := source.QueueInstance()
+		db := source.CDRInstance()
 		start := time.Now()
 		rows, errQuery := db.Query(string(queryString))
 		if errQuery != nil {
