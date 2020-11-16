@@ -1,3 +1,5 @@
+import moment from "moment";
+
 var UtilService = {
   data() {
     return {
@@ -121,10 +123,20 @@ var UtilService = {
       let labelSet = new Set();
       let datasetNameSet = new Set();
       let datasetMap = {};
+      let officeHoursLabels = false;
+
+      // if labels match HH:mm, generate all labels using office hours and time split
+      if (/^[0-2][0-9]:[0-5][0-9]$/.test(rows[0][1])) {
+        officeHoursLabels = true;
+        labelSet = that.generateTimeLabelsLineOrBarChart(that);
+      }
 
       rows.forEach((row) => {
         datasetNameSet.add(row[0]);
-        labelSet.add(row[1]);
+
+        if (!officeHoursLabels) {
+          labelSet.add(row[1]);
+        }
       });
 
       datasetNameSet.forEach((datasetName) => {
@@ -264,6 +276,30 @@ var UtilService = {
 
       return topDatasetsRows.concat(othersRows);
     },
+    generateTimeLabelsLineOrBarChart(that) {
+      let labelSet = new Set();
+      const officeHoursStartString = that.officeHours.startHour;
+      const officeHoursEndString = that.officeHours.endHour;
+
+      // office hour start
+      let officeHoursStart = moment().zone('GMT');
+      let hhmm = officeHoursStartString.split(/:/);
+      officeHoursStart.hours(parseInt(hhmm[0])).minutes(parseInt(hhmm[1])).seconds(0).milliseconds(0);
+
+      // office hour end
+      let officeHoursEnd = moment().zone('GMT');
+      hhmm = officeHoursEndString.split(/:/);
+      officeHoursEnd.hours(parseInt(hhmm[0])).minutes(parseInt(hhmm[1])).seconds(0).milliseconds(0);
+
+      let currentTime = officeHoursStart;
+
+      while (currentTime.isBefore(officeHoursEnd)) {
+        labelSet.add(currentTime.format("HH:mm"));
+        currentTime.add(that.filterTimeSplit, "minutes");
+      }
+      labelSet.add(currentTime.format("HH:mm"));
+      return labelSet;
+    }
   }
 };
 export default UtilService;

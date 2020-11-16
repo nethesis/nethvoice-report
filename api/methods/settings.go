@@ -33,15 +33,6 @@ import (
 )
 
 func GetSettings(c *gin.Context) {
-	// get current user
-	user := GetClaims(c)["id"].(string)
-
-	// check if user admin or API key
-	if user != "admin" && user != "X" {
-		c.JSON(http.StatusNotFound, gin.H{"message": "no settings found"})
-		return
-	}
-
 	// init cache connection
 	cacheConnection := cache.Instance()
 

@@ -61,11 +61,11 @@
             </div>
             <!-- line chart -->
             <div v-if="chart.type == 'line'">
-              <line-chart :data="chart.data" :caption="chart.caption"></line-chart>
+              <line-chart :data="chart.data" :caption="chart.caption" :officeHours="officeHours" :filterTimeSplit="filterTimeSplit"></line-chart>
             </div>
             <!-- bar chart -->
             <div v-if="chart.type == 'bar'">
-              <bar-chart :data="chart.data" :caption="chart.caption" :type="chart.type"></bar-chart>
+              <bar-chart :data="chart.data" :caption="chart.caption" :type="chart.type" :officeHours="officeHours" :filterTimeSplit="filterTimeSplit"></bar-chart>
             </div>
             <!-- pie chart -->
             <div v-if="chart.type == 'pie'">
@@ -108,11 +108,12 @@ import ExportData from "../components/ExportData.vue";
 import QueriesService from "../services/queries";
 import StorageService from "../services/storage";
 import UtilService from "../services/utils";
+import SettingsService from "../services/settings";
 
 export default {
   name: "QueueDashboard",
   components: { TableChart, LineChart, BarChart, ExportData, PieChart },
-  mixins: [StorageService, QueriesService, UtilService],
+  mixins: [StorageService, QueriesService, UtilService, SettingsService],
   data() {
     return {
       queryTree: null,
@@ -122,6 +123,11 @@ export default {
       openDetailsModal: false,
       chartDetails: null,
       dataAvailable: true,
+      officeHours: {
+        start_hour: null,
+        end_hour: null,
+      },
+      filterTimeSplit: 0,
     };
   },
   mounted() {
@@ -133,6 +139,9 @@ export default {
     this.$root.$on("applyFilters", (filter) => {
       this.applyFilters(filter);
     });
+
+    // get office hours
+    this.getAdminSettings();
   },
   watch: {
     $route: function () {
@@ -143,7 +152,7 @@ export default {
       if (this.$root.filtersReady) {
         this.retrieveQueryTree();
       }
-    }
+    },
   },
   methods: {
     retrieveQueryTree() {
@@ -205,6 +214,8 @@ export default {
       }
     },
     applyFilters(filter) {
+      this.filterTimeSplit = Number(filter.time.division);
+
       for (let chart of this.charts) {
         chart.data = null;
         chart.message = null;
@@ -273,6 +284,20 @@ export default {
     },
     hideDetailsModal() {
       this.openDetailsModal = false;
+    },
+    getAdminSettings() {
+      this.getSettings(
+        (success) => {
+          const settings = success.body.settings;
+          this.officeHours = {
+            startHour: settings.start_hour,
+            endHour: settings.end_hour,
+          };
+        },
+        (error) => {
+          console.error(error.body);
+        }
+      );
     },
   },
 };
