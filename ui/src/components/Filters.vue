@@ -1105,6 +1105,18 @@ export default {
         return;
       }
 
+      // time group
+
+      if (!this.showFilterTimeGroup || !this.filter.time.group) {
+        this.filter.time.group = "day";
+      }
+
+      // time split
+
+      if (!this.showFilterTimeSplit || !this.filter.time.division) {
+        this.filter.time.division = "60";
+      }
+
       // save filter to local storage
       this.set(this.reportFilterStorageName, this.filter);
 
