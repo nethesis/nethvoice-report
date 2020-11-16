@@ -104,6 +104,7 @@
       "full": "Full calls",
       "joinempty": "JoinEmpty calls",
       "null": "Null calls",
+      "callDoneByAgent": "Call done by agent",
       "agent": "By agent",
       "session": "By session",
       "caller": "By caller",
