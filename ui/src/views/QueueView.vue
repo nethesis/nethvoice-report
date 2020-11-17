@@ -10,6 +10,10 @@
     </div>
   </div>
   <div v-show="dataAvailable">
+    <div v-if="!$root.filtersReady">
+      <sui-loader active centered inline class="mg-bottom-sm" />
+      <div>{{ $t("message.loading_filters") }}...</div>
+    </div>
     <div class="chart-container">
       <div
         v-for="(chart, index) in charts" v-bind:key="index"
