@@ -22,7 +22,7 @@ const routes = [
       parent: "",
       section: "dashboard",
       view: "default",
-      tags: ["dashboard"],
+      tags: ["dashboard", "calls", "agent", "hour", "answer", "lost", "done", "ivr", "choices", "unique", "caller", "total"],
     },
   },
   {
@@ -34,7 +34,7 @@ const routes = [
       parent: "data",
       section: "data",
       view: "summary",
-      tags: ["summary"],
+      tags: ["summary", "good", "failed", "timeout", "exitempty", "exitkey", "full", "joinempty", "null", "agent"],
     },
   },
   {
@@ -118,7 +118,7 @@ const routes = [
       parent: "performance",
       section: "performance",
       view: "default",
-      tags: ["performance"],
+      tags: ["performance", "qos", "quality", "talk time", "time"],
     },
   },
   {
@@ -130,7 +130,7 @@ const routes = [
       parent: "distribution",
       section: "distribution",
       view: "hourly",
-      tags: ["hourly"],
+      tags: ["hourly", "good", "failed", "timeout", "exitempty", "exitkey", "full", "joinempty", "null", "agent", "ivr"],
     },
   },
   {
@@ -154,7 +154,7 @@ const routes = [
       parent: "graphs",
       section: "graphs",
       view: "load",
-      tags: ["load"],
+      tags: ["load", "geographic"],
     },
   },
   {
@@ -166,7 +166,7 @@ const routes = [
       parent: "graphs",
       section: "graphs",
       view: "hour",
-      tags: ["hour"],
+      tags: ["hour", "good", "failed", "timeout", "exitempty", "exitkey", "full", "joinempty", "null", "agent", "ivr"],
     },
   },
   {
@@ -178,7 +178,7 @@ const routes = [
       parent: "graphs",
       section: "graphs",
       view: "agent",
-      tags: ["agent"],
+      tags: ["agent", "answer", "no answer", "lost", "done", "queue"],
     },
   },
   {
@@ -190,7 +190,7 @@ const routes = [
       parent: "graphs",
       section: "graphs",
       view: "area",
-      tags: ["area"],
+      tags: ["area", "district", "area code", "province", "region"],
     },
   },
   {
