@@ -1346,6 +1346,9 @@ export default {
       this.filterValues.choices = choices.sort(this.sortByProperty("text"));
     },
     async retrievePhonebook() {
+
+      let start = new Date().getTime(); ////
+
       this.phonebookDb = await this.getDb(this.PHONEBOOK_DB_NAME, this.PHONEBOOK_DB_VERSION);
       let phonebookExpiry = this.get("reportPhonebookExpiry");
 
@@ -1396,6 +1399,8 @@ export default {
           }
         );
       }
+
+      console.log("retrievePhonebook completed in ", new Date().getTime() - start); ////
     },
     contactNameInput(event) {
       if (typeof event == "string") {
