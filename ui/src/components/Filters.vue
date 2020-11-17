@@ -309,7 +309,7 @@
             <label>{{$t('filter.contact_name_label')}}</label>
             <sui-search
               :searchFields="['title', 'cleanName']"
-              :source="$root.phoneBook"
+              :source="$root.phonebook"
               ref="filterContactName"
               :placeholder="$t('filter.contact_name_label')"
               :fullTextSearch="'exact'"
@@ -454,6 +454,7 @@
 <script>
 import LoginService from "../services/login";
 import StorageService from "../services/storage";
+import IndexedDbService from "../services/indexedDb";
 import SearchesService from "../services/searches";
 import UtilService from "../services/utils";
 import SearchService from "../services/searches";
@@ -474,10 +475,15 @@ export default {
     UtilService,
     SearchService,
     PhonebookService,
+    IndexedDbService,
   ],
   props: ["showFiltersForm"],
   data() {
     return {
+      PHONEBOOK_DB_NAME: "phonebook",
+      PHONEBOOK_DB_VERSION: 1,
+      PHONEBOOK_TTL_MINUTES: 8 * 60, // 8 hours
+      FILTER_VALUES_TTL_MINUTES: 8 * 60, // 8 hours
       selectedSearch: null,
       filter: {
         queues: [],
@@ -555,6 +561,8 @@ export default {
           return moment(date).isoWeek();
         },
       },
+      phonebookDb: null,
+      phonebookReady: false,
     };
   },
   watch: {
@@ -566,6 +574,12 @@ export default {
     },
     selectedSearch: function () {
       this.setFilterValuesFromSearch();
+    },
+    filtersReady: function () {
+      if (this.filtersReady) {
+        // notify QueueView that queries can now be executed
+        this.$root.filtersReady = true;
+      }
     },
     "filter.ivrs": function () {
       this.updateIvrChoices();
@@ -635,7 +649,6 @@ export default {
   mounted() {
     this.retrieveFilter();
     this.getSavedSearches();
-    this.retrievePhonebook();
 
     // views request to apply filter on loading
     this.$root.$on("requestApplyFilter", () => {
@@ -646,6 +659,8 @@ export default {
     this.$root.$on("clearFilters", () => {
       this.clearFilters()
     });
+
+    this.retrievePhonebook();
   },
   methods: {
     retrieveFilter() {
@@ -808,7 +823,7 @@ export default {
           this.saveToLocalStorageWithExpiry(
             this.reportFilterValuesStorageName,
             this.filterValues,
-            8 * 60 // 8 hours
+            this.FILTER_VALUES_TTL_MINUTES
           );
 
           // set selected values in filter
@@ -871,9 +886,6 @@ export default {
       }
 
       this.loader.filter = false;
-
-      // notify QueueView that queries can now be executed
-      this.$root.filtersReady = true;
     },
     getSavedSearches(searchToSelect) {
       this.getSearches(
@@ -1101,7 +1113,7 @@ export default {
 
       // retrieve contact name phones
       if (this.filter.contactName) {
-        const contact = this.$root.phoneBook.find((c) => {
+        const contact = this.$root.phonebook.find((c) => {
           return c.title == this.filter.contactName;
         });
 
@@ -1329,22 +1341,25 @@ export default {
       });
       this.filterValues.choices = choices.sort(this.sortByProperty("text"));
     },
-    retrievePhonebook() {
-      let phoneBook = this.get("reportPhoneBook");
+    async retrievePhonebook() {
+      this.phonebookDb = await this.getDb(this.PHONEBOOK_DB_NAME, this.PHONEBOOK_DB_VERSION);
+      let phonebookExpiry = this.get("reportPhonebookExpiry");
 
-      if (phoneBook && new Date().getTime() < phoneBook.expiry) {
-        // get object from local storage item
-        phoneBook = phoneBook.item;
-
-        this.$root.phoneBook = phoneBook;
+      if (phonebookExpiry && new Date().getTime() < phonebookExpiry) {
+        // get phonebook from indexed db
+        const phonebook = await this.readFromDb(this.phonebookDb, this.PHONEBOOK_DB_NAME);
+        this.$root.phonebook = phonebook[0].phonebook;
+        this.phonebookReady = true;
       } else {
+        await this.clearDb(this.phonebookDb, this.PHONEBOOK_DB_NAME);
+
+        // get phonebook from backend
         this.getPhonebook(
-          (success) => {
-            const phoneBook = success.body;
-            this.$root.phoneBook = [];
+          async (success) => {
+            let phonebook = [];
 
             for (const [contactName, contactPhones] of Object.entries(
-              phoneBook
+              success.body
             )) {
               // extract company
               let company = "";
@@ -1356,20 +1371,21 @@ export default {
               const cleanName = contactName
                 .replace(/[^a-zA-Z0-9]/g, "")
                 .toLowerCase();
-              this.$root.phoneBook.push({
+
+              phonebook.push({
                 title: contactName,
                 phones: contactPhones,
                 cleanName: cleanName,
                 company: company,
               });
             }
+            await this.addToDb({phonebook: phonebook}, this.phonebookDb, this.PHONEBOOK_DB_NAME);
+            this.$root.phonebook = phonebook;
+            this.phonebookReady = true;
 
-            // save phonebook to local storage (with expiry)
-            this.saveToLocalStorageWithExpiry(
-              "reportPhoneBook",
-              this.$root.phoneBook,
-              8 * 60 // 8 hours
-            );
+            // save phonebook expiry to local storage
+            const expiry = new Date().getTime() + this.PHONEBOOK_TTL_MINUTES * 60 * 1000;
+            this.set("reportPhonebookExpiry", expiry);
           },
           (error) => {
             console.error(error.body);
@@ -1379,7 +1395,9 @@ export default {
     },
     contactNameInput(event) {
       if (typeof event == "string") {
-        this.filter.contactName = event;
+        if (event.length >= 3 || !event.length) {
+          this.filter.contactName = event;
+        }
       }
     },
     clearFilters() {
@@ -1478,6 +1496,9 @@ export default {
     },
     reportFilterValuesStorageName: function () {
       return "reportFilterValues-" + this.get("loggedUser").username;
+    },
+    filtersReady: function () {
+      return !this.loader.filter && this.phonebookReady;
     },
   },
 };

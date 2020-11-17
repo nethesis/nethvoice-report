@@ -28,6 +28,7 @@ import (
 	"net/http"
 
 	"github.com/gin-contrib/cors"
+	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 
 	"github.com/nethesis/nethvoice-report/api/configuration"
@@ -48,6 +49,9 @@ func main() {
 
 	// init routers
 	router := gin.Default()
+
+	// add default compression
+	router.Use(gzip.Gzip(gzip.DefaultCompression))
 
 	// cors configuration only in debug mode GIN_MODE=debug (default)
 	if gin.Mode() == gin.DebugMode {
