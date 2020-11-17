@@ -426,6 +426,7 @@ export default {
 
 .topbar .top.floating.dropdown .menu {
   left: -60px !important;
+  margin-top: 12px !important;
 }
 
 .filter-button {
