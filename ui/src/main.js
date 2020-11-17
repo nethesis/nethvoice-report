@@ -63,8 +63,8 @@ new Vue({
   },
   data: {
     filtersReady: false,
-    phoneBook: [],
-    reversePhoneBook: {},
+    phonebook: [],
+    reversePhonebook: {},
     colorScheme: "",
   },
   render: (h) => h(App),

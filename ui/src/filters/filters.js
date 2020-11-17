@@ -82,9 +82,9 @@ var Filters = {
     reversePhonebookLookup: function (phoneNumber, field, root) {
         // field is either "name" or "company"
 
-        if (!root.reversePhoneBook[phoneNumber]) {
+        if (!root.reversePhonebook[phoneNumber]) {
             // search phone number in phonebook
-            const contactFound = root.phoneBook.find(contact => {
+            const contactFound = root.phonebook.find(contact => {
                 // flatten phone numbers data structure and search phone number
                 const phoneFound = [].concat(...Object.values(contact.phones)).find(phone => {
                     return phone == phoneNumber;
@@ -94,19 +94,19 @@ var Filters = {
 
             if (contactFound) {
                 // add entry to reverse phonebook
-                root.reversePhoneBook[phoneNumber] = {
+                root.reversePhonebook[phoneNumber] = {
                     "name": contactFound.title.split(" | ")[0],
                     "company": contactFound.company,
                 }
             } else {
                 // phone number not present in phonebook
-                root.reversePhoneBook[phoneNumber] = {
+                root.reversePhonebook[phoneNumber] = {
                     "name": "-",
                     "company": "-",
                 }
             }
         }
-        return root.reversePhoneBook[phoneNumber][field];
+        return root.reversePhonebook[phoneNumber][field];
     }
 };
 
