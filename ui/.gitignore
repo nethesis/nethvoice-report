@@ -21,3 +21,6 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# Development configurations
+*config.development.js
