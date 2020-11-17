@@ -106,10 +106,12 @@ export default {
   },
   watch: {
     search: function (val) {
+      var context = this;
       if (val.length >= 3) {
         this.taggedRoutes = this.$router.options.routes.filter(function (r) {
           if (r.meta && r.meta.tags) {
-            return JSON.stringify(r.meta.tags).includes(val);
+            var i18nTags = r.meta.tags.map(function(t) { return context.$i18n.t("tags."+t); });
+            return JSON.stringify(i18nTags).toLowerCase().includes(val.toLowerCase());
           } else {
             return false;
           }

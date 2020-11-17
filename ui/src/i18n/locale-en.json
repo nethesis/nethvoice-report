@@ -288,6 +288,28 @@
       "others": "Others",
       "office_hours_start": "Office hours start",
       "office_hours_end": "Office hours end"
+    },
+    "tags": {
+	"dashboard": "dashboard",
+	"summary": "summary",
+	"agent": "agent",
+	"session": "session",
+	"caller": "caller",
+	"call": "call",
+	"lost call": "lost call",
+	"performance": "performance",
+	"hourly": "hourly",
+	"geographic": "geographic",
+	"load": "load",
+	"hour": "hour",
+	"agent": "agent",
+	"area": "area",
+	"queue": "queue",
+	"position": "position",
+	"avg": "avg",
+	"average": "average",
+	"duration": "duration",
+	"wait": "wait"
     }
   }
 }
