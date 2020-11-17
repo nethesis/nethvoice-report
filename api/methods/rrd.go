@@ -73,7 +73,7 @@ func fetchRrd(dbFile string, start time.Time, end time.Time, label string) ([][]
 	var data [][]interface{}
 
 	// fetch RRD data
-	fetchRes, err := rrd.Fetch(dbFile, "AVERAGE", start, end, time.Second)
+	fetchRes, err := rrd.Fetch(dbFile, "MAX", start, end, time.Second)
 	if err != nil {
 		return nil, errors.Wrap(err, "error fetching RRD data")
 	}
