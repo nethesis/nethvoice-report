@@ -1395,7 +1395,9 @@ export default {
     },
     contactNameInput(event) {
       if (typeof event == "string") {
-        this.filter.contactName = event;
+        if (event.length >= 3 || !event.length) {
+          this.filter.contactName = event;
+        }
       }
     },
     clearFilters() {
