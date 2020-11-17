@@ -49,12 +49,13 @@ func main() {
 	// init routers
 	router := gin.Default()
 
-	// cors //// use configuration / env variable
-	// router.Use(cors.Default())
-	corsConf := cors.DefaultConfig()
-	corsConf.AllowHeaders = []string{"Authorization", "Content-Type"}
-	corsConf.AllowAllOrigins = true
-	router.Use(cors.New(corsConf))
+	// cors configuration only in debug mode GIN_MODE=debug (default)
+	if gin.Mode() == gin.DebugMode {
+		corsConf := cors.DefaultConfig()
+		corsConf.AllowHeaders = []string{"Authorization", "Content-Type"}
+		corsConf.AllowAllOrigins = true
+		router.Use(cors.New(corsConf))
+	}
 
 	// define API
 	api := router.Group("/api")
