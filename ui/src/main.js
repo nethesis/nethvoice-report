@@ -52,8 +52,8 @@ new Vue({
   router,
   i18n,
   created: function () {
-    this.apiEndpoint = window.location.host + window.location.pathname + "api";
-    this.apiScheme = window.location.protocol + "//";
+    this.apiEndpoint = window.CONFIG.API_ENDPOINT;
+    this.apiScheme = window.CONFIG.API_SCHEME;
     this.currentLocale = langConf.locale;
     this.currentView = "";
     this.config = window.CONFIG;
