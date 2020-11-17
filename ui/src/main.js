@@ -48,6 +48,9 @@ const i18n = new VueI18n({
   messages: langConf.messages,
 });
 
+// global variable
+Vue.prototype.$mobileBound = 1193 // px
+
 new Vue({
   router,
   i18n,

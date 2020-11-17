@@ -3,7 +3,7 @@
     <sui-container v-if="this.showFiltersForm">
       <sui-form class="filters-form" @submit.prevent="applyFilters">
         <sui-form-fields v-if="savedSearches.length" class="mg-bottom-md">
-          <sui-form-field width="four">
+          <sui-form-field width="four" class="mb-10">
             <sui-dropdown
               :placeholder="$t('filter.saved_search')"
               search
@@ -24,8 +24,8 @@
           </sui-form-field>
         </sui-form-fields>
 
-        <sui-form-fields>
-          <sui-form-field v-if="showFilterTimeGroup" width="four">
+        <sui-form-fields v-if="showFilterTimeGroup">
+          <sui-form-field width="four">
             <label>{{$t('filter.group_by')}}</label>
             <sui-dropdown
               :options="groupByTimeValues"
@@ -36,7 +36,7 @@
             />
           </sui-form-field>
         </sui-form-fields>
-        <sui-form-fields>
+        <sui-form-fields class="interval-buttons">
           <!-- if time group is day -->
           <sui-form-field v-if="(showFilterTime && filter.time.group == 'day') || (showFilterTime && !showFilterTimeGroup)">
             <label>{{$t('filter.time_range')}}</label>
@@ -133,7 +133,7 @@
               >
             </sui-button-group>
           </sui-form-field>
-          <sui-form-field>
+          <sui-form-field class="datepicker-field">
             <label :class="{ 'error-color': errorTimeInterval }">{{$t('filter.time_interval')}}</label>
             <!-- time interval start -->
             <!-- datetime -->
@@ -324,7 +324,7 @@
             <sui-checkbox label toggle v-model="filter.nullCall" />
           </sui-form-field>
         </sui-grid>
-        <sui-form-fields class="mg-top-md">
+        <sui-form-fields class="mg-top-md filter-actions">
           <sui-button
             primary
             type="submit"
@@ -1484,6 +1484,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .filters-form {
   text-align: left;
   margin-top: 30px;
@@ -1493,6 +1494,40 @@ export default {
   .ui.negative.button {
     min-height: 38px;
   }
+  .fields {
+    margin: 0 -.5em 1.9em !important;
+    @media only screen and (max-width: 885px) {
+      & {
+        // flex-wrap: wrap;
+      }
+    }
+
+    .field:first-child {
+      margin-top: 0px !important;
+    }
+    .field {
+      @media only screen and (max-width: 767px) {
+        & {
+          margin-top: 15px !important;
+        }
+      }
+    }
+  }
+}
+
+.filters-form .filter-actions {
+  margin-bottom: 35px !important;
+  margin-top: 30px !important;
+}
+
+.datepicker-field .mx-datepicker:last-child {
+  @media only screen and (max-width: 767px) {
+    margin-top: 8px;
+  }
+}
+
+.interval-buttons .fluid.ui.buttons {
+  overflow-x: auto;
 }
 
 .view-title {
@@ -1522,4 +1557,5 @@ i.icon.time-filter {
   position: relative;
   top: 0.5rem;
 }
+
 </style>

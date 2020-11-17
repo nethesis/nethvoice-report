@@ -1,5 +1,5 @@
 <template>
-  <div v-show="dataAvailable" :style="styleObject">
+  <div v-show="dataAvailable" class="fixedbar-container" :style="styleObject">
     <div class="fixedbar" :class="{ fixed: isFixed }">
       <sui-container>
         <strong class="activeFilters">{{$t('menu.active_filters')}}: </strong>
@@ -226,7 +226,7 @@ export default {
   },
   methods: {
     scrollHandler(evt) {
-      if (evt.target.attributes["views-wrapper"]) {
+      if (evt.target.attributes["views-wrapper"] && (window.innerWidth > this.$mobileBound)) {
         if (!this.isFixed) {
           let fixedbar = document.querySelector(".fixedbar")
           if (fixedbar !== null) {
@@ -302,6 +302,9 @@ export default {
 </script>
 
 <style lang="scss">
+
+@import "../styles/theming.scss";
+
 .fixed {
   position: fixed;
   z-index: 10000;
@@ -341,6 +344,20 @@ export default {
 
     .activeFilters {
       font-size: 13px;
+    }
+  }
+
+  @media only screen and (max-width: $mobile-bound) {
+    & {
+      display: none;
+    }
+  }
+}
+
+.fixedbar-container {
+  @media only screen and (max-width: $mobile-bound) {
+    & {
+      display: none;
     }
   }
 }
