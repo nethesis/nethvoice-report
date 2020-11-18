@@ -121,7 +121,7 @@
           </span>
         </div>
         <!-- label: time split value -->
-        <div class="ui label" v-if="showFilterTimeSplit && activeFilters.time.division">
+        <div class="ui label" v-if="showFilterTimeSplit && activeFilters.time && activeFilters.time.division">
           <span class="field">
             {{$t('filter.time_split_label')}}:
           </span>

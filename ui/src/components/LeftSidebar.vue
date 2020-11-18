@@ -100,9 +100,23 @@ export default {
     return {
       search: "",
       taggedRoutes: [],
-      selectedReport: this.get("selectedReport") || 'queue',
-      loggedUsername: this.get("loggedUser").username
     }
+  },
+  computed: {
+    selectedReport: function () {
+      if (this.get("selectedReport")) {
+        return this.get("selectedReport");
+      } else {
+        return "queue";
+      }
+    },
+    loggedUsername: function () {
+      if (this.get("loggedUser")) {
+        return this.get("loggedUser").username;
+      } else {
+        return "";
+      }
+    },
   },
   watch: {
     search: function (val) {
