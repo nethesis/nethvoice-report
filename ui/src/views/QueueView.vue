@@ -142,6 +142,11 @@ export default {
 
     // get office hours
     this.getAdminSettings();
+
+    // if coming back from CDR report, retrieve query tree again
+    if (this.$root.filtersReady && !this.queryTree) {
+        this.retrieveQueryTree();
+    }
   },
   watch: {
     $route: function () {
