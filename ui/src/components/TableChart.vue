@@ -240,7 +240,13 @@ export default {
     },
     chartKey: {
      type: String,
-    }
+    },
+    officeHours: {
+      type: Object,
+    },
+    filterTimeSplit: {
+      type: Number,
+    },
   },
   mixins: [UtilService, StorageService],
   components: { HorizontalScrollers },
@@ -546,40 +552,64 @@ export default {
 
       // read pivot data from rows
 
-      let pivotColumnSet = new Set();
-
       // contains pivotGroup -> pivotColumn -> number (e.g. 2019QueueNameQueueDescription -> hour -> numberOfCalls)
       let pivotMap = {};
 
+      // contains totals for all hours grouped
+      let totalsMap = {};
+
+      // contains the list of non pivot columns, organized by pivot group
+      // e.g:
+      // {
+      //   2019FirstQueueNameFirstQueueDescription: [ "2019", "FirstQueueName", "FirstQueueDescription"],
+      //   2019SecondQueueNameSecondQueueDescription: [ "2019", "SecondQueueName", "SecondQueueDescription"],
+      //   ...
+      // }
+      let nonPivotColumnsMap = {};
+
       for (const row of originalRows) {
         // detect when pivot group changes, i.e. when a non-pivot related column changes
+
         let pivotGroup = "";
+        let nonPivotColumns = [];
+
         for (const [colIndex, value] of row.entries()) {
           if (colIndex >= pivotColIndex) {
+            nonPivotColumnsMap[pivotGroup] = nonPivotColumns;
             break;
           } else {
             pivotGroup += value;
+            nonPivotColumns.push(value);
           }
         }
 
         const pivotColumn = row[pivotColIndex]; // e.g. "09:15"
-        const value = row[groupedColIndex]; // e.g. 147
-        pivotColumnSet.add(pivotColumn);
+        const pivotValue = parseInt(row[groupedColIndex]); // e.g. 147
+
+        // add pivot value to pivotMap
 
         if (!pivotMap[pivotGroup]) {
           pivotMap[pivotGroup] = {};
         }
 
-        pivotMap[pivotGroup][pivotColumn] = value;
-      }
+        pivotMap[pivotGroup][pivotColumn] = pivotValue;
 
-      const pivotColumnsList = Array.from(pivotColumnSet).sort();
+        // add pivot value to totalsMap
+
+        if (totalsMap[pivotGroup] === undefined) {
+          totalsMap[pivotGroup] = 0;
+        }
+        totalsMap[pivotGroup] += pivotValue;
+      }
+      const pivotColumnsList = this.generateTimeLabelsLineOrBarChart(this.officeHours, this.filterTimeSplit, this);
 
       // process column headers
 
       let processedColumns = [];
       originalColumns.forEach((rawColumn, index) => {
-        if (index == pivotColIndex) {
+        if (index < pivotColIndex) {
+          processedColumns.push(rawColumn);
+        } else if (index == pivotColIndex) {
           // add sum column
           processedColumns.push(superHeader + "$" + totalSubHeader);
 
@@ -589,84 +619,28 @@ export default {
               superHeader + "$" + pivotColumn + pivotFormat + "#"
             );
           }
-        } else if (index != groupedColIndex) {
-          processedColumns.push(rawColumn);
         }
       });
 
       // process rows
 
       let processedRows = [];
-      let currentPivotGroup;
-      let currentProcessedRow = [];
-      let groupedPivotValues = 0;
-      let pivotColumnIndex = 0;
+      const pivotGroupsList = Object.keys(pivotMap).sort();
 
-      for (const row of originalRows) {
-        // detect when pivot group changes, i.e. when a non-pivot related column changes
-        let pivotGroup = "";
-        for (const [colIndex, value] of row.entries()) {
-          if (colIndex >= pivotColIndex) {
-            break;
-          } else {
-            pivotGroup += value;
-          }
-        }
+      pivotGroupsList.forEach((pivotGroup) => {
+        let processedRow = [];
 
-        if (!currentPivotGroup || pivotGroup != currentPivotGroup) {
-          // new pivot group
+        // non-pivot columns
+        processedRow.push(...nonPivotColumnsMap[pivotGroup]);
 
-          if (currentPivotGroup) {
-            currentProcessedRow[pivotColIndex] = groupedPivotValues;
+        // total
+        processedRow.push(totalsMap[pivotGroup] || 0);
 
-            while (pivotColumnIndex < pivotColumnsList.length) {
-              // fill missing data
-              currentProcessedRow.push(0);
-              pivotColumnIndex++;
-            }
-            processedRows.push(currentProcessedRow);
-          }
-          currentProcessedRow = [];
-          groupedPivotValues = 0;
-          pivotColumnIndex = 0;
-          currentPivotGroup = pivotGroup;
-
-          // non-pivot cells are left untouched
-          for (let colIndex = 0; colIndex < pivotColIndex; colIndex++) {
-            currentProcessedRow.push(row[colIndex]);
-          }
-          // temporary value for grouped pivot values
-          currentProcessedRow.push(0);
-        }
-
-        // add data to current pivot group
-
-        let pivotValue = parseInt(row[groupedColIndex]);
-        groupedPivotValues += pivotValue;
-
-        // insert pivot value under the related pivot column (data may contain data holes)
-
-        let pivotColumn = pivotColumnsList[pivotColumnIndex]; // e.g. 9:00
-
-        while (!pivotMap[pivotGroup][pivotColumn]) {
-          // fill missing data
-          currentProcessedRow.push(0);
-          pivotColumnIndex++;
-          pivotColumn = pivotColumnsList[pivotColumnIndex];
-        }
-        currentProcessedRow.push(pivotValue);
-        pivotColumnIndex++;
-      }
-
-      // add last processed row
-      currentProcessedRow[pivotColIndex] = groupedPivotValues;
-
-      while (pivotColumnIndex < pivotColumnsList.length) {
-        // fill missing data
-        currentProcessedRow.push(0);
-        pivotColumnIndex++;
-      }
-      processedRows.push(currentProcessedRow);
+        pivotColumnsList.forEach((pivotColumn) => {
+          processedRow.push(pivotMap[pivotGroup][pivotColumn] || 0);
+        });
+        processedRows.push(processedRow);
+      });
       return [processedColumns].concat(processedRows);
     },
     processPivotTableWithHoursHeader(
@@ -678,14 +652,6 @@ export default {
       superHeader,
       totalSubHeader
     ) {
-      // e.g:
-      // {
-      //   "09:00": Set() [ "09:00", "09:15", "09:30", "09:45" ],
-      //   "10:00": Set() [ "10:00", "10:15", "10:30", "10:45" ],
-      //   "11:00": Set() [ "11:00", "11:15", "11:30", "11:45" ],
-      //   ....
-      // }
-      let hoursMap = {};
 
       // e.g: [ 09:00, 10:00, 11:00, ... ]
       let hoursList;
@@ -697,7 +663,7 @@ export default {
       //   "11:00": [ "11:00", "11:15", "11:30", "11:45" ],
       //   ...
       // }
-      let hoursMapSorted = {};
+      let hoursMap = this.generateHoursMap(this.officeHours, this.filterTimeSplit, this);
 
       // contains pivotGroup -> hour -> pivotColumn -> number (e.g. 2019QueueNameQueueDescription -> 09:00 -> 09:45 -> 2345)
       let pivotMap = {};
@@ -739,13 +705,6 @@ export default {
 
         const hour = pivotColumn.slice(0, 2) + ":00";
 
-        // add pivot column to hoursMap
-
-        if (!hoursMap[hour]) {
-          hoursMap[hour] = new Set();
-        }
-        hoursMap[hour].add(pivotColumn);
-
         // add pivot value to pivotMap
 
         if (!pivotMap[pivotGroup]) {
@@ -772,15 +731,6 @@ export default {
       }
 
       hoursList = Object.keys(hoursMap).sort();
-
-      // build hoursMapSorted
-      for (const [hour, hourSet] of Object.entries(hoursMap)) {
-        hoursMapSorted[hour] = Array.from(hourSet).sort();
-      }
-
-      console.log("pivotMap", pivotMap); ////
-      console.log("totalsMap", totalsMap); ////
-      console.log("hoursMapSorted", hoursMapSorted); ////
 
       // process column headers
 
@@ -827,13 +777,13 @@ export default {
         processedRow.push(...nonPivotColumnsMap[pivotGroup]);
 
         // all hours total
-        processedRow.push(totalsMap[pivotGroup][superHeader]);
+        processedRow.push(totalsMap[pivotGroup][superHeader] || 0);
 
         hoursList.forEach((hour) => {
           // hour total
-          processedRow.push(totalsMap[pivotGroup][hour]);
+          processedRow.push(totalsMap[pivotGroup][hour] || 0);
 
-          hoursMapSorted[hour].forEach((pivotColumn) => {
+          hoursMap[hour].forEach((pivotColumn) => {
             // pivotColumn e.g. "09:45"
             if (
               pivotMap[pivotGroup][hour] &&
