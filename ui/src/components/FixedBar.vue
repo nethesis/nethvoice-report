@@ -245,8 +245,8 @@ export default {
   watch: {
     "activeFilters.time.interval": function () {
       if (this.activeFilters.time && this.activeFilters.time.interval) {
-        this.activeFilters.time.interval.start = this.formatDate(this.activeFilters.time.interval.start)
-        this.activeFilters.time.interval.end = this.formatDate(this.activeFilters.time.interval.end)
+        this.activeFilters.time.interval.start = this.$options.filters.formatDate(this.activeFilters.time.interval.start)
+        this.activeFilters.time.interval.end = this.$options.filters.formatDate(this.activeFilters.time.interval.end)
       }
     },
     "activeFilters.queues": function () {
