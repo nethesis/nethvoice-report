@@ -209,9 +209,6 @@ export default {
       this.activeFilters = this.lodash.cloneDeep(this.filter)
       this.activeSelectedSearch = this.lodash.cloneDeep(this.selectedSearch)
     })
-    if (this.lodash.isEmpty(this.activeFilters)) {
-      this.$root.$emit("applyFilters")
-    }
     this.$nextTick(() => {
       window.addEventListener('scroll', this.scrollHandler, true)
     })
