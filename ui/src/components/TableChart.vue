@@ -778,6 +778,10 @@ export default {
         hoursMapSorted[hour] = Array.from(hourSet).sort();
       }
 
+      console.log("pivotMap", pivotMap); ////
+      console.log("totalsMap", totalsMap); ////
+      console.log("hoursMapSorted", hoursMapSorted); ////
+
       // process column headers
 
       let processedColumns = [];
