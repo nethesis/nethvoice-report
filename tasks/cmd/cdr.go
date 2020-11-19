@@ -115,7 +115,7 @@ func executeReportCDR() {
 		// close results
 		rowsY.Close()
 
-		// get min and max year
+		// get min and max month
 		rowMinMax = db.QueryRow("SELECT month(min(calldate)), month(max(calldate)) FROM `cdr_" + strconv.Itoa(y)  + "`")
 		errQueryMinMax = rowMinMax.Scan(&minMonth, &maxMonth)
 
