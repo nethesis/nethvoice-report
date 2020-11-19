@@ -42,8 +42,33 @@ export default {
             scheme: this.$root.colorScheme,
           },
         },
+        scales: {
+          yAxes: [{
+            ticks: {
+              callback: (value) => {
+                return this.formatter(value)
+              }
+            }
+          }]
+        },
+        tooltips: {
+          callbacks: {
+            label: (tooltipItem, data) => {
+              return data.datasets[tooltipItem.datasetIndex].label + ': ' + this.formatter(tooltipItem.value)
+            }
+          }
+        }
       },
     };
+  },
+  methods: {
+    formatter(value) {
+      let valuesInfo = this.data[0] && this.data[0][2] ? this.data[0][2].split("£") : ""
+      let format = valuesInfo[1] ? valuesInfo[1] : ""
+      return (
+        format && format == "seconds" ? this.formatValue(value, format) : value
+      )
+    }
   },
   watch: {
     data: function () {
