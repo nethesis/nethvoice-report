@@ -15,6 +15,12 @@ export default {
     data: {
       type: Array,
     },
+    officeHours: {
+      type: Object,
+    },
+    filterTimeSplit: {
+      type: Number,
+    },
     styles: {
       type: Object,
       default: function () {

@@ -33,6 +33,8 @@ import (
 	"time"
 
 	"github.com/juliangruber/go-intersect"
+	"github.com/nethesis/nethvoice-report/api/cache"
+	"github.com/nethesis/nethvoice-report/api/models"
 	"github.com/nleeper/goment"
 	"github.com/pkg/errors"
 
@@ -200,7 +202,33 @@ func ExtractOrigins(o []string, plain bool) string {
 }
 
 func ExtractSettings(settingName string) string {
-	// get settings struct
+	// init cache connection
+	cacheConnection := cache.Instance()
+
+	// check if settings is locally cached
+	settingsString, errCache := cacheConnection.Get("admin_settings").Result()
+
+	if errCache == nil {
+		// settings is cached
+
+		// convert to struct
+		var settingsCache map[string]models.Settings
+
+		errJson := json.Unmarshal([]byte(settingsString), &settingsCache)
+		if errJson != nil {
+			return ""
+		}
+		settings := settingsCache["settings"]
+
+		// reflect settings struct
+		r := reflect.ValueOf(settings)
+		f := reflect.Indirect(r).FieldByName(settingName)
+
+		// return value
+		return string(f.String())
+	}
+
+	// get settings struct from configuration
 	settings := configuration.Config.Settings
 
 	// reflect settings struct

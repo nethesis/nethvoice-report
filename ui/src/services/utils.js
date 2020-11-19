@@ -1,3 +1,5 @@
+import moment from "moment";
+
 var UtilService = {
   data() {
     return {
@@ -85,17 +87,6 @@ var UtilService = {
           return value;
       }
     },
-    formatDate(date) {
-      let d = new Date(date),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
-      if (month.length < 2)
-        month = '0' + month;
-      if (day.length < 2)
-        day = '0' + day;
-      return [year, month, day].join('/');
-    },
     watchDataLineOrBarChart(that) {
       if (!that.data || that.data.length <= 1) {
         // no data
@@ -121,10 +112,20 @@ var UtilService = {
       let labelSet = new Set();
       let datasetNameSet = new Set();
       let datasetMap = {};
+      let officeHoursLabels = false;
+
+      // if labels match HH:mm, generate all labels using office hours and time split
+      if (/^[0-2][0-9]:[0-5][0-9]$/.test(rows[0][1])) {
+        officeHoursLabels = true;
+        labelSet = that.generateTimeLabelsLineOrBarChart(that.officeHours, that.filterTimeSplit, that);
+      }
 
       rows.forEach((row) => {
         datasetNameSet.add(row[0]);
-        labelSet.add(row[1]);
+
+        if (!officeHoursLabels) {
+          labelSet.add(row[1]);
+        }
       });
 
       datasetNameSet.forEach((datasetName) => {
@@ -264,6 +265,76 @@ var UtilService = {
 
       return topDatasetsRows.concat(othersRows);
     },
+    getMomentStartOfHour(timeString) {
+      // returns a moment object that represents today at the start of hour specified by timeString
+      // e.g. timestring: 09:35 -> 09:00
+      // e.g. timestring: 10:00 -> 10:00
+      let momentTime = moment().zone('GMT');
+
+      // timeString is expressed in HH:mm format
+      let hhmm = timeString.split(/:/);
+      momentTime.hours(parseInt(hhmm[0])).startOf('hour');
+      return momentTime;
+    },
+    getMomentNextHour(timeString) {
+      // returns a moment object that represents today at the next hour specified by timeString
+      // e.g. timestring: 09:25 -> 10:00
+      // e.g. timestring: 10:00 -> 10:00
+      let momentTime = moment().zone('GMT');
+
+      // timeString is expressed in HH:mm format
+      let hhmm = timeString.split(/:/);
+
+      momentTime.hours(parseInt(hhmm[0])).minutes(parseInt(hhmm[1])).seconds(0).milliseconds(0);
+
+      if (momentTime.minutes() == 0) {
+        return momentTime;
+      } else {
+        return momentTime.startOf('hour').add(1, 'hour');
+      }
+    },
+    generateTimeLabelsLineOrBarChart(officeHours, timeSplit, that) {
+      let labelSet = new Set();
+      const officeHoursStartString = officeHours.startHour;
+      const officeHoursEndString = officeHours.endHour;
+      let hourStart = that.getMomentStartOfHour(officeHoursStartString);
+      let hourEnd = that.getMomentNextHour(officeHoursEndString);
+      let currentTime = hourStart;
+
+      while (currentTime.isBefore(hourEnd)) {
+        labelSet.add(currentTime.format("HH:mm"));
+        currentTime.add(timeSplit, "minutes");
+      }
+      labelSet.add(currentTime.format("HH:mm"));
+      return labelSet;
+    },
+    generateHoursMap(officeHours, timeSplit, that) {
+      const officeHoursStartString = officeHours.startHour;
+      const officeHoursEndString = officeHours.endHour;
+
+      let hourStart = that.getMomentStartOfHour(officeHoursStartString);
+      let hourEnd = that.getMomentNextHour(officeHoursEndString);
+
+      let currentHourString = hourStart.format("HH:mm");
+      let hoursMap = {};
+      hoursMap[currentHourString] = [currentHourString];
+      let currentTime = hourStart.add(timeSplit, "minutes");
+
+      while (currentTime.isBefore(hourEnd)) {
+        let currentTimeString = currentTime.format("HH:mm");
+
+        if (currentTime.minutes() == 0) {
+          hoursMap[currentTimeString] = [currentTimeString];
+          currentHourString = currentTimeString;
+        } else {
+          hoursMap[currentHourString].push(currentTimeString);
+        }
+        currentTime.add(timeSplit, "minutes");
+      }
+      let currentTimeString = currentTime.format("HH:mm");
+      hoursMap[currentTimeString] = [currentTimeString];
+      return hoursMap;
+    }
   }
 };
 export default UtilService;

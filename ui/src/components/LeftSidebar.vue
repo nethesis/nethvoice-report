@@ -101,7 +101,7 @@ export default {
       search: "",
       taggedRoutes: [],
       selectedReport: this.get("selectedReport") || 'queue',
-      loggedUsername: this.get("loggedUser").username
+      loggedUsername: this.get("loggedUser") ? this.get("loggedUser").username : "",
     }
   },
   watch: {

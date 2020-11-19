@@ -121,7 +121,7 @@
           </span>
         </div>
         <!-- label: time split value -->
-        <div class="ui label" v-if="showFilterTimeSplit && activeFilters.time.division">
+        <div class="ui label" v-if="showFilterTimeSplit && activeFilters.time && activeFilters.time.division">
           <span class="field">
             {{$t('filter.time_split_label')}}:
           </span>
@@ -209,9 +209,6 @@ export default {
       this.activeFilters = this.lodash.cloneDeep(this.filter)
       this.activeSelectedSearch = this.lodash.cloneDeep(this.selectedSearch)
     })
-    if (this.lodash.isEmpty(this.activeFilters)) {
-      this.$root.$emit("applyFilters")
-    }
     this.$nextTick(() => {
       window.addEventListener('scroll', this.scrollHandler, true)
     })
@@ -248,8 +245,8 @@ export default {
   watch: {
     "activeFilters.time.interval": function () {
       if (this.activeFilters.time && this.activeFilters.time.interval) {
-        this.activeFilters.time.interval.start = this.formatDate(this.activeFilters.time.interval.start)
-        this.activeFilters.time.interval.end = this.formatDate(this.activeFilters.time.interval.end)
+        this.activeFilters.time.interval.start = this.$options.filters.formatDate(this.activeFilters.time.interval.start)
+        this.activeFilters.time.interval.end = this.$options.filters.formatDate(this.activeFilters.time.interval.end)
       }
     },
     "activeFilters.queues": function () {
