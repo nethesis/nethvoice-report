@@ -1,10 +1,14 @@
 <template>
   <div v-show="mustShow" class="scrollers-container">
     <div v-show="showLeftScroller" @click="scrollTo('left')" class="scroller left-scroller">
-      <sui-icon name="chevron left" />
+      <sui-icon v-show="leftShadowsShow" class="scroller-shadows flex-start" name="chevron left" />
+      <sui-icon ref="leftScrollerIcon" name="chevron left" />
+      <sui-icon v-show="leftShadowsShow" class="scroller-shadows flex-end" name="chevron left" />
     </div>
     <div v-show="showRightScroller" @click="scrollTo('right')" class="scroller right-scroller">
-      <sui-icon name="chevron right" />
+      <sui-icon v-show="rightShadowsShow" class="scroller-shadows flex-start" name="chevron right" />
+      <sui-icon ref="rightScrollerIcon" name="chevron right" />
+      <sui-icon v-show="rightShadowsShow" class="scroller-shadows flex-end" name="chevron right" />
     </div>
   </div>
 </template>
@@ -31,7 +35,9 @@ export default {
       container: "",
       rightScroller: "",
       leftScroller: "",
-      table: ""
+      table: "",
+      leftShadowsShow: false,
+      rightShadowsShow: false
     }
   },
   mounted () {
@@ -52,10 +58,29 @@ export default {
         })
       }
     })
+    this.leftObserver = new IntersectionObserver(entries => {
+      if (entries[0].intersectionRatio > 0) {
+        this.leftShadowsShow = false
+      } else {
+        this.leftShadowsShow = true
+      }
+    })
+    this.rightObserver = new IntersectionObserver(entries => {
+      if (entries[0].intersectionRatio > 0) {
+        this.rightShadowsShow = false
+      } else {
+        this.rightShadowsShow = true
+      }
+    })
+    this.leftObserver.observe(this.$refs.leftScrollerIcon.$el);
+    this.rightObserver.observe(this.$refs.rightScrollerIcon.$el);
   },
   destroyed() {
     // remove event listner
-    this.container.removeEventListener('scroll', this.updateScrollers);
+    this.container.removeEventListener('scroll', this.updateScrollers)
+    // remove observers
+    this.leftObserver.disconnect()
+    this.rightObserver.disconnect()
   },
   methods: {
     scrollTo(direction) {
@@ -94,6 +119,7 @@ export default {
 <style lang="scss" scoped>
 .scroller {
   display: flex;
+  flex-direction: column;
   cursor: pointer;
   position: absolute;
   top: 0;
@@ -128,5 +154,13 @@ export default {
       display: none;
     }
   }
+}
+
+.flex-start {
+  align-self: flex-start;
+}
+
+.flex-end {
+  align-self: flex-end;
 }
 </style>

@@ -1517,21 +1517,18 @@ export default {
   }
   .fields {
     margin: 0 -.5em 1.9em !important;
-    @media only screen and (max-width: 885px) {
-      & {
-        // flex-wrap: wrap;
-      }
-    }
-
-    .field:first-child {
-      margin-top: 0px !important;
-    }
     .field {
       @media only screen and (max-width: 767px) {
         & {
           margin-top: 15px !important;
         }
       }
+    }
+    .field:first-child {
+      margin-top: 0px !important;
+    }
+    .field:nth-child(n+5) {
+      margin-top: 1.6em;
     }
   }
 }
