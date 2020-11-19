@@ -143,7 +143,7 @@ func DeleteSearches(c *gin.Context) {
 
 	// handle cache error
 	if errCache != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "error on deleting seatch in cache", "status": errCache.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "error on deleting search in cache", "status": errCache.Error()})
 		return
 	}
 

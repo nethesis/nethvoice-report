@@ -1294,12 +1294,12 @@ export default {
     },
     deleteSelectedSearch() {
       this.loader.deleteSearch = true;
-      const searchId =
-        this.selectedSearch +
-        "_" +
-        this.$route.meta.section +
-        "_" +
-        this.$route.meta.view;
+
+      const search = this.savedSearches.find(
+        (s) => (s.name === this.selectedSearch)
+      );
+
+      const searchId = search.name + "_" + search.section + "_" + search.view;
 
       this.deleteSearch(
         searchId,
