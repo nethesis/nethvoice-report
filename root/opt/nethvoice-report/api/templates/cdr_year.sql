@@ -11,10 +11,6 @@ SELECT *,
                                         FROM
        asterisk.trunks), "OUT", "LOCAL"))  AS type,
        Group_concat(disposition, "")       AS dispositions,
-       (SELECT Group_concat(disposition)
-        FROM   cdr
-        WHERE  linkedid = c.uniqueid
-               AND uniqueid != c.uniqueid) AS dispositions_children,
        Group_concat(lastapp, "")           AS lastapps
 FROM   cdr c
 WHERE  uniqueid = linkedid
@@ -38,13 +34,10 @@ SELECT *,
                                         FROM
        asterisk.trunks), "OUT", "LOCAL"))  AS type,
        Group_concat(disposition, "")       AS dispositions,
-       (SELECT Group_concat(disposition)
-        FROM   cdr
-        WHERE  linkedid = c.uniqueid
-               AND uniqueid != c.uniqueid) AS dispositions_children,
        Group_concat(lastapp, "")           AS lastapps
 FROM   cdr c
 WHERE  uniqueid = linkedid
+       AND date_format(calldate, "%Y") = "{{ .Year }}"
        AND date_format(calldate, "%Y-%m-%d") = date_format(NOW() - INTERVAL 1 DAY, "%Y-%m-%d")
 GROUP  BY linkedid,
           peeraccount
