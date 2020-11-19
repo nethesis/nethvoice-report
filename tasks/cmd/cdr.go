@@ -109,7 +109,7 @@ func executeReportCDR() {
 		// execute query
 		rowsY, errQueryY := db.Query(queryY.String())
 		if errQueryY != nil {
-			helper.FatalError(errors.Wrap(errQueryY, "Error in query [year] execution: " + queryY.String()))
+			helper.FatalError(errors.Wrap(errQueryY, "Error in query [year] execution:\n" + queryY.String()))
 		}
 
 		// close results
@@ -142,7 +142,7 @@ func executeReportCDR() {
 			// execute query
 			rowsM, errQueryM := db.Query(queryM.String())
 			if errQueryM != nil {
-				helper.FatalError(errors.Wrap(errQueryM, "Error in query [month] execution: " + queryM.String()))
+				helper.FatalError(errors.Wrap(errQueryM, "Error in query [month] execution:\n" + queryM.String()))
 			}
 
 			// close results
