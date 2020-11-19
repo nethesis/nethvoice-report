@@ -35,12 +35,17 @@
           />
         </div>
         <div v-show="!chart.data">
-            <sui-loader v-if="!chart.message" active centered inline class="loader-height" />
-            <div v-else>
+            <div v-if="chart.error">
+              <sui-message error>
+                <i class="circle times icon"></i>{{ $t("message.chart_error") }}
+              </sui-message>
+            </div>
+            <div v-else-if="chart.message">
               <sui-message warning>
                 <i class="exclamation triangle icon"></i>{{ $t("message." + chart.message) }}
               </sui-message>
             </div>
+            <sui-loader v-else active centered inline class="loader-height" />
         </div>
         <div v-show="chart.data">
           <div v-show="chart.data && chart.data.length < 2">
@@ -189,6 +194,7 @@ export default {
               data: null,
               message: null,
               details: null,
+              error: false,
             });
           });
           this.charts = charts.sort(this.sortByProperty("position"));
@@ -203,6 +209,7 @@ export default {
         chart.data = null;
         chart.message = null;
         chart.details = null;
+        chart.error = false;
 
         this.execQuery(
           filter,
@@ -231,6 +238,7 @@ export default {
           },
           (error) => {
             console.error(error.body);
+            chart.error = true;
           }
         );
       }

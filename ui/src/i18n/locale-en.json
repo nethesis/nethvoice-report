@@ -153,7 +153,8 @@
       "search_name_validation": "Search name must begin with a letter and contain only letters, spaces, numbers and dashes",
       "coming_soon": "Coming soon",
       "cdr_not_available": "CDR & Cost report is not available yet, please come back later",
-      "loading_filters": "Loading filters"
+      "loading_filters": "Loading filters",
+      "chart_error": "An error occured while loading chart"
     },
     "pagination": {
       "page": "page",
