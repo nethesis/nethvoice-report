@@ -24,6 +24,14 @@
           <h4 is="sui-header" class="chart-caption">
             {{ $t("caption." + chart.caption) }}
           </h4>
+          <span v-if="chart.doc">
+            <sui-popup flowing hoverable position="top center">
+              <div class="chart-doc">
+                <VueShowdown :markdown="chart.doc"></VueShowdown>
+              </div>
+              <sui-icon name="info circle" class="chart-doc-icon" slot="trigger" />
+            </sui-popup>
+          </span>
         </div>
         <div class="export-container">
           <ExportData
@@ -199,6 +207,7 @@ export default {
             const position = parseInt(tokens[0]);
             const chartType = tokens[1];
             const caption = tokens[2];
+            const doc = this.retrieveDoc(queryName);
             charts.push({
               name: queryName,
               position: position,
@@ -209,6 +218,7 @@ export default {
               message: null,
               details: null,
               error: false,
+              doc: doc,
             });
           });
           this.charts = charts.sort(this.sortByProperty("position"));
@@ -304,6 +314,15 @@ export default {
         }
       );
     },
+    retrieveDoc(queryName) {
+      try {
+        let mdDoc = require("../doc-inline/" + this.$root.currentLocale + "/" +
+            this.$route.meta.section + "_" + this.$route.meta.view + "_" + queryName + ".md");
+        return mdDoc.default;
+      } catch (error) {
+        return null;
+      }
+    },
   },
 };
 </script>
@@ -326,5 +345,17 @@ export default {
 
 .ui.table.chart-details {
   margin: 0 auto;
+}
+
+.chart-doc-icon {
+  color: #2185d0;
+  margin-left: 0.3rem;
+}
+
+.chart-doc {
+  text-align: left !important;
+  max-width: 35rem !important;
+  max-height: 14rem;
+  overflow-y: auto;
 }
 </style>

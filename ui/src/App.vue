@@ -233,7 +233,7 @@ body {
 }
 
 .modals {
-  z-index: 11000 !important;
+  z-index: 100 !important;
 }
 
 .icon.cursor-default {

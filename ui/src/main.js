@@ -5,6 +5,7 @@ import PortalVue from "portal-vue";
 import VueLodash from 'vue-lodash';
 import lodash from 'lodash';
 import VueScrollTo from 'vue-scrollto';
+import VueShowdown from "vue-showdown";
 
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
@@ -40,6 +41,7 @@ Vue.use(PortalVue);
 Vue.use(VueLodash, { name: 'ldsh', lodash: lodash });
 Vue.use(VueScrollTo)
 Vue.use(DatePicker)
+Vue.use(VueShowdown)
 
 // configure i18n
 var langConf = languages.initLang();
