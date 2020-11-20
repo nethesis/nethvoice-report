@@ -1158,6 +1158,9 @@ export default {
           if (phoneNumbers.length) {
             filterToApply.phones = phoneNumbers;
           }
+        } else {
+          // no contact found, clear searched contact name from filters
+          this.filter.contactName = "";
         }
       }
 
