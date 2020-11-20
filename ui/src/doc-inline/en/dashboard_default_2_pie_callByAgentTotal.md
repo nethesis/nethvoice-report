@@ -1,1 +1,0 @@
-Very brief chart documentation
