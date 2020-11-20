@@ -1,10 +1,6 @@
 import Vue from "vue"
 import lodash from 'lodash';
 import moment from "moment";
-import languages from "../i18n/lang";
-
-var locale = languages.initLang().locale;
-moment.locale(locale);
 
 var Filters = {
     formatDate(date) {
@@ -20,13 +16,17 @@ var Filters = {
 
         return [year, month, day].join('-');
     },
-    formatMonthDate(value) {
+    formatMonthDate(value, i18n) {
+        moment.locale(i18n.vm.locale);
+
         // value: e.g. "2020-10"
         const monthYear = moment(value, "YYYY-MM").format("MMMM YYYY");
         return lodash.upperFirst(monthYear);
     },
     formatWeekDate(value, i18n) {
-        // value: e.g. "2020-50"
+        moment.locale(i18n.vm.locale);
+
+        // value: e.g. "2019-W50" (week 50 of 2019)
         const tokens = value.split("-W");
         const year = tokens[0];
         const weekNum = parseInt(tokens[1]);

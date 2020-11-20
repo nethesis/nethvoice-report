@@ -118,7 +118,7 @@
             <span
               v-else-if="columns[index] && columns[index].format == 'monthDate'"
             >
-              {{ element | formatMonthDate }}
+              {{ element | formatMonthDate($i18n) }}
             </span>
             <span
               v-else-if="columns[index] && columns[index].format == 'weekDate'"
