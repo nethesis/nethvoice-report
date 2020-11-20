@@ -79,6 +79,7 @@ func executeReportPhonebook() {
 
 	// init phonebook map
 	phonebookMap = make(map[string]Entry)
+	counter := 0
 
 	// loop rows
 	for rows.Next() {
@@ -136,5 +137,11 @@ func executeReportPhonebook() {
 		if errCache != nil {
 			helper.FatalError(errors.Wrap(errCache, "error on saving to cache"))
 		}
+
+		counter++
+		if counter%1000 == 0 {
+			helper.LogDebug("Processed %d contacts", counter)
+		}
 	}
+	helper.LogDebug("Done. Processed %d contacts", counter)
 }
