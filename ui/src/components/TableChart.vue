@@ -6,7 +6,7 @@
     striped
     :compact="minimal"
     :collapsing="minimal"
-    class="structured"
+    class="structured sortable"
   >
     <sui-table-header>
       <!-- top header -->
@@ -14,6 +14,12 @@
         <sui-table-header-cell
           v-for="(header, index) in topHeaders"
           v-bind:key="index"
+          ref="tableHeader"
+          :class= "[
+            header.subHeaders.length ? 'not-sortable' : 'sortable',
+            header.name == sortedBy ? 'sorted ' + sortedDirection : ''
+          ]"
+          @click="sortTable(header, $event)"
           :rowspan="
             singleHeader ||
             (doubleHeader && header.subHeaders.length) ||
@@ -48,6 +54,12 @@
         <sui-table-header-cell
           v-for="(header, index) in middleHeaders"
           v-show="header.visible"
+          ref="tableHeader"
+          :class= "[
+            header.subHeaders.length ? 'not-sortable' : 'sortable',
+            header.name == sortedBy ? 'sorted ' + sortedDirection : ''
+          ]"
+          @click="sortTable(header, $event)"
           v-bind:key="index"
           :rowspan="tripleHeader && !header.subHeaders.length ? '2' : '1'"
           :colspan="header.colSpan"
@@ -76,6 +88,12 @@
         <sui-table-header-cell
           v-for="(header, index) in bottomHeaders"
           v-show="header.visible"
+          ref="tableHeader"
+          :class= "[
+            header.subHeaders.length ? 'not-sortable' : 'sortable',
+            header.name == sortedBy ? 'sorted ' + sortedDirection : ''
+          ]"
+          @click="sortTable(header, $event)"
           v-bind:key="index"
         >
           {{
@@ -267,6 +285,8 @@ export default {
         firstRowIndex: 0,
         lastRowIndex: 0,
       },
+      sortedBy: "period",
+      sortedDirection: "ascending"
     };
   },
   mounted() {
@@ -280,6 +300,11 @@ export default {
     if (this.data) {
       this.dataUpdated();
     }
+    // reset table's sorted by variables
+    this.$root.$on("applyFilters", () => {
+      this.sortedBy = "period"
+      this.sortedDirection = "ascending"
+    })
   },
   watch: {
     data: function () {
@@ -852,6 +877,42 @@ export default {
         this.pagination.lastRowIndex
       );
     },
+    sortTable(header, event) {
+      // check if the header is sortable
+      if (event.target.classList.contains("not-sortable")) return
+      // switch the ordering direction in the header currently sorted by
+      this.sortedDirection == "ascending" && this.sortedBy == header.name ? (
+        this.sortedDirection = "descending"
+      ) : (
+        this.sortedDirection = "ascending"
+      )
+      // set the header currently sorted by
+      this.sortedBy = header.name
+      // get the header's column position in the rows array
+      let columnKey = this.columns.indexOf(this.columns.find(obj => obj.name === header.name))
+      // sort table considering direction and column data type
+      this.rows.sort((a, b) => {
+        let rule
+        // check if is date
+        if (header.format && header.format.toLowerCase().includes("date")) {
+          rule = this.sortedDirection == "ascending" ? Date.parse(a[columnKey]) - Date.parse(b[columnKey]) : Date.parse(b[columnKey]) - Date.parse(a[columnKey])
+        } else {
+          // check if is a number
+          if (!Number.isNaN(Number(a[columnKey]))) {
+            rule = this.sortedDirection == "ascending" ? a[columnKey] - b[columnKey] : b[columnKey] - a[columnKey]
+           } else {
+            // if is a string
+            this.sortedDirection == "ascending" ? (
+              rule = a[columnKey] < b[columnKey] ? -1 : a[columnKey] > b[columnKey] ? 1 : 0
+            ) : (
+              rule = b[columnKey] < a[columnKey] ? -1 : b[columnKey] > a[columnKey] ? 1 : 0
+            )
+          }
+        }
+        return rule
+      })
+      this.updatePagination()
+    }
   },
 };
 </script>
@@ -866,6 +927,10 @@ export default {
   .table {
     margin-bottom: 0px;
     margin-top: 0px;
+  }
+  .not-sortable {
+    background: #f9fafb !important;
+    cursor: default !important;
   }
 }
 </style>
