@@ -307,17 +307,30 @@
           </sui-form-field>
           <sui-form-field v-if="showFilterContactName" width="four">
             <label>{{$t('filter.contact_name_label')}}</label>
-            <sui-search
-              :searchFields="['title', 'cleanName']"
-              :source="$root.phonebook"
-              ref="filterContactName"
-              :placeholder="$t('filter.contact_name_label')"
-              :fullTextSearch="'exact'"
-              :maxResults="20"
-              class="searchContactName"
-              @input="contactNameInput"
-              :value="filter.contactName"
-            />
+            <div class="ui search searchContactName">
+              <sui-input
+                :placeholder="$t('filter.contact_name_label')"
+                v-model="filter.contactName"
+                @input="contactNameInput"
+                @focus="contactNameFocus"
+                @blur="contactNameBlur"
+              />
+              <div
+                v-show="searchContactResults.length && showSearchResults"
+                :class="['results', 'transition', showSearchResults ? 'visible' : 'hidden']"
+              >
+                <div
+                  v-for="(contact, index) in searchContactResults"
+                  v-bind:key="index"
+                  class="result"
+                  @click="selectContact(contact)"
+                >
+                  <div class="content">
+                    <div class="title">{{ contact.title }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </sui-form-field>
           <sui-form-field v-if="showFilterNullCall" width="four">
             <label>{{$t('filter.null_call_label')}}</label>
@@ -563,6 +576,8 @@ export default {
       },
       phonebookDb: null,
       phonebookReady: false,
+      showSearchResults: false,
+      searchContactResults: [],
     };
   },
   watch: {
@@ -1405,12 +1420,41 @@ export default {
         );
       }
     },
-    contactNameInput(event) {
-      if (typeof event == "string") {
-        if (event.length >= 3 || !event.length) {
-          this.filter.contactName = event;
-        }
+    contactNameInput() {
+      // get clean name from user input
+      const queryText = this.filter.contactName.replace(/[^a-zA-Z0-9]/g, "");
+
+      if (queryText.length < 3) {
+        this.searchContactResults = [];
+        this.showSearchResults = false;
+        return;
       }
+
+      // search contact name in phonebook
+      this.searchContactResults = this.$root.phonebook.filter( (contact) => {
+        // compare query text with contact clean name
+        return new RegExp(queryText, "i").test(contact.cleanName);
+      });
+
+      if (this.searchContactResults.length) {
+        this.showSearchResults = true;
+      } else {
+        this.showSearchResults = false;
+      }
+    },
+    contactNameFocus() {
+      if (this.searchContactResults.length) {
+        this.showSearchResults = true;
+      }
+    },
+    contactNameBlur() {
+      setTimeout( () => {
+        this.showSearchResults = false;
+      }, 300);
+    },
+    selectContact(contact) {
+      this.filter.contactName = contact.title;
+      this.showSearchResults = false;
     },
     clearFilters() {
       this.filter.queues = [];
