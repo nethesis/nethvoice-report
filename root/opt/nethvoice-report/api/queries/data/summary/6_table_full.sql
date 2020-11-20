@@ -13,4 +13,5 @@ WHERE   TRUE
         {{ end }}
         {{ if gt (len .Queues) 0 }}
             AND qname in ({{ ExtractStrings .Queues }})
-        {{ end }};
+        {{ end }}
+LIMIT {{ ExtractSettings "QueryLimit" }}

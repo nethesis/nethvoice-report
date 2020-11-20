@@ -16,6 +16,7 @@ WHERE   time_{{ .Time.Division  }} >= '{{ ExtractSettings "StartHour" }}' AND ti
         {{ end }}
 GROUP BY period, time_{{ .Time.Division }}
 ORDER BY period, agentNum, time_{{ .Time.Division }}
+LIMIT {{ ExtractSettings "QueryLimit" }}
 {{ else }}
 SELECT "agents field is required" AS "!message";
 {{ end }}

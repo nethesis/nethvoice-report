@@ -14,4 +14,5 @@ WHERE   TRUE
         {{ end }}
         {{ if gt (len .Agents) 0 }}
             AND agentName in ({{ ExtractStrings .Agents }})
-        {{ end }};
+        {{ end }}
+LIMIT {{ ExtractSettings "QueryLimit" }}

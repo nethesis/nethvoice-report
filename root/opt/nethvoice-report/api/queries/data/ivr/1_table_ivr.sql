@@ -16,4 +16,5 @@ WHERE   TRUE
         {{ end }}
         {{ if gt (len .IVRs) 0 }}
             AND ivr_name in ({{ ExtractStrings .IVRs }})
-        {{ end }};
+        {{ end }}
+LIMIT {{ ExtractSettings "QueryLimit" }}

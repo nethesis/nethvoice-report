@@ -34,4 +34,5 @@ WHERE TRUE
 ORDER BY
     qname,
     agent,
-    timestamp_in;
+    timestamp_in
+LIMIT {{ ExtractSettings "QueryLimit" }}
