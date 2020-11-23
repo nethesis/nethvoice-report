@@ -34,7 +34,8 @@ WHERE TRUE
         AND result in ({{ ExtractStrings .Results }})
     {{ end }}
 ORDER BY
-    period;
+    period
+LIMIT {{ ExtractSettings "QueryLimit" }}
 {{ else }}
 SELECT "timeIntervalStart and timeIntervalEnd are required" AS "!message";
 {{ end }}

@@ -205,6 +205,7 @@ export default {
     }
   },
   mounted() {
+    this.$root.$off("applyFilters"); // avoid multiple event listeners
     this.$root.$on("applyFilters", () => {
       this.activeFilters = this.lodash.cloneDeep(this.filter)
       this.activeSelectedSearch = this.lodash.cloneDeep(this.selectedSearch)
@@ -214,6 +215,7 @@ export default {
     })
 
     // event "dataNotAvailable" is triggered by $http interceptor if report tables don't exist yet
+    this.$root.$off("dataNotAvailable"); // avoid multiple event listeners
     this.$root.$on("dataNotAvailable", () => {
       this.dataAvailable = false;
     });

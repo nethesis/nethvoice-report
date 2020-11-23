@@ -20,6 +20,7 @@ WHERE   time_{{ .Time.Division  }} >= '{{ ExtractSettings "StartHour" }}' AND ti
         {{ end }}
 GROUP BY period, time_{{ .Time.Division }}
 ORDER BY period, ivr_id, time_{{ .Time.Division }}
+LIMIT {{ ExtractSettings "QueryLimit" }}
 {{ else }}
 SELECT "ivrs field is required" AS "!message";
 {{ end }}

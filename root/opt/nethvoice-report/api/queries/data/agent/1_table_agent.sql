@@ -28,3 +28,4 @@ WHERE TRUE
     {{ if gt (len .Agents) 0 }}
         AND agent in ({{ ExtractStrings .Agents }})
     {{ end }}
+LIMIT {{ ExtractSettings "QueryLimit" }}

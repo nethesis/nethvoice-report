@@ -18,3 +18,4 @@ WHERE  TRUE
         {{ if gt (len .Origins) 0 }}
                 AND ({{ ExtractOrigins .Origins false }})
         {{ end }}
+LIMIT {{ ExtractSettings "QueryLimit" }}

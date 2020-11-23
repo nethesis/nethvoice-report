@@ -220,8 +220,9 @@ body {
   margin-top: 1rem;
 }
 
-.gray {
+.settings-description {
   color: gray;
+  margin-bottom: 1.5rem;
 }
 
 .component-body {

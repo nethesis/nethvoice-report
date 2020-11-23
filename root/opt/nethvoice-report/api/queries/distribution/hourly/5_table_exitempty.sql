@@ -16,6 +16,7 @@ WHERE   time_{{ .Time.Division  }} >= '{{ ExtractSettings "StartHour" }}' AND ti
         {{ end }}
 GROUP BY period, time_{{ .Time.Division }},qdescr
 ORDER BY period, qdescr,time_{{ .Time.Division }}
+LIMIT {{ ExtractSettings "QueryLimit" }}
 {{ else }}
 SELECT "queues field is required" AS "!message";
 {{ end }}

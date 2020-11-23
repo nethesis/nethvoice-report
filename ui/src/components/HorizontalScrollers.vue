@@ -51,6 +51,7 @@ export default {
       // init scrollers
       this.updateVisibility()
     }),
+    this.$root.$off("expandTable"); // avoid multiple event listeners
     this.$root.$on("expandTable", (containerId) => {
       if (containerId == this.containerId) {
         this.$nextTick(() => {

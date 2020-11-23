@@ -27,6 +27,7 @@ WHERE   TRUE
         {{ if gt (len .Reasons) 0 }}
             AND reason in ({{ ExtractStrings .Reasons }})
         {{ end }}
+LIMIT {{ ExtractSettings "QueryLimit" }}
 {{ else }}
 SELECT "timeIntervalStart and timeIntervalEnd are required" AS "!message";
 {{ end }}

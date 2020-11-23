@@ -154,7 +154,8 @@
       "coming_soon": "Coming soon",
       "cdr_not_available": "Il report CDR & Cost non è ancora disponibile, torna più tardi",
       "loading_filters": "Caricamento filtri",
-      "chart_error": "Si è verificato un errore durante il caricamento del grafico"
+      "chart_error": "Si è verificato un errore durante il caricamento del grafico",
+      "query_limit_description": "Questo è il numero massimo di risultati che possono essere mostrati da un grafico tabellare. Se questo limite viene raggiunto appare un'icona di avvertimento di fianco al titolo del grafico"
     },
     "pagination": {
       "page": "pagina",
@@ -289,7 +290,8 @@
       "week": "Settimana",
       "others": "Altri",
       "office_hours_start": "Inizio orario lavorativo",
-      "office_hours_end": "Fine orario lavorativo"
+      "office_hours_end": "Fine orario lavorativo",
+      "query_limit": "Numero massimo di risultati"
     },
     "tags": {
         "dashboard": "dashboard",

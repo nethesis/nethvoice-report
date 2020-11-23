@@ -42,4 +42,5 @@ WHERE   TRUE
     {{ if gt (len .Phones) 0 }}
         AND cid in ({{ ExtractPhones .Phones true }})
     {{ end }}
+LIMIT {{ ExtractSettings "QueryLimit" }}
 {{ end }}
