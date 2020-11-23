@@ -1,6 +1,6 @@
 Name:		nethvoice-report
-Version:	0.0.1
-Release:	1%{?dist}
+Version: 0.1.0
+Release: 1%{?dist}
 Summary:	Queue and CDR/Costs reports
 
 License:	GPLv3
@@ -70,3 +70,6 @@ cat %{name}-%{version}-filelist
 %doc COPYING
 
 %changelog
+* Mon Nov 23 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.1.0-1
+- NethVoice: new Queue report - Nethesis/dev#5865
+
