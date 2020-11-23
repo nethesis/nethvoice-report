@@ -1274,12 +1274,9 @@ export default {
 
       // convert time interval to string
       if (this.filter.time.interval) {
-        filterToSave.time.interval.start = this.$options.filters.formatDate(
-          this.filter.time.interval.start
-        );
-        filterToSave.time.interval.end = this.$options.filters.formatDate(
-          this.filter.time.interval.end
-        );
+        const dateFormat = this.getDateFormat();
+        filterToSave.time.interval.start = moment(this.filter.time.interval.start).format(dateFormat);
+        filterToSave.time.interval.end = moment(this.filter.time.interval.end).format(dateFormat);
       }
 
       return filterToSave;
