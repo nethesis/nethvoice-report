@@ -1,19 +1,9 @@
-# Header
+# Calls by queue
 
-**Bold text**
+Total calls received by selected queues.
+If no queue has been selected, the chart will display all available queues.
 
-*italic text*
+The chart can contain a maximum of 8 slices. Queues exceeding this number will be 
+aggregated on a slice named `Others`.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
----
-
-#### UNORDERED LIST
-
-* Item 1
-* Item 2
-
-#### ORDERED LIST
-
-1. Item A
-2. Item B
+If present, click the `Show details` button to display all data in tabular format.

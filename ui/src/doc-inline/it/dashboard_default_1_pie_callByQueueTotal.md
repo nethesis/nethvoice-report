@@ -1,19 +1,10 @@
-# Header italiano
+# Chiamate per coda
 
-**Bold text italiano**
+Numero di chiamate totali per le code selezionate.
+Se nessuna coda è stata selezionata, il grafico mostrerà tutte le code disponibili.
 
-*italic text italiano*
+Il grafico può contenere al massimo 8 sezioni. Le code eccedenti questo numero
+verranno visualizzate in una sezione ``Altri``.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
----
-
-#### UNORDERED LIST
-
-* Item 1
-* Item 2
-
-#### ORDERED LIST
-
-1. Item A
-2. Item B
+Se presente, cliccare il bottone ``Mostra dettagli`` per visualizzare tutti i dati
+in formato tabellare.
