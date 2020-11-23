@@ -609,15 +609,13 @@ export default {
 
         // convert to date object if needed
         if (typeof this.filter.time.interval.start == "string") {
-          this.filter.time.interval.start = new Date(
-            this.filter.time.interval.start
-          );
+          const dateFormat = this.getDateFormat();
+          this.filter.time.interval.start = moment(this.filter.time.interval.start, dateFormat).toDate();
         }
 
         if (typeof this.filter.time.interval.end == "string") {
-          this.filter.time.interval.end = new Date(
-            this.filter.time.interval.end
-          );
+          const dateFormat = this.getDateFormat();
+          this.filter.time.interval.end = moment(this.filter.time.interval.end, dateFormat).toDate();
         }
 
         if (!this.validateTimeInterval()) {
@@ -877,7 +875,8 @@ export default {
         this.filter.time.range = filter.time.range;
         this.filter.time.interval = this.selectTime(this.filter.time.range);
       } else {
-        this.filter.time.interval = filter.time.interval;
+        this.filter.time.interval.start = moment(filter.time.interval.start).toDate();
+        this.filter.time.interval.end = moment(filter.time.interval.end).toDate();
       }
 
       this.filter.time.group = filter.time.group;
