@@ -72,6 +72,7 @@
         <sui-modal-header>{{ $t("menu.settings") }}</sui-modal-header>
         <sui-modal-content>
           <sui-modal-description>
+            <!-- office hours -->
             <sui-form-fields>
               <sui-form-field
                 :error="errors.admin && this._.isEmpty(officeHourStart)"
@@ -97,9 +98,23 @@
             <sui-message error :visible="errors.admin">
               <p>{{ $t("message.error_admin_empty") }}</p>
             </sui-message>
-            <span class="gray">{{
+            <div class="settings-description">{{
               $t("message.office_hours_description")
-            }}</span>
+            }}</div>
+            <!-- query limit -->
+            <sui-form-fields>
+              <sui-form-field>
+                <label>{{ $t("misc.query_limit") }}</label>
+                <sui-input
+                  v-model.number="queryLimit"
+                  type="number"
+                  min="10"
+                />
+              </sui-form-field>
+            </sui-form-fields>
+            <div class="settings-description">{{
+              $t("message.query_limit_description")
+            }}</div>
           </sui-modal-description>
         </sui-modal-content>
         <sui-modal-actions>
@@ -140,6 +155,7 @@ export default {
       openSettingsModal: false,
       officeHourStart: "",
       officeHourEnd: "",
+      queryLimit: 0,
       isAdmin: false,
       dataAvailable: true,
       colorSchemes: [
@@ -355,7 +371,6 @@ export default {
       if (value) {
         // on show modal
         this.resetErrors();
-        this.getAdminSettings();
       }
       this.openSettingsModal = value;
     },
@@ -376,6 +391,7 @@ export default {
         {
           start_hour: this.officeHourStart,
           end_hour: this.officeHourEnd,
+          query_limit: this.queryLimit.toString(),
         },
         () => {
           this.loader.saveSettings = false;
@@ -394,6 +410,7 @@ export default {
           const settings = success.body.settings;
           this.officeHourStart = settings.start_hour;
           this.officeHourEnd = settings.end_hour;
+          this.queryLimit = Number(settings.query_limit);
         },
         (error) => {
           console.error(error.body);

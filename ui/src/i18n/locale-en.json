@@ -154,7 +154,8 @@
       "coming_soon": "Coming soon",
       "cdr_not_available": "CDR & Cost report is not available yet, please come back later",
       "loading_filters": "Loading filters",
-      "chart_error": "An error occured while loading chart"
+      "chart_error": "An error occured while loading chart",
+      "query_limit_description": "This is the maximum number of results that can be displayed by a table chart. If this limit is reached a warning icon is shown next to chart title"
     },
     "pagination": {
       "page": "page",
@@ -289,7 +290,8 @@
       "week": "Week",
       "others": "Others",
       "office_hours_start": "Office hours start",
-      "office_hours_end": "Office hours end"
+      "office_hours_end": "Office hours end",
+      "query_limit": "Max results"
     },
     "tags": {
 	"dashboard": "dashboard",

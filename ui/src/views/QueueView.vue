@@ -32,6 +32,14 @@
               <sui-icon name="info circle" class="chart-doc-icon" slot="trigger" />
             </sui-popup>
           </span>
+          <span v-if="chart.queryLimitHit">
+            <sui-popup flowing hoverable position="top center">
+              <div class="chart-query-limit">
+                <VueShowdown :markdown="queryLimitMessage"></VueShowdown>
+              </div>
+              <sui-icon name="exclamation triangle" class="chart-query-limit-icon" slot="trigger" />
+            </sui-popup>
+          </span>
         </div>
         <div class="export-container">
           <ExportData
@@ -135,7 +143,10 @@ export default {
         start_hour: null,
         end_hour: null,
       },
+      queryLimit: 0,
       filterTimeSplit: 0,
+      isAdmin: 0,
+      queryLimitMessage: "",
     };
   },
   mounted() {
@@ -155,6 +166,16 @@ export default {
     if (this.$root.filtersReady && !this.queryTree) {
         this.retrieveQueryTree();
     }
+
+    // check admin user
+    if (this.get("loggedUser") && this.get("loggedUser").username == "admin") {
+      this.isAdmin = true;
+    } else {
+      this.isAdmin = false;
+    }
+
+    // load message for query limit hit
+    this.retrieveQueryLimitMessage();
   },
   watch: {
     $route: function () {
@@ -219,6 +240,7 @@ export default {
               details: null,
               error: false,
               doc: doc,
+              queryLimitHit: false,
             });
           });
           this.charts = charts.sort(this.sortByProperty("position"));
@@ -236,6 +258,7 @@ export default {
         chart.message = null;
         chart.details = null;
         chart.error = false;
+        chart.queryLimitHit = false;
 
         this.execQuery(
           filter,
@@ -259,6 +282,11 @@ export default {
               // show details button for pie chart with a lot of entries
               if (this.tooMuchData(chart)) {
                 chart.details = true;
+              }
+
+              // check if query limit has been hit
+              if (chart.data.length && chart.data.length -1 == this.queryLimit) {
+                chart.queryLimitHit = true;
               }
             }
           },
@@ -308,6 +336,7 @@ export default {
             startHour: settings.start_hour,
             endHour: settings.end_hour,
           };
+          this.queryLimit = Number(settings.query_limit);
         },
         (error) => {
           console.error(error.body);
@@ -323,6 +352,15 @@ export default {
         return null;
       }
     },
+    retrieveQueryLimitMessage() {
+      try {
+        const userType = this.isAdmin ? "admin" : "user";
+        let message = require("../doc-inline/" + this.$root.currentLocale + "/query_limit_hit_" + userType + ".md");
+        this.queryLimitMessage = message.default;
+      } catch (error) {
+        this.queryLimitMessage = "";
+      }
+    }
   },
 };
 </script>
@@ -350,9 +388,15 @@ export default {
 .chart-doc-icon {
   color: #2185d0;
   margin-left: 0.3rem;
+  margin-right: 0;
 }
 
-.chart-doc {
+.chart-query-limit-icon {
+  color: #f2711c;
+  margin-left: 0.3rem;
+}
+
+.chart-doc, .chart-query-limit {
   text-align: left !important;
   max-width: 35rem !important;
   max-height: 14rem;
