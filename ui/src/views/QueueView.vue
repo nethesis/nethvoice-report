@@ -151,10 +151,12 @@ export default {
   },
   mounted() {
     // event "dataNotAvailable" is triggered by $http interceptor if report tables don't exist yet
+    this.$root.$off("dataNotAvailable"); // avoid multiple event listeners
     this.$root.$on("dataNotAvailable", () => {
       this.dataAvailable = false;
     });
 
+    this.$root.$off("applyFilters"); // avoid multiple event listeners
     this.$root.$on("applyFilters", (filter) => {
       this.applyFilters(filter);
     });
@@ -162,9 +164,9 @@ export default {
     // get office hours
     this.getAdminSettings();
 
-    // if coming back from CDR report, retrieve query tree again
-    if (this.$root.filtersReady && !this.queryTree) {
-        this.retrieveQueryTree();
+    // $root.filtersReady is set to true when filters have been loaded
+    if (this.$root.filtersReady) {
+      this.retrieveQueryTree();
     }
 
     // check admin user

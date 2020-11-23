@@ -666,11 +666,14 @@ export default {
     this.getSavedSearches();
 
     // views request to apply filter on loading
+    this.$root.$off("requestApplyFilter"); // avoid multiple event listeners
     this.$root.$on("requestApplyFilter", () => {
       if (this.loader.filter == false) {
         this.applyFilters();
       }
     });
+
+    this.$root.$off("clearFilters"); // avoid multiple event listeners
     this.$root.$on("clearFilters", () => {
       this.clearFilters()
     });

@@ -58,6 +58,7 @@ export default {
   },
   mixins: [LoginService, StorageService],
   mounted() {
+    this.$root.$off("logout"); // avoid multiple event listeners
     this.$root.$on("logout", () => {
       this.sessionExpired = true;
     });
