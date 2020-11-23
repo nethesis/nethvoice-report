@@ -223,7 +223,7 @@ export default {
 }
 
 #docs-menu {
-  z-index: 10001;
+  z-index: 51;
 
   @media only screen and (max-width: $mobile-bound) {
     & {

@@ -304,7 +304,7 @@ export default {
 
 .fixed {
   position: fixed;
-  z-index: 10000;
+  z-index: 50;
   top: 0px !important;
   margin-top: 0px !important;
   width: calc(100% - 270px)
