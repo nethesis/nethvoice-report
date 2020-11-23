@@ -10,7 +10,7 @@ Source1:	dist/ui.tar.gz
 Source2:	dist/api
 Source3:	dist/tasks
 
-Requires:	nethserver-nethvoice14
+Requires:	nethserver-nethvoice14 >= 14.8.0
 Requires:   nethserver-collectd
 Requires:	redis
 
