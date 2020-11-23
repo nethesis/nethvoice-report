@@ -31,6 +31,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"regexp"
 
 	"github.com/juliangruber/go-intersect"
 	"github.com/nethesis/nethvoice-report/api/cache"
@@ -108,18 +109,61 @@ func LogError(err error) {
 	os.Stderr.WriteString(err.Error() + "\n")
 }
 
-func Intersect(a []string, b []string) []string {
-	// intersect arrays and return []interface{}
-	result := intersect.Simple(a, b).([]interface{})
+func Contains(a string, values []string) bool {
+	for _, b := range values {
+		if b == a {
+			return true
+		}
+	}
+	return false
+}
 
-	// iterate over []interface{}
-	s := make([]string, len(result))
-	for i, v := range result {
-		s[i] = fmt.Sprint(v)
+func Intersect(a []string, b []string, objType string) []string {
+	// define result
+	var result []string
+
+	// clean values before intersect
+	switch objType {
+	case "queues":
+		var rgx = regexp.MustCompile(`\((.*?)\)`)
+		for i, q := range a {
+			rs := rgx.FindStringSubmatch(q)
+			queue := rs[1]
+			if Contains(queue, b) {
+				result = append(result, a[i])
+			}
+		}
+
+		return result
+
+	case "groups":
+		// intersect arrays and return []interface{}
+		r := intersect.Simple(a, b).([]interface{})
+
+		// iterate over []interface{}
+		result := make([]string, len(r))
+		for i, v := range r {
+			result[i] = fmt.Sprint(v)
+		}
+
+		return result
+
+	case "agents":
+		// intersect arrays and return []interface{}
+		r := intersect.Simple(a, b).([]interface{})
+
+		// iterate over []interface{}
+                result := make([]string, len(r))
+                for i, v := range r {
+                        result[i] = fmt.Sprint(v)
+                }
+
+		return result
+
 	}
 
-	// return []string result
-	return s
+	// return empty array
+	return result
 }
 
 func ExtractStrings(v []string) string {
