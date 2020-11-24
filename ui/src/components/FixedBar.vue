@@ -205,25 +205,28 @@ export default {
     }
   },
   mounted() {
-    this.$root.$off("applyFilters"); // avoid multiple event listeners
-    this.$root.$on("applyFilters", () => {
-      this.activeFilters = this.lodash.cloneDeep(this.filter)
-      this.activeSelectedSearch = this.lodash.cloneDeep(this.selectedSearch)
-    })
+    this.$root.$off("applyFilters", this.onApplyFilters); // avoid multiple event listeners
+    this.$root.$on("applyFilters", this.onApplyFilters);
+
     this.$nextTick(() => {
       window.addEventListener('scroll', this.scrollHandler, true)
     })
 
     // event "dataNotAvailable" is triggered by $http interceptor if report tables don't exist yet
-    this.$root.$off("dataNotAvailable"); // avoid multiple event listeners
-    this.$root.$on("dataNotAvailable", () => {
-      this.dataAvailable = false;
-    });
+    this.$root.$off("dataNotAvailable", this.onDataNotAvailable); // avoid multiple event listeners
+    this.$root.$on("dataNotAvailable", this.onDataNotAvailable);
   },
   destroyed() {
     window.removeEventListener('scroll', this.scrollHandler);
   },
   methods: {
+    onApplyFilters() {
+      this.activeFilters = this.lodash.cloneDeep(this.filter)
+      this.activeSelectedSearch = this.lodash.cloneDeep(this.selectedSearch)
+    },
+    onDataNotAvailable() {
+      this.dataAvailable = false;
+    },
     scrollHandler(evt) {
       if (evt.target.attributes["views-wrapper"] && (window.innerWidth > this.$mobileBound)) {
         if (!this.isFixed) {

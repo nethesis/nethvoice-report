@@ -664,21 +664,20 @@ export default {
     this.getSavedSearches();
 
     // views request to apply filter on loading
-    this.$root.$off("requestApplyFilter"); // avoid multiple event listeners
-    this.$root.$on("requestApplyFilter", () => {
-      if (this.loader.filter == false) {
-        this.applyFilters();
-      }
-    });
+    this.$root.$off("requestApplyFilter", this.onRequestApplyFilter); // avoid multiple event listeners
+    this.$root.$on("requestApplyFilter", this.onRequestApplyFilter);
 
-    this.$root.$off("clearFilters"); // avoid multiple event listeners
-    this.$root.$on("clearFilters", () => {
-      this.clearFilters()
-    });
+    this.$root.$off("clearFilters", this.clearFilters); // avoid multiple event listeners
+    this.$root.$on("clearFilters", this.clearFilters);
 
     this.retrievePhonebook();
   },
   methods: {
+    onRequestApplyFilter() {
+      if (this.loader.filter == false) {
+        this.applyFilters();
+      }
+    },
     retrieveFilter() {
       this.loader.filter = true;
       let filter = this.get(this.reportFilterStorageName);

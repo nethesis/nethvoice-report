@@ -20,12 +20,13 @@ export default {
     };
   },
   mounted() {
-    this.$root.$off("sidebarHide"); // avoid multiple event listeners
-    this.$root.$on("sidebarHide", () => {
-      this.sidebarShown = false
-    })
+    this.$root.$off("sidebarHide", this.onSidebarHide); // avoid multiple event listeners
+    this.$root.$on("sidebarHide", this.onSidebarHide);
   },
   methods: {
+    onSidebarHide() {
+      this.sidebarShown = false;
+    },
     toggleSidebar() {
       let sidebar = document.querySelector("#docs-menu")
       if (sidebar.style.transform == "translateX(0px)") {

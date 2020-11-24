@@ -307,17 +307,12 @@ export default {
     }
 
     // event "logout" is triggered by $http interceptor if token has expired
-    this.$root.$off("logout"); // avoid multiple event listeners
-    this.$root.$on("logout", () => {
-      this.doLogout();
-    });
+    this.$root.$off("logout", this.doLogout); // avoid multiple event listeners
+    this.$root.$on("logout", this.doLogout);
 
     // event "dataNotAvailable" is triggered by $http interceptor if report tables don't exist yet
-    this.$root.$off("dataNotAvailable"); // avoid multiple event listeners
-    this.$root.$on("dataNotAvailable", () => {
-      this.showFilters = false;
-      this.dataAvailable = false;
-    });
+    this.$root.$off("dataNotAvailable", this.onDataNotAvailable); // avoid multiple event listeners
+    this.$root.$on("dataNotAvailable", this.onDataNotAvailable);
 
     this.retrieveColorScheme();
   },
@@ -334,6 +329,10 @@ export default {
     },
   },
   methods: {
+    onDataNotAvailable() {
+      this.showFilters = false;
+      this.dataAvailable = false;
+    },
     retrieveShowFilter() {
       const showFilters = this.get("showFilters");
 
