@@ -58,16 +58,18 @@ export default {
   },
   mixins: [LoginService, StorageService],
   mounted() {
-    this.$root.$off("logout"); // avoid multiple event listeners
-    this.$root.$on("logout", () => {
-      this.sessionExpired = true;
-    });
+    this.$root.$off("logout", this.onLogout); // avoid multiple event listeners
+    this.$root.$on("logout", this.onLogout);
+
     this.$nextTick(() => {
       // set random background
       document.querySelector('.background').style.background = `linear-gradient( rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.95) ), url(${this.getImgUrl()}) no-repeat center center fixed`
    })
   },
   methods: {
+    onLogout() {
+      this.sessionExpired = true;
+    },
     doLogin() {
       this.loading = true;
       this.sessionExpired = false;
