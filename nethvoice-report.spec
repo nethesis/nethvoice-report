@@ -1,5 +1,5 @@
 Name:		nethvoice-report
-Version: 0.1.0
+Version: 0.1.1
 Release: 1%{?dist}
 Summary:	Queue and CDR/Costs reports
 
@@ -70,6 +70,10 @@ cat %{name}-%{version}-filelist
 %doc COPYING
 
 %changelog
+* Tue Nov 24 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.1.1-1
+- api. query: added query limit based on settings (#68)
+- ui. fix hour of saved search (#72)
+
 * Mon Nov 23 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.1.0-1
 - NethVoice: new Queue report - Nethesis/dev#5865
 
