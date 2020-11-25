@@ -113,15 +113,19 @@ func GetDefaultFilter(c *gin.Context) {
 	defaultFilter.Choices = valuesFilter.Choices
 	defaultFilter.Destinations = valuesFilter.Destinations
 	defaultFilter.Origins = valuesFilter.Origins
+	defaultFilter.Trunks = valuesFilter.Trunks
+	defaultFilter.DIDs = valuesFilter.DIDs
 
 	if user == "X" || user == "admin" {
 		defaultFilter.Queues = valuesFilter.Queues
 		defaultFilter.Groups = valuesFilter.Groups
 		defaultFilter.Agents = valuesFilter.Agents
+		defaultFilter.Users = valuesFilter.Users
 	} else {
 		defaultFilter.Queues = utils.Intersect(valuesFilter.Queues, auths.Queues, "queues")
 		defaultFilter.Groups = utils.Intersect(valuesFilter.Groups, auths.Groups, "groups")
 		defaultFilter.Agents = utils.Intersect(valuesFilter.Agents, auths.Agents, "agents")
+		defaultFilter.Users = utils.Intersect(valuesFilter.Users, auths.Agents, "users")
 	}
 
 	// return in JSON format
