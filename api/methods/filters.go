@@ -40,12 +40,13 @@ func GetDefaultFilter(c *gin.Context) {
 	// get current user
 	user := GetClaims(c)["id"].(string)
 
-	// extract section and view
+	// extract report, section and view
+	report := c.Param("report")
 	section := c.Param("section")
 	view := c.Param("view")
 
 	// override filter path
-	filterOverrideFile := configuration.Config.Queue.QueryPath + "/" + section + "/" + view + "/default_filter.json"
+	filterOverrideFile := configuration.Config.QueryPath + "/" + report + "/" + section + "/" + view + "/default_filter.json"
 
 	// define return filter
 	var defaultFilter models.Filter

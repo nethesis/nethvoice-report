@@ -23,11 +23,11 @@
 package cmd
 
 import (
-	"path"
 	"bytes"
-	"text/template"
 	"fmt"
+	"path"
 	"strconv"
+	"text/template"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -55,7 +55,7 @@ func init() {
 
 // Define objects and utilities
 type CDRObj struct {
-	Year int
+	Year  int
 	Month int
 }
 
@@ -77,8 +77,8 @@ func executeReportCDR() {
 	var objTemplate CDRObj
 
 	// define template path
-	templateY := configuration.Config.CDR.TemplatePath.Year
-	templateM := configuration.Config.CDR.TemplatePath.Month
+	templateY := configuration.Config.TemplatePath + "/cdr_year.sql"
+	templateM := configuration.Config.TemplatePath + "/cdr_month.sql"
 
 	// define db instance
 	db := source.CDRInstance()
@@ -110,14 +110,14 @@ func executeReportCDR() {
 		// execute query
 		rowsY, errQueryY := db.Query(queryY.String())
 		if errQueryY != nil {
-			helper.FatalError(errors.Wrap(errQueryY, "Error in query [year] execution:\n" + queryY.String()))
+			helper.FatalError(errors.Wrap(errQueryY, "Error in query [year] execution:\n"+queryY.String()))
 		}
 
 		// close results
 		rowsY.Close()
 
 		// get min and max month
-		rowMinMax = db.QueryRow("SELECT month(min(calldate)), month(max(calldate)) FROM `cdr_" + strconv.Itoa(y)  + "`")
+		rowMinMax = db.QueryRow("SELECT month(min(calldate)), month(max(calldate)) FROM `cdr_" + strconv.Itoa(y) + "`")
 		errQueryMinMax = rowMinMax.Scan(&minMonth, &maxMonth)
 
 		// save minYear and minMonth in cache
@@ -152,7 +152,7 @@ func executeReportCDR() {
 			// execute query
 			rowsM, errQueryM := db.Query(queryM.String())
 			if errQueryM != nil {
-				helper.FatalError(errors.Wrap(errQueryM, "Error in query [month] execution:\n" + queryM.String()))
+				helper.FatalError(errors.Wrap(errQueryM, "Error in query [month] execution:\n"+queryM.String()))
 			}
 
 			// close results

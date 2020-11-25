@@ -30,17 +30,10 @@
           "name": "asterisk"
         \},
         "secret": "{{$secret}}",
-	"cdr": {
-	  "template_path": {
-	    "year": "/opt/nethvoice-report/api/templates/cdr_year.sql",
-	    "month": "/opt/nethvoice-report/api/templates/cdr_month.sql"
-	  }
-	},
-	"queue": {
-          "query_path": "/opt/nethvoice-report/api/queries",
-	  "values_path": "/opt/nethvoice-report/api/values",
-	  "views_path": "/opt/nethvoice-report/api/views"
-	},
+  "query_path": "/opt/nethvoice-report/api/queries",
+  "template_path": "/opt/nethvoice-report/api/templates",
+  "values_path": "/opt/nethvoice-report/api/values",
+  "views_path": "/opt/nethvoice-report/api/views",
 	"phonebook": {
 	  "phonebook_path": "/opt/nethvoice-report/api/phonebook/phonebook.sql"
 	},
