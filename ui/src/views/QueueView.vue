@@ -147,6 +147,7 @@ export default {
       filterTimeSplit: 0,
       isAdmin: 0,
       queryLimitMessage: "",
+      currentReport: "",
     };
   },
   mounted() {
@@ -172,12 +173,19 @@ export default {
       this.isAdmin = false;
     }
 
+    this.currentReport = this.$route.meta.report;
+
     // load message for query limit hit
     this.retrieveQueryLimitMessage();
   },
   watch: {
     $route: function () {
-      this.initCharts();
+      if (this.currentReport == this.$route.meta.report) {
+        this.initCharts();
+      } else {
+        this.currentReport = this.$route.meta.report;
+        this.retrieveQueryTree();
+      }
     },
     "$root.filtersReady": function () {
       // $root.filtersReady is set to true when filters have been loaded
@@ -192,6 +200,7 @@ export default {
     },
     retrieveQueryTree() {
       this.getQueryTree(
+        this.$route.meta.report,
         (success) => {
           let queryTree = success.body.query_tree;
 
@@ -263,6 +272,7 @@ export default {
 
         this.execQuery(
           filter,
+          this.$route.meta.report,
           this.$route.meta.section,
           this.$route.meta.view,
           chart.name,
