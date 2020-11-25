@@ -125,6 +125,7 @@ func Intersect(a []string, b []string, objType string) []string {
 	// clean values before intersect
 	switch objType {
 	case "queues":
+		// create regexp to extract queue number
 		var rgx = regexp.MustCompile(`\((.*?)\)`)
 		for i, q := range a {
 			rs := rgx.FindStringSubmatch(q)
@@ -137,13 +138,14 @@ func Intersect(a []string, b []string, objType string) []string {
 		return result
 
 	case "groups":
-		// intersect arrays and return []interface{}
-		r := intersect.Simple(a, b).([]interface{})
+		// loop a array and check groups name
+		for i, g := range a {
+			parts := strings.Split(g, "|")
+			var group = parts[0]
 
-		// iterate over []interface{}
-		result := make([]string, len(r))
-		for i, v := range r {
-			result[i] = fmt.Sprint(v)
+			if Contains(group, b) {
+				result = append(result, a[i])
+			}
 		}
 
 		return result
