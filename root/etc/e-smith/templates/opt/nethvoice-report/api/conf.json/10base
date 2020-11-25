@@ -31,16 +31,9 @@
         \},
         "secret": "{{$secret}}",
   "query_path": "/opt/nethvoice-report/api/queries",
-	"cdr": {
-	  "template_path": {
-	    "year": "/opt/nethvoice-report/api/templates/cdr_year.sql",
-	    "month": "/opt/nethvoice-report/api/templates/cdr_month.sql"
-	  }
-	},
-	"queue": {
-	  "values_path": "/opt/nethvoice-report/api/values",
-	  "views_path": "/opt/nethvoice-report/api/views"
-	},
+  "template_path": "/opt/nethvoice-report/api/templates",
+  "values_path": "/opt/nethvoice-report/api/values",
+  "views_path": "/opt/nethvoice-report/api/views",
 	"phonebook": {
 	  "phonebook_path": "/opt/nethvoice-report/api/phonebook/phonebook.sql"
 	},

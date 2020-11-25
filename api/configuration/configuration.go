@@ -58,17 +58,10 @@ type Configuration struct {
 	TTLCache      int    `json:"ttl_cache"`
 	Secret        string `json:"secret"`
 	QueryPath     string `json:"query_path"`
-	CDR           struct {
-		TemplatePath struct {
-			Year  string `json:"year"`
-			Month string `json:"month"`
-		} `json:"template_path"`
-	} `json:"cdr"`
-	Queue struct {
-		ValuesPath string `json:"values_path"`
-		ViewsPath  string `json:"views_path"`
-	} `json:"queue"`
-	Phonebook struct {
+	TemplatePath  string `json:"template_path"`
+	ValuesPath    string `json:"values_path"`
+	ViewsPath     string `json:"views_path"`
+	Phonebook     struct {
 		QueryPath string `json:"query_path"`
 	} `json:"phonebook"`
 	RrdPath                string          `json:"rrd_path"`
