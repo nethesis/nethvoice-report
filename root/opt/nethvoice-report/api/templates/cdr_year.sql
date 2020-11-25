@@ -1,4 +1,5 @@
-CREATE TABLE IF NOT EXISTS `cdr_{{ YearMap .Year }}` AS
+CREATE TABLE IF NOT EXISTS `cdr_{{ YearMap .Year }}`
+(UNIQUE KEY uniq (calldate,uniqueid,dstchannel))
 SELECT *,
        IF(Substring_index(Substring_index(channel, '-', 1), '/', -1) IN
              (SELECT channelid
@@ -18,8 +19,6 @@ WHERE  uniqueid = linkedid
 GROUP  BY linkedid,
           peeraccount
 ORDER  BY calldate;
-
-ALTER TABLE `cdr_{{ YearMap .Year }}` ADD UNIQUE (calldate,uniqueid,dstchannel);
 
 INSERT IGNORE INTO `cdr_{{ YearMap .Year }}`
 SELECT *,
