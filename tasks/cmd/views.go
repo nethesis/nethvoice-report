@@ -57,7 +57,7 @@ func init() {
 // Entry point for "views" command
 func executeReportViews() {
 	// define views path
-	viewsPath := configuration.Config.Queue.ViewsPath
+	viewsPath := configuration.Config.ViewsPath
 
 	// get all .sql files inside views path
 	errWalk := filepath.Walk(viewsPath, func(pathS string, info os.FileInfo, err error) error {
