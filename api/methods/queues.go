@@ -35,6 +35,8 @@ import (
 	"text/template"
 	"time"
 
+	"github.com/nleeper/goment"
+
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/pkg/errors"
@@ -46,8 +48,9 @@ import (
 	"github.com/nethesis/nethvoice-report/api/utils"
 )
 
-func GetQueueReports(c *gin.Context) {
-	// extract section, view and graph
+func GetGraphData(c *gin.Context) {
+	// extract report, section, view and graph
+	report := c.Param("report")
 	section := c.Param("section")
 	view := c.Param("view")
 	graph := c.Query("graph")
@@ -95,13 +98,13 @@ func GetQueueReports(c *gin.Context) {
 
 	switch queryType {
 	case "sql":
-		queryResult, err = executeSqlQuery(filter, section, view, graph, c)
+		queryResult, err = executeSqlQuery(filter, report, section, view, graph, c)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"message": "error executing SQL query", "status": err.Error()})
 			return
 		}
 	default:
-		queryResult, err = executeRrdQuery(filter, section, view, graph)
+		queryResult, err = executeRrdQuery(filter, report, section, view, graph)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"message": "error executing RRD query", "status": err.Error()})
 			return
@@ -120,8 +123,12 @@ func GetQueueReports(c *gin.Context) {
 	c.Data(http.StatusOK, "application/json; charset=utf-8", []byte(queryResult))
 }
 
-func executeSqlQuery(filter models.Filter, section string, view string, graph string, c *gin.Context) (string, error) {
-	queryFile := configuration.Config.Queue.QueryPath + "/" + section + "/" + view + "/" + graph + ".sql"
+func executeSqlQuery(filter models.Filter, report string, section string, view string, graph string, c *gin.Context) (string, error) {
+	if report != "queue" && report != "cdr" {
+		return "", errors.Errorf("unknown report: %s", report)
+	}
+
+	queryFile := configuration.Config.QueryPath + "/" + report + "/" + section + "/" + view + "/" + graph + ".sql"
 
 	// check if query file exists
 	if _, errExists := os.Stat(queryFile); os.IsNotExist(errExists) {
@@ -146,8 +153,21 @@ func executeSqlQuery(filter models.Filter, section string, view string, graph st
 		filter.Agents = allowedAgents
 	}
 
+	// create template
+	q := template.New(path.Base(queryFile)).Funcs(template.FuncMap{"ExtractStrings": utils.ExtractStrings}).Funcs(template.FuncMap{"ExtractPhones": utils.ExtractPhones}).Funcs(template.FuncMap{"ExtractOrigins": utils.ExtractOrigins}).Funcs(template.FuncMap{"ExtractSettings": utils.ExtractSettings}).Funcs(template.FuncMap{"PivotGroup": utils.PivotGroup})
+
 	// parse template
-	q := template.Must(template.New(path.Base(queryFile)).Funcs(template.FuncMap{"ExtractStrings": utils.ExtractStrings}).Funcs(template.FuncMap{"ExtractPhones": utils.ExtractPhones}).Funcs(template.FuncMap{"ExtractOrigins": utils.ExtractOrigins}).Funcs(template.FuncMap{"ExtractSettings": utils.ExtractSettings}).Funcs(template.FuncMap{"PivotGroup": utils.PivotGroup}).ParseFiles(queryFile))
+
+	if report == "queue" {
+		q = template.Must(q.ParseFiles(queryFile))
+	} else {
+		// retrieve partitioned CDR tables
+		query, err := buildCdrQuery(queryFile, filter)
+		if err != nil {
+			return "", err
+		}
+		q = template.Must(q.Parse(query))
+	}
 
 	// compile query with filter object
 	var queryString bytes.Buffer
@@ -171,8 +191,8 @@ func executeSqlQuery(filter models.Filter, section string, view string, graph st
 	return data, nil
 }
 
-func executeRrdQuery(filter models.Filter, section string, view string, graph string) (string, error) {
-	queryFile := configuration.Config.Queue.QueryPath + "/" + section + "/" + view + "/" + graph + ".rrd"
+func executeRrdQuery(filter models.Filter, report string, section string, view string, graph string) (string, error) {
+	queryFile := configuration.Config.QueryPath + "/" + report + "/" + section + "/" + view + "/" + graph + ".rrd"
 
 	// check if query file exists
 	if _, errExists := os.Stat(queryFile); os.IsNotExist(errExists) {
@@ -197,4 +217,69 @@ func executeRrdQuery(filter models.Filter, section string, view string, graph st
 	}
 
 	return results, nil
+}
+
+func buildCdrQuery(queryFile string, filter models.Filter) (string, error) {
+	timeIntervalStart := filter.Time.Interval.Start
+	timeIntervalEnd := filter.Time.Interval.End
+	start, err := goment.New(timeIntervalStart, "YYYY-MM-DD")
+	if err != nil {
+		return "", errors.Wrap(err, "cannot create start goment")
+	}
+	start.StartOf("month")
+
+	end, err := goment.New(timeIntervalEnd, "YYYY-MM-DD")
+	if err != nil {
+		return "", errors.Wrap(err, "cannot create end goment")
+	}
+	end.StartOf("month")
+
+	// get first month with data to prevent access to non-existent tables (e.g. cdr_1999-12)
+
+	cacheConnection := cache.Instance()
+	firstMonthWithDataString, errCache := cacheConnection.Get("cdr_first_month").Result()
+	if errCache != nil {
+		return "", errors.Wrap(errCache, "cannot retrieve CDR first month from cache")
+	}
+
+	firstMonthWithData, err := goment.New(firstMonthWithDataString, "YYYY-MM")
+	if err != nil {
+		return "", errors.Wrap(err, "cannot create firstMonth goment")
+	}
+	firstMonthWithData.StartOf("month")
+
+	if start.IsBefore(firstMonthWithData) {
+		start = firstMonthWithData
+	}
+
+	var cdrTables []string
+
+	for !start.IsAfter(end) {
+		cdrTables = append(cdrTables, "cdr_"+start.Format("YYYY-MM"))
+		start.Add(1, "month")
+	}
+
+	// read query from file
+
+	content, err := ioutil.ReadFile(queryFile)
+	if err != nil {
+		return "", errors.Wrap(err, "cannot ready CDR query file")
+	}
+	queryWithTablePlaceholder := string(content)
+
+	// build a query for every month and append all of them with UNION ALL
+
+	var queryBuilder strings.Builder
+	var query string
+
+	for i, cdrTable := range cdrTables {
+		query = strings.ReplaceAll(queryWithTablePlaceholder, "<CDR_TABLE>", cdrTable)
+		query = strings.ReplaceAll(query, ";", "") // remove trailing semicolon
+		queryBuilder.WriteString(query)
+
+		if i < len(cdrTables)-1 {
+			queryBuilder.WriteString(" UNION ALL ")
+		}
+	}
+	return queryBuilder.String(), nil
 }
