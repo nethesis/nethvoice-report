@@ -32,6 +32,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 
+	"github.com/nethesis/nethvoice-report/api/cache"
 	"github.com/nethesis/nethvoice-report/api/configuration"
 	"github.com/nethesis/nethvoice-report/api/source"
 	"github.com/nethesis/nethvoice-report/tasks/helper"
@@ -118,6 +119,15 @@ func executeReportCDR() {
 		// get min and max month
 		rowMinMax = db.QueryRow("SELECT month(min(calldate)), month(max(calldate)) FROM `cdr_" + strconv.Itoa(y)  + "`")
 		errQueryMinMax = rowMinMax.Scan(&minMonth, &maxMonth)
+
+		// save minYear and minMonth in cache
+		cacheConnection := cache.Instance()
+		errCache := cacheConnection.Set("cdr_first_month", fmt.Sprintf("%d-%02d", minYear, minMonth), 0).Err()
+
+		// handle cache error
+		if errCache != nil {
+			helper.FatalError(errors.Wrap(errCache, "Error on saving to cache"))
+		}
 
 		// check errors
 		if errQueryMinMax != nil {
