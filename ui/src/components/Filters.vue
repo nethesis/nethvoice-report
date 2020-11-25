@@ -701,6 +701,7 @@ export default {
     },
     retrieveDefaultFilter() {
       this.getDefaultFilter(
+        this.$route.meta.report,
         this.$route.meta.section,
         this.$route.meta.view,
         (success) => {

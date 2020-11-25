@@ -75,7 +75,7 @@ func main() {
 	api.Use(middleware.InstanceJWT().MiddlewareFunc())
 	{
 
-		filters := api.Group("/filters/:section/:view")
+		filters := api.Group("/filters/:report/:section/:view")
 		{
 			filters.GET("", methods.GetDefaultFilter)
 		}
@@ -85,14 +85,14 @@ func main() {
 			phonebook.GET("", methods.GetPhonebook)
 		}
 
-		queryTree := api.Group("/query_tree")
+		queryTree := api.Group("/query_tree/:report")
 		{
 			queryTree.GET("", methods.GetQueryTree)
 		}
 
-		queues := api.Group("/queues/:section/:view")
+		graph := api.Group("/graph/:report/:section/:view")
 		{
-			queues.GET("", methods.GetQueueReports)
+			graph.GET("", methods.GetGraphData)
 		}
 
 		searches := api.Group("/searches")

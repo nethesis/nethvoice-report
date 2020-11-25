@@ -106,10 +106,10 @@ func getSearchesFromCache() ([]models.Search, error) {
 }
 
 // Get default filter for input section and view
-func getDefaultFilter(section string, view string, jwtToken string) (models.Filter, error) {
+func getDefaultFilter(report string, section string, view string, jwtToken string) (models.Filter, error) {
 	// create request
 	client := &http.Client{}
-	requestUrl := fmt.Sprintf("%s/filters/%s/%s", configuration.Config.APIEndpoint, section, view)
+	requestUrl := fmt.Sprintf("%s/filters/%s/%s/%s", configuration.Config.APIEndpoint, report, section, view)
 	req, err := http.NewRequest("GET", requestUrl, nil)
 	if err != nil {
 		return models.Filter{}, errors.Wrap(err, "Error creating request")
