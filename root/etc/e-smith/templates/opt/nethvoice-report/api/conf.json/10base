@@ -30,6 +30,7 @@
           "name": "asterisk"
         \},
         "secret": "{{$secret}}",
+  "query_path": "/opt/nethvoice-report/api/queries",
 	"cdr": {
 	  "template_path": {
 	    "year": "/opt/nethvoice-report/api/templates/cdr_year.sql",
@@ -37,7 +38,6 @@
 	  }
 	},
 	"queue": {
-          "query_path": "/opt/nethvoice-report/api/queries",
 	  "values_path": "/opt/nethvoice-report/api/values",
 	  "views_path": "/opt/nethvoice-report/api/views"
 	},

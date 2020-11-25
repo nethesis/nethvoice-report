@@ -47,29 +47,29 @@ type Configuration struct {
 		Password string `json:"password"`
 	} `json:"phonebook_database"`
 	FreePBXDatabase struct {
-                Host     string `json:"host"`
-                Port     string `json:"port"`
-                User     string `json:"user"`
-                Name     string `json:"name"`
-                Password string `json:"password"`
+		Host     string `json:"host"`
+		Port     string `json:"port"`
+		User     string `json:"user"`
+		Name     string `json:"name"`
+		Password string `json:"password"`
 	} `json:"freepbx_database"`
-	ListenAddress          string          `json:"listen_address"`
-	RedisAddress           string          `json:"redis_address"`
-	TTLCache               int             `json:"ttl_cache"`
-	Secret                 string          `json:"secret"`
-	CDR struct {
+	ListenAddress string `json:"listen_address"`
+	RedisAddress  string `json:"redis_address"`
+	TTLCache      int    `json:"ttl_cache"`
+	Secret        string `json:"secret"`
+	QueryPath     string `json:"query_path"`
+	CDR           struct {
 		TemplatePath struct {
-			Year string `json:"year"`
+			Year  string `json:"year"`
 			Month string `json:"month"`
 		} `json:"template_path"`
 	} `json:"cdr"`
 	Queue struct {
-		QueryPath              string          `json:"query_path"`
-		ValuesPath             string          `json:"values_path"`
-		ViewsPath              string          `json:"views_path"`
+		ValuesPath string `json:"values_path"`
+		ViewsPath  string `json:"views_path"`
 	} `json:"queue"`
 	Phonebook struct {
-		QueryPath          string          `json:"query_path"`
+		QueryPath string `json:"query_path"`
 	} `json:"phonebook"`
 	RrdPath                string          `json:"rrd_path"`
 	UserAuthorizationsFile string          `json:"user_auth_file"`
