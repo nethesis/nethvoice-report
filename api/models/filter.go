@@ -26,8 +26,11 @@ type Filter struct {
 	Queues []string `json:"queues"`
 	Groups []string `json:"groups"`
 	Agents []string `json:"agents"`
+	Users  []string `json:"users"`
 	IVRs   []string `json:"ivrs"`
 	Phones []string `json:"phones"`
+	Trunks []string `json:"trunks"`
+	DIDs   []string `json:"dids"`
 
 	Reasons      []string `json:"reasons"`
 	Results      []string `json:"results"`
