@@ -61,7 +61,12 @@
                 <i class="exclamation triangle icon"></i>{{ $t("message." + chart.message) }}
               </sui-message>
             </div>
-            <sui-loader v-else active centered inline class="loader-height" />
+            <div v-else class="loader-height">
+              <sui-loader active centered inline class="mg-bottom-sm" />
+              <sui-message v-if="chart.slowQuery" warning>
+                <i class="exclamation triangle icon"></i>{{ $t("message.slow_query") }}
+              </sui-message>
+            </div>
         </div>
         <div v-show="chart.data">
           <div v-show="chart.data && chart.data.length < 2">
@@ -132,6 +137,7 @@ export default {
   mixins: [StorageService, QueriesService, UtilService, SettingsService],
   data() {
     return {
+      SLOW_QUERY_TIMEOUT: 5000,
       queryTree: null,
       queryNames: [],
       charts: [],
@@ -251,6 +257,8 @@ export default {
               error: false,
               doc: doc,
               queryLimitHit: false,
+              slowQuery: false,
+              slowQueryTimeout: 0,
             });
           });
           this.charts = charts.sort(this.sortByProperty("position"));
@@ -269,6 +277,11 @@ export default {
         chart.details = null;
         chart.error = false;
         chart.queryLimitHit = false;
+
+        chart.slowQuery = false;
+        chart.slowQueryTimeout = setTimeout(() => {
+          chart.slowQuery = true;
+        }, this.SLOW_QUERY_TIMEOUT);
 
         this.execQuery(
           filter,
@@ -299,6 +312,8 @@ export default {
               if (chart.data.length && chart.data.length -1 == this.queryLimit) {
                 chart.queryLimitHit = true;
               }
+
+              clearTimeout(chart.slowQueryTimeout);
             }
           },
           (error) => {
