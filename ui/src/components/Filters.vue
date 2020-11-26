@@ -2,6 +2,7 @@
   <div>
     <sui-container v-if="this.showFiltersForm">
       <sui-form class="filters-form" @submit.prevent="applyFilters">
+        <!-- saved searches -->
         <sui-form-fields v-if="savedSearches.length" class="mg-bottom-md">
           <sui-form-field width="four" class="mb-10">
             <sui-dropdown
@@ -23,7 +24,8 @@
             >
           </sui-form-field>
         </sui-form-fields>
-
+        <!-- START QUEUE FILTERS -->
+        <!-- group by -->
         <sui-form-fields v-if="showFilterTimeGroup">
           <sui-form-field width="four">
             <label>{{$t('filter.group_by')}}</label>
@@ -36,8 +38,9 @@
             />
           </sui-form-field>
         </sui-form-fields>
+        <!-- time interval section -->
         <sui-form-fields class="interval-buttons">
-          <!-- if time group is day -->
+          <!-- fast time range | if time group is day -->
           <sui-form-field v-if="(showFilterTime && filter.time.group == 'day') || (showFilterTime && !showFilterTimeGroup)">
             <label>{{$t('filter.time_range')}}</label>
             <sui-button-group class="fluid">
@@ -61,7 +64,7 @@
               >
             </sui-button-group>
           </sui-form-field>
-          <!-- if time group is week -->
+          <!-- fast time range | if time group is week -->
           <sui-form-field v-if="showFilterTime && filter.time.group == 'week' && showFilterTimeGroup">
             <label>{{$t('filter.time_range')}}</label>
             <sui-button-group class="fluid">
@@ -85,7 +88,7 @@
               >
             </sui-button-group>
           </sui-form-field>
-          <!-- if time group is month -->
+          <!-- fast time range | if time group is month -->
           <sui-form-field v-if="showFilterTime && filter.time.group == 'month' && showFilterTimeGroup">
             <label>{{$t('filter.time_range')}}</label>
             <sui-button-group class="fluid">
@@ -109,7 +112,7 @@
               >
             </sui-button-group>
           </sui-form-field>
-          <!-- if time group is year -->
+          <!-- fast time range | if time group is year -->
           <sui-form-field v-if="showFilterTime && filter.time.group == 'year' && showFilterTimeGroup">
             <label>{{$t('filter.time_range')}}</label>
             <sui-button-group class="fluid">
@@ -133,6 +136,7 @@
               >
             </sui-button-group>
           </sui-form-field>
+          <!-- datapickers section -->
           <sui-form-field class="datepicker-field">
             <label :class="{ 'error-color': errorTimeInterval }">{{$t('filter.time_interval')}}</label>
             <!-- time interval start -->
@@ -189,6 +193,7 @@
           </sui-form-field>
         </sui-form-fields>
         <sui-grid class="fields">
+          <!-- queues -->
           <sui-form-field v-if="showFilterQueue" width="four">
             <label>{{$t('filter.queues_label')}}</label>
             <sui-dropdown
@@ -200,6 +205,7 @@
               v-model="filter.queues"
             />
           </sui-form-field>
+          <!-- group not used -->
           <sui-form-field v-if="showFilterGroup" width="four">
             <label>{{$t('filter.groups_label')}}</label>
             <sui-dropdown
@@ -211,6 +217,7 @@
               v-model="filter.groups"
             />
           </sui-form-field>
+          <!-- agents and extensions -->
           <sui-form-field v-if="showFilterAgent" width="four">
             <label>{{$t('filter.agents_label')}}</label>
             <sui-dropdown
@@ -222,6 +229,7 @@
               v-model="filter.agents"
             />
           </sui-form-field>
+          <!-- reason -->
           <sui-form-field v-if="showFilterReason" width="four">
             <label>{{$t('filter.reasons_label')}}</label>
             <sui-dropdown
@@ -233,6 +241,7 @@
               v-model="filter.reasons"
             />
           </sui-form-field>
+          <!-- result -->
           <sui-form-field v-if="showFilterResult" width="four">
             <label>{{$t('filter.results_label')}}</label>
             <sui-dropdown
@@ -244,6 +253,7 @@
               v-model="filter.results"
             />
           </sui-form-field>
+          <!-- ivr -->
           <sui-form-field v-if="showFilterIvr" width="four">
             <label>{{$t('filter.ivrs_label')}}</label>
             <sui-dropdown
@@ -255,6 +265,7 @@
               v-model="filter.ivrs"
             />
           </sui-form-field>
+          <!-- ivr's defined choices based on selected ivr -->
           <sui-form-field v-if="showFilterChoice" width="four">
             <label>{{$t('filter.choices_label')}}</label>
             <sui-dropdown
@@ -266,6 +277,7 @@
               v-model="filter.choices"
             />
           </sui-form-field>
+          <!-- origin -->
           <sui-form-field v-if="showFilterOrigin" width="four">
             <label>{{$t('filter.origins_label')}}</label>
             <sui-dropdown
@@ -277,6 +289,7 @@
               v-model="filter.origins"
             />
           </sui-form-field>
+          <!-- destination -->
           <sui-form-field v-if="showFilterDestination" width="four">
             <label>{{$t('filter.destinations_label')}}</label>
             <sui-dropdown
@@ -288,6 +301,7 @@
               v-model="filter.destinations"
             />
           </sui-form-field>
+          <!-- time split -->
           <sui-form-field v-if="showFilterTimeSplit" width="four">
             <label>{{$t('filter.time_split_label')}}</label>
             <sui-dropdown
@@ -298,6 +312,7 @@
               v-model="filter.time.division"
             />
           </sui-form-field>
+          <!-- caller -->
           <sui-form-field v-if="showFilterCaller" width="four">
             <label>{{$t('filter.caller_label')}}</label>
             <sui-input
@@ -305,6 +320,7 @@
               v-model="filter.caller"
             />
           </sui-form-field>
+          <!-- contact  -->
           <sui-form-field v-if="showFilterContactName" width="four">
             <label>{{$t('filter.contact_name_label')}}</label>
             <div class="ui search searchContactName">
@@ -332,11 +348,14 @@
               </div>
             </div>
           </sui-form-field>
+          <!-- null call not used -->
           <sui-form-field v-if="showFilterNullCall" width="four">
             <label>{{$t('filter.null_call_label')}}</label>
             <sui-checkbox label toggle v-model="filter.nullCall" />
           </sui-form-field>
         </sui-grid>
+        <!-- START QUEUE FILTERS -->
+        <!-- filters actions -->
         <sui-form-fields class="mg-top-md filter-actions">
           <sui-button
             primary
@@ -498,6 +517,53 @@ export default {
       PHONEBOOK_TTL_MINUTES: 8 * 60, // 8 hours
       FILTER_VALUES_TTL_MINUTES: 8 * 60, // 8 hours
       selectedSearch: null,
+      filtersMap: {
+        "queue": {
+          "dashboard": {
+            "default": ["time", "queue", "agent", "ivr", "choice"],
+          },
+          "data": {
+            "summary": ["timeGroup", "time", "queue", "agent"],
+            "agent": ["timeGroup", "time", "queue", "agent"],
+            "session": ["time", "hour", "queue", "reason", "agent"],
+            "caller": ["timeGroup", "time", "queue", "caller", "contactName"],
+            "call": ["time", "hour", "queue", "caller", "contactName", "agent", "result"],
+            "lost_call": ["timeGroup", "time", "queue", "caller", "contactName", "reason"],
+            "ivr": ["timeGroup", "time", "ivr", "choice"]
+          },
+          "performance": {
+            "default": ["timeGroup", "time", "queue"]
+          },
+          "distribution": {
+            "hourly": ["timeGroup", "time", "queue", "timeSplit", "agent", "ivr"],
+            "geographic": ["timeGroup", "time", "queue", "origin"],
+          },
+          "graphs": {
+            "load": ["timeGroup", "time", "queue", "origin"],
+            "hour": ["time", "queue", "agent", "destination", "ivr", "choice"],
+            "agent": ["timeGroup", "time", "queue", "agent"],
+            "area": ["timeGroup", "time", "queue"],
+            "queue_position": ["time", "queue", "timeSplit"],
+            "avg_duration": ["time", "queue", "timeSplit"],
+            "avg_wait": ["time", "queue", "timeSplit"]
+          }
+        },
+        "cdr": {
+          "dashboard": {
+            "default": ["time", "hour"],
+          },
+          "pbx_data": {
+            "incoming_calls": ["time", "hour"],
+            "outgoing_calls": ["time", "hour"],
+            "internal_calls": ["time", "hour"],
+          },
+          "personal_data": {
+            "incoming_calls": ["time", "hour"],
+            "outgoing_calls": ["time", "hour"],
+            "internal_calls": ["time", "hour"],
+          },
+        }
+      },
       filter: {
         queues: [],
         groups: [],
@@ -947,92 +1013,6 @@ export default {
       // set filter values
       this.filter = JSON.parse(JSON.stringify(search.filter));
     },
-    getToday() {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      return today;
-    },
-    getYesterday(startOrEnd="start") {
-      const yesterday = moment().subtract(1, 'day');
-
-      if (startOrEnd == "start") {
-        return yesterday.startOf('day').toDate();
-      } else {
-        return yesterday.endOf('day').toDate();
-      }
-    },
-    getLastWeek(startOrEnd) {
-      const aWeekAgo = moment().subtract(1, 'week');
-
-      if (startOrEnd == "start") {
-        return aWeekAgo.startOf('day').toDate();
-      } else {
-        return aWeekAgo.endOf('day').toDate();
-      }
-    },
-    getLastTwoWeeks(startOrEnd) {
-      const twoWeeksAgo = moment().subtract(2, 'weeks');
-
-      if (startOrEnd == "start") {
-        return twoWeeksAgo.startOf('day').toDate();
-      } else {
-        return twoWeeksAgo.endOf('day').toDate();
-      }
-    },
-    getLastMonth(startOrEnd) {
-      const aMonthAgo = moment().subtract(1, 'month');
-
-      if (startOrEnd == "start") {
-        return aMonthAgo.startOf('day').toDate();
-      } else {
-        return aMonthAgo.endOf('day').toDate();
-      }
-    },
-    getLastTwoMonths(startOrEnd) {
-      const twoMonthsAgo = moment().subtract(2, 'months');
-
-      if (startOrEnd == "start") {
-        return twoMonthsAgo.startOf('day').toDate();
-      } else {
-        return twoMonthsAgo.endOf('day').toDate();
-      }
-    },
-    getLastSixMonths(startOrEnd) {
-      const sixMonthsAgo = moment().subtract(6, 'months');
-
-      if (startOrEnd == "start") {
-        return sixMonthsAgo.startOf('day').toDate();
-      } else {
-        return sixMonthsAgo.endOf('day').toDate();
-      }
-    },
-    getLastYear(startOrEnd) {
-      const aYearAgo = moment().subtract(1, 'year');
-
-      if (startOrEnd == "start") {
-        return aYearAgo.startOf('day').toDate();
-      } else {
-        return aYearAgo.endOf('day').toDate();
-      }
-    },
-    getLastTwoYears(startOrEnd) {
-      const twoYearsAgo = moment().subtract(2, 'years');
-
-      if (startOrEnd == "start") {
-        return twoYearsAgo.startOf('day').toDate();
-      } else {
-        return twoYearsAgo.endOf('day').toDate();
-      }
-    },
-    getLastThreeYears(startOrEnd) {
-      const threeYearsAgo = moment().subtract(3, 'years');
-
-      if (startOrEnd == "start") {
-        return threeYearsAgo.startOf('day').toDate();
-      } else {
-        return threeYearsAgo.endOf('day').toDate();
-      }
-    },
     selectTime(range) {
       this.errorTimeInterval = false;
       this.filter.time.range = range;
@@ -1471,83 +1451,56 @@ export default {
       this.filter.caller = "";
       this.filter.contactName = "";
       this.applyFilters()
-    },
-    fromToday(date) {
-      return date > this.getYesterday('end');
-    },
-    getDateFormat() {
-      let dateFormat = "";
-      const timeGroup = this.showFilterTimeGroup ? this.filter.time.group : "day";
-
-      switch (timeGroup) {
-        case "year":
-          dateFormat = "YYYY";
-          break;
-        case "month":
-          dateFormat = "YYYY-MM";
-          break;
-        case "week":
-          dateFormat = "GGGG-[W]WW";
-          break;
-        case "day":
-          if (this.showFilterTimeHour) {
-            dateFormat = "YYYY-MM-DD HH:mm";
-          } else {
-            dateFormat = "YYYY-MM-DD";
-          }
-          break;
-      }
-      return dateFormat;
-    },
+    }
   },
   computed: {
     showFilterTime: function () {
-      return this.isFilterInView("time");
+      return this.isFilterInView("time", this.filtersMap);
     },
     showFilterTimeGroup: function () {
-      return this.isFilterInView("timeGroup");
+      return this.isFilterInView("timeGroup", this.filtersMap);
     },
     showFilterTimeSplit: function () {
-      return this.isFilterInView("timeSplit");
+      return this.isFilterInView("timeSplit", this.filtersMap);
     },
     showFilterTimeHour: function () {
-      return this.isFilterInView("hour");
+      return this.isFilterInView("hour", this.filtersMap);
     },
     showFilterAgent: function () {
-      return this.isFilterInView("agent");
+      return this.isFilterInView("agent", this.filtersMap);
     },
     showFilterGroup: function () {
-      return this.isFilterInView("group");
+      return this.isFilterInView("group", this.filtersMap);
     },
     showFilterQueue: function () {
-      return this.isFilterInView("queue");
+      return this.isFilterInView("queue", this.filtersMap);
     },
     showFilterReason: function () {
-      return this.isFilterInView("reason");
+      return this.isFilterInView("reason", this.filtersMap);
     },
     showFilterResult: function () {
-      return this.isFilterInView("result");
+      return this.isFilterInView("result", this.filtersMap);
     },
     showFilterIvr: function () {
-      return this.isFilterInView("ivr");
+      return this.isFilterInView("ivr", this.filtersMap);
     },
     showFilterChoice: function () {
-      return this.isFilterInView("choice");
+      return this.isFilterInView("choice", this.filtersMap);
     },
     showFilterOrigin: function () {
-      return this.isFilterInView("origin");
+      return this.isFilterInView("origin", this.filtersMap);
     },
     showFilterDestination: function () {
-      return this.isFilterInView("destination");
+      return this.isFilterInView("destination", this.filtersMap);
     },
     showFilterCaller: function () {
-      return this.isFilterInView("caller");
+      return this.isFilterInView("caller", this.filtersMap);
     },
     showFilterContactName: function () {
-      return this.isFilterInView("contactName");
+      return this.isFilterInView("contactName", this.filtersMap);
     },
     showFilterNullCall: function () {
-      return this.isFilterInView("nullCall");
+      return this.isFilterInView("nullCall", this.filtersMap);
     },
     reportFilterStorageName: function () {
       return "reportFilter-" + this.get("loggedUser").username;
@@ -1564,74 +1517,6 @@ export default {
 
 <style lang="scss" scoped>
 
-.filters-form {
-  text-align: left;
-  margin-top: 30px;
-  .fluid.ui.buttons {
-    min-height: 38px;
-  }
-  .ui.negative.button {
-    min-height: 38px;
-  }
-  .fields {
-    margin: 0 -.5em 1.9em !important;
-    .field {
-      @media only screen and (max-width: 767px) {
-        & {
-          margin-top: 15px !important;
-        }
-      }
-    }
-    .field:first-child {
-      margin-top: 0px !important;
-    }
-    .field:nth-child(n+5) {
-      margin-top: 1.6em;
-    }
-  }
-}
-
-.filters-form .filter-actions {
-  margin-bottom: 35px !important;
-  margin-top: 30px !important;
-}
-
-.datepicker-field .mx-datepicker:last-child {
-  @media only screen and (max-width: 767px) {
-    margin-top: 8px;
-  }
-}
-
-.interval-buttons .fluid.ui.buttons {
-  overflow-x: auto;
-}
-
-.view-title {
-  text-align: left;
-}
-
-.component-head-menu {
-  margin: 3rem 0rem 0rem !important;
-}
-
-.searchContactName > .results {
-  overflow: auto;
-  max-height: 300px;
-}
-
-.filters-form .ui.grid {
-  margin-top: 1rem;
-  margin-bottom: 0;
-}
-
-.ui.input.time-filter {
-  width: auto !important;
-}
-
-i.icon.time-filter {
-  margin: 0 .25rem;
-  position: relative;
-  top: 0.5rem;
-}
+@import "../styles/filters.scss"
 
 </style>
