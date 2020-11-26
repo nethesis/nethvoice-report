@@ -200,6 +200,13 @@ export default {
       }
     },
   },
+  beforeRouteLeave(to, from, next) {
+    // clear all slow query timeouts
+    for (let chart of this.charts) {
+      clearTimeout(chart.slowQueryTimeout);
+    }
+    next();
+  },
   methods: {
     onDataNotAvailable() {
       this.dataAvailable = false;
