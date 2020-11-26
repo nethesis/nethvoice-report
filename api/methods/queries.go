@@ -281,5 +281,34 @@ func buildCdrQuery(queryFile string, filter models.Filter) (string, error) {
 			queryBuilder.WriteString(" UNION ALL ")
 		}
 	}
+
+	// get query limit
+
+	var queryLimit string
+
+	settingsString, errCache := cacheConnection.Get("admin_settings").Result()
+
+	if errCache == nil {
+		// admin settings are cached
+
+		// convert to struct
+		var settingsCache map[string]models.Settings
+
+		errJson := json.Unmarshal([]byte(settingsString), &settingsCache)
+		if errJson != nil {
+			return "", errors.Wrap(err, "cannot unmarshal admin settings")
+		}
+		settings := settingsCache["settings"]
+		queryLimit = settings.QueryLimit
+	} else {
+		// get settings struct from configuration
+		settings := configuration.Config.Settings
+		queryLimit = settings.QueryLimit
+	}
+
+	// append limit to query
+
+	queryBuilder.WriteString(" LIMIT " + queryLimit)
+
 	return queryBuilder.String(), nil
 }
