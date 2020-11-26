@@ -155,7 +155,8 @@
       "cdr_not_available": "CDR & Cost report is not available yet, please come back later",
       "loading_filters": "Loading filters",
       "chart_error": "An error occured while loading chart",
-      "query_limit_description": "This is the maximum number of results that can be displayed by a table chart. If this limit is reached a warning icon is shown next to chart title"
+      "query_limit_description": "This is the maximum number of results that can be displayed by a table chart. If this limit is reached a warning icon is shown next to chart title",
+      "slow_query": "Processing is taking a while. Please narrow search filters, or keep waiting"
     },
     "pagination": {
       "page": "page",
