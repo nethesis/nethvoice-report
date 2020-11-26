@@ -6,3 +6,6 @@
 
 # precalculate filter values during night
 20 00 * * *     asterisk /opt/nethvoice-report/tasks/tasks values
+
+# execute cdr task to split cdr table
+30 00 * * *	asterisk /opt/nethvoice-report/tasks/tasks cdr
