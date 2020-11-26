@@ -19,44 +19,52 @@ var UtilService = {
       }
     },
     isFilterInView(filter) {
+      const report = this.$route.meta.report;
       const section = this.$route.meta.section;
       const view = this.$route.meta.view;
 
       if (section && view) {
-        return this.getQueueReportViewFilterMap()[section][view].includes(filter);
+        return this.getFiltersInViewMap()[report][section][view].includes(filter);
       } else {
         return false;
       }
     },
-    getQueueReportViewFilterMap() {
+    getFiltersInViewMap() {
       return {
-        "dashboard": {
-          "default": ["time", "queue", "agent", "ivr", "choice"],
+        "queue": {
+          "dashboard": {
+            "default": ["time", "queue", "agent", "ivr", "choice"],
+          },
+          "data": {
+            "summary": ["timeGroup", "time", "queue", "agent"],
+            "agent": ["timeGroup", "time", "queue", "agent"],
+            "session": ["time", "hour", "queue", "reason", "agent"],
+            "caller": ["timeGroup", "time", "queue", "caller", "contactName"],
+            "call": ["time", "hour", "queue", "caller", "contactName", "agent", "result"],
+            "lost_call": ["timeGroup", "time", "queue", "caller", "contactName", "reason"],
+            "ivr": ["timeGroup", "time", "ivr", "choice"]
+          },
+          "performance": {
+            "default": ["timeGroup", "time", "queue"]
+          },
+          "distribution": {
+            "hourly": ["timeGroup", "time", "queue", "timeSplit", "agent", "ivr"],
+            "geographic": ["timeGroup", "time", "queue", "origin"],
+          },
+          "graphs": {
+            "load": ["timeGroup", "time", "queue", "origin"],
+            "hour": ["time", "queue", "agent", "destination", "ivr", "choice"],
+            "agent": ["timeGroup", "time", "queue", "agent"],
+            "area": ["timeGroup", "time", "queue"],
+            "queue_position": ["time", "queue", "timeSplit"],
+            "avg_duration": ["time", "queue", "timeSplit"],
+            "avg_wait": ["time", "queue", "timeSplit"]
+          }
         },
-        "data": {
-          "summary": ["timeGroup", "time", "queue", "agent"],
-          "agent": ["timeGroup", "time", "queue", "agent"],
-          "session": ["time", "hour", "queue", "reason", "agent"],
-          "caller": ["timeGroup", "time", "queue", "caller", "contactName"],
-          "call": ["time", "hour", "queue", "caller", "contactName", "agent", "result"],
-          "lost_call": ["timeGroup", "time", "queue", "caller", "contactName", "reason"],
-          "ivr": ["timeGroup", "time", "ivr", "choice"]
-        },
-        "performance": {
-          "default": ["timeGroup", "time", "queue"]
-        },
-        "distribution": {
-          "hourly": ["timeGroup", "time", "queue", "timeSplit", "agent", "ivr"],
-          "geographic": ["timeGroup", "time", "queue", "origin"],
-        },
-        "graphs": {
-          "load": ["timeGroup", "time", "queue", "origin"],
-          "hour": ["time", "queue", "agent", "destination", "ivr", "choice"],
-          "agent": ["timeGroup", "time", "queue", "agent"],
-          "area": ["timeGroup", "time", "queue"],
-          "queue_position": ["time", "queue", "timeSplit"],
-          "avg_duration": ["time", "queue", "timeSplit"],
-          "avg_wait": ["time", "queue", "timeSplit"]
+        "cdr": {
+          "dashboard": {
+            "default": ["time", "hour"],
+          },
         }
       }
     },
