@@ -20,7 +20,6 @@ export default {
     };
   },
   mounted() {
-    this.$root.$off("sidebarHide", this.onSidebarHide); // avoid multiple event listeners
     this.$root.$on("sidebarHide", this.onSidebarHide);
   },
   methods: {

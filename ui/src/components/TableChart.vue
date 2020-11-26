@@ -301,10 +301,7 @@ export default {
       this.dataUpdated();
     }
     // reset table's sorted by variables
-    this.$root.$on("applyFilters", () => {
-      this.sortedBy = "period"
-      this.sortedDirection = "ascending"
-    })
+    this.$root.$on("applyFilters", this.onApplyFilters);
   },
   watch: {
     data: function () {
@@ -323,6 +320,10 @@ export default {
     },
   },
   methods: {
+    onApplyFilters() {
+      this.sortedBy = "period"
+      this.sortedDirection = "ascending"
+    },
     dataUpdated() {
       let tableData = this.data;
 
