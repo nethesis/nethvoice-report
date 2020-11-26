@@ -27,4 +27,5 @@ type UserAuthorizations struct {
 	Queues   []string `json:"queues"`
 	Groups   []string `json:"groups"`
 	Agents   []string `json:"agents"`
+	Users    []string `json:"users"`
 }
