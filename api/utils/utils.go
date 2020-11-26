@@ -162,6 +162,18 @@ func Intersect(a []string, b []string, objType string) []string {
 
 		return result
 
+	case "users":
+		// loop a array and check users name
+                for i, u := range a {
+                        parts := strings.Split(u, "|")
+                        var user = parts[0]
+
+                        if Contains(user, b) {
+                                result = append(result, a[i])
+                        }
+                }
+
+                return result
 	}
 
 	// return empty array
