@@ -65,6 +65,16 @@ var UtilService = {
           "dashboard": {
             "default": ["time", "hour"],
           },
+          "pbx_data": {
+            "incoming_calls": ["time", "hour"],
+            "outgoing_calls": ["time", "hour"],
+            "internal_calls": ["time", "hour"],
+          },
+          "personal_data": {
+            "incoming_calls": ["time", "hour"],
+            "outgoing_calls": ["time", "hour"],
+            "internal_calls": ["time", "hour"],
+          },
         }
       }
     },

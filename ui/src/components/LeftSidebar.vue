@@ -34,7 +34,7 @@
     <i @click="clearText()" :class="[search.length > 0 ? 'remove' : 'search', 'icon']"></i>
     <sui-input inverted :placeholder="$t('menu.start_typing')+'...'" transparent v-model="search" class="block" />
   </sui-menu-item>
-
+  <!-- is queue -->
   <div v-if="selectedReport == 'queue'">
     <router-link class="item fw-6 menu-section" :class="isActive('/queue') ? 'active' : ''" to="/queue">
       {{$t("menu.dashboard")}}
@@ -96,6 +96,35 @@
       </sui-menu-menu>
     </sui-menu-item>
   </div>
+  <!-- is cdr -->
+  <div v-if="selectedReport == 'cdr'">
+    <router-link class="item fw-6 menu-section" :class="isActive('/cdr') ? 'active' : ''" to="/cdr">
+      {{$t("menu.dashboard")}}
+      <span v-show="isTag('/cdr')" class="press-enter dot no-margin-top"></span>
+    </router-link>
+    <sui-menu-item class="menu-section" :active="isActive('data', true)">
+      <sui-menu-header>{{$t("menu.pbx_data")}}</sui-menu-header>
+      <sui-menu-menu>
+        <span v-show="isTag('/cdr/pbx/incoming_calls')" class="press-enter dot-small"></span>
+        <router-link size="big" is="sui-menu-item" :active="isActive('/cdr/pbx/incoming_calls')" to="/cdr/pbx/incoming_calls">{{$t("pbx_data.incoming_calls")}}</router-link>
+        <span v-show="isTag('/cdr/pbx/outgoing_calls')" class="press-enter dot-small"></span>
+        <router-link size="big" is="sui-menu-item" :active="isActive('/cdr/pbx/outgoing_calls')" to="/cdr/pbx/outgoing_calls">{{$t("pbx_data.outgoing_calls")}}</router-link>
+        <span v-show="isTag('/cdr/pbx/internal_calls')" class="press-enter dot-small"></span>
+        <router-link is="sui-menu-item" :active="isActive('/cdr/pbx/internal_calls')" to="/cdr/pbx/internal_calls">{{$t("pbx_data.internal_calls")}}</router-link>
+      </sui-menu-menu>
+    </sui-menu-item>
+    <sui-menu-item class="menu-section" :active="isActive('data', true)">
+      <sui-menu-header>{{$t("menu.personal_data")}}</sui-menu-header>
+      <sui-menu-menu>
+        <span v-show="isTag('/cdr/personal/incoming_calls')" class="press-enter dot-small"></span>
+        <router-link size="big" is="sui-menu-item" :active="isActive('/cdr/personal/incoming_calls')" to="/cdr/personal/incoming_calls">{{$t("personal_data.incoming_calls")}}</router-link>
+        <span v-show="isTag('/cdr/personal/outgoing_calls')" class="press-enter dot-small"></span>
+        <router-link size="big" is="sui-menu-item" :active="isActive('/cdr/personal/outgoing_calls')" to="/cdr/personal/outgoing_calls">{{$t("personal_data.outgoing_calls")}}</router-link>
+        <span v-show="isTag('/cdr/personal/internal_calls')" class="press-enter dot-small"></span>
+        <router-link is="sui-menu-item" :active="isActive('/cdr/personal/internal_calls')" to="/cdr/personal/internal_calls">{{$t("personal_data.internal_calls")}}</router-link>
+      </sui-menu-menu>
+    </sui-menu-item>
+  </div>
 </sui-menu>
 </template>
 
@@ -109,7 +138,7 @@ export default {
     return {
       search: "",
       taggedRoutes: [],
-      selectedReport: this.get("selectedReport") || 'queue',
+      selectedReport: this.$route.meta.report,
       loggedUsername: this.get("loggedUser") ? this.get("loggedUser").username : "",
       cdrVisited: false,
     }

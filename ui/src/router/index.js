@@ -259,6 +259,84 @@ const routes = [
       tags: ["dashboard"],
     },
   },
+  {
+    path: "/cdr/pbx/incoming_calls",
+    name: "PbxDataIncoming",
+    component: QueueView,
+    meta: {
+      name: "pbx_data.incoming_calls",
+      parent: "pbx_data",
+      section: "pbx_data",
+      view: "incoming_calls",
+      report: "cdr",
+      tags: ["pbx", "incoming"],
+    },
+  },
+  {
+    path: "/cdr/pbx/outgoing_calls",
+    name: "PbxDataOutgoing",
+    component: QueueView,
+    meta: {
+      name: "pbx_data.outgoing",
+      parent: "pbx_data",
+      section: "pbx_data",
+      view: "outgoing_calls",
+      report: "cdr",
+      tags: ["pbx", "outgoing"],
+    },
+  },
+  {
+    path: "/cdr/pbx/internal_calls",
+    name: "PbxDataInternal",
+    component: QueueView,
+    meta: {
+      name: "pbx_data.internal",
+      parent: "pbx_data",
+      section: "pbx_data",
+      view: "internal_calls",
+      report: "cdr",
+      tags: ["pbx", "internal"],
+    }
+  },
+  {
+    path: "/cdr/personal/incoming_calls",
+    name: "PersonalDataIncoming",
+    component: QueueView,
+    meta: {
+      name: "personal_data.incoming",
+      parent: "personal_data",
+      section: "personal_data",
+      view: "incoming_calls",
+      report: "cdr",
+      tags: ["personal", "incoming"],
+    }
+  },
+  {
+    path: "/cdr/personal/outgoing_calls",
+    name: "PersonalDataOutgoing",
+    component: QueueView,
+    meta: {
+      name: "personal_data.outgoing",
+      parent: "personal_data",
+      section: "personal_data",
+      view: "outgoing_calls",
+      report: "cdr",
+      tags: ["personal", "outgoing"],
+    }
+  },
+  {
+    path: "/cdr/personal/internal_calls",
+    name: "PersonalDataInternal",
+    component: QueueView,
+    meta: {
+      name: "personal_data.internal",
+      parent: "personal_data",
+      section: "personal_data",
+      view: "internal_calls",
+      report: "cdr",
+      tags: ["personal", "internal"],
+    }
+  }
 ];
 
 const router = new VueRouter({
