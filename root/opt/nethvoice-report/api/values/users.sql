@@ -1,4 +1,4 @@
-SELECT Concat(displayname, "|", Group_concat(extension)) AS users 
+SELECT Concat(username, "|", displayname, "|", Group_concat(extension)) AS users 
 FROM   asterisk.userman_users u 
        JOIN asterisk.rest_cti_users_groups cg 
          ON cg.user_id = u.id 
