@@ -124,6 +124,10 @@ func GetGraphData(c *gin.Context) {
 }
 
 func executeSqlQuery(filter models.Filter, report string, section string, view string, graph string, c *gin.Context) (string, error) {
+	// get current user
+        user := GetClaims(c)["id"].(string)
+	filter.CurrentUser = user
+
 	if report != "queue" && report != "cdr" {
 		return "", errors.Errorf("unknown report: %s", report)
 	}
@@ -154,7 +158,7 @@ func executeSqlQuery(filter models.Filter, report string, section string, view s
 	}
 
 	// create template
-	q := template.New(path.Base(queryFile)).Funcs(template.FuncMap{"ExtractStrings": utils.ExtractStrings}).Funcs(template.FuncMap{"ExtractPhones": utils.ExtractPhones}).Funcs(template.FuncMap{"ExtractOrigins": utils.ExtractOrigins}).Funcs(template.FuncMap{"ExtractSettings": utils.ExtractSettings}).Funcs(template.FuncMap{"PivotGroup": utils.PivotGroup})
+	q := template.New(path.Base(queryFile)).Funcs(template.FuncMap{"ExtractStrings": utils.ExtractStrings}).Funcs(template.FuncMap{"ExtractPhones": utils.ExtractPhones}).Funcs(template.FuncMap{"ExtractOrigins": utils.ExtractOrigins}).Funcs(template.FuncMap{"ExtractSettings": utils.ExtractSettings}).Funcs(template.FuncMap{"PivotGroup": utils.PivotGroup}).Funcs(template.FuncMap{"ExtractUserExtensions": utils.ExtractUserExtensions})
 
 	// parse template
 
