@@ -48,6 +48,28 @@ import (
 	"github.com/nethesis/nethvoice-report/api/utils"
 )
 
+func GetCallDetails(c *gin.Context) {
+	// extract info
+	linkedid := c.Param("linkedid")
+
+	// execute query
+        db := source.CDRInstance()
+        results, errQuery := db.Query("SELECT * FROM cdr WHERE linkedid = ? ORDER BY calldate", linkedid)
+        if errQuery != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "error executing SQL query", "status": errQuery.Error()})
+                return
+        }
+
+        // close results
+        defer results.Close()
+
+        // parse results
+        data := utils.ParseSqlResults(results)
+
+        // return data
+        c.Data(http.StatusOK, "application/json; charset=utf-8", []byte(data))
+}
+
 func GetGraphData(c *gin.Context) {
 	// extract report, section, view and graph
 	report := c.Param("report")
