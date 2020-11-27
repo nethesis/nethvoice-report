@@ -78,6 +78,15 @@ func ParseSqlResults(rows *sql.Rows) string {
 			if value == nil {
 				value = []uint8{}
 			}
+			if fmt.Sprintf("%T", value) == "time.Time" {
+				t := value.(time.Time)
+				value, _ = t.MarshalText()
+			}
+			if fmt.Sprintf("%T", value) == "int64" {
+				s := fmt.Sprint(value)
+				value = []byte(s)
+			}
+
 			value := string(value.([]byte))
 			record = append(record, value)
 		}
