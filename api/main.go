@@ -80,6 +80,11 @@ func main() {
 			filters.GET("", methods.GetDefaultFilter)
 		}
 
+		details := api.Group("/details/:linkedid")
+		{
+			details.GET("", methods.GetCallDetails)
+		}
+
 		phonebook := api.Group("/phonebook")
 		{
 			phonebook.GET("", methods.GetPhonebook)
