@@ -80,6 +80,18 @@ export default {
     },
     didLogout() {
       this.isLogged = false;
+
+      // remove from localstorage
+      this.delete("loggedUser");
+
+      // remove all event listeners
+      this.$root.$off();
+
+      // reset state of $root
+      this.$root.filtersReady = false;
+      this.$root.phonebook = [];
+      this.$root.reversePhonebook = {};
+      this.$root.colorScheme = "";
     },
     hideSidebar() {
       if (window.innerWidth < this.$mobileBound) {

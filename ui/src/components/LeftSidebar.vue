@@ -12,10 +12,14 @@
       <sui-dropdown :text="$t('menu.'+selectedReport)">
         <sui-dropdown-menu>
           <sui-dropdown-item @click="selectReport('queue')">
-            {{$t('menu.queue')}}
+            <router-link to="/queue" class="menu-item-color">
+              {{$t('menu.queue')}}
+            </router-link>
           </sui-dropdown-item>
           <sui-dropdown-item @click="selectReport('cdr')">
-            {{$t('menu.cdr')}}
+            <router-link to="/cdr" class="menu-item-color">
+              {{$t('menu.cdr')}}
+            </router-link>
           </sui-dropdown-item>
         </sui-dropdown-menu>
       </sui-dropdown>
@@ -127,7 +131,6 @@ export default {
     selectReport(report) {
       this.selectedReport = report;
       this.set("selectedReport", report)
-      this.$router.push("/" + report);
     },
     isActive(route, parent) {
       return parent ? route == this.$route.meta.parent : route == this.$route.path
@@ -265,4 +268,7 @@ export default {
   } 
 }
 
+.menu-item-color {
+  color: rgba(0,0,0,.87)!important;
+}
 </style>

@@ -105,37 +105,6 @@ func getSearchesFromCache() ([]models.Search, error) {
 	return searches, nil
 }
 
-// Get default filter for input section and view
-func getDefaultFilter(report string, section string, view string, jwtToken string) (models.Filter, error) {
-	// create request
-	client := &http.Client{}
-	requestUrl := fmt.Sprintf("%s/filters/%s/%s/%s", configuration.Config.APIEndpoint, report, section, view)
-	req, err := http.NewRequest("GET", requestUrl, nil)
-	if err != nil {
-		return models.Filter{}, errors.Wrap(err, "Error creating request")
-	}
-
-	// add authorization header
-	req.Header.Add("Authorization", "Bearer "+jwtToken)
-
-	// perform request
-	resp, err := client.Do(req)
-	if err != nil {
-		return models.Filter{}, errors.Wrap(err, "Error retrieving default filter")
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != 200 {
-		return models.Filter{}, errors.Errorf("Error retrieving default filter [STATUS]: %d", resp.StatusCode)
-	}
-
-	// decode response
-	var result map[string]models.Filter
-	json.NewDecoder(resp.Body).Decode(&result)
-	filter := result["filter"]
-	return filter, nil
-}
-
 // Retrieve the list of queries for the report, organized by section and view
 func getQueryTree(jwtToken string) (map[string]map[string][]string, error) {
 	// create request
