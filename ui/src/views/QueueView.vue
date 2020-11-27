@@ -158,10 +158,7 @@ export default {
   },
   mounted() {
     // event "dataNotAvailable" is triggered by $http interceptor if report tables don't exist yet
-    this.$root.$off("dataNotAvailable", this.onDataNotAvailable); // avoid multiple event listeners
     this.$root.$on("dataNotAvailable", this.onDataNotAvailable);
-
-    this.$root.$off("applyFilters", this.applyFilters); // avoid multiple event listeners
     this.$root.$on("applyFilters", this.applyFilters);
 
     // get office hours
@@ -378,7 +375,7 @@ export default {
     },
     retrieveDoc(queryName) {
       try {
-        let mdDoc = require("../doc-inline/" + this.$root.currentLocale + "/" +
+        let mdDoc = require("../doc-inline/" + this.$root.currentLocale + "/" + this.$route.meta.report + "/" +
             this.$route.meta.section + "_" + this.$route.meta.view + "_" + queryName + ".md");
         return mdDoc.default;
       } catch (error) {

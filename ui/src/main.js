@@ -60,7 +60,6 @@ new Vue({
     this.apiEndpoint = window.CONFIG.API_ENDPOINT;
     this.apiScheme = window.CONFIG.API_SCHEME;
     this.currentLocale = langConf.locale;
-    this.currentView = "";
     this.config = window.CONFIG;
   },
   data: {
