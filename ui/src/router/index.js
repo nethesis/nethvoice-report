@@ -264,7 +264,7 @@ const routes = [
     name: "PbxDataIncoming",
     component: QueueView,
     meta: {
-      name: "pbx_data.incoming_calls",
+      name: "menu.incoming_calls",
       parent: "pbx_data",
       section: "pbx_data",
       view: "incoming_calls",
@@ -277,7 +277,7 @@ const routes = [
     name: "PbxDataOutgoing",
     component: QueueView,
     meta: {
-      name: "pbx_data.outgoing",
+      name: "menu.outgoing_calls",
       parent: "pbx_data",
       section: "pbx_data",
       view: "outgoing_calls",
@@ -290,7 +290,7 @@ const routes = [
     name: "PbxDataInternal",
     component: QueueView,
     meta: {
-      name: "pbx_data.internal",
+      name: "menu.internal_calls",
       parent: "pbx_data",
       section: "pbx_data",
       view: "internal_calls",
@@ -303,7 +303,7 @@ const routes = [
     name: "PersonalDataIncoming",
     component: QueueView,
     meta: {
-      name: "personal_data.incoming",
+      name: "menu.incoming_calls",
       parent: "personal_data",
       section: "personal_data",
       view: "incoming_calls",
@@ -316,7 +316,7 @@ const routes = [
     name: "PersonalDataOutgoing",
     component: QueueView,
     meta: {
-      name: "personal_data.outgoing",
+      name: "menu.outgoing_calls",
       parent: "personal_data",
       section: "personal_data",
       view: "outgoing_calls",
@@ -329,7 +329,7 @@ const routes = [
     name: "PersonalDataInternal",
     component: QueueView,
     meta: {
-      name: "personal_data.internal",
+      name: "menu.internal_calls",
       parent: "personal_data",
       section: "personal_data",
       view: "internal_calls",

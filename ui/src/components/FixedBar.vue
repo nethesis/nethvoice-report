@@ -156,6 +156,89 @@
             {{activeFilters.nullCall}}
           </span>
         </div>
+        <!-- start cdr -->
+        <!-- label: caller active filter -->
+        <div class="ui label" v-if="showFilterCdrCaller && activeFilters.caller">
+          <span class="field">
+            {{$t('filter.caller_label')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.caller}}
+          </span>
+        </div>
+        <!-- label: callee active filter -->
+        <div class="ui label" v-if="showFilterCdrCallee && activeFilters.callee">
+          <span class="field">
+            {{$t('filter.callee')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.callee}}
+          </span>
+        </div>
+        <!-- label: call type active filter -->
+        <div class="ui label" v-if="showFilterCdrCallType && activeFilters.call_type && (activeFilters.call_type.length > 0)">
+          <span class="field">
+            {{$t('filter.call_type')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.call_type}}
+          </span>
+        </div>
+        <!-- label: call duration active filter -->
+        <div class="ui label" v-if="showFilterCdrCallDuration && activeFilters.call_duration && (activeFilters.call_duration.length > 0)">
+          <span class="field">
+            {{$t('filter.call_duration')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.call_duration}}
+          </span>
+        </div>
+        <!-- label: trunk active filter -->
+        <div class="ui label" v-if="showFilterCdrTrunk && activeFilters.trunks && (activeFilters.trunks.length > 0)">
+          <span class="field">
+            {{$t('filter.trunk')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.trunks}}
+          </span>
+        </div>
+        <!-- label: cti groups active filter -->
+        <div class="ui label" v-if="showFilterCdrCtiGroups && activeFilters.groups && (activeFilters.groups.length > 0)">
+          <span class="field">
+            {{$t('filter.cti_group')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.groups}}
+          </span>
+        </div>
+        <!-- label: users active filter -->
+        <div class="ui label" v-if="showFilterCdrUser && activeFilters.users && (activeFilters.users.length > 0)">
+          <span class="field">
+            {{$t('filter.user')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.users}}
+          </span>
+        </div>
+        <!-- label: destination type active filter -->
+        <div class="ui label" v-if="showFilterCdrDestType && activeFilters.destination_type && (activeFilters.destination_type.length > 0)">
+          <span class="field">
+            {{$t('filter.destination_type')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.destination_type}}
+          </span>
+        </div>
+        <!-- label: destination type active filter -->
+        <div class="ui label" v-if="showFilterCdrDestination && activeFilters.destination && (activeFilters.destination.length > 0)">
+          <span class="field">
+            {{$t('filter.destination')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.destination}}
+          </span>
+        </div>
+        <!-- clear filters action -->
         <div class="clear-filters">
           <a @click="clearFilters()">{{$t('filter.clear_filters')}}</a>
         </div>
@@ -190,7 +273,21 @@ export default {
     "showFilterTimeSplit",
     "showFilterCaller",
     "showFilterContactName",
-    "showFilterNullCall"
+    "showFilterNullCall",
+    "showFilterCdrFastTimeRange",
+    "showFilterCdrCaller",
+    "showFilterCdrCallee",
+    "showFilterCdrCallType",
+    "showFilterCdrCallDuration",
+    "showFilterCdrTrunk",
+    "showFilterCdrCtiGroups",
+    "showFilterCdrUser",
+    "showFilterCdrCalleeType",
+    "showFilterCdrDestType",
+    "showFilterCdrDestination",
+    "cdrCallDurationMap",
+    "destinationsTypeMap",
+    "filterValues"
   ],
   data() {
     return {
@@ -243,6 +340,9 @@ export default {
     },
     clearFilters() {
       this.$root.$emit("clearFilters")
+    },
+    isEmptyFilter(value) {
+      console.log(value)
     }
   },
   watch: {
@@ -259,6 +359,10 @@ export default {
     },
     "activeFilters.groups": function () {
       if (this.activeFilters.groups && this.lodash.isArray(this.activeFilters.groups) && this.activeFilters.groups.length > 0) {
+        this.activeFilters.groups.forEach((element, key) => {
+         let groupsValuesText = this.filterValues.ctiGroups.find(obj => obj.value === element).text
+          this.activeFilters.groups[key] = groupsValuesText
+        })
         this.activeFilters.groups = this.activeFilters.groups.join(", ")
       }
     },
@@ -295,6 +399,73 @@ export default {
     "activeFilters.destinations": function () {
       if (this.activeFilters.destinations && this.lodash.isArray(this.activeFilters.destinations) && this.activeFilters.destinations.length > 0) {
         this.activeFilters.destinations = this.activeFilters.destinations.join(", ")
+      }
+    },
+    "activeFilters.caller": function () {
+      if (this.activeFilters.caller) {
+        let callerValuesTitle = this.filterValues.cdrCaller.find(obj => obj.value === this.activeFilters.caller).title
+        this.activeFilters.caller = callerValuesTitle
+      }
+    },
+    "activeFilters.callee": function () {
+      if (this.activeFilters.callee) {
+        let calleeValuesTitle = this.filterValues.cdrCallee.find(obj => obj.value === this.activeFilters.callee).title
+        this.activeFilters.callee = calleeValuesTitle
+      }
+    },
+    "activeFilters.call_type": function () {
+      if (this.activeFilters.call_type && this.lodash.isArray(this.activeFilters.call_type) && this.activeFilters.call_type.length > 0) {
+        this.activeFilters.call_type = this.activeFilters.call_type.map((element) => {
+          return this.$t(`filter.${element}`)
+        })
+        this.activeFilters.call_type = this.activeFilters.call_type.join(", ")
+      }
+    },
+    "activeFilters.call_duration": function () {
+      if (this.activeFilters.call_duration && this.lodash.isArray(this.activeFilters.call_duration) && this.activeFilters.call_duration.length > 0) {
+        this.activeFilters.call_duration.forEach((duration , durationKey) => {
+          this.cdrCallDurationMap.forEach(element => {
+            if (element.value == duration) this.activeFilters.call_duration[durationKey] = element.text
+          })
+        })
+        this.activeFilters.call_duration = this.activeFilters.call_duration.join(", ")
+      }
+    },
+    "activeFilters.trunks": function () {
+      if (this.activeFilters.trunks && this.lodash.isArray(this.activeFilters.trunks) && this.activeFilters.trunks.length > 0) {
+        this.activeFilters.trunks.forEach((trunk, key) => {
+          let splittedTrunk = trunk.split(",")
+          let text = `${splittedTrunk[0]} (${splittedTrunk[1]})`
+          this.activeFilters.trunks[key] = text
+        })
+        this.activeFilters.trunks = this.activeFilters.trunks.join(", ")
+      }
+    },
+    "activeFilters.users": function () {
+      if (this.activeFilters.users && this.lodash.isArray(this.activeFilters.users) && this.activeFilters.users.length > 0) {
+        this.activeFilters.users.forEach((element, key) => {
+          let usersValuesText = this.filterValues.users.find(obj => obj.value === element).text
+          this.activeFilters.users[key] = usersValuesText
+        })
+        this.activeFilters.users = this.activeFilters.users.join(", ")
+      }
+    },
+    "activeFilters.destination_type": function () {
+      if (this.activeFilters.destination_type && this.lodash.isArray(this.activeFilters.destination_type) && this.activeFilters.destination_type.length > 0) {
+        this.activeFilters.destination_type.forEach((element, key) => {
+          let destinationsValuesText = this.destinationsTypeMap.find(obj => obj.value === element).text
+          this.activeFilters.destination_type[key] = destinationsValuesText
+        })
+        this.activeFilters.destination_type = this.activeFilters.destination_type.join(", ")
+      }
+    },
+    "activeFilters.destination": function () {
+      if (this.activeFilters.destination && this.lodash.isArray(this.activeFilters.destination) && this.activeFilters.destination.length > 0) {
+        this.activeFilters.destination.forEach((element, key) => {
+          let destinationValuesText = this.filterValues.cdrDestinations.find(obj => obj.value === element).text
+          this.activeFilters.destination[key] = destinationValuesText
+        })
+        this.activeFilters.destination = this.activeFilters.destination.join(", ")
       }
     }
   }

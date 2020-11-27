@@ -24,13 +24,12 @@
             >
           </sui-form-field>
         </sui-form-fields>
-        <!-- START QUEUE FILTERS -->
         <!-- group by -->
         <sui-form-fields v-if="showFilterTimeGroup">
           <sui-form-field width="four">
             <label>{{$t('filter.group_by')}}</label>
             <sui-dropdown
-              :options="groupByTimeValues"
+              :options="groupByTimeValuesMap"
               :placeholder="$t('filter.group_by')"
               search
               selection
@@ -40,6 +39,20 @@
         </sui-form-fields>
         <!-- time interval section -->
         <sui-form-fields class="interval-buttons">
+          <!-- CDR ONLY START -->
+          <!-- cdr: fast time range for -->
+          <sui-form-field v-if="showFilterCdrFastTimeRange" width="four">
+            <label class="ellipsis">{{$t('filter.time_range')}}</label>
+            <sui-dropdown
+              :options="fastCdrTimeRangeValuesMap"
+              :placeholder="$t('filter.time_range_label')"
+              @click="selectTime(fastCdrRange)"
+              search
+              selection
+              v-model="fastCdrRange"
+            />
+          </sui-form-field>
+          <!-- CDR ONLY END -->
           <!-- fast time range | if time group is day -->
           <sui-form-field v-if="(showFilterTime && filter.time.group == 'day') || (showFilterTime && !showFilterTimeGroup)">
             <label>{{$t('filter.time_range')}}</label>
@@ -136,8 +149,8 @@
               >
             </sui-button-group>
           </sui-form-field>
-          <!-- datapickers section -->
-          <sui-form-field class="datepicker-field">
+          <!-- datapickers section queues -->
+          <sui-form-field v-show="$route.meta.report == 'queue'" class="datepicker-field">
             <label :class="{ 'error-color': errorTimeInterval }">{{$t('filter.time_interval')}}</label>
             <!-- time interval start -->
             <!-- datetime -->
@@ -191,6 +204,37 @@
               :formatter="momentFormatter"
             ></date-picker>
           </sui-form-field>
+          <!-- CDR ONLY START -->
+          <!-- datapickers section cdr -->
+          <sui-form-field v-show="$route.meta.report == 'cdr'" class="datepicker-field">
+            <label :class="{ 'error-color': errorTimeInterval }">{{$t('filter.time_interval')}}</label>
+            <!-- time interval start -->
+            <!-- datetime -->
+            <date-picker
+              v-model="filter.time.interval.start"
+              type="datetime"
+              :placeholder="$t('filter.time_interval_start_placeholder')"
+              :clearable="false"
+              :show-second="false"
+              :disabled-date="fromToday"
+              :class="{ 'time-interval-error': errorTimeInterval }"
+              :formatter="momentFormatter"
+            ></date-picker>
+            <sui-icon name="right arrow time-filter" />
+            <!-- time interval end -->
+            <!-- datetime -->
+            <date-picker
+              v-model="filter.time.interval.end"
+              type="datetime"
+              :placeholder="$t('filter.time_interval_end_placeholder')"
+              :clearable="false"
+              :show-second="false"
+              :disabled-date="fromToday"
+              :class="{ 'time-interval-error': errorTimeInterval }"
+              :formatter="momentFormatter"
+            ></date-picker>
+          </sui-form-field>
+          <!-- CDR ONLY END -->
         </sui-form-fields>
         <sui-grid class="fields">
           <!-- queues -->
@@ -305,7 +349,7 @@
           <sui-form-field v-if="showFilterTimeSplit" width="four">
             <label>{{$t('filter.time_split_label')}}</label>
             <sui-dropdown
-              :options="splitByTimeValues"
+              :options="splitByTimeValuesMap"
               :placeholder="$t('filter.time_split_label')"
               search
               selection
@@ -353,8 +397,122 @@
             <label>{{$t('filter.null_call_label')}}</label>
             <sui-checkbox label toggle v-model="filter.nullCall" />
           </sui-form-field>
+          <!-- CDR ONLY START -->
+          <!-- EVERYWHERE -->
+          <!-- cdr: caller -->
+          <sui-form-field v-if="showFilterCdrCaller" width="four">
+            <label>{{$t('filter.caller')}}</label>
+            <SearchInput
+              :options="filterValues.cdrCaller"
+              :placeholder="$t('filter.caller_label')"
+              :minCharacters="3"
+              :searchFields="['title', 'description', 'phoneNumber']"
+              @select="setSelectedCaller"
+              @input="setFreeInputCaller"
+            />
+          </sui-form-field>
+          <!-- cdr: callee -->
+          <sui-form-field v-if="showFilterCdrCallee" width="four">
+            <label>{{$t('filter.callee')}}</label>
+            <SearchInput
+              :options="filterValues.cdrCallee"
+              :placeholder="$t('filter.callee')"
+              :minCharacters="3"
+              :searchFields="['title', 'description', 'phoneNumber']"
+              @select="setSelectedCallee"
+              @input="setFreeInputCallee"
+            />
+          </sui-form-field>
+          <!-- cdr: call type -->
+          <sui-form-field v-if="showFilterCdrCallType" width="four">
+            <label>{{$t('filter.call_type')}}</label>
+            <sui-dropdown
+              multiple
+              :options="cdrCallTypeMap"
+              :placeholder="$t('filter.call_type')"
+              search
+              selection
+              v-model="filter.call_type"
+            />
+          </sui-form-field>
+          <!-- cdr: call duration -->
+          <sui-form-field v-if="showFilterCdrCallDuration" width="four">
+            <label class="ellipsis">{{$t('filter.call_duration')}} ({{$t('filter.or_custom_seconds')}})</label>
+            <sui-dropdown
+              multiple
+              :options="cdrCallDurationMap"
+              :placeholder="$t('filter.call_duration')"
+              search
+              selection
+              allow-additions
+              v-model="filter.call_duration"
+            />
+          </sui-form-field>
+          <!-- cdr: trunk -->
+          <sui-form-field v-if="showFilterCdrTrunk" width="four">
+            <label>{{$t('filter.trunk')}}</label>
+            <sui-dropdown
+              multiple
+              :options="filterValues.cdrTrunk"
+              :placeholder="$t('filter.trunk')"
+              search
+              selection
+              v-model="filter.trunks"
+            />
+          </sui-form-field>
+          <!-- EVERYWHERE END -->
+          <!-- cdr: cti groups -->
+          <sui-form-field v-if="showFilterCdrCtiGroups" width="four">
+            <label>{{$t('filter.cti_group')}}</label>
+            <sui-dropdown
+              multiple
+              :options="filterValues.ctiGroups"
+              :placeholder="$t('filter.cti_group')"
+              search
+              selection
+              v-model="filter.groups"
+            />
+          </sui-form-field>
+          <!-- cdr: user -->
+          <sui-form-field v-if="showFilterCdrUser" width="four">
+            <label>{{$t('filter.user')}}</label>
+            <sui-dropdown
+              multiple
+              :options="filterValues.users"
+              :placeholder="$t('filter.user')"
+              search
+              selection
+              allow-additions
+              v-model="filter.users"
+            />
+          </sui-form-field>
+          <!-- cdr: destination type -->
+          <sui-form-field v-if="showFilterCdrDestType" width="four">
+            <label>{{$t('filter.destination_type')}}</label>
+            <sui-dropdown
+              multiple
+              :options="destinationsTypeMap"
+              :placeholder="$t('filter.destination_type')"
+              search
+              selection
+              allow-additions
+              v-model="filter.destination_type"
+            />
+          </sui-form-field>
+          <!-- cdr: destination -->
+          <sui-form-field v-if="showFilterCdrDestination" width="four">
+            <label>{{$t('filter.destination')}}</label>
+            <sui-dropdown
+              multiple
+              :options="filterValues.cdrDestinations"
+              :placeholder="$t('filter.destination')"
+              search
+              selection
+              v-model="filter.destination"
+            />
+          </sui-form-field>
+          <!-- CDR ONLY END -->
         </sui-grid>
-        <!-- START QUEUE FILTERS -->
         <!-- filters actions -->
         <sui-form-fields class="mg-top-md filter-actions">
           <sui-button
@@ -479,6 +637,19 @@
       :showFilterCaller="showFilterCaller"
       :showFilterContactName="showFilterContactName"
       :showFilterNullCall="showFilterNullCall"
+      :showFilterCdrFastTimeRange="showFilterCdrFastTimeRange"
+      :showFilterCdrCaller="showFilterCdrCaller"
+      :showFilterCdrCallee="showFilterCdrCallee"
+      :showFilterCdrCallType="showFilterCdrCallType"
+      :showFilterCdrCallDuration="showFilterCdrCallDuration"
+      :showFilterCdrTrunk="showFilterCdrTrunk"
+      :showFilterCdrCtiGroups="showFilterCdrCtiGroups"
+      :showFilterCdrUser="showFilterCdrUser"
+      :showFilterCdrDestType="showFilterCdrDestType"
+      :showFilterCdrDestination="showFilterCdrDestination"
+      :cdrCallDurationMap="cdrCallDurationMap"
+      :destinationsTypeMap="destinationsTypeMap"
+      :filterValues="filterValues"
     />
   </div>
 </template>
@@ -489,17 +660,21 @@ import StorageService from "../services/storage";
 import IndexedDbService from "../services/indexedDb";
 import SearchesService from "../services/searches";
 import UtilService from "../services/utils";
+import UiMaps from "../services/uimaps";
 import SearchService from "../services/searches";
 import PhonebookService from "../services/phonebook";
 import FixedBar from "../components/FixedBar.vue";
 import FilterService from "../services/filter";
+import SettingsService from "../services/settings";
+import SearchInput from "../components/SearchInput";
 
 import moment from "moment";
 
 export default {
   name: "Filters",
   components: {
-    FixedBar: FixedBar
+    FixedBar: FixedBar,
+    SearchInput: SearchInput
   },
   mixins: [
     LoginService,
@@ -510,6 +685,8 @@ export default {
     PhonebookService,
     IndexedDbService,
     FilterService,
+    UiMaps,
+    SettingsService
   ],
   props: ["showFiltersForm"],
   data() {
@@ -519,53 +696,6 @@ export default {
       PHONEBOOK_TTL_MINUTES: 8 * 60, // 8 hours
       FILTER_VALUES_TTL_MINUTES: 8 * 60, // 8 hours
       selectedSearch: null,
-      filtersMap: {
-        "queue": {
-          "dashboard": {
-            "default": ["time", "queue", "agent", "ivr", "choice"],
-          },
-          "data": {
-            "summary": ["timeGroup", "time", "queue", "agent"],
-            "agent": ["timeGroup", "time", "queue", "agent"],
-            "session": ["time", "hour", "queue", "reason", "agent"],
-            "caller": ["timeGroup", "time", "queue", "caller", "contactName"],
-            "call": ["time", "hour", "queue", "caller", "contactName", "agent", "result"],
-            "lost_call": ["timeGroup", "time", "queue", "caller", "contactName", "reason"],
-            "ivr": ["timeGroup", "time", "ivr", "choice"]
-          },
-          "performance": {
-            "default": ["timeGroup", "time", "queue"]
-          },
-          "distribution": {
-            "hourly": ["timeGroup", "time", "queue", "timeSplit", "agent", "ivr"],
-            "geographic": ["timeGroup", "time", "queue", "origin"],
-          },
-          "graphs": {
-            "load": ["timeGroup", "time", "queue", "origin"],
-            "hour": ["time", "queue", "agent", "destination", "ivr", "choice"],
-            "agent": ["timeGroup", "time", "queue", "agent"],
-            "area": ["timeGroup", "time", "queue"],
-            "queue_position": ["time", "queue", "timeSplit"],
-            "avg_duration": ["time", "queue", "timeSplit"],
-            "avg_wait": ["time", "queue", "timeSplit"]
-          }
-        },
-        "cdr": {
-          "dashboard": {
-            "default": ["time", "hour"],
-          },
-          "pbx_data": {
-            "incoming_calls": ["time", "hour"],
-            "outgoing_calls": ["time", "hour"],
-            "internal_calls": ["time", "hour"],
-          },
-          "personal_data": {
-            "incoming_calls": ["time", "hour"],
-            "outgoing_calls": ["time", "hour"],
-            "internal_calls": ["time", "hour"],
-          },
-        }
-      },
       filter: {
         queues: [],
         groups: [],
@@ -588,6 +718,13 @@ export default {
         caller: "",
         contactName: "",
         nullCall: false, ////
+        callee: null,
+        call_type: "",
+        call_duration: "",
+        trunks: "",
+        users: "",
+        destination_type: "",
+        destination: ""
       },
       filterValues: {
         queues: [],
@@ -602,8 +739,15 @@ export default {
         origins: [],
         callers: [],
         contactNames: [],
+        cdrCaller: [],
+        cdrCallee: [],
+        cdrTrunk: [],
+        ctiGroups: [],
+        users: [],
+        cdrDestinations: [],
         devices: {},
       },
+      fastCdrRange: null,
       savedSearches: [],
       openSaveSearchModal: false,
       openOverwriteSearchModal: false,
@@ -617,18 +761,6 @@ export default {
         saveSearch: false,
         deleteSearch: false,
       },
-      groupByTimeValues: [
-        { value: "day", text: this.$i18n.t('filter.day') },
-        { value: "week", text: this.$i18n.t('filter.week') },
-        { value: "month", text: this.$i18n.t('filter.month') },
-        { value: "year", text: this.$i18n.t('filter.year') },
-      ],
-      splitByTimeValues: [
-        { value: "60", text: "1 hour" },
-        { value: "30", text: "30 minutes" },
-        { value: "15", text: "15 minutes" },
-        { value: "10", text: "10 minutes" },
-      ],
       queueReportViewFilterMap: null,
       momentFormatter: {
         stringify: (date) => {
@@ -735,8 +867,6 @@ export default {
     // views request to apply filter on loading
     this.$root.$on("requestApplyFilter", this.onRequestApplyFilter);
     this.$root.$on("clearFilters", this.clearFilters);
-
-    this.retrievePhonebook();
   },
   methods: {
     onRequestApplyFilter() {
@@ -748,7 +878,7 @@ export default {
       this.loader.filter = true;
       let filter = this.get(this.reportFilterStorageName);
       let filterValues = this.get(this.reportFilterValuesStorageName);
-
+      // check filters validity
       if (
         filter &&
         filterValues &&
@@ -756,20 +886,144 @@ export default {
       ) {
         // get object from local storage item
         filterValues = filterValues.item;
-
         this.filterValues = filterValues;
         this.$root.devices = this.filterValues.devices;
 
         // set selected values in filter
         this.setFilterSelection(filter, true);
+        // retrieve phonebook when
+        this.retrievePhonebook();
       } else {
         this.retrieveDefaultFilter();
       }
     },
+    // custom search callback functions
+    // start caller
+    setSelectedCaller(obj) {
+      if (obj) this.filter.caller = obj.value
+    },
+    setFreeInputCaller(value) {
+      if (value) this.filter.caller = value
+    },
+    // end caller
+    // start callee
+    setSelectedCallee(obj) {
+      if (obj) this.filter.callee = obj.value
+    },
+    setFreeInputCallee(value) {
+      if (value) this.filter.callee = value
+    },
+    // end callee
+    // add phonebook contacts to filterValues
+    addContactsToValues() {
+      console.log("ROOT phonebook", this.$root.phonebook)
+      let contacts = this.$root.phonebook.map((contact) => {
+        return ({
+          "title": contact.title,
+          "type": "phonebook",
+          "description": `${contact.cleanName} ${contact.company}`,
+          "phoneNumber": "",
+          "value": contact.title
+        })
+      })
+      // add contacts to caller values
+      this.filterValues.cdrCaller.push(...contacts)
+      // add contacts to callee values
+      this.filterValues.cdrCallee.push(...contacts)
+    },
+    
     retrieveDefaultFilter() {
       this.getDefaultFilter(
-        (success) => {
+        async (success) => {
           this.defaultFilter = success.body.filter;
+          // get cdr destinations values
+          await this.getSettingsPromise().then((res) => {
+            let destinations = res.settings.destinations.map((element) => {
+              return({
+                value: element,
+                text: !this.$t(`filter.${element.toLowerCase()}`).includes("filter.") ? this.$t(`filter.${element.toLowerCase()}`) : element
+              })
+            })
+            this.filterValues.cdrDestinations = destinations
+          })
+
+          // parse some data from default filters
+          let users = this.defaultFilter.users.map((user) => {
+            let parsedUser = user.split("|")
+            return {
+              "title": parsedUser[1],
+              "type": "users",
+              "description": user,
+              "phoneNumber": "",
+              "value": parsedUser[2]
+            }
+          })
+          let destinations = this.filterValues.cdrDestinations.map((destination) => {
+            return({
+              "title": destination.text,
+              "type": "destinations",
+              "description": destination.text,
+              "phoneNumber": "",
+              "value": destination.text
+            })
+          })
+          let ctiGroups = this.defaultFilter.groups.map((group) => {
+            let parsedGroup = group.split("|")
+            return({
+              "title": parsedGroup[0],
+              "type": "cti_groups",
+              "description": parsedGroup[0],
+              "phoneNumber": "",
+              "value": parsedGroup[1]
+            })
+          })
+          // add users, destinations and ctiGroups to cdrCaller values
+          this.filterValues.cdrCaller.push(...users, ...destinations, ...ctiGroups)
+          // parse other data from default filters
+          let dids = this.defaultFilter.dids.map((did) => {
+            return({
+              "title": did,
+              "type": "dids",
+              "description": did,
+              "phoneNumber": "",
+              "value": did
+            })
+          })
+          // add users, destinations, dids and ctiGroups to cdrCallee values
+          this.filterValues.cdrCallee.push(...users, ...destinations, ...ctiGroups, ...dids)
+
+          // cdr trunks
+          if (this.defaultFilter.trunks) {
+            this.filterValues.cdrTrunk = this.defaultFilter.trunks.map((trunk) => {
+              let text =  `${trunk.split(",")[0]} (${trunk.split(",")[1]})`
+              return({
+                text: text,
+                value: trunk
+              })
+            })
+          }
+
+          // cdr cti groups
+          if (this.defaultFilter.groups) {
+            this.filterValues.ctiGroups = this.defaultFilter.groups.map((group) => {
+              let parsedGroup = group.split("|")
+              return({
+                text: parsedGroup[0],
+                value: parsedGroup[1]
+              })
+            })
+          }
+
+          // cdr users
+          if (this.defaultFilter.users) {
+            this.filterValues.users = this.defaultFilter.users.map((user) => {
+              let parsedUser = user.split("|")
+              return({
+                text: parsedUser[1],
+                value: parsedUser[2]
+              })
+            })
+          }
 
           // queues
           if (this.defaultFilter.queues) {
@@ -823,12 +1077,10 @@ export default {
               });
               choiceSet.add(choiceName);
             });
-
             let choices = [];
             choiceSet.forEach((choice) => {
               choices.push({ value: choice, text: choice });
             });
-
             this.filterValues.choices = choices.sort(
               this.sortByProperty("text")
             );
@@ -921,6 +1173,8 @@ export default {
 
           // set selected values in filter
           this.setFilterSelection(this.defaultFilter, false);
+          // retrieve phonebook after default filters
+          this.retrievePhonebook();
         },
         (error) => {
           console.error(error.body);
@@ -1033,9 +1287,39 @@ export default {
           start: this.getYesterday("start"),
           end: this.getYesterday("end"),
         };
+      } else if (range == "last_two_days") {
+        this.filter.time.interval = {
+          start: this.getLastTwoDays("start"),
+          end: this.getYesterday("end"),
+        };
+      } else if (range == "current_week") {
+        this.filter.time.interval = {
+          start: this.getCurrentWeek("start"),
+          end: this.getYesterday("end"),
+        };
+      } else if (range == "last_seven_days") {
+        this.filter.time.interval = {
+          start: this.getLastSevenDays(),
+          end: this.getYesterday("end"),
+        };
       } else if (range == "last_week") {
         this.filter.time.interval = {
           start: this.getLastWeek("start"),
+          end: this.getYesterday("end"),
+        };
+      } else if (range == "current_month") {
+        this.filter.time.interval = {
+          start: this.getCurrentMonth("start"),
+          end: this.getYesterday("end"),
+        };
+      } else if (range == "last_three_months") {
+        this.filter.time.interval = {
+          start: this.getLastThreeMonths("start"),
+          end: this.getYesterday("end"),
+        };
+      } else if (range == "current_year") {
+        this.filter.time.interval = {
+          start: this.getCurrentYear("start"),
           end: this.getYesterday("end"),
         };
       } else if (range == "last_two_weeks") {
@@ -1412,6 +1696,8 @@ export default {
           }
         );
       }
+      // function to add phonebook contacts to filters
+      this.addContactsToValues()
     },
     contactNameInput() {
       // get clean name from user input
@@ -1461,6 +1747,12 @@ export default {
       this.filter.origins = [];
       this.filter.caller = "";
       this.filter.contactName = "";
+      this.filter.call_type = [];
+      this.filter.call_duration = [];
+      this.filter.trunks = [];
+      this.filter.users = [];
+      this.filter.destination_type = [];
+      this.filter.destination = [];
       this.applyFilters()
     }
   },
@@ -1512,6 +1804,46 @@ export default {
     },
     showFilterNullCall: function () {
       return this.isFilterInView("nullCall", this.filtersMap);
+    },
+    // cdr filters check
+    showFilterCdrFastTimeRange: function () {
+      return this.isFilterInView("cdr_fastTimeRange", this.filtersMap);
+    },
+    // cdr caller check
+    showFilterCdrCaller: function () {
+      return this.isFilterInView("cdr_caller", this.filtersMap);
+    },
+    // cdr callee check
+    showFilterCdrCallee: function () {
+      return this.isFilterInView("cdr_callee", this.filtersMap);
+    },
+    // cdr callee check
+    showFilterCdrCallType: function () {
+      return this.isFilterInView("cdr_callType", this.filtersMap);
+    },
+    // cdr callee check
+    showFilterCdrCallDuration: function () {
+      return this.isFilterInView("cdr_callDuration", this.filtersMap);
+    },
+    // cdr trunk check
+    showFilterCdrTrunk: function () {
+      return this.isFilterInView("cdr_trunk", this.filtersMap);
+    },
+    // cdr cti groups check
+    showFilterCdrCtiGroups: function () {
+      return this.isFilterInView("cdr_ctiGroups", this.filtersMap);
+    },
+    // cdr user check
+    showFilterCdrUser: function () {
+      return this.isFilterInView("cdr_user", this.filtersMap);
+    },
+    // cdr destination type
+    showFilterCdrDestType: function () {
+      return this.isFilterInView("cdr_destinationType", this.filtersMap);
+    },
+    // cdr destination
+    showFilterCdrDestination: function () {
+      return this.isFilterInView("cdr_destination", this.filtersMap);
     },
     reportFilterStorageName: function () {
       return "reportFilter-" + this.get("loggedUser").username;

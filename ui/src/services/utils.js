@@ -318,6 +318,51 @@ var UtilService = {
         return yesterday.endOf('day').toDate();
       }
     },
+    getLastTwoDays(startOrEnd) {
+      const twoDaysAgo = moment().subtract(2, 'day');
+
+      if (startOrEnd == "start") {
+        return twoDaysAgo.startOf('day').toDate();
+      } else {
+        return twoDaysAgo.endOf('day').toDate();
+      }
+    },
+    getCurrentWeek(startOrEnd) {
+      const today = moment();
+
+      if (startOrEnd == "start") {
+        return today.weekday(0).toDate();
+      } else {
+        return today.weekday(7).toDate();
+      }
+    },
+    getCurrentMonth(startOrEnd) {
+      const today = moment();
+
+      if (startOrEnd == "start") {
+        return today.startOf('month').toDate();
+      } else {
+        return today.endOf('month').toDate();
+      }
+    },
+    getLastThreeMonths(startOrEnd) {
+      const threeMonthsAgo = moment().subtract(3, 'months');
+
+      if (startOrEnd == "start") {
+        return threeMonthsAgo.startOf('day').toDate();
+      } else {
+        return threeMonthsAgo.endOf('day').toDate();
+      }
+    },
+    getCurrentYear(startOrEnd) {
+      const currentYear = moment();
+
+      if (startOrEnd == "start") {
+        return currentYear.startOf('year').toDate();
+      } else {
+        return currentYear.endOf('year').toDate();
+      }
+    },
     getLastWeek(startOrEnd) {
       const aWeekAgo = moment().subtract(1, 'week');
 
