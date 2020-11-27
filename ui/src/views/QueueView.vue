@@ -78,7 +78,7 @@
           <div v-show="chart.data && chart.data.length > 1">
             <!-- table chart -->
             <div v-if="chart.type == 'table'">
-              <TableChart :caption="chart.caption" :data="chart.data" :chartKey="`${index}`" :officeHours="officeHours" :filterTimeSplit="filterTimeSplit" />
+              <TableChart :caption="chart.caption" :data="chart.data" :chartKey="`${index}`" :officeHours="officeHours" :filterTimeSplit="filterTimeSplit" :report="$route.meta.report"/>
             </div>
             <!-- line chart -->
             <div v-if="chart.type == 'line'">
@@ -411,7 +411,7 @@ export default {
   margin-bottom: 1rem !important;
 }
 
-.ui.table.chart-details {
+.ui.table.chart-details, .ui.table.cdr-details {
   margin: 0 auto;
 }
 

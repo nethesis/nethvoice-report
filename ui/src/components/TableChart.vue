@@ -48,6 +48,10 @@
             }}
           </a>
         </sui-table-header-cell>
+        <!-- details header for CDR -->
+        <sui-table-header-cell v-if="report == 'cdr'" class="not-sortable">
+          {{ $t('table.actions') }}
+        </sui-table-header-cell>
       </sui-table-row>
       <!-- middle header -->
       <sui-table-row v-if="middleHeaders.length">
@@ -157,11 +161,21 @@
               {{ element }}
             </span>
           </sui-table-cell>
+          <!-- details button for CDR -->
+          <sui-table-cell v-if="report == 'cdr'">
+            <sui-button
+              type="button"
+              @click.native="showCdrDetailsModal(row)"
+              size="tiny"
+              icon="zoom"
+              >{{ $t('command.show_details') }}</sui-button
+            >
+          </sui-table-cell>
         </sui-table-row>
       </sui-table-body>
       <sui-table-footer>
         <sui-table-row>
-          <sui-table-header-cell :colspan="columns.length">
+          <sui-table-header-cell :colspan="report == 'cdr' ? columns.length + 1 : columns.length">
             <sui-menu pagination class="no-border">
               <span is="sui-menu-item" class="small-pad"
                 >{{ pagination.firstRowIndex + 1 }} -
@@ -233,12 +247,34 @@
       :containerId="`#container_${chartKey}`"
       :chartData="data"
     />
+
+    <!-- CDR details modal -->
+    <sui-form @submit.prevent="hideCdrDetailsModal()" warning>
+      <sui-modal v-model="cdr.openDetailsModal" size="small" class="cdr-details">
+        <sui-modal-header>{{ $t("misc.call_details") }}</sui-modal-header>
+        <sui-modal-content scrolling>
+          <TableChart v-if="cdr.details.length" :minimal="true" :caption="$t('misc.details')" :data="cdr.details" class="cdr-details"/>
+          <div v-else>
+            <sui-loader active centered inline class="mg-bottom-sm fix" />
+            <sui-message warning class="align-center">
+              <i class="exclamation triangle icon"></i>{{ $t("message.plase_wait") }}
+            </sui-message>
+          </div>
+        </sui-modal-content>
+        <sui-modal-actions>
+          <sui-button type="submit" primary>
+            {{ $t("command.close") }}
+          </sui-button>
+        </sui-modal-actions>
+      </sui-modal>
+    </sui-form>
   </div>
 </template>
 
 <script>
 import UtilService from "../services/utils";
 import StorageService from "../services/storage";
+import CdrDetailsService from "../services/cdr_details";
 import HorizontalScrollers from "../components/HorizontalScrollers.vue";
 
 export default {
@@ -265,8 +301,11 @@ export default {
     filterTimeSplit: {
       type: Number,
     },
+    report: {
+      type: String,
+    },
   },
-  mixins: [UtilService, StorageService],
+  mixins: [UtilService, StorageService, CdrDetailsService],
   components: { HorizontalScrollers },
   data() {
     return {
@@ -286,7 +325,12 @@ export default {
         lastRowIndex: 0,
       },
       sortedBy: "period",
-      sortedDirection: "ascending"
+      sortedDirection: "ascending",
+      cdr: {
+        openDetailsModal: false,
+        linkedId: "",
+        details: [],
+      }
     };
   },
   mounted() {
@@ -913,7 +957,25 @@ export default {
         return rule
       })
       this.updatePagination()
-    }
+    },
+    showCdrDetailsModal(row) {
+      this.cdr.linkedId = row[4]; //// adapt to column index in query
+      this.cdr.details = [];
+      this.cdr.openDetailsModal = true;
+
+      this.getCdrDetails(
+        this.cdr.linkedId,
+        (success) => {
+          this.cdr.details = success.body;
+        },
+        (error) => {
+          console.error(error.body);
+        }
+      );
+    },
+    hideCdrDetailsModal() {
+      this.cdr.openDetailsModal = false;
+    },
   },
 };
 </script>
@@ -933,5 +995,13 @@ export default {
     background: #f9fafb !important;
     cursor: default !important;
   }
+}
+
+.ui.dimmer .ui.fix.loader:before {
+  border-color: rgba(0,0,0,.1);
+}
+
+.ui.dimmer .ui.fix.loader:after {
+  border-color: #767676 transparent transparent;
 }
 </style>
