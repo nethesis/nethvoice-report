@@ -67,8 +67,6 @@ github.com/modern-go/reflect2 v1.0.1 h1:9f412s+6RmYXLWZSEzVVgPGK7C2PphHj5RJrvfx9
 github.com/modern-go/reflect2 v1.0.1/go.mod h1:bx2lNnkwVCuqBIxFjflWJWanXIb3RllmbCylyMrvgv0=
 github.com/msteinert/pam v0.0.0-20200810204841-913b8f8cdf8b h1:UZ7RWBA77dedMow4Zkek/gfJ/DRbti7C+Ny/Pf9D3gM=
 github.com/msteinert/pam v0.0.0-20200810204841-913b8f8cdf8b/go.mod h1:np1wUFZ6tyoke22qDJZY40URn9Ae51gX7ljIWXN5TJs=
-github.com/nethesis/nethvoice-report v0.0.0-20200911131145-2bb8a41077c9 h1:0BgaMtnzb38k4n34U+Nx/kTwtMVD5Q1P/BrsoLWjTo0=
-github.com/nethesis/nethvoice-report v0.0.0-20200921070514-b2a2d29862c0 h1:FoSWgw+59oMgmetAfXZZWuszPNnAWhDHtj8xPcQhbIc=
 github.com/nleeper/goment v1.4.0 h1:k+PnV26S9wnxI+ryxKEkpG7JhVtDJpM6+CzeRxh5S54=
 github.com/nleeper/goment v1.4.0/go.mod h1:zDl5bAyDhqxwQKAvkSXMRLOdCowrdZz53ofRJc4VhTo=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
