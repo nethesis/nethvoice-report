@@ -658,10 +658,7 @@ export default {
     this.getSavedSearches();
 
     // views request to apply filter on loading
-    this.$root.$off("requestApplyFilter", this.onRequestApplyFilter); // avoid multiple event listeners
     this.$root.$on("requestApplyFilter", this.onRequestApplyFilter);
-
-    this.$root.$off("clearFilters", this.clearFilters); // avoid multiple event listeners
     this.$root.$on("clearFilters", this.clearFilters);
 
     this.retrievePhonebook();

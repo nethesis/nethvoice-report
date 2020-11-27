@@ -195,7 +195,6 @@ export default {
     }
   },
   mounted() {
-    this.$root.$off("applyFilters", this.onApplyFilters); // avoid multiple event listeners
     this.$root.$on("applyFilters", this.onApplyFilters);
 
     this.$nextTick(() => {
@@ -203,7 +202,6 @@ export default {
     })
 
     // event "dataNotAvailable" is triggered by $http interceptor if report tables don't exist yet
-    this.$root.$off("dataNotAvailable", this.onDataNotAvailable); // avoid multiple event listeners
     this.$root.$on("dataNotAvailable", this.onDataNotAvailable);
   },
   destroyed() {
