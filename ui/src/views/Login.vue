@@ -58,7 +58,6 @@ export default {
   },
   mixins: [LoginService, StorageService],
   mounted() {
-    this.$root.$off("logout", this.onLogout); // avoid multiple event listeners
     this.$root.$on("logout", this.onLogout);
 
     this.$nextTick(() => {
