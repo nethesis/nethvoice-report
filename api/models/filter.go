@@ -48,6 +48,8 @@ type Filter struct {
 		} `json:"interval"`
 	} `json:"time"`
 
+	CurrentUser string `json:"currentUser"`
+
 	Caller   string `json:"caller"`
 	Name     string `json:"contactName"`
 	GeoGroup string `json:"geoGroup"`

@@ -302,6 +302,42 @@ func ExtractSettings(settingName string) string {
 	return string(f.String())
 }
 
+func ExtractUserExtensions(user string) string {
+	// init extensions var
+	var extensions string
+
+	// init cache connection
+	cacheConnection := cache.Instance()
+
+	// read default filter from cache
+	valuesFilterString, errCache := cacheConnection.Get("values_filter").Result()
+
+	// check error for filter
+	if errCache != nil {
+		LogError(errors.Wrap(errCache, "error reading filter from cache"))
+		return ""
+	}
+
+	// convert to struct
+	var valuesFilter models.Filter
+	errJson := json.Unmarshal([]byte(valuesFilterString), &valuesFilter)
+	if errJson != nil {
+		LogError(errors.Wrap(errJson, "error converting filter"))
+		return ""
+	}
+
+	users := valuesFilter.Users
+	for _, u := range users {
+		parts := strings.Split(u, "|")
+		if parts[0] == user {
+			extensions = parts[2]
+			return extensions
+		}
+	}
+
+	return ""
+}
+
 func EpochToHumanDate(epochTime int) string {
 	i, err := strconv.ParseInt(strconv.Itoa(epochTime), 10, 64)
 	if err != nil {
