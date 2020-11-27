@@ -375,7 +375,7 @@ export default {
     },
     retrieveDoc(queryName) {
       try {
-        let mdDoc = require("../doc-inline/" + this.$root.currentLocale + "/" +
+        let mdDoc = require("../doc-inline/" + this.$root.currentLocale + "/" + this.$route.meta.report + "/" +
             this.$route.meta.section + "_" + this.$route.meta.view + "_" + queryName + ".md");
         return mdDoc.default;
       } catch (error) {
