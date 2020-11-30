@@ -35,6 +35,7 @@ import (
 	"github.com/nethesis/nethvoice-report/api/cache"
 	"github.com/nethesis/nethvoice-report/api/configuration"
 	"github.com/nethesis/nethvoice-report/api/source"
+	"github.com/nethesis/nethvoice-report/api/utils"
 	"github.com/nethesis/nethvoice-report/tasks/helper"
 )
 
@@ -99,7 +100,7 @@ func executeReportCDR() {
 		objTemplate.Year = y
 		objTemplate.Month = 0
 
-		tplY := template.Must(template.New(path.Base(templateY)).Funcs(template.FuncMap{"YearMap": yearMap}).Funcs(template.FuncMap{"MonthMap": monthMap}).ParseFiles(templateY))
+		tplY := template.Must(template.New(path.Base(templateY)).Funcs(template.FuncMap{"YearMap": yearMap}).Funcs(template.FuncMap{"MonthMap": monthMap}).Funcs(template.FuncMap{"ExtractPatterns": utils.ExtractPatterns}).ParseFiles(templateY))
 		errTpl := tplY.Execute(&queryY, &objTemplate)
 		if errTpl != nil {
 			helper.FatalError(errors.Wrap(errTpl, "invalid query template compiling"))
