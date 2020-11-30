@@ -13,7 +13,8 @@ SELECT *,
        asterisk.trunks), "OUT", "LOCAL"))  AS type,
        Group_concat(disposition, "")       AS dispositions,
        Group_concat(lastapp, "")           AS lastapps,
-       Group_concat(dcontext, "")          AS dcontexts
+       Group_concat(dcontext, "")          AS dcontexts,
+       {{ ExtractPatterns }}               AS call_type
 FROM   cdr c
 WHERE  uniqueid = linkedid
        AND date_format(calldate, "%Y") = "{{ .Year }}"
@@ -35,7 +36,8 @@ SELECT *,
        asterisk.trunks), "OUT", "LOCAL"))  AS type,
        Group_concat(disposition, "")       AS dispositions,
        Group_concat(lastapp, "")           AS lastapps,
-       Group_concat(dcontext, "")          AS dcontexts
+       Group_concat(dcontext, "")          AS dcontexts,
+       {{ ExtractPatterns }}               AS call_type
 FROM   cdr c
 WHERE  uniqueid = linkedid
        AND date_format(calldate, "%Y") = "{{ .Year }}"
