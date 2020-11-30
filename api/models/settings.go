@@ -23,7 +23,12 @@
 package models
 
 type Settings struct {
-	StartHour   string `json:"start_hour"`
-	EndHour     string `json:"end_hour"`
-	QueryLimit  string `json:"query_limit"`
+	StartHour    string `json:"start_hour"`
+	EndHour      string `json:"end_hour"`
+	QueryLimit   string `json:"query_limit"`
+	CallPatterns []struct {
+		Pattern string `json:"pattern"`
+		Name    string `json:"name"`
+	} `json:"call_patterns"`
+	Currency     string `json:"currency"`
 }

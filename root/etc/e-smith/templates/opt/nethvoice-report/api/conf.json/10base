@@ -60,6 +60,26 @@
         "settings": \{
           "start_hour": "09:00",
           "end_hour": "18:00",
-          "query_limit": "2000"
+          "query_limit": "2000",
+          "call_patterns": [{
+            "name": "national",
+            "pattern": "00390%"
+          }, {
+            "name": "mobile",
+            "pattern": "00393%"
+          }, {
+            "name": "international",
+            "pattern": "00%"
+          }, {
+            "name": "mobile",
+            "pattern": "3%"
+          }, {
+            "name": "national",
+            "pattern": "0%"
+          }, {
+            "name": "emergency",
+            "pattern": "1%"
+          }],
+          "currency": "EUR"
         \}
 \}
