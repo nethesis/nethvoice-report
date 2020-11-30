@@ -52,22 +52,42 @@ func GetCallDetails(c *gin.Context) {
 	// extract info
 	linkedid := c.Param("linkedid")
 
-	// execute query
-        db := source.CDRInstance()
-        results, errQuery := db.Query("SELECT * FROM cdr WHERE linkedid = ? ORDER BY calldate", linkedid)
-        if errQuery != nil {
+	// init cache connection
+	cacheConnection := cache.Instance()
+
+	// check if call detail is locally cached
+	data, errCache := cacheConnection.Get(linkedid).Result()
+
+	// data is cached, return immediately
+	if errCache == nil {
+		c.Data(http.StatusOK, "application/json; charset=utf-8", []byte(data))
+		return
+	}
+
+	// call detail is not cached, execute query
+
+	db := source.CDRInstance()
+	results, errQuery := db.Query("SELECT * FROM cdr WHERE linkedid = ? ORDER BY calldate", linkedid)
+	if errQuery != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "error executing SQL query", "status": errQuery.Error()})
-                return
-        }
+		return
+	}
 
-        // close results
-        defer results.Close()
+	// close results
+	defer results.Close()
 
-        // parse results
-        data := utils.ParseSqlResults(results)
+	// parse results
+	callDetails := utils.ParseSqlResults(results)
 
-        // return data
-        c.Data(http.StatusOK, "application/json; charset=utf-8", []byte(data))
+	// save call details to cache
+	errCache = cacheConnection.Set(linkedid, callDetails, 0).Err()
+	if errCache != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "cannot save call details to cache", "status": errCache.Error()})
+		return
+	}
+
+	// return data
+	c.Data(http.StatusOK, "application/json; charset=utf-8", []byte(callDetails))
 }
 
 func GetGraphData(c *gin.Context) {
@@ -147,7 +167,7 @@ func GetGraphData(c *gin.Context) {
 
 func executeSqlQuery(filter models.Filter, report string, section string, view string, graph string, c *gin.Context) (string, error) {
 	// get current user
-        user := GetClaims(c)["id"].(string)
+	user := GetClaims(c)["id"].(string)
 	filter.CurrentUser = user
 
 	if report != "queue" && report != "cdr" {
