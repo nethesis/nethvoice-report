@@ -27,4 +27,9 @@ type Settings struct {
 	EndHour      string `json:"end_hour"`
 	QueryLimit   string `json:"query_limit"`
 	NullCallTime string `json:"null_call_time"`
+	CallPatterns []struct {
+		Pattern string `json:"pattern"`
+		Name    string `json:"name"`
+	} `json:"call_patterns"`
+	Currency string `json:"currency"`
 }
