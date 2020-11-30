@@ -78,7 +78,7 @@
           <div v-show="chart.data && chart.data.length > 1">
             <!-- table chart -->
             <div v-if="chart.type == 'table'">
-              <TableChart :caption="chart.caption" :data="chart.data" :chartKey="`${index}`" :officeHours="officeHours" :filterTimeSplit="filterTimeSplit" />
+              <TableChart :caption="chart.caption" :data="chart.data" :chartKey="`${index}`" :officeHours="officeHours" :filterTimeSplit="filterTimeSplit" :report="$route.meta.report"/>
             </div>
             <!-- line chart -->
             <div v-if="chart.type == 'line'">
@@ -115,6 +115,26 @@
         </sui-modal-actions>
       </sui-modal>
     </sui-form>
+    <!-- CDR call details modal -->
+    <sui-form @submit.prevent="hideCdrDetailsModal()" warning>
+      <sui-modal v-model="cdr.openDetailsModal" class="cdr-details">
+        <sui-modal-header>{{ $t("misc.call_details") }}</sui-modal-header>
+        <sui-modal-content scrolling>
+          <TableChart v-if="cdr.details.length" :minimal="true" :caption="$t('misc.details')" :data="cdr.details" class="cdr-details"/>
+          <div v-else>
+            <sui-loader active centered inline class="mg-bottom-sm fix" />
+            <sui-message warning class="align-center">
+              <i class="exclamation triangle icon"></i>{{ $t("message.cdr_details_wait") }}
+            </sui-message>
+          </div>
+        </sui-modal-content>
+        <sui-modal-actions>
+          <sui-button type="submit" primary>
+            {{ $t("command.close") }}
+          </sui-button>
+        </sui-modal-actions>
+      </sui-modal>
+    </sui-form>
   </div>
 </div>
 </template>
@@ -130,11 +150,12 @@ import QueriesService from "../services/queries";
 import StorageService from "../services/storage";
 import UtilService from "../services/utils";
 import SettingsService from "../services/settings";
+import CdrDetailsService from "../services/cdr_details";
 
 export default {
   name: "QueueDashboard",
   components: { TableChart, LineChart, BarChart, ExportData, PieChart },
-  mixins: [StorageService, QueriesService, UtilService, SettingsService],
+  mixins: [StorageService, QueriesService, UtilService, SettingsService, CdrDetailsService],
   data() {
     return {
       SLOW_QUERY_TIMEOUT: 5000,
@@ -154,6 +175,11 @@ export default {
       isAdmin: 0,
       queryLimitMessage: "",
       currentReport: "",
+      cdr: {
+        openDetailsModal: false,
+        linkedId: "",
+        details: [],
+      },
     };
   },
   mounted() {
@@ -390,7 +416,25 @@ export default {
       } catch (error) {
         this.queryLimitMessage = "";
       }
-    }
+    },
+    showCdrDetailsModal(row) {
+      this.cdr.linkedId = row[4]; //// adapt to column index in query
+      this.cdr.details = [];
+      this.cdr.openDetailsModal = true;
+
+      this.getCdrDetails(
+        this.cdr.linkedId,
+        (success) => {
+          this.cdr.details = success.body;
+        },
+        (error) => {
+          console.error(error.body);
+        }
+      );
+    },
+    hideCdrDetailsModal() {
+      this.cdr.openDetailsModal = false;
+    },
   },
 };
 </script>
@@ -411,7 +455,7 @@ export default {
   margin-bottom: 1rem !important;
 }
 
-.ui.table.chart-details {
+.ui.table.chart-details, .ui.table.cdr-details {
   margin: 0 auto;
 }
 

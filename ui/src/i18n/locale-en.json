@@ -156,7 +156,8 @@
       "loading_filters": "Loading filters",
       "chart_error": "An error occured while loading chart",
       "query_limit_description": "This is the maximum number of results that can be displayed by a table chart. If this limit is reached a warning icon is shown next to chart title",
-      "slow_query": "Processing is taking a while. Please narrow search filters, or keep waiting"
+      "slow_query": "Processing is taking a while. Please narrow search filters, or keep waiting",
+      "cdr_details_wait": "This operation can take a while, please wait or come back later..."
     },
     "pagination": {
       "page": "page",
@@ -270,7 +271,8 @@
       "regione": "Region",
       "avgPosition": "Average position",
       "avgDuration": "Average duration",
-      "avgHold": "Average wait"
+      "avgHold": "Average wait",
+      "actions": "Actions"
     },
     "command": {
       "save": "Save",
@@ -292,7 +294,8 @@
       "others": "Others",
       "office_hours_start": "Office hours start",
       "office_hours_end": "Office hours end",
-      "query_limit": "Max results"
+      "query_limit": "Max results",
+      "call_details": "Call details"
     },
     "tags": {
 	"dashboard": "dashboard",
