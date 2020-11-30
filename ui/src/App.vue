@@ -363,4 +363,13 @@ body {
   color: rgba(0,0,0,.87) !important;
   font-weight: 600;
 }
+
+
+.ui.dimmer .ui.fix.loader:before {
+  border-color: rgba(0,0,0,.1);
+}
+
+.ui.dimmer .ui.fix.loader:after {
+  border-color: #767676 transparent transparent;
+}
 </style>

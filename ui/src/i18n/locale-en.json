@@ -157,7 +157,7 @@
       "chart_error": "An error occured while loading chart",
       "query_limit_description": "This is the maximum number of results that can be displayed by a table chart. If this limit is reached a warning icon is shown next to chart title",
       "slow_query": "Processing is taking a while. Please narrow search filters, or keep waiting",
-      "plase_wait": "Please wait, this operation can take a while..."
+      "cdr_details_wait": "This operation can take a while, please wait or come back later..."
     },
     "pagination": {
       "page": "page",

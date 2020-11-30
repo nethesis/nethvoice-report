@@ -157,7 +157,7 @@
       "chart_error": "Si è verificato un errore durante il caricamento del grafico",
       "query_limit_description": "Questo è il numero massimo di risultati che possono essere mostrati da un grafico tabellare. Se questo limite viene raggiunto appare un'icona di avvertimento di fianco al titolo del grafico",
       "slow_query": "Il caricamento sta impiegando più del previsto. Restringi i filtri di ricerca, oppure continua ad attendere",
-      "plase_wait": "Attendere, questa operazione potrebbe richiedere un po' di tempo..."
+      "cdr_details_wait": "Questa operazione potrebbe richiedere un po' di tempo, attendi oppure torna più tardi..."
     },
     "pagination": {
       "page": "pagina",
