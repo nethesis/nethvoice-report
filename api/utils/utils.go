@@ -32,6 +32,7 @@ import (
 	"strings"
 	"time"
 	"regexp"
+	"sort"
 
 	"github.com/juliangruber/go-intersect"
 	"github.com/nethesis/nethvoice-report/api/cache"
@@ -193,6 +194,49 @@ func ExtractStrings(v []string) string {
 	result := strings.Join(v, `","`)
 
 	return "\"" + result + "\""
+}
+
+func ExtractPatterns() string {
+	// init vars
+	var settings models.Settings
+	var patterns string
+
+	// init cache connection
+        cacheConnection := cache.Instance()
+
+        // check if settings is locally cached
+        settingsString, errCache := cacheConnection.Get("admin_settings").Result()
+
+        if errCache == nil {
+                // settings is cached
+
+                // convert to struct
+                var settingsCache map[string]models.Settings
+
+                errJson := json.Unmarshal([]byte(settingsString), &settingsCache)
+                if errJson != nil {
+                        return ""
+                }
+                settings = settingsCache["settings"]
+        }
+
+        // get settings struct from configuration
+        settings = configuration.Config.Settings
+
+	// sort patterns by long
+	sort.Slice(settings.CallPatterns, func(i, j int) bool {
+		return len(settings.CallPatterns[i].Pattern) > len(settings.CallPatterns[j].Pattern)
+
+	})
+
+        // loop patterns
+	for _, p := range settings.CallPatterns {
+		patterns += "IF (dst LIKE \""+ p.Pattern +"\", \""+ p.Name +"\", "
+	}
+	patterns += "\"\"" + strings.Repeat(")", len(settings.CallPatterns))
+
+        // return value
+        return patterns
 }
 
 func PivotGroup(timeDivisionString string) string {
