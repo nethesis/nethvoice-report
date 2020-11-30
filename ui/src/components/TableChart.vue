@@ -48,6 +48,10 @@
             }}
           </a>
         </sui-table-header-cell>
+        <!-- details header for CDR -->
+        <sui-table-header-cell v-if="report == 'cdr'" class="not-sortable">
+          {{ $t('table.actions') }}
+        </sui-table-header-cell>
       </sui-table-row>
       <!-- middle header -->
       <sui-table-row v-if="middleHeaders.length">
@@ -157,11 +161,21 @@
               {{ element }}
             </span>
           </sui-table-cell>
+          <!-- details button for CDR -->
+          <sui-table-cell v-if="report == 'cdr'">
+            <sui-button
+              type="button"
+              @click.native="$parent.showCdrDetailsModal(row)"
+              size="tiny"
+              icon="zoom"
+              >{{ $t('command.show_details') }}</sui-button
+            >
+          </sui-table-cell>
         </sui-table-row>
       </sui-table-body>
       <sui-table-footer>
         <sui-table-row>
-          <sui-table-header-cell :colspan="columns.length">
+          <sui-table-header-cell :colspan="report == 'cdr' ? columns.length + 1 : columns.length">
             <sui-menu pagination class="no-border">
               <span is="sui-menu-item" class="small-pad"
                 >{{ pagination.firstRowIndex + 1 }} -
@@ -265,6 +279,9 @@ export default {
     filterTimeSplit: {
       type: Number,
     },
+    report: {
+      type: String,
+    },
   },
   mixins: [UtilService, StorageService],
   components: { HorizontalScrollers },
@@ -286,7 +303,7 @@ export default {
         lastRowIndex: 0,
       },
       sortedBy: "period",
-      sortedDirection: "ascending"
+      sortedDirection: "ascending",
     };
   },
   mounted() {
@@ -913,7 +930,7 @@ export default {
         return rule
       })
       this.updatePagination()
-    }
+    },
   },
 };
 </script>
