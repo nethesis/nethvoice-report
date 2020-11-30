@@ -234,6 +234,7 @@ body {
 
 .settings-description {
   color: gray;
+  margin-top: 1em;
   margin-bottom: 1.5rem;
 }
 
@@ -371,5 +372,9 @@ body {
 
 .ui.dimmer .ui.fix.loader:after {
   border-color: #767676 transparent transparent;
+}
+
+.transparent {
+  color: transparent !important;
 }
 </style>

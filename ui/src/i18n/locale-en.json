@@ -157,7 +157,14 @@
       "chart_error": "An error occured while loading chart",
       "query_limit_description": "This is the maximum number of results that can be displayed by a table chart. If this limit is reached a warning icon is shown next to chart title",
       "slow_query": "Processing is taking a while. Please narrow search filters, or keep waiting",
-      "cdr_details_wait": "This operation can take a while, please wait or come back later..."
+      "cdr_details_wait": "This operation can take a while, please wait or come back later...",
+      "welcome": "Welcome",
+      "configure_call_costs": "First of all, configure destinations and call costs",
+      "configure_call_costs_description": "You can do it anytime in Settings page, by clicking cogs button in top-right toolbar",
+      "currency_description": "Currency used to compute calls cost",
+      "destinations_description": "Destinations are used to configure destination prefixes and compute calls cost",
+      "costs_description": "Configure call costs for specific trunks and destinations",
+      "call_patterns_description": "Configure destination of phone numbers using their prefix. Destination is matched with most specific (lengthy) prefix"
     },
     "pagination": {
       "page": "page",
@@ -287,15 +294,35 @@
       "export": "Export",
       "save_search": "Save search",
       "overwrite_search": "Overwrite search",
-      "delete_search": "Delete search"
+      "delete_search": "Delete search",
+      "skip": "Skip",
+      "configure": "Configure",
+      "create": "Create",
+      "delete_destination": "Delete destination",
+      "delete_call_pattern": "Delete destination prefix",
+      "delete_cost": "Delete cost"
+    },
+    "settings": {
+      "office_hours_start": "Office hours start",
+      "office_hours_end": "Office hours end",
+      "query_limit": "Max results",
+      "currency": "Currency",
+      "general": "General",
+      "destinations": "Destinations",
+      "destination": "Destination",
+      "costs": "Costs",
+      "prefix": "Prefix",
+      "new_destination": "New destination",
+      "call_patterns": "Destination prefixes",
+      "new_prefix": "New prefix",
+      "trunk": "Trunk",
+      "cost": "Cost"
     },
     "misc": {
       "week": "Week",
       "others": "Others",
-      "office_hours_start": "Office hours start",
-      "office_hours_end": "Office hours end",
-      "query_limit": "Max results",
-      "call_details": "Call details"
+      "call_details": "Call details",
+      "per_second": "per second"
     },
     "tags": {
 	"dashboard": "dashboard",

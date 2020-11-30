@@ -75,9 +75,10 @@ func main() {
 	api.Use(middleware.InstanceJWT().MiddlewareFunc())
 	{
 
-		filters := api.Group("/filters/:report/:section/:view")
+		filters := api.Group("/filters")
 		{
 			filters.GET("", methods.GetDefaultFilter)
+			filters.GET("/:field", methods.GetDefaultFilter)
 		}
 
 		details := api.Group("/details/:linkedid")

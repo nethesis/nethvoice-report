@@ -43,21 +43,6 @@ var SearchesService = {
         )
         .then(success, error);
     },
-    getDefaultFilter(report, section, view, success, error) {
-      this.$http
-        .get(
-          this.$root.apiScheme + this.$root.apiEndpoint + "/filters/" + report + "/" + section + "/" + view,
-          {
-            headers: {
-              Authorization:
-                "Bearer " +
-                (this.get("loggedUser") && this.get("loggedUser").token) ||
-                "",
-            },
-          }
-        )
-        .then(success, error);
-    },
   },
 };
 export default SearchesService;
