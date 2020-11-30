@@ -56,7 +56,7 @@ func GetCallDetails(c *gin.Context) {
 	cacheConnection := cache.Instance()
 
 	// check if call detail is locally cached
-	data, errCache := cacheConnection.Get(linkedid).Result()
+	data, errCache := cacheConnection.Get("call_details_" + linkedid).Result()
 
 	// data is cached, return immediately
 	if errCache == nil {
@@ -80,7 +80,7 @@ func GetCallDetails(c *gin.Context) {
 	callDetails := utils.ParseSqlResults(results)
 
 	// save call details to cache
-	errCache = cacheConnection.Set(linkedid, callDetails, 0).Err()
+	errCache = cacheConnection.Set("call_details_"+linkedid, callDetails, 0).Err()
 	if errCache != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "cannot save call details to cache", "status": errCache.Error()})
 		return
