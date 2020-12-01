@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS `cdr_{{ YearMap .Year }}`
-(UNIQUE KEY uniq (calldate,uniqueid,dstchannel))
+(`cost` DOUBLE DEFAULT NULL, UNIQUE KEY uniq (calldate,uniqueid,dstchannel))
 SELECT *,
        IF(Substring_index(Substring_index(channel, '-', 1), '/', -1) IN
              (SELECT channelid
@@ -14,7 +14,8 @@ SELECT *,
        Group_concat(disposition, "")       AS dispositions,
        Group_concat(lastapp, "")           AS lastapps,
        Group_concat(dcontext, "")          AS dcontexts,
-       {{ ExtractPatterns }}               AS call_type
+       {{ ExtractPatterns }}               AS call_type,
+       NULL                                AS cost
 FROM   cdr c
 WHERE  uniqueid = linkedid
        AND date_format(calldate, "%Y") = "{{ .Year }}"
@@ -37,7 +38,8 @@ SELECT *,
        Group_concat(disposition, "")       AS dispositions,
        Group_concat(lastapp, "")           AS lastapps,
        Group_concat(dcontext, "")          AS dcontexts,
-       {{ ExtractPatterns }}               AS call_type
+       {{ ExtractPatterns }}               AS call_type,
+       NULL                                AS cost
 FROM   cdr c
 WHERE  uniqueid = linkedid
        AND date_format(calldate, "%Y") = "{{ .Year }}"
