@@ -161,10 +161,10 @@
       "welcome": "Benvenuto/a",
       "configure_call_costs": "Per prima cosa, configura le destinazioni e i costi delle chiamate",
       "configure_call_costs_description": "Puoi farlo in qualunque momento nella pagina Impostazioni, cliccando il pulsante con ingranaggio nella barra degli strumenti in alto a destra",
-      "currency_description": "Valuta usata per calcolare il costo delle chiamate",
+      "currency_description": "Valuta usata per mostrare il costo delle chiamate",
       "destinations_description": "Le destinazioni sono usate per raggruppare i prefissi di destinazione delle chiamate e calcolare i costi delle chiamate",
       "costs_description": "Configura il costo delle chiamate per fasci specifici e destinazioni specifiche",
-      "call_patterns_description": "Configura la destinazione dei numeri di telefono usando il loro prefisso. La destinazione è selezionata in base al prefisso più specifico (lungo)"
+      "call_patterns_description": "I prefissi di destinazione son usati per configurare la destinazione dei numeri di telefono usando il loro prefisso. La destinazione è selezionata in base al prefisso più specifico (lungo)"
     },
     "pagination": {
       "page": "pagina",
@@ -316,13 +316,17 @@
       "call_patterns": "Prefissi di destinazione",
       "new_prefix": "Nuovo prefisso",
       "trunk": "Fascio",
-      "cost": "Costo"
+      "cost": "Costo",
+      "call_patterns_accordion": "Configura i prefissi di destinatione"
     },
     "misc": {
       "week": "Settimana",
       "others": "Altri",
       "call_details": "Dettagli chiamata",
       "per_second": "al secondo"
+    },
+    "validation": {
+      "invalid_value": "Valore non valido"
     },
     "tags": {
         "dashboard": "dashboard",

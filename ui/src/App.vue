@@ -181,6 +181,10 @@ body {
   width: 100% !important;
 }
 
+.no-mg-top {
+  margin-top: 0 !important;
+}
+
 .mg-top-md {
   margin-top: 2rem !important;
   padding-left: 7px;
@@ -376,5 +380,11 @@ body {
 
 .transparent {
   color: transparent !important;
+}
+
+.input-error input {
+  background: #fff6f6 !important;
+  border-color: #e0b4b4 !important;
+  color: #9f3a38 !important;
 }
 </style>

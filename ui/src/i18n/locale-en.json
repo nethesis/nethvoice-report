@@ -161,10 +161,10 @@
       "welcome": "Welcome",
       "configure_call_costs": "First of all, configure destinations and call costs",
       "configure_call_costs_description": "You can do it anytime in Settings page, by clicking cogs button in top-right toolbar",
-      "currency_description": "Currency used to compute calls cost",
+      "currency_description": "Currency used to display calls cost",
       "destinations_description": "Destinations are used to configure destination prefixes and compute calls cost",
       "costs_description": "Configure call costs for specific trunks and destinations",
-      "call_patterns_description": "Configure destination of phone numbers using their prefix. Destination is matched with most specific (lengthy) prefix"
+      "call_patterns_description": "Destination prefixes are used to configure the destination of phone numbers using their prefix. Destination is matched with most specific (lengthy) prefix"
     },
     "pagination": {
       "page": "page",
@@ -316,13 +316,17 @@
       "call_patterns": "Destination prefixes",
       "new_prefix": "New prefix",
       "trunk": "Trunk",
-      "cost": "Cost"
+      "cost": "Cost",
+      "call_patterns_accordion": "Configure destination prefixes"
     },
     "misc": {
       "week": "Week",
       "others": "Others",
       "call_details": "Call details",
       "per_second": "per second"
+    },
+    "validation": {
+      "invalid_value": "Invalid value"
     },
     "tags": {
 	"dashboard": "dashboard",
