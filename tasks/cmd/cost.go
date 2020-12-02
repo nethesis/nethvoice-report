@@ -25,83 +25,190 @@
 import (
 	"bytes"
 	"path"
+	"fmt"
 	"text/template"
+	"time"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
+	"github.com/thoas/go-funk"
 
 	"github.com/nethesis/nethvoice-report/api/configuration"
 	"github.com/nethesis/nethvoice-report/api/source"
 	"github.com/nethesis/nethvoice-report/tasks/helper"
 )
 
+var (
+	from string
+	to string
+	cost string
+	destination string
+	trunk string
+)
+
 // Define command handled by cobra
 var costCmd = &cobra.Command{
 	Use:   "cost",
 	Short: "Calculate cost for each record based on cost configuration",
-	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
-		executeReportCost()
+		flagsN := cmd.Flags().NFlag()
+		if flagsN > 0 { // at least one flag is set
+			// check flags
+			if !cmd.Flags().Changed("from") {
+				helper.FatalError(errors.New("Missing <from> flag"))
+			}
+			if !cmd.Flags().Changed("to") {
+                                helper.FatalError(errors.New("Missing <to> flag"))
+                        }
+			if !cmd.Flags().Changed("cost") {
+                                helper.FatalError(errors.New("Missing <from> flag"))
+                        }
+			if !cmd.Flags().Changed("destination") {
+                                helper.FatalError(errors.New("Missing <destination> flag"))
+                        }
+			if !cmd.Flags().Changed("trunk") {
+                                helper.FatalError(errors.New("Missing <trunk> flag"))
+                        }
+
+			// execute command with flags
+			executeReportCost(true)
+		} else {
+			// execute command without flags
+			executeReportCost(false)
+		}
 	},
 }
 
 // Register "cost" command to root command
 func init() {
 	RootCmd.AddCommand(costCmd)
+
+	// add flags
+	costCmd.Flags().StringVarP(&from, "from", "f", "", "Date interval <from> to update costs")
+	costCmd.Flags().StringVarP(&to, "to", "t", "", "Date interval <to> to update costs")
+	costCmd.Flags().StringVarP(&cost, "cost", "c", "", "Cost value to update")
+	costCmd.Flags().StringVarP(&destination, "destination", "d", "", "Type of call to update: national, international, cell etc...")
+	costCmd.Flags().StringVarP(&trunk, "trunk", "u", "", "Trunk used with specific destination to update")
 }
 
 type CostObj struct {
 	Table string
+	Cost string
+	Destination string
+	Trunk string
 }
 
 // Entry point for "cost" command
-func executeReportCost() {
-	// define cost object
-	var objTemplate CostObj
+func executeReportCost(flags bool) {
+	// check if args is passed
+	if flags {
+		// define cost object
+		var objTemplate CostObj
+		objTemplate.Cost = cost
+		objTemplate.Destination = destination
+		objTemplate.Trunk = trunk
 
-	// define template cost
-	templateCost := configuration.Config.TemplatePath + "/cdr_cost.sql"
-
-	// define db instance
-	db := source.CDRInstance()
-
-	// get all cdr tables
-	cdrTables, errQuery := db.Query("SHOW TABLES LIKE 'cdr_%'")
-	if errQuery != nil {
-		helper.FatalError(errors.Wrap(errQuery, "Error getting cdr tables"))
-	}
-
-	// loop cdr tables
-	for cdrTables.Next() {
-		// define record
-		var table string
-
-		// handle scan error
-		errScan := cdrTables.Scan(&table)
-		if errScan != nil {
-			helper.FatalError(errors.Wrap(errScan, "Error in query scan field"))
-		}
-		objTemplate.Table = table
-
-		// define query
-		var query bytes.Buffer
-
-		// compile template
-		tpl := template.Must(template.New(path.Base(templateCost)).ParseFiles(templateCost))
-		errTpl := tpl.Execute(&query, &objTemplate)
-		if errTpl != nil {
-			helper.FatalError(errors.Wrap(errTpl, "invalid query template compiling"))
+		// get date
+		tFrom, errFrom := time.Parse("2006-01-02", from)
+		if errFrom != nil {
+			helper.FatalError(errors.Wrap(errFrom, "Error parsing <from> date. Format date: YYYY-MM-DD"))
 		}
 
-		helper.LogDebug("\nExecuting query %s for [%s]:\n%s", templateCost, table, query.String())
+		tTo, errTo := time.Parse("2006-01-02", to)
+                if errTo != nil {
+			helper.FatalError(errors.Wrap(errTo, "Error parsing <to> date. Format date: YYYY-MM-DD"))
+                }
 
-		// execute query
-		rows, errQueryCost := db.Query(query.String())
-		if errQueryCost != nil {
-			helper.FatalError(errors.Wrap(errQueryCost, "Error in query [cdr] execution:\n"+query.String()))
+		// iterate over dates
+		var tables []string
+		for f := tFrom; f.After(tTo) == false; f = f.AddDate(0, 0, 1) {
+			y := int(f.Year())
+			m := int(f.Month())
+
+			table := fmt.Sprintf("cdr_%d-%02d", y, m)
+			tables = append(tables, table)
 		}
 
-		// close results
-		rows.Close()
+		// remove duplicates from tables
+		tables = funk.UniqString(tables)
+
+		// loop tables
+		for _, t := range tables {
+			// compile query
+			objTemplate.Table = t
+
+			// define template cost update
+			templateCost := configuration.Config.TemplatePath + "/cdr_cost_update.sql"
+
+			// define query
+                        var query bytes.Buffer
+
+			tpl := template.Must(template.New(path.Base(templateCost)).ParseFiles(templateCost))
+                        errTpl := tpl.Execute(&query, &objTemplate)
+                        if errTpl != nil {
+                                helper.FatalError(errors.Wrap(errTpl, "invalid query template compiling"))
+                        }
+
+                        helper.LogDebug("\nExecuting query %s for [%s]:\n%s", templateCost, t, query.String())
+
+			// execute query
+			db := source.CDRInstance()
+                        rows, errQueryCost := db.Query(query.String())
+                        if errQueryCost != nil {
+                                helper.FatalError(errors.Wrap(errQueryCost, "Error in query [cdr] execution:\n"+query.String()))
+                        }
+
+                        // close results
+                        rows.Close()
+		}
+	} else {
+		// define cost object
+		var objTemplate CostObj
+
+		// define template cost
+		templateCost := configuration.Config.TemplatePath + "/cdr_cost.sql"
+
+		// define db instance
+		db := source.CDRInstance()
+
+		// get all cdr tables
+		cdrTables, errQuery := db.Query("SHOW TABLES LIKE 'cdr_%'")
+		if errQuery != nil {
+			helper.FatalError(errors.Wrap(errQuery, "Error getting cdr tables"))
+		}
+
+		// loop cdr tables
+		for cdrTables.Next() {
+			// define record
+			var table string
+
+			// handle scan error
+			errScan := cdrTables.Scan(&table)
+			if errScan != nil {
+				helper.FatalError(errors.Wrap(errScan, "Error in query scan field"))
+			}
+			objTemplate.Table = table
+
+			// define query
+			var query bytes.Buffer
+
+			// compile template
+			tpl := template.Must(template.New(path.Base(templateCost)).ParseFiles(templateCost))
+			errTpl := tpl.Execute(&query, &objTemplate)
+			if errTpl != nil {
+				helper.FatalError(errors.Wrap(errTpl, "invalid query template compiling"))
+			}
+
+			helper.LogDebug("\nExecuting query %s for [%s]:\n%s", templateCost, table, query.String())
+
+			// execute query
+			rows, errQueryCost := db.Query(query.String())
+			if errQueryCost != nil {
+				helper.FatalError(errors.Wrap(errQueryCost, "Error in query [cdr] execution:\n"+query.String()))
+			}
+
+			// close results
+			rows.Close()
+		}
 	}
 }
