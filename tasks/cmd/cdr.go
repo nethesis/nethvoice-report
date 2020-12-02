@@ -49,7 +49,7 @@ var cdrCmd = &cobra.Command{
 	},
 }
 
-// Register "views" command to root command
+// Register "cdr" command to root command
 func init() {
 	RootCmd.AddCommand(cdrCmd)
 }
