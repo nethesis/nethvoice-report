@@ -163,7 +163,9 @@ func executeReportCost(flags bool) {
 			y := int(f.Year())
 			m := int(f.Month())
 
-			table := fmt.Sprintf("cdr_%d-%02d", y, m)
+			table := fmt.Sprintf("cdr_%d", y)
+			tables = append(tables, table)
+			table = fmt.Sprintf("cdr_%d-%02d", y, m)
 			tables = append(tables, table)
 		}
 
@@ -192,7 +194,8 @@ func executeReportCost(flags bool) {
 			// execute query
                         rows, errQueryCost := db.Query(query.String())
                         if errQueryCost != nil {
-                                helper.FatalError(errors.Wrap(errQueryCost, "Error in query [cdr] execution:\n"+query.String()))
+				helper.LogDebug(errQueryCost.Error() + ". Skipping...")
+				continue
                         }
 
                         // close results
