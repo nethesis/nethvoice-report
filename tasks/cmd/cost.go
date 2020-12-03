@@ -28,12 +28,15 @@ import (
 	"fmt"
 	"text/template"
 	"time"
+	"encoding/json"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/thoas/go-funk"
 
+	"github.com/nethesis/nethvoice-report/api/cache"
 	"github.com/nethesis/nethvoice-report/api/configuration"
+	"github.com/nethesis/nethvoice-report/api/models"
 	"github.com/nethesis/nethvoice-report/api/source"
 	"github.com/nethesis/nethvoice-report/tasks/helper"
 )
@@ -100,6 +103,41 @@ type CostObj struct {
 
 // Entry point for "cost" command
 func executeReportCost(flags bool) {
+	// init cache connection
+	cacheConnection := cache.Instance()
+
+	// define db instance
+	db := source.CDRInstance()
+
+	// check if settings is locally cached
+	settingsString, errCache := cacheConnection.Get("admin_settings").Result()
+
+	// delete cost details
+	_, errDelete := db.Exec("DELETE FROM cost_details")
+	if errDelete != nil {
+		helper.FatalError(errors.Wrap(errDelete, "Error deleting cost details"))
+	}
+
+	// save cost details to tables
+	if errCache == nil {
+		// convert to struct
+		var settingsCache map[string]models.Settings
+
+		errJson := json.Unmarshal([]byte(settingsString), &settingsCache)
+		if errJson != nil {
+			helper.FatalError(errors.Wrap(errJson, "Error parsing settings from cache"))
+		}
+		settings := settingsCache["settings"]
+
+		for _, c := range settings.Costs {
+			// create cost query
+			_, errInsert := db.Exec("INSERT INTO cost_details VALUES (NULL, ?, ?, ?)", c.ChannelId, c.Destination, c.Cost)
+			if errInsert != nil {
+				helper.FatalError(errors.Wrap(errInsert, "Error insert cost details"))
+			}
+		}
+	}
+
 	// check if args is passed
 	if flags {
 		// define cost object
@@ -152,7 +190,6 @@ func executeReportCost(flags bool) {
                         helper.LogDebug("\nExecuting query %s for [%s]:\n%s", templateCost, t, query.String())
 
 			// execute query
-			db := source.CDRInstance()
                         rows, errQueryCost := db.Query(query.String())
                         if errQueryCost != nil {
                                 helper.FatalError(errors.Wrap(errQueryCost, "Error in query [cdr] execution:\n"+query.String()))
@@ -167,9 +204,6 @@ func executeReportCost(flags bool) {
 
 		// define template cost
 		templateCost := configuration.Config.TemplatePath + "/cdr_cost.sql"
-
-		// define db instance
-		db := source.CDRInstance()
 
 		// get all cdr tables
 		cdrTables, errQuery := db.Query("SHOW TABLES LIKE 'cdr_%'")
