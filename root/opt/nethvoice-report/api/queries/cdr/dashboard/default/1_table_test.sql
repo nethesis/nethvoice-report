@@ -4,6 +4,7 @@ select
     dst,
     type,
     DATE_FORMAT(calldate, '%Y-%m-%d %H:%i:%s') AS time,
+    billsec,
     linkedid
     from `<CDR_TABLE>`
     where

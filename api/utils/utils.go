@@ -225,13 +225,12 @@ func ExtractPatterns() string {
 
 	// sort patterns by long
 	sort.Slice(settings.CallPatterns, func(i, j int) bool {
-		return len(settings.CallPatterns[i].Pattern) > len(settings.CallPatterns[j].Pattern)
-
+		return len(settings.CallPatterns[i].Prefix) > len(settings.CallPatterns[j].Prefix)
 	})
 
 	// loop patterns
 	for _, p := range settings.CallPatterns {
-		patterns += "IF (dst LIKE \"" + p.Pattern + "\", \"" + p.Name + "\", "
+		patterns += "IF (dst LIKE \"" + p.Prefix + "%\", \"" + p.Destination + "\", "
 	}
 	patterns += "\"\"" + strings.Repeat(")", len(settings.CallPatterns))
 

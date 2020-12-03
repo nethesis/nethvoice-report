@@ -67,51 +67,55 @@
     <Filters :showFiltersForm="showFilters" />
 
     <!-- settings modal -->
-    <sui-form @submit.prevent="saveAdminSettings()">
-      <sui-modal v-model="openSettingsModal" size="tiny">
+    <sui-form :error="adminSettingsError">
+      <sui-modal v-model="openSettingsModal">
         <sui-modal-header>{{ $t("menu.settings") }}</sui-modal-header>
-        <sui-modal-content>
+        <sui-modal-content scrolling>
           <sui-modal-description>
+            <sui-header>{{ $t('settings.general') }}</sui-header>
             <!-- office hours -->
             <sui-form-fields>
-              <sui-form-field
-                :error="errors.admin && this._.isEmpty(officeHourStart)"
-              >
-                <label>{{ $t("misc.office_hours_start") }}</label>
+              <sui-form-field :error="error.settings.officeHourStart">
+                <label>{{ $t("settings.office_hours_start") }}</label>
                 <vue-timepicker
                   hide-clear-button
                   :minute-interval="5"
-                  v-model="officeHourStart"
+                  v-model="adminSettings.officeHourStart"
+                  ref="officeHourStart"
                 ></vue-timepicker>
               </sui-form-field>
-              <sui-form-field
-                :error="errors.admin && this._.isEmpty(officeHourEnd)"
+              <sui-form-field :error="error.settings.officeHourEnd"
               >
-                <label>{{ $t("misc.office_hours_end") }}</label>
+                <label>{{ $t("settings.office_hours_end") }}</label>
                 <vue-timepicker
                   hide-clear-button
                   :minute-interval="5"
-                  v-model="officeHourEnd"
+                  v-model="adminSettings.officeHourEnd"
+                  ref="officeHourEnd"
                 ></vue-timepicker>
               </sui-form-field>
             </sui-form-fields>
-            <sui-message error :visible="errors.admin">
-              <p>{{ $t("message.error_admin_empty") }}</p>
+            <sui-message v-show="error.settings.officeHourStart || error.settings.officeHourEnd" error>
+              <p>{{ $t("validation.invalid_value") }}</p>
             </sui-message>
             <div class="settings-description">{{
               $t("message.office_hours_description")
             }}</div>
             <!-- query limit -->
             <sui-form-fields>
-              <sui-form-field>
-                <label>{{ $t("misc.query_limit") }}</label>
+              <sui-form-field width="three" :error="error.settings.queryLimit">
+                <label>{{ $t("settings.query_limit") }}</label>
                 <sui-input
-                  v-model.number="queryLimit"
+                  v-model.number="adminSettings.queryLimit"
                   type="number"
                   min="10"
+                  ref="queryLimit"
                 />
               </sui-form-field>
             </sui-form-fields>
+            <sui-message v-show="error.settings.queryLimit" error>
+              <p>{{ $t("validation.invalid_value") }}</p>
+            </sui-message>
             <div class="settings-description">{{
               $t("message.query_limit_description")
             }}</div>
@@ -120,7 +124,7 @@
               <sui-form-field>
                 <label>{{ $t("filter.null_call_label") }}</label>
                 <sui-input
-                  v-model.number="nullCallTime"
+                  v-model.number="adminSettings.nullCallTime"
                   type="number"
                   min="0"
                 />
@@ -129,6 +133,215 @@
             <div class="settings-description">{{
               $t("message.null_call_description")
             }}</div>
+            <!-- currency -->
+            <sui-form-fields>
+              <sui-form-field width="three" :error="error.settings.currency">
+                <label>{{ $t("settings.currency") }}</label>
+                <sui-input
+                  v-model.trim="adminSettings.currency"
+                  ref="currency"
+                />
+              </sui-form-field>
+            </sui-form-fields>
+            <sui-message v-show="error.settings.currency" error>
+              <p>{{ $t("validation.invalid_value") }}</p>
+            </sui-message>
+            <div class="settings-description">{{
+              $t("message.currency_description")
+            }}</div>
+            <!-- destinations -->
+            <sui-header>{{ $t('settings.destinations') }}</sui-header>
+            <div class="settings-description">{{
+              $t("message.destinations_description")
+            }}</div>
+            <sui-card-group :items-per-row="3">
+              <sui-card v-for="(destination, index) in adminSettings.destinations" v-bind:key="'destination-' + index" class="destination">
+                <sui-card-content>
+                  <sui-icon name="map marker alternate" class="right floated" />
+                  <sui-card-header>{{ destination }}</sui-card-header>
+                </sui-card-content>
+                <sui-button basic negative attached="bottom" type="button" @click="showDeleteDestinationModal(destination)">
+                  <sui-icon name="trash" /> {{ $t('command.delete') }}
+                </sui-button>
+              </sui-card>
+              <!-- new destination -->
+              <sui-card class="destination">
+                <sui-card-content>
+                  <sui-icon name="map marker alternate" class="right floated" />
+                  <sui-input
+                    v-model.trim="newDestination"
+                    :placeholder="$t('settings.new_destination')"
+                    ref="newDestination"
+                    :class="{'input-error': error.settings.newDestination}"
+                  />
+                </sui-card-content>
+                <sui-button basic positive attached="bottom" type="button" @click="createDestination()">
+                  <sui-icon name="plus" /> {{ $t('command.create') }}
+                </sui-button>
+              </sui-card>
+            </sui-card-group>
+            <!-- call patterns -->
+            <sui-accordion exclusive class="call-patterns-accordion">
+              <sui-accordion-title>
+                <sui-icon name="dropdown" />
+                <a>{{ $t('settings.call_patterns_accordion') }}</a>
+              </sui-accordion-title>
+              <sui-accordion-content>
+                <div class="settings-description no-mg-top">{{
+                  $t("message.call_patterns_description")
+                }}</div>
+                <sui-form-fields v-for="(callPattern, index) in adminSettings.callPatterns" v-bind:key="'callPattern' + index">
+                  <sui-form-field width="three">
+                    <label>{{ $t("settings.prefix") }}</label>
+                    <sui-input
+                      v-model.trim="callPattern.prefix"
+                      disabled
+                    />
+                  </sui-form-field>
+                  <sui-form-field width="five">
+                    <label>{{ $t("settings.destination") }}</label>
+                    <sui-dropdown
+                      :placeholder="$t('settings.destination')"
+                      search
+                      selection
+                      v-model="callPattern.destination"
+                      :options="destinationOptions"
+                      disabled
+                    />
+                  </sui-form-field>
+                  <sui-form-field>
+                    <label class="transparent">.</label>
+                    <sui-button basic negative type="button" @click="showDeleteCallPatternModal(callPattern)">
+                      <sui-icon name="trash" /> {{ $t('command.delete') }}
+                    </sui-button>
+                  </sui-form-field>
+                </sui-form-fields>
+                <!-- new call pattern -->
+                <sui-form-fields>
+                  <sui-form-field width="three" :error="error.settings.newCallPatternPrefix">
+                    <label>{{ $t("settings.prefix") }}</label>
+                    <sui-input
+                      v-model.trim="newCallPattern.prefix"
+                      :placeholder="$t('settings.new_prefix')"
+                      ref="newCallPatternPrefix"
+                    />
+                  </sui-form-field>
+                  <sui-form-field width="five" :error="error.settings.newCallPatternDestination">
+                    <label>{{ $t("settings.destination") }}</label>
+                    <sui-dropdown
+                      :placeholder="$t('settings.destination')"
+                      search
+                      selection
+                      v-model="newCallPattern.destination"
+                      :options="destinationOptions"
+                      ref="newCallPatternDestination"
+                    />
+                  </sui-form-field>
+                  <sui-form-field>
+                    <label class="transparent">.</label>
+                    <sui-button basic positive type="button" @click="createCallPattern()">
+                      <sui-icon name="plus" /> {{ $t('command.create') }}
+                    </sui-button>
+                  </sui-form-field>
+                </sui-form-fields>
+                <sui-message v-show="error.settings.newCallPatternPrefix || error.settings.newCallPatternDestination" error>
+                  <p>{{ $t("validation.invalid_value") }}</p>
+                </sui-message>
+              </sui-accordion-content>
+            </sui-accordion>
+            <!-- costs -->
+            <sui-header>{{ $t('settings.costs') }}</sui-header>
+            <div class="settings-description">{{
+              $t("message.costs_description")
+            }}</div>
+            <sui-form-fields v-for="(cost, index) in adminSettings.costs" v-bind:key="'cost-' + index">
+              <sui-form-field width="four">
+                <label>{{ $t("settings.trunk") }}</label>
+                <sui-dropdown
+                  :placeholder="$t('settings.trunk')"
+                  search
+                  selection
+                  v-model="cost.channelId"
+                  :options="trunkOptions"
+                  disabled
+                />
+              </sui-form-field>
+              <sui-form-field width="four">
+                <label>{{ $t("settings.destination") }}</label>
+                <sui-dropdown
+                  :placeholder="$t('settings.destination')"
+                  search
+                  selection
+                  v-model="cost.destination"
+                  :options="destinationOptions"
+                  disabled
+                />
+              </sui-form-field>
+              <sui-form-field>
+                <label>{{ $t("settings.cost") + ' (' + adminSettings.currency + ' ' + $t('misc.per_second') + ')' }}</label>
+                <input
+                  type="number"
+                  v-model.number="cost.cost"
+                  min="0"
+                  step=".01"
+                  :placeholder="adminSettings.currency + ' ' + $t('misc.per_second')"
+                  disabled
+                >
+              </sui-form-field>
+              <sui-form-field width="three">
+                <label class="transparent">.</label>
+                <sui-button basic negative type="button" @click="showDeleteCostModal(cost)">
+                  <sui-icon name="trash" /> {{ $t('command.delete') }}
+                </sui-button>
+              </sui-form-field>
+            </sui-form-fields>
+            <!-- new cost -->
+            <sui-form-fields>
+              <sui-form-field width="four" :error="error.settings.newCostChannelId">
+                <label>{{ $t("settings.trunk") }}</label>
+                <sui-dropdown
+                  :placeholder="$t('settings.trunk')"
+                  search
+                  selection
+                  v-model="newCost.channelId"
+                  :options="trunkOptions"
+                  direction="upward"
+                  ref="newCostChannelId"
+                />
+              </sui-form-field>
+              <sui-form-field width="four" :error="error.settings.newCostDestination">
+                <label>{{ $t("settings.destination") }}</label>
+                <sui-dropdown
+                  :placeholder="$t('settings.destination')"
+                  search
+                  selection
+                  v-model="newCost.destination"
+                  :options="destinationOptions"
+                  direction="upward"
+                  ref="newCostDestination"
+                />
+              </sui-form-field>
+              <sui-form-field :error="error.settings.newCostValue">
+                <label>{{ $t("settings.cost") + ' (' + adminSettings.currency + ' ' + $t('misc.per_second') + ')' }}</label>
+                <input
+                  type="number"
+                  v-model.number="newCost.cost"
+                  min="0"
+                  step=".01"
+                  :placeholder="adminSettings.currency + ' ' + $t('misc.per_second')"
+                  ref="newCostValue"
+                >
+              </sui-form-field>
+              <sui-form-field width="three">
+                <label class="transparent">.</label>
+                <sui-button basic positive type="button" @click="createCost()">
+                  <sui-icon name="plus" /> {{ $t('command.create') }}
+                </sui-button>
+              </sui-form-field>
+            </sui-form-fields>
+            <sui-message v-show="error.settings.newCostChannelId || error.settings.newCostDestination || error.settings.newCostValue" error>
+              <p>{{ $t("validation.invalid_value") }}</p>
+            </sui-message>
           </sui-modal-description>
         </sui-modal-content>
         <sui-modal-actions>
@@ -137,9 +350,117 @@
           }}</sui-button>
           <sui-button
             primary
-            type="submit"
+            type="button"
             :loading="loader.saveSettings"
             :content="$t('command.save')"
+            @click="saveAdminSettings()"
+          ></sui-button>
+        </sui-modal-actions>
+      </sui-modal>
+    </sui-form>
+
+    <!-- configure costs modal -->
+    <sui-form>
+      <sui-modal v-model="openCostsConfigModal" size="tiny">
+        <sui-modal-header>{{ $t("message.welcome") }}</sui-modal-header>
+        <sui-modal-content>
+          <sui-modal-description>
+            <sui-header>{{ $t('message.configure_call_costs') }}</sui-header>
+            <p>
+              {{ $t('message.configure_call_costs_description') }}
+            </p>
+          </sui-modal-description>
+        </sui-modal-content>
+        <sui-modal-actions>
+          <sui-button type="button" @click.native="skipCostsConfiguration">{{
+            $t("command.skip")
+          }}</sui-button>
+          <sui-button
+            primary
+            type="button"
+            :content="$t('command.configure')"
+            @click="configureCosts()"
+          ></sui-button>
+        </sui-modal-actions>
+      </sui-modal>
+    </sui-form>
+
+    <!-- delete destination modal -->
+    <sui-form warning>
+      <sui-modal v-model="openDeleteDestinationModal" size="tiny">
+        <sui-modal-header>{{ $t('command.delete_destination') }}</sui-modal-header>
+        <sui-modal-content>
+          <sui-modal-description>
+            <sui-message warning>
+              <i class="exclamation triangle icon"></i> {{ $t("message.you_are_about_to_delete") }} <b>{{ destinationToDelete }}</b>
+            </sui-message>
+            <p>{{ $t("message.are_you_sure") }}</p>
+          </sui-modal-description>
+        </sui-modal-content>
+        <sui-modal-actions>
+          <sui-button type="button" @click.native="hideDeleteDestinationModal()"
+            >{{ $t("command.cancel") }}</sui-button
+          >
+          <sui-button
+            negative
+            type="button"
+            :loading="loader.deleteDestination"
+            :content="$t('command.delete')"
+            @click="deleteDestination()"
+          ></sui-button>
+        </sui-modal-actions>
+      </sui-modal>
+    </sui-form>
+
+    <!-- delete call pattern modal -->
+    <sui-form warning>
+      <sui-modal v-model="openDeleteCallPatternModal" size="tiny">
+        <sui-modal-header>{{ $t('command.delete_call_pattern') }}</sui-modal-header>
+        <sui-modal-content>
+          <sui-modal-description>
+            <sui-message warning>
+              <i class="exclamation triangle icon"></i> {{ $t("message.you_are_about_to_delete") }} <b>{{ callPatternToDelete.prefix }}</b>
+            </sui-message>
+            <p>{{ $t("message.are_you_sure") }}</p>
+          </sui-modal-description>
+        </sui-modal-content>
+        <sui-modal-actions>
+          <sui-button type="button" @click.native="hideDeleteCallPatternModal()"
+            >{{ $t("command.cancel") }}</sui-button
+          >
+          <sui-button
+            negative
+            type="button"
+            :loading="loader.deleteCallPattern"
+            :content="$t('command.delete')"
+            @click="deleteCallPattern()"
+          ></sui-button>
+        </sui-modal-actions>
+      </sui-modal>
+    </sui-form>
+
+    <!-- delete cost modal -->
+    <sui-form warning>
+      <sui-modal v-model="openDeleteCostModal" size="tiny">
+        <sui-modal-header>{{ $t('command.delete_cost') }}</sui-modal-header>
+        <sui-modal-content>
+          <sui-modal-description>
+            <sui-message warning>
+              <i class="exclamation triangle icon"></i> {{ $t("message.you_are_about_to_delete") }} {{ $t('settings.cost') }} <b>{{ costToDelete.channelId }}, {{ costToDelete.destination }}</b>
+            </sui-message>
+            <p>{{ $t("message.are_you_sure") }}</p>
+          </sui-modal-description>
+        </sui-modal-content>
+        <sui-modal-actions>
+          <sui-button type="button" @click.native="hideDeleteCostModal()"
+            >{{ $t("command.cancel") }}</sui-button
+          >
+          <sui-button
+            negative
+            type="button"
+            :loading="loader.deleteCost"
+            :content="$t('command.delete')"
+            @click="deleteCost()"
           ></sui-button>
         </sui-modal-actions>
       </sui-modal>
@@ -154,6 +475,7 @@ import StorageService from "../services/storage";
 import VueTimepicker from "vue2-timepicker";
 import "vue2-timepicker/dist/VueTimepicker.css";
 import SettingsService from "../services/settings";
+import FilterService from "../services/filter";
 
 export default {
   name: "TopBar",
@@ -161,18 +483,50 @@ export default {
     Filters: Filters,
     VueTimepicker,
   },
-  mixins: [LoginService, StorageService, SettingsService],
+  mixins: [LoginService, StorageService, SettingsService, FilterService],
   data() {
     return {
       showFilters: true,
       title: this.$i18n.t(this.$route.meta.name) || "",
       openSettingsModal: false,
-      officeHourStart: "",
-      officeHourEnd: "",
-      queryLimit: 0,
-      nullCallTime: 0,
+      adminSettings: {
+        officeHourStart: "",
+        officeHourEnd: "",
+        queryLimit: 0,
+        nullCallTime: 0,
+        destinations: [],
+        callPatterns: [],
+        costs: [],
+      },
+      trunks: [],
+      openCostsConfigModal: false,
       isAdmin: false,
       dataAvailable: true,
+      newDestination: "",
+      openDeleteDestinationModal: false,
+      destinationToDelete: "",
+      destinationOptions: [],
+      newCallPattern: {
+        prefix: "",
+        destination: null,
+      },
+      callPatternToDelete: {
+        prefix: "",
+        destination: null,
+      },
+      openDeleteCallPatternModal: false,
+      trunkOptions: [],
+      newCost: {
+        channelId: null,
+        destination: null,
+        cost: "",
+      },
+      costToDelete: {
+        channelId: null,
+        destination: null,
+        cost: "",
+      },
+      openDeleteCostModal: false,
       colorSchemes: [
         "tableau.Classic10",
         "brewer.DarkTwo8",
@@ -302,9 +656,23 @@ export default {
       },
       loader: {
         saveSettings: false,
+        deleteDestination: false,
+        deleteCallPattern: false,
+        deleteCost: false,
       },
-      errors: {
-        admin: false,
+      error: {
+        settings: {
+          officeHourStart: false,
+          officeHourEnd: false,
+          queryLimit: false,
+          currency: false,
+          newDestination: false,
+          newCallPatternPrefix: false,
+          newCallPatternDestination: false,
+          newCostChannelId: false,
+          newCostDestination: false,
+          newCostValue: false,
+        }
       },
     };
   },
@@ -341,6 +709,12 @@ export default {
       }
     },
   },
+  computed: {
+    adminSettingsError: function () {
+      // check if there is at least an error in admin settings
+      return Object.values(this.error.settings).some((e) => e);
+    },
+  },
   methods: {
     onDataNotAvailable() {
       this.showFilters = false;
@@ -374,39 +748,102 @@ export default {
         }
       );
     },
-    resetErrors() {
-      this.errors.admin = false;
-    },
     showSettingsModal(value) {
-      if (value) {
-        // on show modal
-        this.resetErrors();
-      }
       this.openSettingsModal = value;
     },
-    saveAdminSettings() {
+    validateAdminSettings() {
       // reset errors
-      this.resetErrors();
-      if (
-        this._.isEmpty(this.officeHourStart) ||
-        this._.isEmpty(this.officeHourEnd)
-      ) {
-        // validate inputs
-        this.errors.admin = true;
+      for (const key of Object.keys(this.error.settings)) {
+        this.error.settings[key] = false;
+      }
+      let errors = false;
+
+      // office hour start
+
+      if (!this.adminSettings.officeHourStart) {
+        this.error.settings.officeHourStart = true;
+
+        if (!errors) {
+          errors = true;
+          this.$nextTick(() => this.$refs.officeHourStart.$el.children[0].focus());
+        }
+      }
+
+      // office hour end
+
+      if (!this.adminSettings.officeHourEnd) {
+        this.error.settings.officeHourEnd = true;
+
+        if (!errors) {
+          errors = true;
+          this.$nextTick(() => this.$refs.officeHourEnd.$el.children[0].focus())
+        }
+      }
+
+      // query limit
+
+      if (!this.adminSettings.queryLimit || this.adminSettings.queryLimit < 10) {
+        this.error.settings.queryLimit = true;
+
+        if (!errors) {
+          errors = true;
+          this.$nextTick(() => this.$refs.queryLimit.$el.children[0].focus())
+        }
+      }
+
+      // currency
+
+      if (!this.adminSettings.currency) {
+        this.error.settings.currency = true;
+
+        if (!errors) {
+          errors = true;
+          this.$nextTick(() => this.$refs.currency.$el.children[0].focus())
+        }
+      }
+
+      // new destination is validated by validateNewDestination()
+
+      // new call pattern is validated by validateNewCallPattern()
+
+      // new cost is validated by validateNewCost()
+
+      return !errors;
+    },
+    saveAdminSettings(closeModal = true) {
+      if (!this.validateAdminSettings()) {
         return;
       }
+
       // apply changes
-      this.loader.saveSettings = true;
+
+      if (closeModal) {
+        this.loader.saveSettings = true;
+      }
+
       this.updateSettings(
         {
-          start_hour: this.officeHourStart,
-          end_hour: this.officeHourEnd,
-          query_limit: this.queryLimit.toString(),
-          null_call_time: this.nullCallTime.toString(),
+          start_hour: this.adminSettings.officeHourStart,
+          end_hour: this.adminSettings.officeHourEnd,
+          query_limit: this.adminSettings.queryLimit.toString(),
+          null_call_time: this.adminSettings.nullCallTime.toString(),
+          currency: this.adminSettings.currency,
+          destinations: this.adminSettings.destinations,
+          call_patterns: this.adminSettings.callPatterns,
+          costs: this.mapCostsForBackend(),
         },
         () => {
           this.loader.saveSettings = false;
-          this.showSettingsModal(false);
+          this.loader.deleteDestination = false;
+          this.loader.deleteCallPattern = false;
+          this.loader.deleteCost = false;
+          this.hideDeleteDestinationModal();
+          this.hideDeleteCallPatternModal();
+          this.hideDeleteCostModal();
+
+          if (closeModal) {
+            this.showSettingsModal(false);
+          }
           this.getAdminSettings();
         },
         (error) => {
@@ -419,10 +856,33 @@ export default {
       this.getSettings(
         (success) => {
           const settings = success.body.settings;
-          this.officeHourStart = settings.start_hour;
-          this.officeHourEnd = settings.end_hour;
-          this.queryLimit = Number(settings.query_limit);
-          this.nullCallTime = Number(settings.null_call_time);
+          this.adminSettings.officeHourStart = settings.start_hour;
+          this.adminSettings.officeHourEnd = settings.end_hour;
+          this.adminSettings.queryLimit = Number(settings.query_limit);
+          this.adminSettings.nullCallTime = Number(settings.null_call_time);
+          this.adminSettings.currency = settings.currency;
+          this.adminSettings.destinations = settings.destinations;
+
+          // sort call patterns by prefix length
+          this.adminSettings.callPatterns = settings.call_patterns.sort((cp1, cp2) => {
+            return cp2.prefix.length - cp1.prefix.length;
+          });
+
+          // destinationOptions is used for destinations dropdown
+          this.destinationOptions = this.adminSettings.destinations.map((d) => {
+            return {value: d, text: d}
+          });
+
+          // costs
+          this.adminSettings.costs = this.mapCostsFromBackend(settings.costs);
+
+          // need to show costs configuration modal?
+          const costsConfigured = this.get("costsConfigured");
+          if (!costsConfigured && (!this.adminSettings.costs || !this.adminSettings.costs.length)) {
+            this.openCostsConfigModal = true;
+          }
+
+          this.retrieveTrunks();
         },
         (error) => {
           console.error(error.body);
@@ -446,6 +906,209 @@ export default {
 
       // save to local storage
       this.set("reportColorScheme", this.$root.colorScheme);
+    },
+    configureCosts() {
+      this.openCostsConfigModal = false;
+      this.showSettingsModal(true);
+      this.set("costsConfigured", true);
+    },
+    skipCostsConfiguration() {
+      this.openCostsConfigModal = false;
+      this.set("costsConfigured", true);
+    },
+    validateNewDestination() {
+      // reset error
+      this.error.settings.newDestination = false;
+
+      // check empty or duplicated
+      if (!this.newDestination || this.adminSettings.destinations.find((d) => d.toLowerCase() == this.newDestination.toLowerCase())) {
+        this.error.settings.newDestination = true;
+        this.$nextTick(() => this.$refs.newDestination.$el.children[0].focus());
+      }
+      return !this.error.settings.newDestination;
+    },
+    createDestination() {
+      if (!this.validateAdminSettings() || !this.validateNewDestination()) {
+        return;
+      }
+      this.adminSettings.destinations.push(this.newDestination);
+      this.saveAdminSettings(false);
+      this.newDestination = "";
+    },
+    validateNewCallPattern() {
+      // reset errors
+      this.error.settings.newCallPatternPrefix = false;
+      this.error.settings.newCallPatternDestination = false;
+
+      // prefix
+
+      const prefixDuplicated = this.adminSettings.callPatterns.find((cp) => cp.prefix == this.newCallPattern.prefix);
+
+      const prefixValidSyntax = /^[0-9+]+$/.test(this.newCallPattern.prefix);
+
+      if (!this.newCallPattern.prefix || prefixDuplicated || !prefixValidSyntax) {
+        this.error.settings.newCallPatternPrefix = true;
+        this.$nextTick(() => this.$refs.newCallPatternPrefix.$el.children[0].focus());
+      }
+
+      // destination
+
+      if (!this.newCallPattern.destination) {
+        this.error.settings.newCallPatternDestination = true;
+        this.$nextTick(() => this.$refs.newCallPatternDestination.$el.children[0].focus());
+      }
+
+      return !this.error.settings.newCallPatternPrefix && !this.error.settings.newCallPatternDestination;
+    },
+    createCallPattern() {
+      if (!this.validateAdminSettings() || !this.validateNewCallPattern()) {
+        return;
+      }
+      this.adminSettings.callPatterns.push(this.newCallPattern);
+      this.saveAdminSettings(false);
+      this.newCallPattern = { prefix: "", destination: null };
+    },
+    validateNewCost() {
+      // reset errors
+      this.error.settings.newCostChannelId = false;
+      this.error.settings.newCostDestination = false;
+      this.error.settings.newCostValue = false;
+
+      // channel id (trunk)
+
+      if (!this.newCost.channelId) {
+        this.error.settings.newCostChannelId = true;
+        this.$nextTick(() => this.$refs.newCostChannelId.$el.children[0].focus());
+      }
+
+      // destination
+
+      if (!this.newCost.destination) {
+        this.error.settings.newCostDestination = true;
+        this.$nextTick(() => this.$refs.newCostDestination.$el.children[0].focus());
+      }
+
+      // cost value
+
+      if (!this.newCost.cost.toString().length || this.newCost.cost < 0) {
+        this.error.settings.newCostValue = true;
+        this.$nextTick(() => this.$refs.newCostValue.focus());
+      }
+
+      // check cost duplicated
+
+      const costDuplicated = this.adminSettings.costs.find((c) => c.channelId == this.newCost.channelId && c.destination == this.newCost.destination);
+
+      if (costDuplicated) {
+        this.error.settings.newCostChannelId = true;
+        this.error.settings.newCostDestination = true;
+        this.$nextTick(() => this.$refs.newCostChannelId.$el.children[0].focus());
+      }
+
+      return !this.error.settings.newCostChannelId && !this.error.settings.newCostDestination && !this.error.settings.newCostValue;
+    },
+    createCost() {
+      if (!this.validateAdminSettings() || !this.validateNewCost()) {
+        return;
+      }
+      this.adminSettings.costs.push(this.newCost);
+      this.saveAdminSettings(false);
+      this.newCost = { channelId: null, destination: null, cost: "" };
+    },
+    showDeleteDestinationModal(destinationToDelete) {
+      if (!this.validateAdminSettings()) {
+        return;
+      }
+      this.destinationToDelete = destinationToDelete;
+      this.openDeleteDestinationModal = true;
+    },
+    showDeleteCallPatternModal(callPatternToDelete) {
+      if (!this.validateAdminSettings()) {
+        return;
+      }
+      this.callPatternToDelete = callPatternToDelete;
+      this.openDeleteCallPatternModal = true;
+    },
+    showDeleteCostModal(costToDelete) {
+      if (!this.validateAdminSettings()) {
+        return;
+      }
+      this.costToDelete = costToDelete;
+      this.openDeleteCostModal = true;
+    },
+    hideDeleteDestinationModal() {
+      this.destinationToDelete = "";
+      this.openDeleteDestinationModal = false;
+    },
+    hideDeleteCallPatternModal() {
+      this.callPatternToDelete = { prefix: "", destination: null };
+      this.openDeleteCallPatternModal = false;
+    },
+    hideDeleteCostModal() {
+      this.costToDelete = { channelId: null, destination: null, cost: "" };
+      this.openDeleteCostModal = false;
+    },
+    deleteDestination() {
+      this.loader.deleteDestination = true;
+      this.adminSettings.destinations = this.adminSettings.destinations.filter((d) => d !== this.destinationToDelete);
+      this.saveAdminSettings(false);
+    },
+    deleteCallPattern() {
+      this.loader.deleteCallPattern = true;
+      this.adminSettings.callPatterns = this.adminSettings.callPatterns.filter((cp) => cp.prefix !== this.callPatternToDelete.prefix);
+      this.saveAdminSettings(false);
+    },
+    deleteCost() {
+      this.loader.deleteCost = true;
+      this.adminSettings.costs = this.adminSettings.costs.filter((c) => !(c.channelId == this.costToDelete.channelId && c.destination == this.costToDelete.destination));
+      this.saveAdminSettings(false);
+    },
+    retrieveTrunks() {
+      this.getFilterField(
+        "trunks",
+        (success) => {
+          const trunkStrings = success.body.filter;
+          let trunks = [];
+
+          for (const trunkString of trunkStrings) {
+            const split = trunkString.split(",");
+            trunks.push({ name: split[0], channelId: split[1]});
+          }
+          this.trunks = trunks;
+
+          // trunkOptions is used for trunks dropdown
+          this.trunkOptions = this.trunks.map((t) => {
+            return {value: t.channelId, text: t.name}
+          });
+        },
+        (error) => {
+          console.error(error.body);
+        }
+      );
+    },
+    mapCostsFromBackend(costsBackend) {
+      let costs = [];
+
+      for (const c of costsBackend) {
+        costs.push({
+          channelId: c.channel_id,
+          destination: c.destination,
+          cost: c.cost,
+        });
+      }
+      return costs;
+    },
+    mapCostsForBackend() {
+        let costsBackend = [];
+
+        for (const c of this.adminSettings.costs) {
+          costsBackend.push({
+            channel_id: c.channelId,
+            destination: c.destination,
+            cost: c.cost.toString(),
+          });
+        }
+        return costsBackend;
     },
   },
 };
@@ -492,5 +1155,37 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.input-warning {
+    background-color: #fffaf3 !important;
+    color: #573a08 !important;
+    border: none !important;
+    -webkit-box-shadow: 0 0 0 1px #c9ba9b inset, 0 0 0 0 transparent !important;
+    box-shadow: 0 0 0 1px #c9ba9b inset, 0 0 0 0 transparent !important;
+}
+
+.destination {
+  min-height: 8rem !important;
+}
+
+.destination .header {
+  font-size: 1.1em !important;
+}
+
+.destination .icon {
+  margin: 0;
+}
+
+.destination .input {
+  width: 85%;
+}
+
+.call-patterns-accordion {
+  margin-top: 1.5rem;
+}
+
+.call-patterns-accordion .title {
+  display: inline-block;
 }
 </style>
