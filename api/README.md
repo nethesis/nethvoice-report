@@ -48,7 +48,7 @@ To reduce the numbers of record inside the `cdr`table, the templates query split
 - `cdr_YYYY`: contains all calls for a specific year
 - `cdr_YYYY-MM`: contains all calls for a specific month of a year
 ```
-/opt/nethvoice-report/api/values/cdr_<name>.sql
+/opt/nethvoice-report/api/templates/cdr_<name>.sql
 ```
 
 # API
