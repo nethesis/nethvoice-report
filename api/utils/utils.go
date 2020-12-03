@@ -207,6 +207,9 @@ func ExtractPatterns() string {
 	// check if settings is locally cached
 	settingsString, errCache := cacheConnection.Get("admin_settings").Result()
 
+	// get settings struct from configuration
+	settings = configuration.Config.Settings
+
 	if errCache == nil {
 		// settings is cached
 
@@ -219,9 +222,6 @@ func ExtractPatterns() string {
 		}
 		settings = settingsCache["settings"]
 	}
-
-	// get settings struct from configuration
-	settings = configuration.Config.Settings
 
 	// sort patterns by long
 	sort.Slice(settings.CallPatterns, func(i, j int) bool {
