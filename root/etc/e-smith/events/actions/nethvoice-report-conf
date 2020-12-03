@@ -39,3 +39,6 @@ password=$(perl -e "use NethServer::Password; print NethServer::Password::store(
 
 # expand user auth file
 scl enable rh-php56 /var/lib/asterisk/bin/retrieve_conf
+
+# fix bad user_authorizations.json owner
+/usr/bin/chown asterisk:asterisk /opt/nethvoice-report/api/user_authorizations.json
