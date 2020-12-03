@@ -328,6 +328,13 @@
     "validation": {
       "invalid_value": "Invalid value"
     },
+    "search": {
+      "contact": "Contact",
+      "user": "User",
+      "cti_group": "CTI group",
+      "destination": "Destination",
+      "did": "DID"
+    },
     "tags": {
 	"dashboard": "dashboard",
 	"summary": "summary",
