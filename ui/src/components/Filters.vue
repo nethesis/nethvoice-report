@@ -477,6 +477,7 @@ import UtilService from "../services/utils";
 import SearchService from "../services/searches";
 import PhonebookService from "../services/phonebook";
 import FixedBar from "../components/FixedBar.vue";
+import FilterService from "../services/filter";
 
 import moment from "moment";
 
@@ -493,6 +494,7 @@ export default {
     SearchService,
     PhonebookService,
     IndexedDbService,
+    FilterService,
   ],
   props: ["showFiltersForm"],
   data() {
@@ -714,9 +716,6 @@ export default {
     },
     retrieveDefaultFilter() {
       this.getDefaultFilter(
-        this.$route.meta.report,
-        this.$route.meta.section,
-        this.$route.meta.view,
         (success) => {
           this.defaultFilter = success.body.filter;
 
