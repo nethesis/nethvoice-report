@@ -61,7 +61,7 @@
           "end_hour": "18:00",
           "query_limit": "2000",
           "null_call_time": "5",
-          "destinations": ["National", "Mobile", "International", "Emergency"],
+          "destinations": ["National", "Mobile", "International", "Emergency", "PayNumber"],
           "call_patterns": [
             \{
               "prefix": "00390",
@@ -90,6 +90,9 @@
             \}, \{
               "prefix": "1",
               "destination": "Emergency"
+            \}, \{
+              "prefix": "8",
+              "destination": "PayNumber"
             \}
           ],
           "currency": "EUR",
