@@ -123,3 +123,11 @@ CREATE TABLE IF NOT EXISTS `queue_failed` (
   `qname` varchar(32) NOT NULL DEFAULT '',
   `event` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `cost_details` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `channelid` varchar(190) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `destination` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `cost` FLOAT NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
