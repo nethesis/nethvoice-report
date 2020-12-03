@@ -34,9 +34,9 @@
   "template_path": "/opt/nethvoice-report/api/templates",
   "values_path": "/opt/nethvoice-report/api/values",
   "views_path": "/opt/nethvoice-report/api/views",
-	"phonebook": {
+	"phonebook": \{
 	  "phonebook_path": "/opt/nethvoice-report/api/phonebook/phonebook.sql"
-	},
+	\},
 	"rrd_path": "/var/lib/collectd/rrd",
         "user_auth_file": "/opt/nethvoice-report/api/user_authorizations.json",
         "default_filter": \{
@@ -61,25 +61,38 @@
           "start_hour": "09:00",
           "end_hour": "18:00",
           "query_limit": "2000",
-          "call_patterns": [{
-            "name": "national",
-            "pattern": "00390%"
-          }, {
-            "name": "mobile",
-            "pattern": "00393%"
-          }, {
-            "name": "international",
-            "pattern": "00%"
-          }, {
-            "name": "mobile",
-            "pattern": "3%"
-          }, {
-            "name": "national",
-            "pattern": "0%"
-          }, {
-            "name": "emergency",
-            "pattern": "1%"
-          }],
-          "currency": "EUR"
+          "destinations": ["National", "Mobile", "International", "Emergency"],
+          "call_patterns": [
+            \{
+              "prefix": "00390",
+              "destination": "National"
+            \}, \{
+              "prefix": "+390",
+              "destination": "National"
+            \}, \{
+              "prefix": "0",
+              "destination": "National"
+            \}, \{
+              "prefix": "00393",
+              "destination": "Mobile"
+            \}, \{
+              "prefix": "+393",
+              "destination": "Mobile"
+            \}, \{
+              "prefix": "3",
+              "destination": "Mobile"
+            \}, \{
+              "prefix": "00",
+              "destination": "International"
+            \}, \{
+              "prefix": "+",
+              "destination": "International"
+            \}, \{
+              "prefix": "1",
+              "destination": "Emergency"
+            \}
+          ],
+          "currency": "EUR",
+          "costs": []
         \}
 \}

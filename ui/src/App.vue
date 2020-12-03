@@ -181,6 +181,10 @@ body {
   width: 100% !important;
 }
 
+.no-mg-top {
+  margin-top: 0 !important;
+}
+
 .mg-top-md {
   margin-top: 2rem !important;
   padding-left: 7px;
@@ -234,6 +238,7 @@ body {
 
 .settings-description {
   color: gray;
+  margin-top: 1em;
   margin-bottom: 1.5rem;
 }
 
@@ -371,5 +376,15 @@ body {
 
 .ui.dimmer .ui.fix.loader:after {
   border-color: #767676 transparent transparent;
+}
+
+.transparent {
+  color: transparent !important;
+}
+
+.input-error input {
+  background: #fff6f6 !important;
+  border-color: #e0b4b4 !important;
+  color: #9f3a38 !important;
 }
 </style>
