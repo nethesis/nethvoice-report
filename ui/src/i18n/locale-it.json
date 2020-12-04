@@ -328,6 +328,13 @@
     "validation": {
       "invalid_value": "Valore non valido"
     },
+    "search": {
+      "contact": "Contatto",
+      "user": "Utente",
+      "cti_group": "Gruppo CTI",
+      "destination": "Destinazione",
+      "did": "DID"
+    },
     "tags": {
         "dashboard": "dashboard",
         "summary": "sommario",
