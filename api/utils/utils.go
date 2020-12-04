@@ -230,7 +230,7 @@ func ExtractPatterns() string {
 
 	// loop patterns
 	for _, p := range settings.CallPatterns {
-		patterns += "IF (dst LIKE \"" + p.Prefix + "%\", \"" + p.Destination + "\", "
+		patterns += "IF (dst LIKE \"" + p.Prefix + "%\" AND type = \"OUT\", \"" + p.Destination + "\", "
 	}
 	patterns += "\"\"" + strings.Repeat(")", len(settings.CallPatterns))
 
