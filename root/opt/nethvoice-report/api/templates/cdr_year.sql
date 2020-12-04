@@ -47,3 +47,6 @@ WHERE  uniqueid = linkedid
 GROUP  BY linkedid,
           peeraccount
 ORDER  BY calldate;
+
+UPDATE `cdr_{{ YearMap .Year }}` SET call_type = "" WHERE type = "IN";
+UPDATE `cdr_{{ YearMap .Year }}` SET call_type = "" WHERE type = "LOCAL";
