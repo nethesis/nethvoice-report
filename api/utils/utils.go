@@ -196,6 +196,27 @@ func ExtractStrings(v []string) string {
 	return "\"" + result + "\""
 }
 
+func ExtractCallDestinations(v []string) string {
+	// init result var
+	result := ""
+
+	// loop destinations
+	for i, d := range v {
+		parts := strings.Split(d, ",")
+
+		// switch type of destination
+		switch parts[0] {
+		case "dcontext":
+			result = "AND dcontext = " + parts[1]
+
+		case "lastapp":
+			result = "AND lastapps REGEXP '" + parts[1] + "$'"
+		}
+	}
+
+	return result
+}
+
 func ExtractPatterns() string {
 	// init vars
 	var settings models.Settings
