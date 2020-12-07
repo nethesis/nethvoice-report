@@ -23,19 +23,24 @@
 package models
 
 type Filter struct {
-	Queues []string `json:"queues"`
-	Groups []string `json:"groups"`
-	Agents []string `json:"agents"`
-	Users  []string `json:"users"`
-	IVRs   []string `json:"ivrs"`
-	Phones []string `json:"phones"`
-	Trunks []string `json:"trunks"`
-	DIDs   []string `json:"dids"`
+	Queues             []string `json:"queues"`
+	Groups             []string `json:"groups"`
+	Agents             []string `json:"agents"`
+	Users              []string `json:"users"`
+	IVRs               []string `json:"ivrs"`
+	Phones             []string `json:"phones"`
+	Trunks             []string `json:"trunks"`
+	DIDs               []string `json:"dids"`
+	Sources            []string `json:"sources"`
+	Destinations       []string `json:"destinations"`
+	CallType           string   `json:"call_type"`
+	Duration           string   `json:"duration"`
+	CallDestinations   []string `json:"call_destinations"`
+	Patterns           []string `json:"patterns"`
 
 	Reasons      []string `json:"reasons"`
 	Results      []string `json:"results"`
 	Choices      []string `json:"choices"`
-	Destinations []string `json:"destinations"`
 	Origins      []string `json:"origins"`
 
 	Time struct {
