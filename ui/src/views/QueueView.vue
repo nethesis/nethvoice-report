@@ -18,7 +18,7 @@
       <div
         v-for="(chart, index) in charts" v-bind:key="index"
         :id="`export_${index}`"
-        :class="{'table-chart': chart.type == 'table', 'line-chart': chart.type == 'line', 'pie-chart': chart.type == 'pie', 'bar-chart': chart.type == 'bar'}"
+        :class="{'table-chart': chart.type == 'table', 'line-chart': chart.type == 'line', 'pie-chart': chart.type == 'pie', 'bar-chart': chart.type == 'bar', 'recap-chart': chart.type == 'recap'}"
       >
         <div class="align-center h-20">
           <h4 is="sui-header" class="chart-caption">
@@ -92,6 +92,10 @@
             <div v-if="chart.type == 'pie'">
               <pie-chart :data="chart.data" :caption="chart.caption"></pie-chart>
             </div>
+            <!-- recap chart -->
+            <div v-if="chart.type == 'recap'">
+              <RecapChart :data="chart.data" :caption="chart.caption" :currency="currency"></RecapChart>
+            </div>
           </div>
         </div>
         <div v-show="chart.details" class="show-details">
@@ -145,6 +149,7 @@ import LineChart from "../components/LineChart.vue";
 import BarChart from "../components/BarChart.vue";
 import PieChart from "../components/PieChart.vue";
 import ExportData from "../components/ExportData.vue";
+import RecapChart from "../components/RecapChart.vue";
 
 import QueriesService from "../services/queries";
 import StorageService from "../services/storage";
@@ -153,8 +158,8 @@ import SettingsService from "../services/settings";
 import CdrDetailsService from "../services/cdr_details";
 
 export default {
-  name: "QueueDashboard",
-  components: { TableChart, LineChart, BarChart, ExportData, PieChart },
+  name: "QueueDashboard", //// rename, used for CDR too
+  components: { TableChart, LineChart, BarChart, ExportData, PieChart, RecapChart },
   mixins: [StorageService, QueriesService, UtilService, SettingsService, CdrDetailsService],
   data() {
     return {
@@ -171,6 +176,7 @@ export default {
         end_hour: null,
       },
       queryLimit: 0,
+      currency: "",
       filterTimeSplit: 0,
       isAdmin: 0,
       queryLimitMessage: "",
@@ -393,6 +399,7 @@ export default {
             endHour: settings.end_hour,
           };
           this.queryLimit = Number(settings.query_limit);
+          this.currency = settings.currency;
         },
         (error) => {
           console.error(error.body);
