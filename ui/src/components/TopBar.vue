@@ -136,7 +136,14 @@
               $t("message.currency_description")
             }}</div>
             <!-- destinations -->
-            <sui-header>{{ $t('settings.destinations') }}</sui-header>
+            <sui-header>
+              {{ $t('settings.destinations') }}
+              <span>
+                <sui-popup :content="$t('message.configure_to_compute_call_costs')">
+                  <sui-icon v-show="highlightCostsSettings" name="exclamation circle" color="blue" class="blink-opacity blink-icon" slot="trigger"/>
+                </sui-popup>
+              </span>
+            </sui-header>
             <div class="settings-description">{{
               $t("message.destinations_description")
             }}</div>
@@ -170,7 +177,14 @@
             <sui-accordion exclusive class="call-patterns-accordion">
               <sui-accordion-title>
                 <sui-icon name="dropdown" />
-                <a>{{ $t('settings.call_patterns_accordion') }}</a>
+                <a>
+                  {{ $t('settings.call_patterns_accordion') }}
+                  <span>
+                  <sui-popup :content="$t('message.configure_to_compute_call_costs')">
+                    <sui-icon v-show="highlightCostsSettings" name="exclamation circle" color="blue" class="blink-opacity blink-icon" slot="trigger"/>
+                  </sui-popup>
+                </span>
+                </a>
               </sui-accordion-title>
               <sui-accordion-content>
                 <div class="settings-description no-mg-top">{{
@@ -236,7 +250,14 @@
               </sui-accordion-content>
             </sui-accordion>
             <!-- costs -->
-            <sui-header>{{ $t('settings.costs') }}</sui-header>
+            <sui-header>
+              {{ $t('settings.costs') }}
+              <span>
+                <sui-popup :content="$t('message.configure_to_compute_call_costs')">
+                  <sui-icon v-show="highlightCostsSettings" name="exclamation circle" color="blue" class="blink-opacity blink-icon" slot="trigger"/>
+                </sui-popup>
+              </span>
+            </sui-header>
             <div class="settings-description">{{
               $t("message.costs_description")
             }}</div>
@@ -512,6 +533,7 @@ export default {
         cost: "",
       },
       openDeleteCostModal: false,
+      highlightCostsSettings: false,
       colorSchemes: [
         "tableau.Classic10",
         "brewer.DarkTwo8",
@@ -735,6 +757,10 @@ export default {
     },
     showSettingsModal(value) {
       this.openSettingsModal = value;
+
+      if (!value) {
+        this.highlightCostsSettings = false;
+      }
     },
     validateAdminSettings() {
       // reset errors
@@ -893,6 +919,7 @@ export default {
     configureCosts() {
       this.openCostsConfigModal = false;
       this.showSettingsModal(true);
+      this.highlightCostsSettings = true;
       this.set("costsConfigured", true);
     },
     skipCostsConfiguration() {

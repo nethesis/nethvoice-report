@@ -400,4 +400,18 @@ body {
   border-color: #e0b4b4 !important;
   color: #9f3a38 !important;
 }
+
+.blink-icon {
+  font-size: 1.1rem !important;
+}
+
+.blink-opacity {
+  animation: blinkOpacity 2s infinite;
+}
+
+@keyframes blinkOpacity{
+  0%		{ opacity: 1;}
+  50%		{ opacity: 0.25;}
+  100%	{ opacity: 1;}
+}
 </style>
