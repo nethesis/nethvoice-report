@@ -210,7 +210,7 @@
                     />
                   </sui-form-field>
                   <sui-form-field>
-                    <label class="transparent">.</label>
+                    <label class="color-transparent">.</label>
                     <sui-button basic negative type="button" @click="showDeleteCallPatternModal(callPattern)">
                       <sui-icon name="trash" /> {{ $t('command.delete') }}
                     </sui-button>
@@ -238,7 +238,7 @@
                     />
                   </sui-form-field>
                   <sui-form-field>
-                    <label class="transparent">.</label>
+                    <label class="color-transparent">.</label>
                     <sui-button basic positive type="button" @click="createCallPattern()">
                       <sui-icon name="plus" /> {{ $t('command.create') }}
                     </sui-button>
@@ -289,7 +289,7 @@
                 >
               </sui-form-field>
               <sui-form-field width="three">
-                <label class="transparent">.</label>
+                <label class="color-transparent">.</label>
                 <sui-button basic negative type="button" @click="showDeleteCostModal(cost)">
                   <sui-icon name="trash" /> {{ $t('command.delete') }}
                 </sui-button>
@@ -333,7 +333,7 @@
                 >
               </sui-form-field>
               <sui-form-field width="three">
-                <label class="transparent">.</label>
+                <label class="color-transparent">.</label>
                 <sui-button basic positive type="button" @click="createCost()">
                   <sui-icon name="plus" /> {{ $t('command.create') }}
                 </sui-button>
