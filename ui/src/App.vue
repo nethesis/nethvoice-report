@@ -378,7 +378,7 @@ body {
   border-color: #767676 transparent transparent;
 }
 
-.transparent {
+.color-transparent {
   color: transparent !important;
 }
 
