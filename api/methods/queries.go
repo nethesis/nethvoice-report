@@ -34,6 +34,7 @@ import (
 	"strings"
 	"text/template"
 	"time"
+	"regexp"
 
 	"github.com/nleeper/goment"
 
@@ -318,14 +319,43 @@ func buildCdrQuery(queryFile string, filter models.Filter) (string, error) {
 	var queryBuilder strings.Builder
 	var query string
 
+	// define regexps
+	rG := regexp.MustCompile(`<CDR_GROUP: (.+)>`)
+	rO := regexp.MustCompile(`<CDR_ORDER: (.+)>`)
+
 	for i, cdrTable := range cdrTables {
+		// clean placeholders
 		query = strings.ReplaceAll(queryWithTablePlaceholder, "<CDR_TABLE>", cdrTable)
-		query = strings.ReplaceAll(query, ";", "") // remove trailing semicolon
+
+		// remove groups and orders
+		query = rG.ReplaceAllString(query, "")
+		query = rO.ReplaceAllString(query, "")
+
+		// remove trailing semicolon
+		query = strings.ReplaceAll(query, ";", "")
 		queryBuilder.WriteString(query)
 
 		if i < len(cdrTables)-1 {
 			queryBuilder.WriteString(" UNION ALL ")
 		}
+	}
+
+	// get query groups
+	findsG := rG.FindStringSubmatch(queryWithTablePlaceholder)
+	if len(findsG) > 0 {
+		queryGroup := strings.Join(findsG[1:], ",")
+
+		// append group to query
+		queryBuilder.WriteString(" GROUP BY " + queryGroup)
+	}
+
+	// get query orders
+        findsO := rO.FindStringSubmatch(queryWithTablePlaceholder)
+	if len(findsO) > 0 {
+		queryOrder := strings.Join(findsO[1:], ",")
+
+		// append order to query
+		queryBuilder.WriteString(" ORDER BY " + queryOrder)
 	}
 
 	// get query limit
