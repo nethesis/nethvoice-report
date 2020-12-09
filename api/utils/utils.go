@@ -201,7 +201,7 @@ func ExtractCallDestinations(v []string) string {
 	result := ""
 
 	// loop destinations
-	for i, d := range v {
+	for _, d := range v {
 		parts := strings.Split(d, ",")
 
 		// switch type of destination

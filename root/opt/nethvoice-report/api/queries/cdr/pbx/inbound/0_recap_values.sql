@@ -13,5 +13,5 @@ SELECT type,
        Sum(duration) - Sum(billsec)				AS "totalWait£seconds",
        Avg(duration) - Avg(billsec)                             AS "avgWait£seconds" 
 FROM   `<CDR_TABLE>`
-GROUP BY type, call_type
-ORDER BY type, call_type;
+<CDR_GROUP: type, call_type>
+<CDR_ORDER: type, call_type>
