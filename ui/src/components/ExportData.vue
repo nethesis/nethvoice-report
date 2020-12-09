@@ -1,8 +1,8 @@
 <template>
   <div v-if="isVisible && data && data.length > 1" class="right-floated mt-30m">
-    <!-- button only csv if is table -->
+    <!-- button only csv if is table or recap -->
     <sui-button
-      v-if="type === 'table'"
+      v-if="type === 'table' || type === 'recap'"
       @click="exportToCSV()"
       class="custom-btn"
       basic
@@ -11,7 +11,7 @@
     />
     <!-- dropdown for csv and pdf export -->
     <sui-dropdown
-      v-if="type !== 'table'"
+      v-else
       class="icon basic"
       :class="{ transparent: transparent }"
       icon="download"
