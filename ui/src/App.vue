@@ -185,6 +185,10 @@ body {
   margin-top: 0 !important;
 }
 
+.no-mg-left {
+  margin-left: 0 !important;
+}
+
 .mg-top-md {
   margin-top: 2rem !important;
   padding-left: 7px;
@@ -204,6 +208,11 @@ body {
 
 .table-chart {
   width: 95%;
+  margin: 2rem;
+}
+
+.recap-chart {
+  width: 100%;
   margin: 2rem;
 }
 
@@ -355,6 +364,10 @@ body {
 
 .no-margin {
   margin: 0 !important;
+}
+
+.full-width {
+  width: 100% !important;
 }
 
 .filters-form .mx-datepicker input {
