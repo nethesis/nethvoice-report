@@ -169,7 +169,9 @@
       "costs_description": "Configure call costs for specific trunks and destinations",
       "call_patterns_description": "Destination prefixes are used to configure the destination of phone numbers using their prefix. Destination is matched with most specific (lengthy) prefix",
       "configure_to_compute_call_costs": "Configure this setting to compute and display call costs",
-      "access_cdr_report": "Access CDR & Cost report"
+      "access_cdr_report": "Access CDR & Cost report",
+      "reset_settings_description": "Reset all settings to their default values",
+      "you_are_about_to_reset_settings": "You are about to reset ALL settings to default values. This action cannot be undone"
     },
     "pagination": {
       "page": "page",
@@ -312,7 +314,8 @@
       "delete_call_pattern": "Delete destination prefix",
       "delete_cost": "Delete cost",
       "expand": "Expand",
-      "collapse": "Collapse"
+      "collapse": "Collapse",
+      "reset_settings": "Reset settings"
     },
     "settings": {
       "office_hours_start": "Office hours start",
@@ -329,7 +332,8 @@
       "new_prefix": "New prefix",
       "trunk": "Trunk",
       "cost": "Cost",
-      "call_patterns_accordion": "Configure destination prefixes"
+      "call_patterns_accordion": "Configure destination prefixes",
+      "reset_settings": "Reset settings"
     },
     "misc": {
       "week": "Week",
