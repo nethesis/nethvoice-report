@@ -15,5 +15,6 @@ require (
 	github.com/msteinert/pam v0.0.0-20200810204841-913b8f8cdf8b
 	github.com/nleeper/goment v1.4.0
 	github.com/pkg/errors v0.9.1
+	github.com/thoas/go-funk v0.7.0
 	github.com/ziutek/rrd v0.0.3
 )
