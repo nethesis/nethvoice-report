@@ -43,7 +43,7 @@
     },
     "menu": {
       "queue": "Report Code",
-      "cdr": "Report Chiamate & Report Costi",
+      "cdr": "Report Chiamate & Costi",
       "dashboard": "Dashboard",
       "data": "Dati",
       "performance": "Performance",
@@ -161,13 +161,15 @@
       "null_call_description": "Le chiamate con durata minore o uguale a questo valore sono considerate nulle",
       "slow_query": "Il caricamento sta impiegando più del previsto. Restringi i filtri di ricerca, oppure continua ad attendere",
       "cdr_details_wait": "Questa operazione potrebbe richiedere un po' di tempo, attendi oppure torna più tardi...",
-      "welcome": "Benvenuto/a",
+      "welcome_in_cdr": "Benvenuto/a nel Report Chiamate & Costi",
       "configure_call_costs": "Per prima cosa, configura le destinazioni e i costi delle chiamate",
       "configure_call_costs_description": "Puoi farlo in qualunque momento nella pagina Impostazioni, cliccando il pulsante con ingranaggio nella barra degli strumenti in alto a destra",
       "currency_description": "Valuta usata per mostrare il costo delle chiamate",
       "destinations_description": "Le destinazioni sono usate per raggruppare i prefissi di destinazione delle chiamate e calcolare i costi delle chiamate",
       "costs_description": "Configura il costo delle chiamate per fasci specifici e destinazioni specifiche",
-      "call_patterns_description": "I prefissi di destinazione son usati per configurare la destinazione dei numeri di telefono usando il loro prefisso. La destinazione è selezionata in base al prefisso più specifico (lungo)"
+      "call_patterns_description": "I prefissi di destinazione son usati per configurare la destinazione dei numeri di telefono usando il loro prefisso. La destinazione è selezionata in base al prefisso più specifico (lungo)",
+      "configure_to_compute_call_costs": "Configura questa impostazione per calcolare e visualizzare i costi delle chiamate",
+      "access_cdr_report": "Accedi al Report Chiamate & Costi"
     },
     "pagination": {
       "page": "pagina",
