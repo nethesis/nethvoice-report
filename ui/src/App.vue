@@ -181,6 +181,10 @@ body {
   width: 100% !important;
 }
 
+.no-mg {
+  margin: 0 !important;
+}
+
 .no-mg-top {
   margin-top: 0 !important;
 }
@@ -417,5 +421,9 @@ body {
   0%		{ opacity: 1;}
   50%		{ opacity: 0.25;}
   100%	{ opacity: 1;}
+}
+
+.created-icon {
+  margin: 0.5rem 0 0 0 !important;
 }
 </style>
