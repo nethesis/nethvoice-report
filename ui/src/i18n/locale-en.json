@@ -340,7 +340,8 @@
       "others": "Others",
       "call_details": "Call details",
       "per_second": "per second",
-      "unknown": "Unknown"
+      "unknown": "Unknown",
+      "just_created": "Just created"
     },
     "validation": {
       "invalid_value": "Invalid value"
