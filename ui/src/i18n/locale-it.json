@@ -339,7 +339,8 @@
       "others": "Altri",
       "call_details": "Dettagli chiamata",
       "per_second": "al secondo",
-      "unknown": "Sconosciuto"
+      "unknown": "Sconosciuto",
+      "just_created": "Appena creato"
     },
     "validation": {
       "invalid_value": "Valore non valido"
