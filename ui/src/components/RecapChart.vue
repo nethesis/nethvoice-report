@@ -195,7 +195,7 @@
                     type="button"
                     @click="entry.expanded = false"
                     size="tiny"
-                    icon="zoom"
+                    icon="zoom-out"
                     >{{ $t("command.collapse") }}</sui-button
                   >
                 </sui-statistic>

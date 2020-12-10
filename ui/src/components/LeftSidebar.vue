@@ -23,6 +23,11 @@
           </sui-dropdown-item>
         </sui-dropdown-menu>
       </sui-dropdown>
+      <span>
+        <sui-popup :content="$t('message.access_cdr_report')" flowing>
+          <sui-icon v-show="$route.meta.report != 'cdr' && !cdrVisited" name="exclamation circle" color="blue" class="blink-opacity blink-icon mg-left-sm" slot="trigger"/>
+        </sui-popup>
+      </span>
     </div>
   </sui-menu-item>
   <sui-menu-item>
@@ -106,6 +111,7 @@ export default {
       taggedRoutes: [],
       selectedReport: this.get("selectedReport") || 'queue',
       loggedUsername: this.get("loggedUser") ? this.get("loggedUser").username : "",
+      cdrVisited: false,
     }
   },
   watch: {
@@ -125,7 +131,14 @@ export default {
       } else {
         this.taggedRoutes = []
       }
-    }
+    },
+    $route: function () {
+      this.checkCdrVisited();
+    },
+  },
+  mounted() {
+    this.cdrVisited = this.get("cdrVisited");
+    this.checkCdrVisited();
   },
   methods: {
     selectReport(report) {
@@ -143,7 +156,13 @@ export default {
     },
     handlePropagation(event) {
       event.stopPropagation()
-    }
+    },
+    checkCdrVisited() {
+      if (!this.cdrVisited && this.$route.meta.report == "cdr") {
+        this.cdrVisited = true;
+        this.set("cdrVisited", true);
+      }
+    },
   }
 };
 </script>
@@ -175,8 +194,6 @@ export default {
     width: 100%;
 
     .dropdown {
-      width: 100%;
-
       .text {
         font-size: 17px;
         font-weight: 600;
