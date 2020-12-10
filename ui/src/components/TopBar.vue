@@ -164,8 +164,13 @@
             <sui-card-group :items-per-row="3">
               <sui-card v-for="(destination, index) in adminSettings.destinations" v-bind:key="'destination-' + index" class="destination">
                 <sui-card-content>
-                  <sui-icon name="map marker alternate" class="right floated" />
+                  <sui-icon name="map marker alternate" class="right floated no-mg" size="large" />
                   <sui-card-header>{{ destination }}</sui-card-header>
+                  <span v-show="destination == destinationJustCreated">
+                    <sui-popup :content="$t('misc.just_created')">
+                      <sui-icon name="check circle" color="green" size="large" class="created-icon" slot="trigger" />
+                    </sui-popup>
+                  </span>
                 </sui-card-content>
                 <sui-button basic negative attached="bottom" type="button" @click="showDeleteDestinationModal(destination)">
                   <sui-icon name="trash" /> {{ $t('command.delete') }}
@@ -174,7 +179,7 @@
               <!-- new destination -->
               <sui-card class="destination">
                 <sui-card-content>
-                  <sui-icon name="map marker alternate" class="right floated" />
+                  <sui-icon name="map marker alternate" class="right floated no-mg" size="large" />
                   <sui-input
                     v-model.trim="newDestination"
                     :placeholder="$t('settings.new_destination')"
@@ -228,6 +233,14 @@
                     <sui-button basic negative type="button" @click="showDeleteCallPatternModal(callPattern)">
                       <sui-icon name="trash" /> {{ $t('command.delete') }}
                     </sui-button>
+                  </sui-form-field>
+                  <sui-form-field>
+                    <label class="color-transparent">.</label>
+                    <span v-show="callPattern.prefix == callPatternJustCreated.prefix">
+                      <sui-popup :content="$t('misc.just_created')">
+                        <sui-icon name="check circle" color="green" size="large" class="created-icon" slot="trigger" />
+                      </sui-popup>
+                    </span>
                   </sui-form-field>
                 </sui-form-fields>
                 <!-- new call pattern -->
@@ -309,11 +322,19 @@
                   disabled
                 >
               </sui-form-field>
-              <sui-form-field width="three">
+              <sui-form-field>
                 <label class="color-transparent">.</label>
                 <sui-button basic negative type="button" @click="showDeleteCostModal(cost)">
                   <sui-icon name="trash" /> {{ $t('command.delete') }}
                 </sui-button>
+              </sui-form-field>
+              <sui-form-field>
+                <label class="color-transparent">.</label>
+                <span v-show="cost.channelId == costJustCreated.channelId && cost.destination == costJustCreated.destination">
+                  <sui-popup :content="$t('misc.just_created')">
+                    <sui-icon name="check circle" color="green" size="large" class="created-icon" slot="trigger" />
+                  </sui-popup>
+                </span>
               </sui-form-field>
             </sui-form-fields>
             <!-- new cost -->
@@ -597,6 +618,16 @@ export default {
       openDeleteCostModal: false,
       highlightCostsSettings: false,
       openResetSettingsModal: false,
+      destinationJustCreated: "",
+      callPatternJustCreated: {
+        prefix: "",
+        destination: null,
+      },
+      costJustCreated: {
+        channelId: null,
+        destination: null,
+        cost: "",
+      },
       colorSchemes: [
         "tableau.Classic10",
         "brewer.DarkTwo8",
@@ -1005,6 +1036,13 @@ export default {
         return;
       }
       this.adminSettings.destinations.push(this.newDestination);
+
+      // show temporary icon for destination just created
+      this.destinationJustCreated = this.newDestination;
+      setTimeout(() => {
+        this.destinationJustCreated = "";
+      }, 5000);
+
       this.saveAdminSettings(false);
       this.newDestination = "";
     },
@@ -1038,6 +1076,13 @@ export default {
         return;
       }
       this.adminSettings.callPatterns.push(this.newCallPattern);
+
+      // show temporary icon for call pattern just created
+      this.callPatternJustCreated = this.newCallPattern;
+      setTimeout(() => {
+        this.callPatternJustCreated = { prefix: "", destination: null };
+      }, 5000);
+
       this.saveAdminSettings(false);
       this.newCallPattern = { prefix: "", destination: null };
     },
@@ -1085,6 +1130,13 @@ export default {
         return;
       }
       this.adminSettings.costs.push(this.newCost);
+
+      // show temporary icon for cost just created
+      this.costJustCreated = this.newCost;
+      setTimeout(() => {
+        this.costJustCreated = { channelId: null, destination: null, cost: "" };
+      }, 5000);
+
       this.saveAdminSettings(false);
       this.newCost = { channelId: null, destination: null, cost: "" };
     },
@@ -1268,10 +1320,6 @@ export default {
 
 .destination .header {
   font-size: 1.1em !important;
-}
-
-.destination .icon {
-  margin: 0;
 }
 
 .destination .input {
