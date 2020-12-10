@@ -363,6 +363,24 @@
             <sui-message v-show="error.settings.newCostChannelId || error.settings.newCostDestination || error.settings.newCostValue" error>
               <p>{{ $t("validation.invalid_value") }}</p>
             </sui-message>
+            <!-- reset admin settings -->
+            <sui-header>
+              {{ $t('settings.reset_settings') }}
+            </sui-header>
+            <div class="settings-description">{{
+              $t("message.reset_settings_description")
+            }}</div>
+            <sui-form-fields>
+              <sui-form-field>
+                <sui-button
+                  negative
+                  type="button"
+                  icon="trash"
+                  :content="$t('command.reset_settings')"
+                  @click="showResetSettingsModal()"
+                ></sui-button>
+              </sui-form-field>
+            </sui-form-fields>
           </sui-modal-description>
         </sui-modal-content>
         <sui-modal-actions>
@@ -372,6 +390,7 @@
           <sui-button
             primary
             type="button"
+            icon="save"
             :loading="loader.saveSettings"
             :content="$t('command.save')"
             @click="saveAdminSettings()"
@@ -486,6 +505,34 @@
         </sui-modal-actions>
       </sui-modal>
     </sui-form>
+
+    <!-- reset settings modal -->
+    <sui-form warning>
+      <sui-modal v-model="openResetSettingsModal" size="tiny">
+        <sui-modal-header>{{ $t('command.reset_settings') }}</sui-modal-header>
+        <sui-modal-content>
+          <sui-modal-description>
+            <sui-message warning>
+              <i class="exclamation triangle icon"></i> {{ $t("message.you_are_about_to_reset_settings") }}
+            </sui-message>
+            <p>{{ $t("message.are_you_sure") }}</p>
+          </sui-modal-description>
+        </sui-modal-content>
+        <sui-modal-actions>
+          <sui-button type="button" @click.native="hideResetSettingsModal()"
+            >{{ $t("command.cancel") }}</sui-button
+          >
+          <sui-button
+            negative
+            type="button"
+            icon="trash"
+            :loading="loader.resetSettings"
+            :content="$t('command.reset_settings')"
+            @click="resetAdminSettings()"
+          ></sui-button>
+        </sui-modal-actions>
+      </sui-modal>
+    </sui-form>
   </div>
 </template>
 
@@ -549,6 +596,7 @@ export default {
       },
       openDeleteCostModal: false,
       highlightCostsSettings: false,
+      openResetSettingsModal: false,
       colorSchemes: [
         "tableau.Classic10",
         "brewer.DarkTwo8",
@@ -681,6 +729,7 @@ export default {
         deleteDestination: false,
         deleteCallPattern: false,
         deleteCost: false,
+        resetSettings: false,
       },
       error: {
         settings: {
@@ -1136,7 +1185,28 @@ export default {
     },
     showCostsConfigModal() {
       this.openCostsConfigModal = true;
-    }
+    },
+    hideResetSettingsModal() {
+      this.openResetSettingsModal = false;
+    },
+    showResetSettingsModal() {
+      this.openResetSettingsModal = true;
+    },
+    resetAdminSettings() {
+      this.loader.resetSettings = true;
+
+      this.deleteSettings(
+        () => {
+          this.loader.resetSettings = false;
+          this.getAdminSettings();
+          this.hideResetSettingsModal();
+        },
+        (error) => {
+          console.error(error.body);
+          this.loader.resetSettings = false;
+        }
+      );
+    },
   },
 };
 </script>

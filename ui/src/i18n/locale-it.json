@@ -169,7 +169,9 @@
       "costs_description": "Configura il costo delle chiamate per fasci specifici e destinazioni specifiche",
       "call_patterns_description": "I prefissi di destinazione son usati per configurare la destinazione dei numeri di telefono usando il loro prefisso. La destinazione è selezionata in base al prefisso più specifico (lungo)",
       "configure_to_compute_call_costs": "Configura questa impostazione per calcolare e visualizzare i costi delle chiamate",
-      "access_cdr_report": "Accedi al Report Chiamate & Costi"
+      "access_cdr_report": "Accedi al Report Chiamate & Costi",
+      "reset_settings_description": "Ripristina tutte le impostazioni ai loro valori predefiniti",
+      "you_are_about_to_reset_settings": "Stai per ripristinare TUTTE le impostazioni ai valori di default. Questa azione non può essere annullata"
     },
     "pagination": {
       "page": "pagina",
@@ -312,7 +314,8 @@
       "delete_call_pattern": "Elimina prefisso di destinazione",
       "delete_cost": "Elimina costo",
       "expand": "Espandi",
-      "collapse": "Chiudi"
+      "collapse": "Chiudi",
+      "reset_settings": "Ripristina impostazioni"
     },
     "settings": {
       "office_hours_start": "Inizio orario lavorativo",
@@ -329,7 +332,8 @@
       "new_prefix": "Nuovo prefisso",
       "trunk": "Fascio",
       "cost": "Costo",
-      "call_patterns_accordion": "Configura i prefissi di destinatione"
+      "call_patterns_accordion": "Configura i prefissi di destinazione",
+      "reset_settings": "Ripristina impostazioni"
     },
     "misc": {
       "week": "Settimana",
