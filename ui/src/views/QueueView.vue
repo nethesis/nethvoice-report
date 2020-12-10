@@ -78,15 +78,15 @@
           <div v-show="chart.data && chart.data.length > 1">
             <!-- table chart -->
             <div v-if="chart.type == 'table'">
-              <TableChart :caption="chart.caption" :data="chart.data" :chartKey="`${index}`" :officeHours="officeHours" :filterTimeSplit="filterTimeSplit" :report="$route.meta.report"/>
+              <TableChart :caption="chart.caption" :data="chart.data" :chartKey="`${index}`" :officeHours="adminSettings.officeHours" :filterTimeSplit="filterTimeSplit" :report="$route.meta.report"/>
             </div>
             <!-- line chart -->
             <div v-if="chart.type == 'line'">
-              <line-chart :data="chart.data" :caption="chart.caption" :officeHours="officeHours" :filterTimeSplit="filterTimeSplit"></line-chart>
+              <line-chart :data="chart.data" :caption="chart.caption" :officeHours="adminSettings.officeHours" :filterTimeSplit="filterTimeSplit"></line-chart>
             </div>
             <!-- bar chart -->
             <div v-if="chart.type == 'bar'">
-              <bar-chart :data="chart.data" :caption="chart.caption" :type="chart.type" :officeHours="officeHours" :filterTimeSplit="filterTimeSplit"></bar-chart>
+              <bar-chart :data="chart.data" :caption="chart.caption" :type="chart.type" :officeHours="adminSettings.officeHours" :filterTimeSplit="filterTimeSplit"></bar-chart>
             </div>
             <!-- pie chart -->
             <div v-if="chart.type == 'pie'">
@@ -94,7 +94,7 @@
             </div>
             <!-- recap chart -->
             <div v-if="chart.type == 'recap'">
-              <RecapChart :data="chart.data" :caption="chart.caption" :currency="currency"></RecapChart>
+              <RecapChart :data="chart.data" :caption="chart.caption" :currency="adminSettings.currency"></RecapChart>
             </div>
           </div>
         </div>
@@ -171,14 +171,18 @@ export default {
       openDetailsModal: false,
       chartDetails: null,
       dataAvailable: true,
-      officeHours: {
-        start_hour: null,
-        end_hour: null,
+      adminSettings: {
+        officeHours: {
+          start_hour: null,
+          end_hour: null,
+        },
+        queryLimit: 0,
+        currency: "",
+        costs: [],
       },
-      queryLimit: 0,
-      currency: "",
+      costsConfigured: false,
       filterTimeSplit: 0,
-      isAdmin: 0,
+      isAdmin: false,
       queryLimitMessage: "",
       currentReport: "",
       cdr: {
@@ -220,6 +224,10 @@ export default {
       } else {
         this.currentReport = this.$route.meta.report;
         this.retrieveQueryTree();
+      }
+
+      if (this.isAdmin && this.$route.meta.report == "cdr") {
+        this.checkCostsConfiguration();
       }
     },
     "$root.filtersReady": function () {
@@ -345,7 +353,7 @@ export default {
               }
 
               // check if query limit has been hit
-              if (chart.data.length && chart.data.length -1 == this.queryLimit) {
+              if (chart.data.length && chart.data.length -1 == this.adminSettings.queryLimit) {
                 chart.queryLimitHit = true;
               }
 
@@ -394,12 +402,21 @@ export default {
       this.getSettings(
         (success) => {
           const settings = success.body.settings;
-          this.officeHours = {
+          this.adminSettings.officeHours = {
             startHour: settings.start_hour,
             endHour: settings.end_hour,
           };
-          this.queryLimit = Number(settings.query_limit);
-          this.currency = settings.currency;
+          this.adminSettings.queryLimit = Number(settings.query_limit);
+          this.adminSettings.currency = settings.currency;
+
+          // costs
+          this.adminSettings.costs = settings.costs;
+
+          // check if costs configuration modal has already been shown
+          this.costsConfigured = this.get("costsConfigured");
+          if (this.isAdmin && this.$route.meta.report == "cdr") {
+            this.checkCostsConfiguration();
+          }
         },
         (error) => {
           console.error(error.body);
@@ -441,6 +458,12 @@ export default {
     },
     hideCdrDetailsModal() {
       this.cdr.openDetailsModal = false;
+    },
+    checkCostsConfiguration() {
+      // need to show costs configuration modal?
+      if (!this.costsConfigured && (!this.adminSettings.costs || !this.adminSettings.costs.length)) {
+        this.$root.$emit("showCostsConfigModal");
+      }
     },
   },
 };

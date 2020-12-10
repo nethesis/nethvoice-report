@@ -136,7 +136,14 @@
               $t("message.currency_description")
             }}</div>
             <!-- destinations -->
-            <sui-header>{{ $t('settings.destinations') }}</sui-header>
+            <sui-header>
+              {{ $t('settings.destinations') }}
+              <span>
+                <sui-popup :content="$t('message.configure_to_compute_call_costs')">
+                  <sui-icon v-show="highlightCostsSettings" name="exclamation circle" color="blue" class="blink-opacity blink-icon" slot="trigger"/>
+                </sui-popup>
+              </span>
+            </sui-header>
             <div class="settings-description">{{
               $t("message.destinations_description")
             }}</div>
@@ -170,7 +177,14 @@
             <sui-accordion exclusive class="call-patterns-accordion">
               <sui-accordion-title>
                 <sui-icon name="dropdown" />
-                <a>{{ $t('settings.call_patterns_accordion') }}</a>
+                <a>
+                  {{ $t('settings.call_patterns_accordion') }}
+                  <span>
+                  <sui-popup :content="$t('message.configure_to_compute_call_costs')">
+                    <sui-icon v-show="highlightCostsSettings" name="exclamation circle" color="blue" class="blink-opacity blink-icon" slot="trigger"/>
+                  </sui-popup>
+                </span>
+                </a>
               </sui-accordion-title>
               <sui-accordion-content>
                 <div class="settings-description no-mg-top">{{
@@ -236,7 +250,14 @@
               </sui-accordion-content>
             </sui-accordion>
             <!-- costs -->
-            <sui-header>{{ $t('settings.costs') }}</sui-header>
+            <sui-header>
+              {{ $t('settings.costs') }}
+              <span>
+                <sui-popup :content="$t('message.configure_to_compute_call_costs')">
+                  <sui-icon v-show="highlightCostsSettings" name="exclamation circle" color="blue" class="blink-opacity blink-icon" slot="trigger"/>
+                </sui-popup>
+              </span>
+            </sui-header>
             <div class="settings-description">{{
               $t("message.costs_description")
             }}</div>
@@ -348,7 +369,7 @@
     <!-- configure costs modal -->
     <sui-form>
       <sui-modal v-model="openCostsConfigModal" size="tiny">
-        <sui-modal-header>{{ $t("message.welcome") }}</sui-modal-header>
+        <sui-modal-header>{{ $t("message.welcome_in_cdr") }}</sui-modal-header>
         <sui-modal-content>
           <sui-modal-description>
             <sui-header>{{ $t('message.configure_call_costs') }}</sui-header>
@@ -512,6 +533,7 @@ export default {
         cost: "",
       },
       openDeleteCostModal: false,
+      highlightCostsSettings: false,
       colorSchemes: [
         "tableau.Classic10",
         "brewer.DarkTwo8",
@@ -674,6 +696,9 @@ export default {
       this.getAdminSettings();
     }
 
+    // event "showCostsConfigModal" is triggered by QueueView
+    this.$root.$on("showCostsConfigModal", this.showCostsConfigModal);
+
     // event "logout" is triggered by $http interceptor if token has expired
     this.$root.$on("logout", this.doLogout);
 
@@ -735,6 +760,10 @@ export default {
     },
     showSettingsModal(value) {
       this.openSettingsModal = value;
+
+      if (!value) {
+        this.highlightCostsSettings = false;
+      }
     },
     validateAdminSettings() {
       // reset errors
@@ -859,12 +888,6 @@ export default {
           // costs
           this.adminSettings.costs = this.mapCostsFromBackend(settings.costs);
 
-          // need to show costs configuration modal?
-          const costsConfigured = this.get("costsConfigured");
-          if (!costsConfigured && (!this.adminSettings.costs || !this.adminSettings.costs.length)) {
-            this.openCostsConfigModal = true;
-          }
-
           this.retrieveTrunks();
         },
         (error) => {
@@ -893,6 +916,7 @@ export default {
     configureCosts() {
       this.openCostsConfigModal = false;
       this.showSettingsModal(true);
+      this.highlightCostsSettings = true;
       this.set("costsConfigured", true);
     },
     skipCostsConfiguration() {
@@ -1093,6 +1117,9 @@ export default {
         }
         return costsBackend;
     },
+    showCostsConfigModal() {
+      this.openCostsConfigModal = true;
+    }
   },
 };
 </script>
