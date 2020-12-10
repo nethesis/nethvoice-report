@@ -93,3 +93,19 @@ func SetSettings(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "settings updated successfully"})
 
 }
+
+func DeleteSettings(c *gin.Context) {
+	// init cache connection
+	cacheConnection := cache.Instance()
+
+	errCache := cacheConnection.Del("admin_settings").Err()
+
+	// handle cache error
+	if errCache != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "error on deleting admin settings in cache", "status": errCache.Error()})
+		return
+	}
+
+	// return status created
+	c.JSON(http.StatusOK, gin.H{"message": "admin settings deleted successfully"})
+}
