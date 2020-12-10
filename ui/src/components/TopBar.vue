@@ -369,7 +369,7 @@
     <!-- configure costs modal -->
     <sui-form>
       <sui-modal v-model="openCostsConfigModal" size="tiny">
-        <sui-modal-header>{{ $t("message.welcome") }}</sui-modal-header>
+        <sui-modal-header>{{ $t("message.welcome_in_cdr") }}</sui-modal-header>
         <sui-modal-content>
           <sui-modal-description>
             <sui-header>{{ $t('message.configure_call_costs') }}</sui-header>
@@ -696,6 +696,9 @@ export default {
       this.getAdminSettings();
     }
 
+    // event "showCostsConfigModal" is triggered by QueueView
+    this.$root.$on("showCostsConfigModal", this.showCostsConfigModal);
+
     // event "logout" is triggered by $http interceptor if token has expired
     this.$root.$on("logout", this.doLogout);
 
@@ -884,12 +887,6 @@ export default {
 
           // costs
           this.adminSettings.costs = this.mapCostsFromBackend(settings.costs);
-
-          // need to show costs configuration modal?
-          const costsConfigured = this.get("costsConfigured");
-          if (!costsConfigured && (!this.adminSettings.costs || !this.adminSettings.costs.length)) {
-            this.openCostsConfigModal = true;
-          }
 
           this.retrieveTrunks();
         },
@@ -1120,6 +1117,9 @@ export default {
         }
         return costsBackend;
     },
+    showCostsConfigModal() {
+      this.openCostsConfigModal = true;
+    }
   },
 };
 </script>

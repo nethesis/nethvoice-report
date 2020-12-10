@@ -158,7 +158,7 @@
       "query_limit_description": "Questo è il numero massimo di risultati che possono essere mostrati da un grafico tabellare. Se questo limite viene raggiunto appare un'icona di avvertimento di fianco al titolo del grafico",
       "slow_query": "Il caricamento sta impiegando più del previsto. Restringi i filtri di ricerca, oppure continua ad attendere",
       "cdr_details_wait": "Questa operazione potrebbe richiedere un po' di tempo, attendi oppure torna più tardi...",
-      "welcome": "Benvenuto/a",
+      "welcome_in_cdr": "Benvenuto/a nel Report Chiamate & Costi",
       "configure_call_costs": "Per prima cosa, configura le destinazioni e i costi delle chiamate",
       "configure_call_costs_description": "Puoi farlo in qualunque momento nella pagina Impostazioni, cliccando il pulsante con ingranaggio nella barra degli strumenti in alto a destra",
       "currency_description": "Valuta usata per mostrare il costo delle chiamate",

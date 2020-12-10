@@ -158,7 +158,7 @@
       "query_limit_description": "This is the maximum number of results that can be displayed by a table chart. If this limit is reached a warning icon is shown next to chart title",
       "slow_query": "Processing is taking a while. Please narrow search filters, or keep waiting",
       "cdr_details_wait": "This operation can take a while, please wait or come back later...",
-      "welcome": "Welcome",
+      "welcome_in_cdr": "Welcome in CDR & Cost report",
       "configure_call_costs": "First of all, configure destinations and call costs",
       "configure_call_costs_description": "You can do it anytime in Settings page, by clicking cogs button in top-right toolbar",
       "currency_description": "Currency used to display calls cost",
