@@ -112,6 +112,7 @@ func main() {
 		{
 			settings.GET("", methods.GetSettings)
 			settings.PUT("", methods.SetSettings)
+			settings.DELETE("", methods.DeleteSettings)
 		}
 	}
 

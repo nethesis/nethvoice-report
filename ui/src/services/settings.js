@@ -29,6 +29,20 @@ var SettingsService = {
         )
         .then(success, error);
     },
+    deleteSettings(success, error) {
+      this.$http
+        .delete(this.$root.apiScheme + this.$root.apiEndpoint + "/settings",
+          {
+            headers: {
+              Authorization:
+                "Bearer " +
+                (this.get("loggedUser") && this.get("loggedUser").token) ||
+                "",
+            },
+          }
+        )
+        .then(success, error);
+    }
   },
 };
 export default SettingsService;
