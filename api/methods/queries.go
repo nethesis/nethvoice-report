@@ -208,6 +208,27 @@ func executeSqlQuery(filter models.Filter, report string, section string, view s
 	if report == "queue" {
 		q = template.Must(q.ParseFiles(queryFile))
 	} else {
+		// set sources and destinations for personal calls
+		if section == "personal" && (user != "admin" || user != "X") {
+			// get user extensions
+			extensionsString := utils.ExtractUserExtensions(user)
+			extensions := strings.Split(extensionsString, ",")
+
+			// get view
+			if view == "inbound" {
+				filter.Destinations = extensions
+			}
+
+			if view == "outbound" {
+				filter.Sources = extensions
+			}
+
+			if view == "local" {
+				filter.Sources = extensions
+				filter.Destinations = extensions
+			}
+		}
+
 		// retrieve partitioned CDR tables
 		query, err := buildCdrQuery(queryFile, filter)
 		if err != nil {
