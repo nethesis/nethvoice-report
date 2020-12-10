@@ -43,7 +43,7 @@ import (
 	"github.com/nethesis/nethvoice-report/api/configuration"
 )
 
-var excludedRoutes = [...]string{"/api/searches", "/api/filters/:section/:view"}
+var excludedRoutes = [...]string{"/api/searches", "/api/filters"}
 
 func ParseSqlResults(rows *sql.Rows) string {
 	// define data to return
