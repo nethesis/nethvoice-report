@@ -37,6 +37,7 @@ import (
 	"regexp"
 
 	"github.com/nleeper/goment"
+	"github.com/thoas/go-funk"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -227,6 +228,25 @@ func executeSqlQuery(filter models.Filter, report string, section string, view s
 				filter.Sources = extensions
 				filter.Destinations = extensions
 			}
+		}
+
+		// set sources and destinations for pbx calls
+		if section == "pbx" {
+			// append groups to sources and destinations
+			if len(filter.Groups) > 0 {
+				filter.Sources = append(filter.Sources, filter.Groups...)
+				filter.Destinations = append(filter.Destinations, filter.Groups...)
+			}
+
+			// append users to sources and destinations
+			if len(filter.Users) > 0 {
+				filter.Sources = append(filter.Sources, filter.Users...)
+				filter.Destinations = append(filter.Destinations, filter.Users...)
+			}
+
+			// remove duplicates
+			filter.Sources = funk.UniqString(filter.Sources)
+			filter.Destinations = funk.UniqString(filter.Destinations)
 		}
 
 		// retrieve partitioned CDR tables
