@@ -189,6 +189,10 @@ body {
   margin-left: 0 !important;
 }
 
+.mg-left-sm {
+  margin-left: 1rem !important;
+}
+
 .mg-top-md {
   margin-top: 2rem !important;
   padding-left: 7px;

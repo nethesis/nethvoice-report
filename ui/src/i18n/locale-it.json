@@ -42,7 +42,7 @@
     },
     "menu": {
       "queue": "Report Code",
-      "cdr": "Report Chiamate & Report Costi",
+      "cdr": "Report Chiamate & Costi",
       "dashboard": "Dashboard",
       "data": "Dati",
       "performance": "Performance",
@@ -165,7 +165,8 @@
       "destinations_description": "Le destinazioni sono usate per raggruppare i prefissi di destinazione delle chiamate e calcolare i costi delle chiamate",
       "costs_description": "Configura il costo delle chiamate per fasci specifici e destinazioni specifiche",
       "call_patterns_description": "I prefissi di destinazione son usati per configurare la destinazione dei numeri di telefono usando il loro prefisso. La destinazione è selezionata in base al prefisso più specifico (lungo)",
-      "configure_to_compute_call_costs": "Configura questa impostazione per calcolare e visualizzare i costi delle chiamate"
+      "configure_to_compute_call_costs": "Configura questa impostazione per calcolare e visualizzare i costi delle chiamate",
+      "access_cdr_report": "Accedi al Report Chiamate & Costi"
     },
     "pagination": {
       "page": "pagina",
