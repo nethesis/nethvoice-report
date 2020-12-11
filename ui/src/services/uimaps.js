@@ -95,9 +95,9 @@ var UiMaps = {
         { value: "received_fail", text: this.$i18n.t('filter.received_fail') }
       ],
       destinationsTypeMap: [
-        { value: "ext-group", text: this.$i18n.t('filter.call_groups') },
-        { value: "VoiceMail", text: this.$i18n.t('filter.voicemails') },
-        { value: "queue", text: this.$i18n.t('filter.queues') },
+        { value: "dcontext,ext-group", text: this.$i18n.t('filter.call_groups') },
+        { value: "lastapp,VoiceMail", text: this.$i18n.t('filter.voicemails') },
+        { value: "lastapp,queue", text: this.$i18n.t('filter.queues') },
       ],
       calleeTypeMap: [
         { value: "mobile", text: this.$i18n.t('filter.mobile') },

@@ -418,7 +418,7 @@
               :placeholder="$t('filter.callee')"
               :minCharacters="3"
               :searchFields="['title', 'description', 'phoneNumber']"
-              v-model="filter.call_destinations"
+              v-model="filter.caller_destinations"
             />
           </sui-form-field>
           <!-- cdr: call type -->
@@ -716,14 +716,14 @@ export default {
           },
         },
         caller: "",
-        sources: { title: "" },
         contactName: "",
         nullCall: false, ////
-        call_destinations: { title: "" },
+        sources: { title: "" },
+        caller_destinations: { title: "" },
         call_type: "",
         duration: { title: "" },
-        trunks: "",
-        users: "",
+        trunks: [],
+        users: [],
         destination_type: "",
         destination: ""
       },
@@ -906,14 +906,17 @@ export default {
     },
     // add phonebook contacts to filterValues
     addContactsToValues() {
-      console.log("ROOT phonebook", this.$root.phonebook)
       let contacts = this.$root.phonebook.map((contact) => {
+        let contactNumbers = []
+        if (!this._.isEmpty(contact.phones.cellphones) && contact.phones.cellphones[0] != "") contactNumbers.push(contact.phones.cellphones[0])
+        if (!this._.isEmpty(contact.phones.homephones) && contact.phones.homephones[0] != "") contactNumbers.push(contact.phones.homephones[0])
+        if (!this._.isEmpty(contact.phones.workphones) && contact.phones.workphones[0] != "") contactNumbers.push(contact.phones.workphones[0])
         return ({
           "title": contact.title,
           "type": "phonebook",
           "description": `${contact.cleanName} ${contact.company}`,
-          "phoneNumber": "",
-          "value": contact.title
+          "phoneNumber": contactNumbers.join(","),
+          "value": contactNumbers.join(",")
         })
       })
       // add contacts to caller values
@@ -938,16 +941,6 @@ export default {
           })
 
           // parse some data from default filters
-          let users = this.defaultFilter.users.map((user) => {
-            let parsedUser = user.split("|")
-            return {
-              "title": parsedUser[1],
-              "type": "users",
-              "description": user,
-              "phoneNumber": "",
-              "value": parsedUser[2]
-            }
-          })
           let destinations = this.filterValues.cdrDestinations.map((destination) => {
             return({
               "title": destination.text,
@@ -957,18 +950,8 @@ export default {
               "value": destination.text
             })
           })
-          let ctiGroups = this.defaultFilter.groups.map((group) => {
-            let parsedGroup = group.split("|")
-            return({
-              "title": parsedGroup[0],
-              "type": "cti_groups",
-              "description": parsedGroup[0],
-              "phoneNumber": "",
-              "value": parsedGroup[1]
-            })
-          })
-          // add users, destinations and ctiGroups to cdrCaller values
-          this.filterValues.cdrCaller.push(...users, ...destinations, ...ctiGroups)
+          // add destinations to cdrCaller values
+          this.filterValues.cdrCaller.push(...destinations)
           // parse other data from default filters
           let dids = this.defaultFilter.dids.map((did) => {
             return({
@@ -979,8 +962,8 @@ export default {
               "value": did
             })
           })
-          // add users, destinations, dids and ctiGroups to cdrCallee values
-          this.filterValues.cdrCallee.push(...users, ...destinations, ...ctiGroups, ...dids)
+          // add destinations and dids to cdrCallee values
+          this.filterValues.cdrCallee.push(...destinations, ...dids)
 
           // cdr trunks
           if (this.defaultFilter.trunks) {
@@ -1374,13 +1357,9 @@ export default {
 
       if (this.filter.duration.title && !this.filter.duration.value) {
         // validate custom call duration (free input)
+        const syntaxValid = new RegExp("[0-9]+ " + this.$t("misc.seconds"), "i").test(this.filter.duration.title);
 
-        const syntaxValid = new RegExp("^[0-9]+ " + this.$t("misc.seconds") + "$", "i").test(this.filter.duration.title);
-
-        // if user hits ENTER with focus on call duration, "seconds" text is not present (callDurationBlur() has not been invoked)
-        const syntaxOnlyNumbersValid = /^[0-9]+$/.test(this.filter.duration.title);
-
-        if (!syntaxValid && !syntaxOnlyNumbersValid) {
+        if (!syntaxValid) {
           this.errorCallDuration = true;
           return false;
         }
@@ -1494,6 +1473,27 @@ export default {
         // empty call duration
         filterToApply.duration = "";
       }
+
+      // parse call sources and call destinations berfore apply
+      if (filterToApply.sources.title != "") {
+        filterToApply.sources = filterToApply.sources.values != "" ? (
+          filterToApply.sources.value.split(",")
+        ) : (
+          filterToApply.sources.title
+        )
+      } else {
+        filterToApply.sources = []
+      }
+      if (filterToApply.caller_destinations.title != "") {
+        filterToApply.destinations = filterToApply.caller_destinations.value != "" ? (
+          filterToApply.caller_destinations.value.split(",")
+        ) : (
+          filterToApply.caller_destinations.title
+        )
+      } else {
+        filterToApply.destinations = []
+      }
+      // parse users
 
       console.log("filterToApply", filterToApply); ////
 
@@ -1698,6 +1698,8 @@ export default {
         const phonebook = await this.readFromDb(this.phonebookDb, this.PHONEBOOK_DB_NAME);
         this.$root.phonebook = phonebook[0].phonebook;
         this.phonebookReady = true;
+        // function to add phonebook contacts to filters
+        this.addContactsToValues()
       } else {
         await this.clearDb(this.phonebookDb, this.PHONEBOOK_DB_NAME);
 
@@ -1734,14 +1736,14 @@ export default {
             // save phonebook expiry to local storage
             const expiry = new Date().getTime() + this.PHONEBOOK_TTL_MINUTES * 60 * 1000;
             this.set("reportPhonebookExpiry", expiry);
+            // function to add phonebook contacts to filters
+            this.addContactsToValues()
           },
           (error) => {
             console.error(error.body);
           }
         );
       }
-      // function to add phonebook contacts to filters
-      this.addContactsToValues()
     },
     contactNameInput() {
       // get clean name from user input
@@ -1789,7 +1791,7 @@ export default {
       this.filter.choices = [];
       this.filter.destinations = [];
       this.filter.origins = [];
-      this.filter.caller = "";
+      this.filter.caller = [];
       this.filter.contactName = "";
       this.filter.call_type = [];
       this.filter.duration = [];
