@@ -1375,9 +1375,13 @@ export default {
 
       if (this.filter.duration.title && !this.filter.duration.value) {
         // validate custom call duration (free input)
-        const syntaxValid = new RegExp("[0-9]+ " + this.$t("misc.seconds"), "i").test(this.filter.duration.title);
 
-        if (!syntaxValid) {
+        const syntaxValid = new RegExp("^[0-9]+ " + this.$t("misc.seconds") + "$", "i").test(this.filter.duration.title);
+
+        // if user hits ENTER with focus on call duration, "seconds" text is not present (callDurationBlur() has not been invoked)
+        const syntaxOnlyNumbersValid = /^[0-9]+$/.test(this.filter.duration.title);
+
+        if (!syntaxValid && !syntaxOnlyNumbersValid) {
           this.errorCallDuration = true;
           return false;
         }
