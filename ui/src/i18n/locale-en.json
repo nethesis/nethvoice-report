@@ -82,7 +82,10 @@
       "mobile": "Mobile",
       "international": "International",
       "emergency": "Emergency",
-      "paynumber": "Pay number"
+      "paynumber": "Pay number",
+      "past_week": "Past week",
+      "past_month": "Past month",
+      "past_year": "Past year"
     },
     "menu": {
       "queue": "Queue report",

@@ -82,7 +82,10 @@
       "mobile": "Mobile",
       "international": "Internazionali",
       "emergency": "Emergenza",
-      "paynumber": "Numero a pagamento"
+      "paynumber": "Numero a pagamento",
+      "past_week": "Settimana scorsa",
+      "past_month": "Mese scorso",
+      "past_year": "Anno scorso"
     },
     "menu": {
       "queue": "Report Code",

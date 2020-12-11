@@ -435,6 +435,15 @@ var UtilService = {
         return threeYearsAgo.endOf('day').toDate();
       }
     },
+    getPastPeriod(startOrEnd, periodName) {
+      const pastWeek = moment().subtract(1, periodName);
+
+      if (startOrEnd == "start") {
+        return pastWeek.startOf(periodName).toDate();
+      } else {
+        return pastWeek.endOf(periodName).toDate();
+      }
+    },
     fromToday(date) {
       return date > this.getYesterday('end');
     },

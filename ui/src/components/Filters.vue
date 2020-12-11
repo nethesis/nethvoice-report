@@ -1357,6 +1357,21 @@ export default {
           start: this.getLastThreeYears("start"),
           end: this.getYesterday("end"),
         };
+      } else if (range == "past_week") {
+        this.filter.time.interval = {
+          start: this.getPastPeriod("start", "week"),
+          end: this.getPastPeriod("end", "week"),
+        };
+      } else if (range == "past_month") {
+        this.filter.time.interval = {
+          start: this.getPastPeriod("start", "month"),
+          end: this.getPastPeriod("end", "month"),
+        };
+      } else if (range == "past_year") {
+        this.filter.time.interval = {
+          start: this.getPastPeriod("start", "year"),
+          end: this.getPastPeriod("end", "year"),
+        };
       }
     },
     validateTimeInterval() {
