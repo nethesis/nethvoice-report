@@ -825,7 +825,7 @@ export default {
           return;
         }
 
-        if (this.filter.time.interval.end.getTime() == this.getToday().getTime()) {
+        if (this.filter.time.interval.end.getTime() == this.getYesterday("end").getTime()) {
           // check time range starting from dates
           switch (this.filter.time.interval.start.getTime()) {
             case this.getYesterday().getTime():
@@ -1197,7 +1197,6 @@ export default {
       this.filter.time.range = filter.time.range;
 
       if (this.filter.time.range) {
-        this.filter.time.range = filter.time.range;
         this.filter.time.interval = this.selectTime(this.filter.time.range);
       } else {
         this.filter.time.interval.start = moment(filter.time.interval.start).toDate();
