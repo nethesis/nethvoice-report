@@ -185,12 +185,12 @@
           </span>
         </div>
         <!-- label: call duration active filter -->
-        <div class="ui label" v-if="showFilterCdrCallDuration && activeFilters.call_duration && (activeFilters.call_duration.length > 0)">
+        <div class="ui label" v-if="showFilterCdrCallDuration && activeFilters.duration && (activeFilters.duration.length > 0)">
           <span class="field">
             {{$t('filter.call_duration')}}:
           </span>
           <span class="value">
-            {{activeFilters.call_duration}}
+            {{activeFilters.duration}}
           </span>
         </div>
         <!-- label: trunk active filter -->
@@ -421,14 +421,14 @@ export default {
         this.activeFilters.call_type = this.activeFilters.call_type.join(", ")
       }
     },
-    "activeFilters.call_duration": function () {
-      if (this.activeFilters.call_duration && this.lodash.isArray(this.activeFilters.call_duration) && this.activeFilters.call_duration.length > 0) {
-        this.activeFilters.call_duration.forEach((duration , durationKey) => {
+    "activeFilters.duration": function () {
+      if (this.activeFilters.duration && this.lodash.isArray(this.activeFilters.duration) && this.activeFilters.duration.length > 0) {
+        this.activeFilters.duration.forEach((duration , durationKey) => {
           this.cdrCallDurationMap.forEach(element => {
-            if (element.value == duration) this.activeFilters.call_duration[durationKey] = element.text
+            if (element.value == duration) this.activeFilters.duration[durationKey] = element.text
           })
         })
-        this.activeFilters.call_duration = this.activeFilters.call_duration.join(", ")
+        this.activeFilters.duration = this.activeFilters.duration.join(", ")
       }
     },
     "activeFilters.trunks": function () {

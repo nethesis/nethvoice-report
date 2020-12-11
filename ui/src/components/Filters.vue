@@ -162,7 +162,7 @@
               :clearable="false"
               :show-second="false"
               :disabled-date="fromToday"
-              :class="{ 'time-interval-error': errorTimeInterval }"
+              :class="{ 'field-error': errorTimeInterval }"
               :formatter="momentFormatter"
             ></date-picker>
             <!-- date / week / month / year -->
@@ -174,7 +174,7 @@
               :clearable="false"
               :show-second="false"
               :disabled-date="fromToday"
-              :class="{ 'time-interval-error': errorTimeInterval }"
+              :class="{ 'field-error': errorTimeInterval }"
               :formatter="momentFormatter"
             ></date-picker>
             <sui-icon name="right arrow time-filter" />
@@ -188,7 +188,7 @@
               :clearable="false"
               :show-second="false"
               :disabled-date="fromToday"
-              :class="{ 'time-interval-error': errorTimeInterval }"
+              :class="{ 'field-error': errorTimeInterval }"
               :formatter="momentFormatter"
             ></date-picker>
             <!-- date / week / month / year -->
@@ -200,7 +200,7 @@
               :clearable="false"
               :show-second="false"
               :disabled-date="fromToday"
-              :class="{ 'time-interval-error': errorTimeInterval }"
+              :class="{ 'field-error': errorTimeInterval }"
               :formatter="momentFormatter"
             ></date-picker>
           </sui-form-field>
@@ -217,7 +217,7 @@
               :clearable="false"
               :show-second="false"
               :disabled-date="fromToday"
-              :class="{ 'time-interval-error': errorTimeInterval }"
+              :class="{ 'field-error': errorTimeInterval }"
               :formatter="momentFormatter"
             ></date-picker>
             <sui-icon name="right arrow time-filter" />
@@ -230,7 +230,7 @@
               :clearable="false"
               :show-second="false"
               :disabled-date="fromToday"
-              :class="{ 'time-interval-error': errorTimeInterval }"
+              :class="{ 'field-error': errorTimeInterval }"
               :formatter="momentFormatter"
             ></date-picker>
           </sui-form-field>
@@ -399,7 +399,7 @@
           </sui-form-field>
           <!-- CDR ONLY START -->
           <!-- EVERYWHERE -->
-          <!-- cdr: caller -->
+          <!-- cdr: source / caller -->
           <sui-form-field v-if="showFilterCdrCaller" width="four">
             <label>{{$t('filter.caller')}}</label>
             <SearchInput
@@ -407,11 +407,10 @@
               :placeholder="$t('filter.caller_label')"
               :minCharacters="3"
               :searchFields="['title', 'description', 'phoneNumber']"
-              @select="setSelectedCaller"
-              @input="setFreeInputCaller"
+              v-model="filter.sources"
             />
           </sui-form-field>
-          <!-- cdr: callee -->
+          <!-- cdr: call destination / callee -->
           <sui-form-field v-if="showFilterCdrCallee" width="four">
             <label>{{$t('filter.callee')}}</label>
             <SearchInput
@@ -419,8 +418,7 @@
               :placeholder="$t('filter.callee')"
               :minCharacters="3"
               :searchFields="['title', 'description', 'phoneNumber']"
-              @select="setSelectedCallee"
-              @input="setFreeInputCallee"
+              v-model="filter.call_destinations"
             />
           </sui-form-field>
           <!-- cdr: call type -->
@@ -437,15 +435,17 @@
           </sui-form-field>
           <!-- cdr: call duration -->
           <sui-form-field v-if="showFilterCdrCallDuration" width="four">
-            <label class="ellipsis">{{$t('filter.call_duration')}} ({{$t('filter.or_custom_seconds')}})</label>
-            <sui-dropdown
-              multiple
+            <label :class="{ 'error-color': errorCallDuration }">
+              {{$t('filter.call_duration')}}
+            </label>
+            <SearchInput
               :options="cdrCallDurationMap"
-              :placeholder="$t('filter.call_duration')"
-              search
-              selection
-              allow-additions
-              v-model="filter.call_duration"
+              :placeholder="$t('filter.call_duration_placeholder')"
+              :minCharacters="0"
+              v-model="filter.duration"
+              @blur="callDurationBlur"
+              :showOptionType="false"
+              :class="{ 'field-error': errorCallDuration }"
             />
           </sui-form-field>
           <!-- cdr: trunk -->
@@ -716,11 +716,12 @@ export default {
           },
         },
         caller: "",
+        sources: { title: "" },
         contactName: "",
         nullCall: false, ////
-        callee: null,
+        call_destinations: { title: "" },
         call_type: "",
-        call_duration: "",
+        duration: { title: "" },
         trunks: "",
         users: "",
         destination_type: "",
@@ -755,6 +756,7 @@ export default {
       newSearchName: "",
       errorNewSearch: false,
       errorTimeInterval: false,
+      errorCallDuration: false,
       errorMessage: "",
       loader: {
         filter: true,
@@ -897,23 +899,11 @@ export default {
         this.retrieveDefaultFilter();
       }
     },
-    // custom search callback functions
-    // start caller
-    setSelectedCaller(obj) {
-      if (obj) this.filter.caller = obj.value
+    callDurationBlur() {
+      if (this.filter.duration && Number(this.filter.duration.title)) {
+        this.filter.duration.title += ' ' + this.$t('misc.seconds');
+      }
     },
-    setFreeInputCaller(value) {
-      if (value) this.filter.caller = value
-    },
-    // end caller
-    // start callee
-    setSelectedCallee(obj) {
-      if (obj) this.filter.callee = obj.value
-    },
-    setFreeInputCallee(value) {
-      if (value) this.filter.callee = value
-    },
-    // end callee
     // add phonebook contacts to filterValues
     addContactsToValues() {
       console.log("ROOT phonebook", this.$root.phonebook)
@@ -1200,6 +1190,7 @@ export default {
         this.filter.caller = filter.caller;
         this.filter.nullCall = filter.nullCall;
         this.filter.contactName = filter.contactName;
+        //// cdr filters?
       }
 
       // time
@@ -1374,6 +1365,25 @@ export default {
         };
       }
     },
+    validateFilters() {
+      const timeIntervalValid = this.validateTimeInterval();
+      const callDurationValid = this.validateCallDuration();
+      return timeIntervalValid && callDurationValid;
+    },
+    validateCallDuration() {
+      this.errorCallDuration = false;
+
+      if (this.filter.duration.title && !this.filter.duration.value) {
+        // validate custom call duration (free input)
+        const syntaxValid = new RegExp("[0-9]+ " + this.$t("misc.seconds"), "i").test(this.filter.duration.title);
+
+        if (!syntaxValid) {
+          this.errorCallDuration = true;
+          return false;
+        }
+      }
+      return true;
+    },
     validateTimeInterval() {
       this.errorTimeInterval = false;
 
@@ -1408,7 +1418,7 @@ export default {
       return true;
     },
     applyFilters() {
-      if (!this.validateTimeInterval()) {
+      if (!this.validateFilters()) {
         return;
       }
 
@@ -1467,6 +1477,22 @@ export default {
           filterToApply.time.interval.end
         ).format(dateFormat);
       }
+
+      // call duration
+      if (this.filter.duration.title) {
+        if (this.filter.duration.value) {
+          // chosen from options
+          filterToApply.duration = this.filter.duration.value;
+        } else {
+          // custom call duration (free input)
+          filterToApply.duration = this.filter.duration.title.replace(" " + this.$t("misc.seconds"), "");
+        }
+      } else {
+        // empty call duration
+        filterToApply.duration = "";
+      }
+
+      console.log("filterToApply", filterToApply); ////
 
       // apply filters
       this.$root.$emit("applyFilters", filterToApply);
@@ -1763,7 +1789,7 @@ export default {
       this.filter.caller = "";
       this.filter.contactName = "";
       this.filter.call_type = [];
-      this.filter.call_duration = [];
+      this.filter.duration = [];
       this.filter.trunks = [];
       this.filter.users = [];
       this.filter.destination_type = [];

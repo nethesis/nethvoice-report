@@ -77,12 +77,12 @@ var UiMaps = {
         { value: "past_year", text: this.$i18n.t('filter.past_year') },
       ],
       cdrCallDurationMap: [
-        { value: "60", text: this.$i18n.t('filter.one_minute') },
-        { value: "300", text: this.$i18n.t('filter.five_minutes') },
-        { value: "900", text: this.$i18n.t('filter.fifteen_minutes') },
-        { value: "1800", text: this.$i18n.t('filter.thirti_minutes') },
-        { value: "3600", text: this.$i18n.t('filter.one_hour') },
-        { value: "7200", text: this.$i18n.t('filter.two_hours') }
+        { value: "60", title: this.$i18n.t('filter.one_minute') },
+        { value: "300", title: this.$i18n.t('filter.five_minutes') },
+        { value: "900", title: this.$i18n.t('filter.fifteen_minutes') },
+        { value: "1800", title: this.$i18n.t('filter.thirty_minutes') },
+        { value: "3600", title: this.$i18n.t('filter.one_hour') },
+        { value: "7200", title: this.$i18n.t('filter.two_hours') }
       ],
       cdrCallTypeMap: [
         { value: "done", text: this.$i18n.t('filter.done') },

@@ -52,6 +52,7 @@
       "callee": "Callee",
       "call_type": "Call type",
       "call_duration": "Call duration",
+      "call_duration_placeholder": "You can type a custom call duration",
       "trunk": "Trunk",
       "cti_group": "CTI group",
       "user": "Utente",
@@ -74,10 +75,9 @@
       "one_minute": "1 minute",
       "five_minutes": "5 minutes",
       "fifteen_minutes": "15 minutes",
-      "thirti_minutes": "30 minutes",
+      "thirty_minutes": "30 minutes",
       "one_hour": "1 hour",
       "two_hours": "2 hours",
-      "or_custom_seconds": "or custom in seconds",
       "national": "National",
       "mobile": "Mobile",
       "international": "International",
@@ -389,7 +389,8 @@
       "call_details": "Call details",
       "per_second": "per second",
       "unknown": "Unknown",
-      "just_created": "Just created"
+      "just_created": "Just created",
+      "seconds": "seconds"
     },
     "validation": {
       "invalid_value": "Invalid value"
