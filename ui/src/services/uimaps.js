@@ -36,15 +36,15 @@ var UiMaps = {
           "dashboard": {
             "default": ["cdr_fastTimeRange", "cdr_caller", "cdr_callee", "cdr_callType", "cdr_callDuration", "cdr_trunk"],
           },
-          "pbx_data": {
-            "incoming_calls": ["cdr_fastTimeRange", "cdr_caller", "cdr_callee", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_ctiGroups", "cdr_user", "cdr_destinationType"],
-            "outgoing_calls": ["cdr_fastTimeRange", "cdr_caller", "cdr_callee", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_ctiGroups", "cdr_user", "cdr_destination"],
-            "internal_calls": ["cdr_fastTimeRange", "cdr_caller", "cdr_callee", "cdr_callType", "cdr_callDuration", "cdr_user", "cdr_ctiGroups"],
+          "pbx": {
+            "inbound": ["cdr_fastTimeRange", "cdr_caller", "cdr_callee", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_ctiGroups", "cdr_user", "cdr_destinationType"],
+            "outbound": ["cdr_fastTimeRange", "cdr_caller", "cdr_callee", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_ctiGroups", "cdr_user", "cdr_destination"],
+            "local": ["cdr_fastTimeRange", "cdr_caller", "cdr_callee", "cdr_callType", "cdr_callDuration", "cdr_user", "cdr_ctiGroups"],
           },
-          "personal_data": {
-            "incoming_calls": ["cdr_fastTimeRange", "cdr_caller", "cdr_callee", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_destinationType"],
-            "outgoing_calls": ["cdr_fastTimeRange", "cdr_caller", "cdr_callee", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_destination"],
-            "internal_calls": ["cdr_fastTimeRange", "cdr_caller", "cdr_callee", "cdr_callType", "cdr_callDuration"],
+          "personal": {
+            "inbound": ["cdr_fastTimeRange", "cdr_caller", "cdr_callee", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_destinationType"],
+            "outbound": ["cdr_fastTimeRange", "cdr_caller", "cdr_callee", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_destination"],
+            "local": ["cdr_fastTimeRange", "cdr_caller", "cdr_callee", "cdr_callType", "cdr_callDuration"],
           },
         }
       },

@@ -100,11 +100,11 @@
       "show_filters": "Visualizza filtri",
       "active_filters": "Filtri attivi",
       "filters": "Filtri",
-      "pbx_data": "Dati PBX",
-      "personal_data": "Dati personali",
-      "incoming_calls": "Chiamate in entrata",
-      "outgoing_calls": "Chiamate in uscita",
-      "internal_calls": "Chiamate interne",
+      "pbx": "Dati PBX",
+      "personal": "Dati personali",
+      "inbound": "Chiamate in entrata",
+      "outbound": "Chiamate in uscita",
+      "local": "Chiamate interne",
       "done": "Fatte"
     },
     "data": {

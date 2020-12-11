@@ -103,25 +103,25 @@
       <span v-show="isTag('/cdr')" class="press-enter dot no-margin-top"></span>
     </router-link>
     <sui-menu-item class="menu-section" :active="isActive('data', true)">
-      <sui-menu-header>{{$t("menu.pbx_data")}}</sui-menu-header>
+      <sui-menu-header>{{$t("menu.pbx")}}</sui-menu-header>
       <sui-menu-menu>
-        <span v-show="isTag('/cdr/pbx/incoming_calls')" class="press-enter dot-small"></span>
-        <router-link size="big" is="sui-menu-item" :active="isActive('/cdr/pbx/incoming_calls')" to="/cdr/pbx/incoming_calls">{{$t("menu.incoming_calls")}}</router-link>
-        <span v-show="isTag('/cdr/pbx/outgoing_calls')" class="press-enter dot-small"></span>
-        <router-link size="big" is="sui-menu-item" :active="isActive('/cdr/pbx/outgoing_calls')" to="/cdr/pbx/outgoing_calls">{{$t("menu.outgoing_calls")}}</router-link>
-        <span v-show="isTag('/cdr/pbx/internal_calls')" class="press-enter dot-small"></span>
-        <router-link is="sui-menu-item" :active="isActive('/cdr/pbx/internal_calls')" to="/cdr/pbx/internal_calls">{{$t("menu.internal_calls")}}</router-link>
+        <span v-show="isTag('/cdr/pbx/inbound')" class="press-enter dot-small"></span>
+        <router-link size="big" is="sui-menu-item" :active="isActive('/cdr/pbx/inbound')" to="/cdr/pbx/inbound">{{$t("menu.inbound")}}</router-link>
+        <span v-show="isTag('/cdr/pbx/outbound')" class="press-enter dot-small"></span>
+        <router-link size="big" is="sui-menu-item" :active="isActive('/cdr/pbx/outbound')" to="/cdr/pbx/outbound">{{$t("menu.outbound")}}</router-link>
+        <span v-show="isTag('/cdr/pbx/local')" class="press-enter dot-small"></span>
+        <router-link is="sui-menu-item" :active="isActive('/cdr/pbx/local')" to="/cdr/pbx/local">{{$t("menu.local")}}</router-link>
       </sui-menu-menu>
     </sui-menu-item>
     <sui-menu-item class="menu-section" :active="isActive('data', true)">
-      <sui-menu-header>{{$t("menu.personal_data")}}</sui-menu-header>
+      <sui-menu-header>{{$t("menu.personal")}}</sui-menu-header>
       <sui-menu-menu>
-        <span v-show="isTag('/cdr/personal/incoming_calls')" class="press-enter dot-small"></span>
-        <router-link size="big" is="sui-menu-item" :active="isActive('/cdr/personal/incoming_calls')" to="/cdr/personal/incoming_calls">{{$t("menu.incoming_calls")}}</router-link>
-        <span v-show="isTag('/cdr/personal/outgoing_calls')" class="press-enter dot-small"></span>
-        <router-link size="big" is="sui-menu-item" :active="isActive('/cdr/personal/outgoing_calls')" to="/cdr/personal/outgoing_calls">{{$t("menu.outgoing_calls")}}</router-link>
-        <span v-show="isTag('/cdr/personal/internal_calls')" class="press-enter dot-small"></span>
-        <router-link is="sui-menu-item" :active="isActive('/cdr/personal/internal_calls')" to="/cdr/personal/internal_calls">{{$t("menu.internal_calls")}}</router-link>
+        <span v-show="isTag('/cdr/personal/inbound')" class="press-enter dot-small"></span>
+        <router-link size="big" is="sui-menu-item" :active="isActive('/cdr/personal/inbound')" to="/cdr/personal/inbound">{{$t("menu.inbound")}}</router-link>
+        <span v-show="isTag('/cdr/personal/outbound')" class="press-enter dot-small"></span>
+        <router-link size="big" is="sui-menu-item" :active="isActive('/cdr/personal/outbound')" to="/cdr/personal/outbound">{{$t("menu.outbound")}}</router-link>
+        <span v-show="isTag('/cdr/personal/local')" class="press-enter dot-small"></span>
+        <router-link is="sui-menu-item" :active="isActive('/cdr/personal/local')" to="/cdr/personal/local">{{$t("menu.local")}}</router-link>
       </sui-menu-menu>
     </sui-menu-item>
   </div>

@@ -100,11 +100,11 @@
       "show_filters": "Show filters",
       "active_filters": "Active filters",
       "filters": "Filters",
-      "pbx_data": "PBX data",
-      "personal_data": "Personal data",
-      "incoming_calls": "Incoming calls",
-      "outgoing_calls": "Outgoing calls",
-      "internal_calls": "Internal calls"
+      "pbx": "PBX data",
+      "personal": "Personal data",
+      "inbound": "Incoming calls",
+      "outbound": "Outgoing calls",
+      "local": "Internal calls"
     },
     "data": {
       "summary": "Summary",
