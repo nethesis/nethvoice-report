@@ -18,7 +18,7 @@ WHERE	calldate >= "{{ .Time.Interval.Start }}"
 	  AND duration <= {{ .Duration }}
 	{{ end }}
 	{{ if gt (len .Trunks) 0 }}
-	  AND channel LIKE "%{{ .Trunks }}%"
+	  AND dstchannel LIKE "%{{ .Trunks }}%"
 	{{ end }}
         {{ if gt (len .Patterns) 0 }}
 	  AND call_type IN ({{ ExtractStrings .Patterns }})
