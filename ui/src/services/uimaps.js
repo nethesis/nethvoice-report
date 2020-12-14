@@ -34,17 +34,17 @@ var UiMaps = {
         },
         "cdr": {
           "dashboard": {
-            "default": ["cdr_fastTimeRange", "cdr_caller", "cdr_callee", "cdr_callType", "cdr_callDuration", "cdr_trunk"],
+            "default": ["cdr_fastTimeRange", "cdr_caller", "cdr_callee","cdr_did" , "cdr_callType", "cdr_callDuration", "cdr_trunk"],
           },
           "pbx": {
-            "inbound": ["cdr_fastTimeRange", "cdr_caller", "cdr_callee", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_ctiGroups", "cdr_user", "cdr_destinationType"],
-            "outbound": ["cdr_fastTimeRange", "cdr_caller", "cdr_callee", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_ctiGroups", "cdr_user", "cdr_destination"],
-            "local": ["cdr_fastTimeRange", "cdr_caller", "cdr_callee", "cdr_callType", "cdr_callDuration", "cdr_user", "cdr_ctiGroups"],
+            "inbound": ["cdr_fastTimeRange", "cdr_caller", "cdr_callee","cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_ctiGroups", "cdr_user", "cdr_destinationType"],
+            "outbound": ["cdr_fastTimeRange", "cdr_caller", "cdr_callee","cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_ctiGroups", "cdr_user", "cdr_destination"],
+            "local": ["cdr_fastTimeRange", "cdr_caller", "cdr_callee","cdr_did", "cdr_callType", "cdr_callDuration", "cdr_user", "cdr_ctiGroups"],
           },
           "personal": {
-            "inbound": ["cdr_fastTimeRange", "cdr_caller", "cdr_callee", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_destinationType"],
-            "outbound": ["cdr_fastTimeRange", "cdr_caller", "cdr_callee", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_destination"],
-            "local": ["cdr_fastTimeRange", "cdr_caller", "cdr_callee", "cdr_callType", "cdr_callDuration"],
+            "inbound": ["cdr_fastTimeRange", "cdr_caller", "cdr_callee","cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_destinationType"],
+            "outbound": ["cdr_fastTimeRange", "cdr_caller", "cdr_callee","cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_destination"],
+            "local": ["cdr_fastTimeRange", "cdr_caller", "cdr_callee","cdr_did", "cdr_callType", "cdr_callDuration"],
           },
         }
       },
@@ -85,14 +85,10 @@ var UiMaps = {
         { value: "7200", title: this.$i18n.t('filter.two_hours') }
       ],
       cdrCallTypeMap: [
-        { value: "done", text: this.$i18n.t('filter.done') },
-        { value: "done_answered", text: this.$i18n.t('filter.done_answered') },
-        { value: "done_not_answered", text: this.$i18n.t('filter.done_not_answered') },
-        { value: "done_fail", text: this.$i18n.t('filter.done_fail') },
-        { value: "received", text: this.$i18n.t('filter.received') },
-        { value: "received_answered", text: this.$i18n.t('filter.received_answered') },
-        { value: "received_not_answered", text: this.$i18n.t('filter.received_not_answered') },
-        { value: "received_fail", text: this.$i18n.t('filter.received_fail') }
+        { value: "answered", text: this.$i18n.t('filter.answered') },
+        { value: "no_answer", text: this.$i18n.t('filter.no_answer') },
+        { value: "busy", text: this.$i18n.t('filter.busy') },
+        { value: "failed", text: this.$i18n.t('filter.failed') }
       ],
       destinationsTypeMap: [
         { value: "dcontext,ext-group", text: this.$i18n.t('filter.call_groups') },

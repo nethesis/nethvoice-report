@@ -448,6 +448,18 @@
               :class="{ 'field-error': errorCallDuration }"
             />
           </sui-form-field>
+          <!-- cdr: dids -->
+          <sui-form-field v-if="showFilterCdrDid" width="four">
+            <label>{{$t('filter.did')}}</label>
+            <sui-dropdown
+              multiple
+              :options="filterValues.dids"
+              :placeholder="$t('filter.did')"
+              search
+              selection
+              v-model="filter.dids"
+            />
+          </sui-form-field>
           <!-- cdr: trunk -->
           <sui-form-field v-if="showFilterCdrTrunk" width="four">
             <label>{{$t('filter.trunk')}}</label>
@@ -504,11 +516,11 @@
             <label>{{$t('filter.destination')}}</label>
             <sui-dropdown
               multiple
-              :options="filterValues.cdrDestinations"
+              :options="filterValues.cdrPatterns"
               :placeholder="$t('filter.destination')"
               search
               selection
-              v-model="filter.destination"
+              v-model="filter.patterns"
             />
           </sui-form-field>
           <!-- CDR ONLY END -->
@@ -643,6 +655,7 @@
       :showFilterCdrCallType="showFilterCdrCallType"
       :showFilterCdrCallDuration="showFilterCdrCallDuration"
       :showFilterCdrTrunk="showFilterCdrTrunk"
+      :showFilterCdrDid="showFilterCdrDid"
       :showFilterCdrCtiGroups="showFilterCdrCtiGroups"
       :showFilterCdrUser="showFilterCdrUser"
       :showFilterCdrDestType="showFilterCdrDestType"
@@ -724,8 +737,8 @@ export default {
         duration: { title: "" },
         trunks: [],
         users: [],
-        destination_type: "",
-        destination: ""
+        destination_type: [],
+        patterns: []
       },
       filterValues: {
         queues: [],
@@ -747,6 +760,8 @@ export default {
         users: [],
         cdrDestinations: [],
         devices: {},
+        cdrPatterns: [],
+        dids: []
       },
       fastCdrRange: null,
       savedSearches: [],
@@ -937,33 +952,18 @@ export default {
                 text: !this.$t(`filter.${element.toLowerCase()}`).includes("filter.") ? this.$t(`filter.${element.toLowerCase()}`) : element
               })
             })
-            this.filterValues.cdrDestinations = destinations
+            this.filterValues.cdrPatterns = destinations
           })
 
-          // parse some data from default filters
-          let destinations = this.filterValues.cdrDestinations.map((destination) => {
-            return({
-              "title": destination.text,
-              "type": "destinations",
-              "description": destination.text,
-              "phoneNumber": "",
-              "value": destination.text
+          // cdr dids
+          if (this.defaultFilter.dids) {
+            this.filterValues.dids = this.defaultFilter.dids.map((did) => {
+              return({
+                text: did,
+                value: did
+              })
             })
-          })
-          // add destinations to cdrCaller values
-          this.filterValues.cdrCaller.push(...destinations)
-          // parse other data from default filters
-          let dids = this.defaultFilter.dids.map((did) => {
-            return({
-              "title": did,
-              "type": "dids",
-              "description": did,
-              "phoneNumber": "",
-              "value": did
-            })
-          })
-          // add destinations and dids to cdrCallee values
-          this.filterValues.cdrCallee.push(...destinations, ...dids)
+          }
 
           // cdr trunks
           if (this.defaultFilter.trunks) {
@@ -1173,7 +1173,15 @@ export default {
         this.filter.caller = filter.caller;
         this.filter.nullCall = filter.nullCall;
         this.filter.contactName = filter.contactName;
-        //// cdr filters?
+        // cdr filters
+        this.filter.sources = filter.sources;
+        this.filter.caller_destinations = filter.destinations;
+        this.filter.call_type = filter.call_type;
+        this.filter.duration = filter.duration;
+        this.filter.trunks = filter.trunks;
+        this.filter.users = filter.users;
+        this.filter.destination_type = filter.destination_type;
+        this.filter.patterns = filter.patterns;
       }
 
       // time
@@ -1405,18 +1413,19 @@ export default {
       }
 
       // time group
-
       if (!this.showFilterTimeGroup || !this.filter.time.group) {
         this.filter.time.group = "day";
       }
 
       // time split
-
       if (!this.showFilterTimeSplit || !this.filter.time.division) {
         this.filter.time.division = "60";
       }
 
-      // save filter to local storage
+      // parse destinations for localstorage
+      if (this.filter.destinations.length == 0) this.filter.destinations = { title: "" }
+
+      // save filter to local storage 
       this.set(this.reportFilterStorageName, this.filter);
 
       let filterToApply = JSON.parse(JSON.stringify(this.filter));
@@ -1493,9 +1502,24 @@ export default {
       } else {
         filterToApply.destinations = []
       }
+      // parse groups
+      if (this.filter.groups.length > 0) {
+        let parsedGroups = []
+        this.filter.groups.forEach(groups => {
+          let groupExt = groups.split(",")
+          parsedGroups = parsedGroups.concat(groupExt)
+        });
+        filterToApply.groups = parsedGroups
+      }
       // parse users
-
-      console.log("filterToApply", filterToApply); ////
+      if (this.filter.users.length > 0) {
+        let parsedUsers = []
+        this.filter.users.forEach(users => {
+          let userExt = users.split(",")
+          parsedUsers = parsedUsers.concat(userExt)
+        });
+        filterToApply.users = parsedUsers
+      }
 
       // apply filters
       this.$root.$emit("applyFilters", filterToApply);
@@ -1798,7 +1822,7 @@ export default {
       this.filter.trunks = [];
       this.filter.users = [];
       this.filter.destination_type = [];
-      this.filter.destination = [];
+      this.filter.patterns = [];
       this.applyFilters()
     }
   },
@@ -1874,6 +1898,10 @@ export default {
     // cdr trunk check
     showFilterCdrTrunk: function () {
       return this.isFilterInView("cdr_trunk", this.filtersMap);
+    },
+    // cdr did check
+    showFilterCdrDid: function () {
+      return this.isFilterInView("cdr_did", this.filtersMap);
     },
     // cdr cti groups check
     showFilterCdrCtiGroups: function () {

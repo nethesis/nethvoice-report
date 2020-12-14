@@ -85,7 +85,12 @@
       "paynumber": "Pay number",
       "past_week": "Past week",
       "past_month": "Past month",
-      "past_year": "Past year"
+      "past_year": "Past year",
+      "answered": "Answered",
+      "no_answer": "No answer",
+      "busy": "Busy",
+      "failed": "Failed",
+      "did": "DID"
     },
     "menu": {
       "queue": "Queue report",

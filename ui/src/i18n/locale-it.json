@@ -85,7 +85,12 @@
       "paynumber": "Numero a pagamento",
       "past_week": "Settimana scorsa",
       "past_month": "Mese scorso",
-      "past_year": "Anno scorso"
+      "past_year": "Anno scorso",
+      "answered": "Risposte",
+      "no_answer": "Non risposte",
+      "busy": "Occupato",
+      "failed": "Fallite",
+      "did": "DID"
     },
     "menu": {
       "queue": "Report Code",

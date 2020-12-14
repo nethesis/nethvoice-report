@@ -193,6 +193,15 @@
             {{activeFilters.duration}}
           </span>
         </div>
+        <!-- label: did active filter -->
+        <div class="ui label" v-if="showFilterCdrDid && activeFilters.dids && (activeFilters.dids.length > 0)">
+          <span class="field">
+            {{$t('filter.did')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.dids}}
+          </span>
+        </div>
         <!-- label: trunk active filter -->
         <div class="ui label" v-if="showFilterCdrTrunk && activeFilters.trunks && (activeFilters.trunks.length > 0)">
           <span class="field">
@@ -229,13 +238,13 @@
             {{activeFilters.destination_type}}
           </span>
         </div>
-        <!-- label: destination type active filter -->
-        <div class="ui label" v-if="showFilterCdrDestination && activeFilters.destination && (activeFilters.destination.length > 0)">
+        <!-- label: destination patterns type active filter -->
+        <div class="ui label" v-if="showFilterCdrDestination && activeFilters.patterns && (activeFilters.patterns.length > 0)">
           <span class="field">
             {{$t('filter.destination')}}:
           </span>
           <span class="value">
-            {{activeFilters.destination}}
+            {{activeFilters.patterns}}
           </span>
         </div>
         <!-- clear filters action -->
@@ -279,6 +288,7 @@ export default {
     "showFilterCdrCallee",
     "showFilterCdrCallType",
     "showFilterCdrCallDuration",
+    "showFilterCdrDid",
     "showFilterCdrTrunk",
     "showFilterCdrCtiGroups",
     "showFilterCdrUser",
@@ -431,6 +441,11 @@ export default {
         this.activeFilters.duration = this.activeFilters.duration.join(", ")
       }
     },
+    "activeFilters.dids": function () {
+      if (this.activeFilters.dids && this.lodash.isArray(this.activeFilters.dids) && this.activeFilters.dids.length > 0) {
+        this.activeFilters.dids = this.activeFilters.dids.join(", ")
+      }
+    },
     "activeFilters.trunks": function () {
       if (this.activeFilters.trunks && this.lodash.isArray(this.activeFilters.trunks) && this.activeFilters.trunks.length > 0) {
         this.activeFilters.trunks.forEach((trunk, key) => {
@@ -459,13 +474,13 @@ export default {
         this.activeFilters.destination_type = this.activeFilters.destination_type.join(", ")
       }
     },
-    "activeFilters.destination": function () {
-      if (this.activeFilters.destination && this.lodash.isArray(this.activeFilters.destination) && this.activeFilters.destination.length > 0) {
-        this.activeFilters.destination.forEach((element, key) => {
-          let destinationValuesText = this.filterValues.cdrDestinations.find(obj => obj.value === element).text
-          this.activeFilters.destination[key] = destinationValuesText
+    "activeFilters.patterns": function () {
+      if (this.activeFilters.patterns && this.lodash.isArray(this.activeFilters.patterns) && this.activeFilters.patterns.length > 0) {
+        this.activeFilters.patterns.forEach((element, key) => {
+          let destinationValuesText = this.filterValues.cdrPatterns.find(obj => obj.value === element).text
+          this.activeFilters.patterns[key] = destinationValuesText
         })
-        this.activeFilters.destination = this.activeFilters.destination.join(", ")
+        this.activeFilters.patterns = this.activeFilters.patterns.join(", ")
       }
     }
   }
