@@ -530,6 +530,7 @@ export default {
         origins: [],
         callers: [],
         contactNames: [],
+        devices: {},
       },
       savedSearches: [],
       openSaveSearchModal: false,
@@ -823,6 +824,18 @@ export default {
             this.filterValues.destinations = destinations.sort(
               this.sortByProperty("text")
             );
+          }
+
+          // devices
+          if (this.defaultFilter.devices) {
+            for (const deviceString of this.defaultFilter.devices) {
+              const split = deviceString.split(",");
+              const vendor = split[0];
+              const model = split[1];
+              const extension = split[2];
+              const type = split[3];
+              this.filterValues.devices[extension] = { vendor: vendor, model: model, type: type};
+            }
           }
 
           // save filter values to local storage (with expiry)
