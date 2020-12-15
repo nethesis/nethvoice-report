@@ -157,6 +157,13 @@
             >
               {{ element | reversePhonebookLookup('company', $root) }}
             </span>
+            <span
+              v-else-if="columns[index] && columns[index].format == 'phoneNumber' && $root.devices[element]"
+              :title="$root.devices[element].type == 'physical' ? $root.devices[element].vendor + ' ' + $root.devices[element].model : ''"
+            >
+              {{ element }}
+              <sui-icon :name="$root.devices[element].type == 'physical' ? 'phone' : $root.devices[element].type == 'mobile' ? 'mobile alternate' : 'headphones'" />
+            </span>
             <span v-else>
               {{ element }}
             </span>
