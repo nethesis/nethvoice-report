@@ -66,6 +66,7 @@ new Vue({
     filtersReady: false,
     phonebook: [],
     reversePhonebook: {},
+    devices: {},
     colorScheme: "",
     queues: {}
   },
