@@ -83,6 +83,7 @@ func GetDefaultFilter(c *gin.Context) {
 	defaultFilter.Origins = valuesFilter.Origins
 	defaultFilter.Trunks = valuesFilter.Trunks
 	defaultFilter.DIDs = valuesFilter.DIDs
+	defaultFilter.Devices = valuesFilter.Devices
 
 	if user == "X" || user == "admin" {
 		defaultFilter.Queues = valuesFilter.Queues
