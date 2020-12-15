@@ -187,7 +187,7 @@ export default {
       currentReport: "",
       cdr: {
         openDetailsModal: false,
-        linkedId: "",
+        currentLinkedId: "",
         details: [],
       },
     };
@@ -442,14 +442,18 @@ export default {
       }
     },
     showCdrDetailsModal(row) {
-      this.cdr.linkedId = row[4]; //// adapt to column index in query
+      this.cdr.currentLinkedId = row[5]; //// adapt to column index in query
       this.cdr.details = [];
       this.cdr.openDetailsModal = true;
+      const linkedId = this.cdr.currentLinkedId;
 
       this.getCdrDetails(
-        this.cdr.linkedId,
+        linkedId,
         (success) => {
-          this.cdr.details = success.body;
+          // ensure user hansn't opened details for another call while processing
+          if (linkedId == this.cdr.currentLinkedId) {
+            this.cdr.details = success.body;
+          }
         },
         (error) => {
           console.error(error.body);
