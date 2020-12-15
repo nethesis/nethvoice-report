@@ -23,25 +23,26 @@
 package models
 
 type Filter struct {
-	Queues             []string `json:"queues"`
-	Groups             []string `json:"groups"`
-	Agents             []string `json:"agents"`
-	Users              []string `json:"users"`
-	IVRs               []string `json:"ivrs"`
-	Phones             []string `json:"phones"`
-	Trunks             []string `json:"trunks"`
-	DIDs               []string `json:"dids"`
-	Sources            []string `json:"sources"`
-	Destinations       []string `json:"destinations"`
-	CallType           string   `json:"call_type"`
-	Duration           string   `json:"duration"`
-	CallDestinations   []string `json:"call_destinations"`
-	Patterns           []string `json:"patterns"`
+	Queues           []string `json:"queues"`
+	Groups           []string `json:"groups"`
+	Agents           []string `json:"agents"`
+	Users            []string `json:"users"`
+	IVRs             []string `json:"ivrs"`
+	Phones           []string `json:"phones"`
+	Trunks           []string `json:"trunks"`
+	DIDs             []string `json:"dids"`
+	Sources          []string `json:"sources"`
+	Destinations     []string `json:"destinations"`
+	CallType         string   `json:"call_type"`
+	Duration         string   `json:"duration"`
+	CallDestinations []string `json:"call_destinations"`
+	Patterns         []string `json:"patterns"`
+	Devices          []string `json:"devices"`
 
-	Reasons      []string `json:"reasons"`
-	Results      []string `json:"results"`
-	Choices      []string `json:"choices"`
-	Origins      []string `json:"origins"`
+	Reasons []string `json:"reasons"`
+	Results []string `json:"results"`
+	Choices []string `json:"choices"`
+	Origins []string `json:"origins"`
 
 	Time struct {
 		Group    string `json:"group"`
