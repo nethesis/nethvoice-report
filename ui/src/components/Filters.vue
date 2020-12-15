@@ -702,6 +702,7 @@ export default {
         filterValues = filterValues.item;
 
         this.filterValues = filterValues;
+        this.$root.devices = this.filterValues.devices;
 
         // set queue into root object
         this.$root.queues = {};
@@ -865,6 +866,7 @@ export default {
               const type = split[3];
               this.filterValues.devices[extension] = { vendor: vendor, model: model, type: type};
             }
+            this.$root.devices = this.filterValues.devices;
           }
 
           // save filter values to local storage (with expiry)
