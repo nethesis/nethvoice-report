@@ -1175,7 +1175,7 @@ export default {
         this.filter.contactName = filter.contactName;
         // cdr filters
         this.filter.sources = filter.sources;
-        this.filter.caller_destinations = filter.destinations;
+        this.filter.caller_destinations = filter.caller_destinations;
         this.filter.call_type = filter.call_type;
         this.filter.duration = filter.duration;
         this.filter.trunks = filter.trunks;
@@ -1484,7 +1484,7 @@ export default {
       }
 
       // parse call sources and call destinations berfore apply
-      if (filterToApply.sources.title != "") {
+      if (filterToApply.sources && filterToApply.sources.title != "") {
         filterToApply.sources = filterToApply.sources.values != "" ? (
           filterToApply.sources.value.split(",")
         ) : (
@@ -1493,7 +1493,7 @@ export default {
       } else {
         filterToApply.sources = []
       }
-      if (filterToApply.caller_destinations.title != "") {
+      if (filterToApply.caller_destinations && filterToApply.caller_destinations.title != "") {
         filterToApply.destinations = filterToApply.caller_destinations.value != "" ? (
           filterToApply.caller_destinations.value.split(",")
         ) : (
@@ -1502,19 +1502,20 @@ export default {
       } else {
         filterToApply.destinations = []
       }
+      delete filterToApply.caller_destinations
       // parse groups
-      if (this.filter.groups.length > 0) {
+      if (filterToApply.groups && filterToApply.groups.length > 0) {
         let parsedGroups = []
-        this.filter.groups.forEach(groups => {
+        filterToApply.groups.forEach(groups => {
           let groupExt = groups.split(",")
           parsedGroups = parsedGroups.concat(groupExt)
         });
         filterToApply.groups = parsedGroups
       }
       // parse users
-      if (this.filter.users.length > 0) {
+      if (filterToApply.users && filterToApply.users.length > 0) {
         let parsedUsers = []
-        this.filter.users.forEach(users => {
+        filterToApply.users.forEach(users => {
           let userExt = users.split(",")
           parsedUsers = parsedUsers.concat(userExt)
         });
