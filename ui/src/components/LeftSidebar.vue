@@ -113,7 +113,7 @@
         <router-link is="sui-menu-item" :active="isActive('/cdr/pbx/local')" to="/cdr/pbx/local">{{$t("menu.local")}}</router-link>
       </sui-menu-menu>
     </sui-menu-item>
-    <sui-menu-item class="menu-section" :active="isActive('data', true)">
+    <sui-menu-item v-if="loggedUsername != 'admin' && loggedUsername != 'X'" class="menu-section" :active="isActive('data', true)">
       <sui-menu-header>{{$t("menu.personal")}}</sui-menu-header>
       <sui-menu-menu>
         <span v-show="isTag('/cdr/personal/inbound')" class="press-enter dot-small"></span>
