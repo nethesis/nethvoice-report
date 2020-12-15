@@ -692,6 +692,7 @@ export default {
         filterValues = filterValues.item;
 
         this.filterValues = filterValues;
+        this.$root.devices = this.filterValues.devices;
 
         // set selected values in filter
         this.setFilterSelection(filter, true);
@@ -842,6 +843,7 @@ export default {
               const type = split[3];
               this.filterValues.devices[extension] = { vendor: vendor, model: model, type: type};
             }
+            this.$root.devices = this.filterValues.devices;
           }
 
           // save filter values to local storage (with expiry)
