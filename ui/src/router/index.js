@@ -259,6 +259,84 @@ const routes = [
       tags: ["dashboard"],
     },
   },
+  {
+    path: "/cdr/pbx/inbound",
+    name: "PbxDataIncoming",
+    component: QueueView,
+    meta: {
+      name: "menu.inbound",
+      parent: "pbx",
+      section: "pbx",
+      view: "inbound",
+      report: "cdr",
+      tags: ["pbx", "incoming"],
+    },
+  },
+  {
+    path: "/cdr/pbx/outbound",
+    name: "PbxDataOutgoing",
+    component: QueueView,
+    meta: {
+      name: "menu.outbound",
+      parent: "pbx",
+      section: "pbx",
+      view: "outbound",
+      report: "cdr",
+      tags: ["pbx", "outgoing"],
+    },
+  },
+  {
+    path: "/cdr/pbx/local",
+    name: "PbxDataInternal",
+    component: QueueView,
+    meta: {
+      name: "menu.local",
+      parent: "pbx",
+      section: "pbx",
+      view: "local",
+      report: "cdr",
+      tags: ["pbx", "internal"],
+    }
+  },
+  {
+    path: "/cdr/personal/inbound",
+    name: "PersonalDataIncoming",
+    component: QueueView,
+    meta: {
+      name: "menu.inbound",
+      parent: "personal",
+      section: "personal",
+      view: "inbound",
+      report: "cdr",
+      tags: ["personal", "incoming"],
+    }
+  },
+  {
+    path: "/cdr/personal/outbound",
+    name: "PersonalDataOutgoing",
+    component: QueueView,
+    meta: {
+      name: "menu.outbound",
+      parent: "personal",
+      section: "personal",
+      view: "outbound",
+      report: "cdr",
+      tags: ["personal", "outgoing"],
+    }
+  },
+  {
+    path: "/cdr/personal/local",
+    name: "PersonalDataInternal",
+    component: QueueView,
+    meta: {
+      name: "menu.local",
+      parent: "personal",
+      section: "personal",
+      view: "local",
+      report: "cdr",
+      tags: ["personal", "internal"],
+    }
+  }
 ];
 
 const router = new VueRouter({

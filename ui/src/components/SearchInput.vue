@@ -2,7 +2,7 @@
   <div class="ui search">
     <sui-input
       :placeholder="placeholder"
-      v-model="query"
+      :value="value.title"
       @input="onInput"
       @focus="onFocus"
       @blur="onBlur"
@@ -37,6 +37,10 @@ export default {
       type: Array,
       required: true,
     },
+    value: {
+      type: Object,
+      required: false,
+    },
     minCharacters: {
       type: Number,
       required: false,
@@ -67,7 +71,6 @@ export default {
   },
   data() {
     return {
-      query: "",
       results: [],
       showResults: false,
     };
@@ -76,7 +79,7 @@ export default {
     search() {
       // clean query
       const cleanRegex = /[^a-zA-Z0-9]/g;
-      const queryText = this.query.replace(cleanRegex, "");
+      const queryText = this.value.title.replace(cleanRegex, "");
 
       if (queryText.length < this.minCharacters) {
         this.results = [];
@@ -109,21 +112,24 @@ export default {
       }
     },
     onInput(event) {
-      this.$emit("input", event);
+      // free input
+      this.value.title = event;
+      this.$emit("input", { title: event });
       this.search();
     },
     onFocus() {
       this.search();
     },
     onBlur() {
+      this.$emit("blur");
+
       setTimeout(() => {
         this.showResults = false;
       }, 300);
     },
     selectResult(result) {
-      this.query = result.title;
-      this.$emit("input", this.query);
-      this.$emit("select", result);
+      this.value.title = result.title;
+      this.$emit("input", result);
       this.showResults = false;
     },
   },

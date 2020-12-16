@@ -33,7 +33,7 @@ type Filter struct {
 	DIDs             []string `json:"dids"`
 	Sources          []string `json:"sources"`
 	Destinations     []string `json:"destinations"`
-	CallType         string   `json:"call_type"`
+	CallType         []string `json:"call_type"`
 	Duration         string   `json:"duration"`
 	CallDestinations []string `json:"call_destinations"`
 	Patterns         []string `json:"patterns"`

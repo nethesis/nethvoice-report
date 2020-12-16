@@ -81,3 +81,9 @@
 .white-color {
     color: white !important;
 }
+
+.ellipsis {
+    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+}
