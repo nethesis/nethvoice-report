@@ -733,7 +733,7 @@ export default {
         nullCall: false, ////
         sources: { title: "" },
         caller_destinations: { title: "" },
-        call_type: "",
+        call_type: [],
         duration: { title: "" },
         trunks: [],
         users: [],
@@ -1483,26 +1483,29 @@ export default {
         filterToApply.duration = "";
       }
 
-      // parse call sources and call destinations berfore apply
+      // parse call sources berfore apply
       if (filterToApply.sources && filterToApply.sources.title != "") {
-        filterToApply.sources = filterToApply.sources.values != "" ? (
+        filterToApply.sources = filterToApply.sources.value != null ? (
           filterToApply.sources.value.split(",")
         ) : (
-          filterToApply.sources.title
+          [filterToApply.sources.title]
         )
       } else {
         filterToApply.sources = []
       }
+
+      // parse call destinations berfore apply
       if (filterToApply.caller_destinations && filterToApply.caller_destinations.title != "") {
-        filterToApply.destinations = filterToApply.caller_destinations.value != "" ? (
+        filterToApply.destinations = filterToApply.caller_destinations.value != null ? (
           filterToApply.caller_destinations.value.split(",")
         ) : (
-          filterToApply.caller_destinations.title
+          [filterToApply.caller_destinations.title]
         )
       } else {
         filterToApply.destinations = []
       }
       delete filterToApply.caller_destinations
+      
       // parse groups
       if (filterToApply.groups && filterToApply.groups.length > 0) {
         let parsedGroups = []
@@ -1816,10 +1819,12 @@ export default {
       this.filter.choices = [];
       this.filter.destinations = [];
       this.filter.origins = [];
-      this.filter.caller = [];
+      this.filter.caller = "";
       this.filter.contactName = "";
       this.filter.call_type = [];
-      this.filter.duration = [];
+      this.filter.duration = { title: "" };
+      this.filter.caller_destinations = { title: "" };
+      this.filter.sources = { title: "" };
       this.filter.trunks = [];
       this.filter.users = [];
       this.filter.destination_type = [];

@@ -158,12 +158,12 @@
         </div>
         <!-- start cdr -->
         <!-- label: caller active filter -->
-        <div class="ui label" v-if="showFilterCdrCaller && activeFilters.caller">
+        <div class="ui label" v-if="showFilterCdrCaller && activeFilters.caller_destinations">
           <span class="field">
             {{$t('filter.caller_label')}}:
           </span>
           <span class="value">
-            {{activeFilters.caller}}
+            {{activeFilters.caller_destinations}}
           </span>
         </div>
         <!-- label: callee active filter -->
@@ -413,8 +413,8 @@ export default {
     },
     "activeFilters.caller": function () {
       if (this.activeFilters.caller) {
-        let callerValuesTitle = this.filterValues.cdrCaller.find(obj => obj.value === this.activeFilters.caller).title
-        this.activeFilters.caller = callerValuesTitle
+        let callerValuesTitle = this.filterValues.cdrCaller.find(obj => obj.value === this.activeFilters.caller_destinations).title
+        this.activeFilters.caller_destinations = callerValuesTitle
       }
     },
     "activeFilters.callee": function () {
