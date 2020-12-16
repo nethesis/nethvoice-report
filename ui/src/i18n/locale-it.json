@@ -112,8 +112,7 @@
       "personal": "Dati personali",
       "inbound": "Chiamate in entrata",
       "outbound": "Chiamate in uscita",
-      "local": "Chiamate interne",
-      "done": "Fatte"
+      "local": "Chiamate interne"
     },
     "data": {
       "summary": "Riepilogo",
