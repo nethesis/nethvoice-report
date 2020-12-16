@@ -157,22 +157,22 @@
           </span>
         </div>
         <!-- start cdr -->
-        <!-- label: caller active filter -->
-        <div class="ui label" v-if="showFilterCdrCaller && activeFilters.caller_destinations">
+        <!-- label: caller sources active filter -->
+        <div class="ui label" v-if="showFilterCdrCaller && activeFilters.sources && activeFilters.sources.title != ''">
           <span class="field">
             {{$t('filter.caller_label')}}:
           </span>
           <span class="value">
-            {{activeFilters.caller_destinations}}
+            {{activeFilters.sources.title}}
           </span>
         </div>
-        <!-- label: callee active filter -->
-        <div class="ui label" v-if="showFilterCdrCallee && activeFilters.callee">
+        <!-- label: caller destinations active filter -->
+        <div class="ui label" v-if="showFilterCdrCallee && activeFilters.caller_destinations && activeFilters.caller_destinations.title != ''">
           <span class="field">
             {{$t('filter.callee')}}:
           </span>
           <span class="value">
-            {{activeFilters.callee}}
+            {{activeFilters.caller_destinations.title}}
           </span>
         </div>
         <!-- label: call type active filter -->
@@ -185,12 +185,12 @@
           </span>
         </div>
         <!-- label: call duration active filter -->
-        <div class="ui label" v-if="showFilterCdrCallDuration && activeFilters.duration && (activeFilters.duration.length > 0)">
+        <div class="ui label" v-if="showFilterCdrCallDuration &&  activeFilters.duration && activeFilters.duration.title != ''">
           <span class="field">
             {{$t('filter.call_duration')}}:
           </span>
           <span class="value">
-            {{activeFilters.duration}}
+            {{activeFilters.duration.title}}
           </span>
         </div>
         <!-- label: did active filter -->
@@ -411,16 +411,20 @@ export default {
         this.activeFilters.destinations = this.activeFilters.destinations.join(", ")
       }
     },
-    "activeFilters.caller": function () {
-      if (this.activeFilters.caller) {
-        let callerValuesTitle = this.filterValues.cdrCaller.find(obj => obj.value === this.activeFilters.caller_destinations).title
-        this.activeFilters.caller_destinations = callerValuesTitle
+    "activeFilters.sources": function () {
+      if (this.activeFilters.sources && this.activeFilters.sources.title && this.activeFilters.sources.title != "") {
+        if (this.activeFilters.sources.value) {
+          let sourcesValues = this.filterValues.cdrCaller.find(obj => obj.value === this.activeFilters.sources.value)
+          this.activeFilters.sources.title = sourcesValues.title
+        }
       }
     },
-    "activeFilters.callee": function () {
-      if (this.activeFilters.callee) {
-        let calleeValuesTitle = this.filterValues.cdrCallee.find(obj => obj.value === this.activeFilters.callee).title
-        this.activeFilters.callee = calleeValuesTitle
+    "activeFilters.caller_destinations": function () {
+      if (this.activeFilters.caller_destinations && this.activeFilters.caller_destinations.title && this.activeFilters.caller_destinations.title != "") {
+        if (this.activeFilters.caller_destinations.value) {
+          let destinationsValues = this.filterValues.cdrCaller.find(obj => obj.value === this.activeFilters.caller_destinations.value)
+          this.activeFilters.caller_destinations.title = destinationsValues.title
+        }
       }
     },
     "activeFilters.call_type": function () {
@@ -429,16 +433,6 @@ export default {
           return this.$t(`filter.${element}`)
         })
         this.activeFilters.call_type = this.activeFilters.call_type.join(", ")
-      }
-    },
-    "activeFilters.duration": function () {
-      if (this.activeFilters.duration && this.lodash.isArray(this.activeFilters.duration) && this.activeFilters.duration.length > 0) {
-        this.activeFilters.duration.forEach((duration , durationKey) => {
-          this.cdrCallDurationMap.forEach(element => {
-            if (element.value == duration) this.activeFilters.duration[durationKey] = element.text
-          })
-        })
-        this.activeFilters.duration = this.activeFilters.duration.join(", ")
       }
     },
     "activeFilters.dids": function () {

@@ -405,7 +405,8 @@
       "user": "User",
       "cti_group": "CTI group",
       "destination": "Destination",
-      "did": "DID"
+      "did": "DID",
+      "phonebook": "Phonebook"
     },
     "tags": {
       "dashboard": "dashboard",
