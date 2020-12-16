@@ -147,6 +147,107 @@
             {{activeFilters.contactName}}
           </span>
         </div>
+        <!-- label: nullCall value -->
+        <div class="ui label" v-if="showFilterNullCall && activeFilters.nullCall">
+          <span class="field">
+            {{$t('filter.null_call_label')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.nullCall}}
+          </span>
+        </div>
+        <!-- start cdr -->
+        <!-- label: caller sources active filter -->
+        <div class="ui label" v-if="showFilterCdrCaller && activeFilters.sources && activeFilters.sources.title != ''">
+          <span class="field">
+            {{$t('filter.caller_label')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.sources.title}}
+          </span>
+        </div>
+        <!-- label: caller destinations active filter -->
+        <div class="ui label" v-if="showFilterCdrCallee && activeFilters.caller_destinations && activeFilters.caller_destinations.title != ''">
+          <span class="field">
+            {{$t('filter.callee')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.caller_destinations.title}}
+          </span>
+        </div>
+        <!-- label: call type active filter -->
+        <div class="ui label" v-if="showFilterCdrCallType && activeFilters.call_type && (activeFilters.call_type.length > 0)">
+          <span class="field">
+            {{$t('filter.call_type')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.call_type}}
+          </span>
+        </div>
+        <!-- label: call duration active filter -->
+        <div class="ui label" v-if="showFilterCdrCallDuration &&  activeFilters.duration && activeFilters.duration.title != ''">
+          <span class="field">
+            {{$t('filter.call_duration')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.duration.title}}
+          </span>
+        </div>
+        <!-- label: did active filter -->
+        <div class="ui label" v-if="showFilterCdrDid && activeFilters.dids && (activeFilters.dids.length > 0)">
+          <span class="field">
+            {{$t('filter.did')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.dids}}
+          </span>
+        </div>
+        <!-- label: trunk active filter -->
+        <div class="ui label" v-if="showFilterCdrTrunk && activeFilters.trunks && (activeFilters.trunks.length > 0)">
+          <span class="field">
+            {{$t('filter.trunk')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.trunks}}
+          </span>
+        </div>
+        <!-- label: cti groups active filter -->
+        <div class="ui label" v-if="showFilterCdrCtiGroups && activeFilters.groups && (activeFilters.groups.length > 0)">
+          <span class="field">
+            {{$t('filter.cti_group')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.groups}}
+          </span>
+        </div>
+        <!-- label: users active filter -->
+        <div class="ui label" v-if="showFilterCdrUser && activeFilters.users && (activeFilters.users.length > 0)">
+          <span class="field">
+            {{$t('filter.user')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.users}}
+          </span>
+        </div>
+        <!-- label: destination type active filter -->
+        <div class="ui label" v-if="showFilterCdrDestType && activeFilters.destination_type && (activeFilters.destination_type.length > 0)">
+          <span class="field">
+            {{$t('filter.destination_type')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.destination_type}}
+          </span>
+        </div>
+        <!-- label: destination patterns type active filter -->
+        <div class="ui label" v-if="showFilterCdrDestination && activeFilters.patterns && (activeFilters.patterns.length > 0)">
+          <span class="field">
+            {{$t('filter.destination')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.patterns}}
+          </span>
+        </div>
+        <!-- clear filters action -->
         <div class="clear-filters">
           <a @click="clearFilters()">{{$t('filter.clear_filters')}}</a>
         </div>
@@ -181,6 +282,22 @@ export default {
     "showFilterTimeSplit",
     "showFilterCaller",
     "showFilterContactName",
+    "showFilterNullCall",
+    "showFilterCdrFastTimeRange",
+    "showFilterCdrCaller",
+    "showFilterCdrCallee",
+    "showFilterCdrCallType",
+    "showFilterCdrCallDuration",
+    "showFilterCdrDid",
+    "showFilterCdrTrunk",
+    "showFilterCdrCtiGroups",
+    "showFilterCdrUser",
+    "showFilterCdrCalleeType",
+    "showFilterCdrDestType",
+    "showFilterCdrDestination",
+    "cdrCallDurationMap",
+    "destinationsTypeMap",
+    "filterValues"
   ],
   data() {
     return {
@@ -233,6 +350,9 @@ export default {
     },
     clearFilters() {
       this.$root.$emit("clearFilters")
+    },
+    isEmptyFilter(value) {
+      console.log(value)
     }
   },
   watch: {
@@ -249,6 +369,10 @@ export default {
     },
     "activeFilters.groups": function () {
       if (this.activeFilters.groups && this.lodash.isArray(this.activeFilters.groups) && this.activeFilters.groups.length > 0) {
+        this.activeFilters.groups.forEach((element, key) => {
+         let groupsValuesText = this.filterValues.ctiGroups.find(obj => obj.value === element).text
+          this.activeFilters.groups[key] = groupsValuesText
+        })
         this.activeFilters.groups = this.activeFilters.groups.join(", ")
       }
     },
@@ -285,6 +409,72 @@ export default {
     "activeFilters.destinations": function () {
       if (this.activeFilters.destinations && this.lodash.isArray(this.activeFilters.destinations) && this.activeFilters.destinations.length > 0) {
         this.activeFilters.destinations = this.activeFilters.destinations.join(", ")
+      }
+    },
+    "activeFilters.sources": function () {
+      if (this.activeFilters.sources && this.activeFilters.sources.title && this.activeFilters.sources.title != "") {
+        if (this.activeFilters.sources.value) {
+          let sourcesValues = this.filterValues.cdrCaller.find(obj => obj.value === this.activeFilters.sources.value)
+          this.activeFilters.sources.title = sourcesValues.title
+        }
+      }
+    },
+    "activeFilters.caller_destinations": function () {
+      if (this.activeFilters.caller_destinations && this.activeFilters.caller_destinations.title && this.activeFilters.caller_destinations.title != "") {
+        if (this.activeFilters.caller_destinations.value) {
+          let destinationsValues = this.filterValues.cdrCaller.find(obj => obj.value === this.activeFilters.caller_destinations.value)
+          this.activeFilters.caller_destinations.title = destinationsValues.title
+        }
+      }
+    },
+    "activeFilters.call_type": function () {
+      if (this.activeFilters.call_type && this.lodash.isArray(this.activeFilters.call_type) && this.activeFilters.call_type.length > 0) {
+        this.activeFilters.call_type = this.activeFilters.call_type.map((element) => {
+          return this.$t(`filter.${element}`)
+        })
+        this.activeFilters.call_type = this.activeFilters.call_type.join(", ")
+      }
+    },
+    "activeFilters.dids": function () {
+      if (this.activeFilters.dids && this.lodash.isArray(this.activeFilters.dids) && this.activeFilters.dids.length > 0) {
+        this.activeFilters.dids = this.activeFilters.dids.join(", ")
+      }
+    },
+    "activeFilters.trunks": function () {
+      if (this.activeFilters.trunks && this.lodash.isArray(this.activeFilters.trunks) && this.activeFilters.trunks.length > 0) {
+        this.activeFilters.trunks.forEach((trunk, key) => {
+          let splittedTrunk = trunk.split(",")
+          let text = `${splittedTrunk[0]} (${splittedTrunk[1]})`
+          this.activeFilters.trunks[key] = text
+        })
+        this.activeFilters.trunks = this.activeFilters.trunks.join(", ")
+      }
+    },
+    "activeFilters.users": function () {
+      if (this.activeFilters.users && this.lodash.isArray(this.activeFilters.users) && this.activeFilters.users.length > 0) {
+        this.activeFilters.users.forEach((element, key) => {
+          let usersValuesText = this.filterValues.users.find(obj => obj.value === element).text
+          this.activeFilters.users[key] = usersValuesText
+        })
+        this.activeFilters.users = this.activeFilters.users.join(", ")
+      }
+    },
+    "activeFilters.destination_type": function () {
+      if (this.activeFilters.destination_type && this.lodash.isArray(this.activeFilters.destination_type) && this.activeFilters.destination_type.length > 0) {
+        this.activeFilters.destination_type.forEach((element, key) => {
+          let destinationsValuesText = this.destinationsTypeMap.find(obj => obj.value === element).text
+          this.activeFilters.destination_type[key] = destinationsValuesText
+        })
+        this.activeFilters.destination_type = this.activeFilters.destination_type.join(", ")
+      }
+    },
+    "activeFilters.patterns": function () {
+      if (this.activeFilters.patterns && this.lodash.isArray(this.activeFilters.patterns) && this.activeFilters.patterns.length > 0) {
+        this.activeFilters.patterns.forEach((element, key) => {
+          let destinationValuesText = this.filterValues.cdrPatterns.find(obj => obj.value === element).text
+          this.activeFilters.patterns[key] = destinationValuesText
+        })
+        this.activeFilters.patterns = this.activeFilters.patterns.join(", ")
       }
     }
   }
