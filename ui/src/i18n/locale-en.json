@@ -290,7 +290,10 @@
       "avgPosition": "Average position",
       "avgDuration": "Average duration",
       "avgHold": "Average wait",
-      "actions": "Actions"
+      "actions": "Actions",
+      "call_type": "Call type",
+      "cost": "Cost",
+      "ANSWERED": "Answered"
     },
     "command": {
       "save": "Save",
@@ -408,7 +411,7 @@
       "answered": "Answered",
       "unanswered": "Unanswered",
       "busy": "Busy",
-      "failed": "failed",
+      "failed": "Failed",
       "total_duration": "Total duration",
       "avg_duration": "Average duration",
       "total_cost": "Total cost",
