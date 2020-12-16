@@ -124,7 +124,41 @@
       <sui-modal v-model="cdr.openDetailsModal" class="cdr-details">
         <sui-modal-header>{{ $t("misc.call_details") }}</sui-modal-header>
         <sui-modal-content scrolling>
-          <TableChart v-if="cdr.details.length" :minimal="true" :caption="$t('misc.details')" :data="cdr.details" class="cdr-details"/>
+          <sui-statistics-group class="mg-bottom-sm">
+            <sui-statistic in-group>
+              <sui-statistic-value>{{
+                cdr.details.callType
+              }}</sui-statistic-value>
+              <sui-statistic-label>{{
+                $t("table.call_type")
+              }}</sui-statistic-label>
+            </sui-statistic>
+            <sui-statistic in-group :color="cdr.details.result == 'ANSWERED' ? 'green' : cdr.details.result == 'BUSY' ? 'yellow' : cdr.details.result == 'NO ANSWER' ? 'orange' : cdr.details.result == 'FAILED' ? 'red' : ''">
+              <sui-statistic-value>{{
+                cdr.details.result
+              }}</sui-statistic-value>
+              <sui-statistic-label>{{
+                $t("table.result")
+              }}</sui-statistic-label>
+            </sui-statistic>
+            <sui-statistic in-group>
+              <sui-statistic-value>{{
+                cdr.details.duration | formatTime
+              }}</sui-statistic-value>
+              <sui-statistic-label>{{
+                $t("table.duration")
+              }}</sui-statistic-label>
+            </sui-statistic>
+            <sui-statistic in-group color="blue">
+              <sui-statistic-value>{{
+                cdr.details.cost | formatCurrency }} {{ adminSettings.currency
+              }}</sui-statistic-value>
+              <sui-statistic-label>{{
+                $t("table.cost")
+              }}</sui-statistic-label>
+            </sui-statistic>
+          </sui-statistics-group>
+          <TableChart v-if="cdr.details.data.length" :minimal="true" :caption="$t('misc.details')" :data="cdr.details.data" class="cdr-details"/>
           <div v-else>
             <sui-loader active centered inline class="mg-bottom-sm fix" />
             <sui-message warning class="align-center">
@@ -187,8 +221,14 @@ export default {
       currentReport: "",
       cdr: {
         openDetailsModal: false,
-        currentLinkedId: "",
-        details: [],
+        details: {
+          linkedId: "",
+          callType: "",
+          result: "",
+          duration: "",
+          cost: "",
+          data: [],
+        }
       },
     };
   },
@@ -442,17 +482,22 @@ export default {
       }
     },
     showCdrDetailsModal(row) {
-      this.cdr.currentLinkedId = row[5]; //// adapt to column index in query
-      this.cdr.details = [];
+      //// adapt to columns index in query
+      this.cdr.details.linkedId = row[0];
+      this.cdr.details.callType = row[3];
+      this.cdr.details.result = row[5];
+      this.cdr.details.duration = row[6];
+      this.cdr.details.cost = row[7];
+      this.cdr.details.data = [];
       this.cdr.openDetailsModal = true;
-      const linkedId = this.cdr.currentLinkedId;
+      const linkedId = this.cdr.details.linkedId;
 
       this.getCdrDetails(
         linkedId,
         (success) => {
           // ensure user hansn't opened details for another call while processing
-          if (linkedId == this.cdr.currentLinkedId) {
-            this.cdr.details = success.body;
+          if (linkedId == this.cdr.details.linkedId) {
+            this.cdr.details.data = success.body;
           }
         },
         (error) => {
@@ -509,5 +554,10 @@ export default {
   max-width: 35rem !important;
   max-height: 14rem;
   overflow-y: auto;
+}
+
+.ui.statistic > .value,
+.ui.statistics .statistic > .value {
+  font-size: 1.7rem !important;
 }
 </style>

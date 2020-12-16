@@ -80,6 +80,10 @@ var Filters = {
         }
     },
     formatCurrency: function (value) {
+        if (value == "") {
+            value = 0;
+        }
+
         // round to two decimal places
         const currencyValue = Math.round((parseFloat(value) + Number.EPSILON) * 100) / 100;
         return currencyValue.toLocaleString();
