@@ -63,7 +63,7 @@ func init() {
 // Entry point for "phonebook" command
 func executeReportPhonebook() {
 	// read value content
-	queryString, errRead := ioutil.ReadFile(configuration.Config.Phonebook.QueryPath)
+	queryString, errRead := ioutil.ReadFile(configuration.Config.PhonebookPath)
 
 	// handle reading error
 	if errRead != nil {
