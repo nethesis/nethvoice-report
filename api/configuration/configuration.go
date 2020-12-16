@@ -53,17 +53,15 @@ type Configuration struct {
 		Name     string `json:"name"`
 		Password string `json:"password"`
 	} `json:"freepbx_database"`
-	ListenAddress string `json:"listen_address"`
-	RedisAddress  string `json:"redis_address"`
-	TTLCache      int    `json:"ttl_cache"`
-	Secret        string `json:"secret"`
-	QueryPath     string `json:"query_path"`
-	TemplatePath  string `json:"template_path"`
-	ValuesPath    string `json:"values_path"`
-	ViewsPath     string `json:"views_path"`
-	Phonebook     struct {
-		QueryPath string `json:"query_path"`
-	} `json:"phonebook"`
+	ListenAddress          string          `json:"listen_address"`
+	RedisAddress           string          `json:"redis_address"`
+	TTLCache               int             `json:"ttl_cache"`
+	Secret                 string          `json:"secret"`
+	QueryPath              string          `json:"query_path"`
+	TemplatePath           string          `json:"template_path"`
+	ValuesPath             string          `json:"values_path"`
+	ViewsPath              string          `json:"views_path"`
+	PhonebookPath          string          `json:"phonebook_path"`
 	RrdPath                string          `json:"rrd_path"`
 	UserAuthorizationsFile string          `json:"user_auth_file"`
 	DefaultFilter          models.Filter   `json:"default_filter"`
