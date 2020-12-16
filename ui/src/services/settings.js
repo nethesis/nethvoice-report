@@ -1,7 +1,7 @@
 var SettingsService = {
   methods: {
     getSettings(success, error) {
-      this.$http
+       this.$http
         .get(
           this.$root.apiScheme + this.$root.apiEndpoint + "/settings",
           {
@@ -15,6 +15,25 @@ var SettingsService = {
         )
         .then(success, error);
     },
+    getSettingsPromise() {
+      return this.$http
+        .get(
+          this.$root.apiScheme + this.$root.apiEndpoint + "/settings",
+          {
+            headers: {
+              Authorization:
+                "Bearer " +
+                (this.get("loggedUser") && this.get("loggedUser").token) ||
+                "",
+            },
+          }
+        )
+        .then((response) => {
+          return response.body
+        }, (error) => {
+          console.error(error.body)
+        });
+   },
     updateSettings(body, success, error) {
       this.$http
         .put(this.$root.apiScheme + this.$root.apiEndpoint + "/settings", body,
