@@ -29,6 +29,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/nethesis/nethvoice-report/api/cache"
+	"github.com/nethesis/nethvoice-report/api/configuration"
 	"github.com/nethesis/nethvoice-report/api/models"
 	"github.com/nethesis/nethvoice-report/api/utils"
 )
@@ -69,6 +70,12 @@ func GetDefaultFilter(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "invalid default filter unmarshal", "status": errJson.Error()})
 		return
 	}
+
+	// read default filter from configuration
+	filterFromConfig := configuration.Config.DefaultFilter
+	defaultFilter.Time.Group = filterFromConfig.Time.Group
+	defaultFilter.Time.Division = filterFromConfig.Time.Division
+	defaultFilter.Time.Range = filterFromConfig.Time.Range
 
 	// read user authorizations
 	auths, _ := GetUserAuthorizations(user)

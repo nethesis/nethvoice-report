@@ -18,54 +18,15 @@ var UtilService = {
         return 0;
       }
     },
-    isFilterInView(filter) {
+    isFilterInView(filter, map) {
       const report = this.$route.meta.report;
       const section = this.$route.meta.section;
       const view = this.$route.meta.view;
 
       if (section && view) {
-        return this.getFiltersInViewMap()[report][section][view].includes(filter);
+        return map[report][section][view].includes(filter);
       } else {
         return false;
-      }
-    },
-    getFiltersInViewMap() {
-      return {
-        "queue": {
-          "dashboard": {
-            "default": ["time", "queue", "agent", "ivr", "choice"],
-          },
-          "data": {
-            "summary": ["timeGroup", "time", "queue", "agent"],
-            "agent": ["timeGroup", "time", "queue", "agent"],
-            "session": ["time", "hour", "queue", "reason", "agent"],
-            "caller": ["timeGroup", "time", "queue", "caller", "contactName"],
-            "call": ["time", "hour", "queue", "caller", "contactName", "agent", "result"],
-            "lost_call": ["timeGroup", "time", "queue", "caller", "contactName", "reason"],
-            "ivr": ["timeGroup", "time", "ivr", "choice"]
-          },
-          "performance": {
-            "default": ["timeGroup", "time", "queue"]
-          },
-          "distribution": {
-            "hourly": ["timeGroup", "time", "queue", "timeSplit", "agent", "ivr"],
-            "geographic": ["timeGroup", "time", "queue", "origin", "geoGroup"],
-          },
-          "graphs": {
-            "load": ["timeGroup", "time", "queue", "origin"],
-            "hour": ["time", "queue", "agent", "destination", "ivr", "choice"],
-            "agent": ["timeGroup", "time", "queue", "agent"],
-            "area": ["timeGroup", "time", "queue"],
-            "queue_position": ["time", "queue", "timeSplit"],
-            "avg_duration": ["time", "queue", "timeSplit"],
-            "avg_wait": ["time", "queue", "timeSplit"]
-          }
-        },
-        "cdr": {
-          "dashboard": {
-            "default": ["time", "hour"],
-          },
-        }
       }
     },
     saveToLocalStorageWithExpiry(key, item, ttlMinutes) {
@@ -356,6 +317,173 @@ var UtilService = {
       let currentTimeString = currentTime.format("HH:mm");
       hoursMap[currentTimeString] = [currentTimeString];
       return hoursMap;
+    },
+    getToday() {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return today;
+    },
+    getYesterday(startOrEnd="start") {
+      const yesterday = moment().subtract(1, 'day');
+
+      if (startOrEnd == "start") {
+        return yesterday.startOf('day').toDate();
+      } else {
+        return yesterday.endOf('day').toDate();
+      }
+    },
+    getLastTwoDays(startOrEnd) {
+      const twoDaysAgo = moment().subtract(2, 'day');
+
+      if (startOrEnd == "start") {
+        return twoDaysAgo.startOf('day').toDate();
+      } else {
+        return twoDaysAgo.endOf('day').toDate();
+      }
+    },
+    getCurrentWeek(startOrEnd) {
+      const today = moment();
+
+      if (startOrEnd == "start") {
+        return today.weekday(0).toDate();
+      } else {
+        return today.weekday(7).toDate();
+      }
+    },
+    getCurrentMonth(startOrEnd) {
+      const today = moment();
+
+      if (startOrEnd == "start") {
+        return today.startOf('month').toDate();
+      } else {
+        return today.endOf('month').toDate();
+      }
+    },
+    getLastThreeMonths(startOrEnd) {
+      const threeMonthsAgo = moment().subtract(3, 'months');
+
+      if (startOrEnd == "start") {
+        return threeMonthsAgo.startOf('day').toDate();
+      } else {
+        return threeMonthsAgo.endOf('day').toDate();
+      }
+    },
+    getCurrentYear(startOrEnd) {
+      const currentYear = moment();
+
+      if (startOrEnd == "start") {
+        return currentYear.startOf('year').toDate();
+      } else {
+        return currentYear.endOf('year').toDate();
+      }
+    },
+    getLastWeek(startOrEnd) {
+      const aWeekAgo = moment().subtract(1, 'week');
+
+      if (startOrEnd == "start") {
+        return aWeekAgo.startOf('day').toDate();
+      } else {
+        return aWeekAgo.endOf('day').toDate();
+      }
+    },
+    getLastTwoWeeks(startOrEnd) {
+      const twoWeeksAgo = moment().subtract(2, 'weeks');
+
+      if (startOrEnd == "start") {
+        return twoWeeksAgo.startOf('day').toDate();
+      } else {
+        return twoWeeksAgo.endOf('day').toDate();
+      }
+    },
+    getLastMonth(startOrEnd) {
+      const aMonthAgo = moment().subtract(1, 'month');
+
+      if (startOrEnd == "start") {
+        return aMonthAgo.startOf('day').toDate();
+      } else {
+        return aMonthAgo.endOf('day').toDate();
+      }
+    },
+    getLastTwoMonths(startOrEnd) {
+      const twoMonthsAgo = moment().subtract(2, 'months');
+
+      if (startOrEnd == "start") {
+        return twoMonthsAgo.startOf('day').toDate();
+      } else {
+        return twoMonthsAgo.endOf('day').toDate();
+      }
+    },
+    getLastSixMonths(startOrEnd) {
+      const sixMonthsAgo = moment().subtract(6, 'months');
+
+      if (startOrEnd == "start") {
+        return sixMonthsAgo.startOf('day').toDate();
+      } else {
+        return sixMonthsAgo.endOf('day').toDate();
+      }
+    },
+    getLastYear(startOrEnd) {
+      const aYearAgo = moment().subtract(1, 'year');
+
+      if (startOrEnd == "start") {
+        return aYearAgo.startOf('day').toDate();
+      } else {
+        return aYearAgo.endOf('day').toDate();
+      }
+    },
+    getLastTwoYears(startOrEnd) {
+      const twoYearsAgo = moment().subtract(2, 'years');
+
+      if (startOrEnd == "start") {
+        return twoYearsAgo.startOf('day').toDate();
+      } else {
+        return twoYearsAgo.endOf('day').toDate();
+      }
+    },
+    getLastThreeYears(startOrEnd) {
+      const threeYearsAgo = moment().subtract(3, 'years');
+
+      if (startOrEnd == "start") {
+        return threeYearsAgo.startOf('day').toDate();
+      } else {
+        return threeYearsAgo.endOf('day').toDate();
+      }
+    },
+    getPastPeriod(startOrEnd, periodName) {
+      const pastWeek = moment().subtract(1, periodName);
+
+      if (startOrEnd == "start") {
+        return pastWeek.startOf(periodName).toDate();
+      } else {
+        return pastWeek.endOf(periodName).toDate();
+      }
+    },
+    fromToday(date) {
+      return date > this.getYesterday('end');
+    },
+    getDateFormat() {
+      let dateFormat = "";
+      const timeGroup = this.showFilterTimeGroup ? this.filter.time.group : "day";
+
+      switch (timeGroup) {
+        case "year":
+          dateFormat = "YYYY";
+          break;
+        case "month":
+          dateFormat = "YYYY-MM";
+          break;
+        case "week":
+          dateFormat = "GGGG-[W]WW";
+          break;
+        case "day":
+          if (this.showFilterTimeHour) {
+            dateFormat = "YYYY-MM-DD HH:mm";
+          } else {
+            dateFormat = "YYYY-MM-DD";
+          }
+          break;
+      }
+      return dateFormat;
     }
   }
 };

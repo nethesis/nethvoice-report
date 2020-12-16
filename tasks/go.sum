@@ -227,6 +227,8 @@ github.com/nethesis/nethvoice-report/api v0.0.0-20201215095137-a40118681cd7 h1:k
 github.com/nethesis/nethvoice-report/api v0.0.0-20201215095137-a40118681cd7/go.mod h1:EVlrgK6wN3zaCi8E0e8A9YwMlTKj+2u8lbFF811x5K8=
 github.com/nethesis/nethvoice-report/api v0.0.0-20201215155657-e4cdb6b81a43 h1:ysU/NqBw0fiBE+mgMFE8R/5A8kmOIoFTVSu11qjuLv8=
 github.com/nethesis/nethvoice-report/api v0.0.0-20201215155657-e4cdb6b81a43/go.mod h1:EVlrgK6wN3zaCi8E0e8A9YwMlTKj+2u8lbFF811x5K8=
+github.com/nethesis/nethvoice-report/api v0.0.0-20201216131606-e3c510aea411 h1:rnu39QynlVulRyKy/84WefxoshokhQ/KYQNy4EMoyv8=
+github.com/nethesis/nethvoice-report/api v0.0.0-20201216131606-e3c510aea411/go.mod h1:EVlrgK6wN3zaCi8E0e8A9YwMlTKj+2u8lbFF811x5K8=
 github.com/nleeper/goment v1.4.0 h1:k+PnV26S9wnxI+ryxKEkpG7JhVtDJpM6+CzeRxh5S54=
 github.com/nleeper/goment v1.4.0/go.mod h1:zDl5bAyDhqxwQKAvkSXMRLOdCowrdZz53ofRJc4VhTo=
 github.com/oklog/ulid v1.3.1/go.mod h1:CirwcVhetQ6Lv90oh/F+FBtV6XMibvdAFo93nm5qn4U=
