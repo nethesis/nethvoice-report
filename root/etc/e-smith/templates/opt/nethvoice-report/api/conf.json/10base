@@ -34,9 +34,7 @@
   "template_path": "/opt/nethvoice-report/api/templates",
   "values_path": "/opt/nethvoice-report/api/values",
   "views_path": "/opt/nethvoice-report/api/views",
-	"phonebook": \{
-	  "phonebook_path": "/opt/nethvoice-report/api/phonebook/phonebook.sql"
-	\},
+  "phonebook_path": "/opt/nethvoice-report/api/phonebook/phonebook.sql",
 	"rrd_path": "/var/lib/collectd/rrd",
         "user_auth_file": "/opt/nethvoice-report/api/user_authorizations.json",
         "default_filter": \{
