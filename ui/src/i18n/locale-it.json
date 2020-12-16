@@ -349,7 +349,14 @@
       "avgHold": "Attesa Media",
       "actions": "Azioni",
       "call_type": "Tipo chiamata",
-      "cost": "Costo"
+      "cost": "Costo",
+      "ANSWERED": "Risposta",
+      "BUSY": "Occupato",
+      "NO ANSWER": "Non risposta",
+      "FAILED": "Fallita",
+      "IN": "In entrata",
+      "OUT": "In uscita",
+      "LOCAL": "Locale"
     },
     "command": {
       "save": "Salva",

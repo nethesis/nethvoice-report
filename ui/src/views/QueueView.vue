@@ -126,17 +126,17 @@
         <sui-modal-content scrolling>
           <sui-statistics-group class="mg-bottom-sm">
             <sui-statistic in-group>
-              <sui-statistic-value>{{
-                cdr.details.callType
-              }}</sui-statistic-value>
+              <sui-statistic-value>
+                {{ $t('table.' + cdr.details.callType) }}
+              </sui-statistic-value>
               <sui-statistic-label>{{
                 $t("table.call_type")
               }}</sui-statistic-label>
             </sui-statistic>
-            <sui-statistic in-group :color="cdr.details.result == 'ANSWERED' ? 'green' : cdr.details.result == 'BUSY' ? 'yellow' : cdr.details.result == 'NO ANSWER' ? 'orange' : cdr.details.result == 'FAILED' ? 'red' : ''">
-              <sui-statistic-value>{{
-                cdr.details.result
-              }}</sui-statistic-value>
+            <sui-statistic in-group :color="cdr.details.result == 'ANSWERED' ? 'green' : cdr.details.result == 'BUSY' ? 'yellow' : cdr.details.result == 'NO ANSWER' ? 'orange' : cdr.details.result == 'FAILED' ? 'red' : 'black'">
+              <sui-statistic-value>
+                {{ $t('table.' + cdr.details.result) }}
+              </sui-statistic-value>
               <sui-statistic-label>{{
                 $t("table.result")
               }}</sui-statistic-label>
@@ -149,7 +149,7 @@
                 $t("table.duration")
               }}</sui-statistic-label>
             </sui-statistic>
-            <sui-statistic in-group color="blue">
+            <sui-statistic in-group :color="'blue'">
               <sui-statistic-value>{{
                 cdr.details.cost | formatCurrency }} {{ adminSettings.currency
               }}</sui-statistic-value>
