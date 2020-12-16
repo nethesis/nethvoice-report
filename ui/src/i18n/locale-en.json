@@ -349,7 +349,13 @@
       "actions": "Actions",
       "call_type": "Call type",
       "cost": "Cost",
-      "ANSWERED": "Answered"
+      "ANSWERED": "Answered",
+      "BUSY": "Busy",
+      "NO ANSWER": "No answer",
+      "FAILED": "Failed",
+      "IN": "Inbound",
+      "OUT": "Outbound",
+      "LOCAL": "Local"
     },
     "command": {
       "save": "Save",
