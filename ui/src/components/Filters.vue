@@ -1187,8 +1187,9 @@ export default {
       // time
       this.filter.time.range = filter.time.range;
 
-      if (this.filter.time.range) {
-        this.filter.time.interval = this.selectTime(this.filter.time.range);
+      if (this.filter.time.range && (!filter.time.interval.start || !filter.time.interval.end)) {
+        // set time interval from time range
+        this.selectTime(this.filter.time.range);
       } else {
         this.filter.time.interval.start = moment(filter.time.interval.start).toDate();
         this.filter.time.interval.end = moment(filter.time.interval.end).toDate();
@@ -1203,8 +1204,6 @@ export default {
       if (!this.showFilterTimeSplit || !this.filter.time.division) {
         this.filter.time.division = "60";
       }
-
-      this.selectTime(filter.time.range);
 
       // null call
       this.filter.nullCall = filter.nullCall;
