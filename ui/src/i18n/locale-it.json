@@ -51,7 +51,7 @@
       "caller": "Chiamante",
       "callee": "Chiamato",
       "call_type": "Tipo chiamata",
-      "call_duration": "Durata chiamata",
+      "call_duration": "Durata chiamata massima",
       "call_duration_placeholder": "Puoi digitare una durata personalizzata",
       "trunk": "Fascio",
       "cti_group": "Gruppo CTI",
