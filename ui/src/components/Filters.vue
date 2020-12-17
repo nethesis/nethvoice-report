@@ -416,7 +416,8 @@
               :placeholder="$t('filter.caller_label')"
               :minCharacters="3"
               :searchFields="['title', 'description', 'phoneNumber']"
-              v-model="filter.sources"
+              @input="onSourcesInput"
+              @select="onSourcesSelect"
             />
           </sui-form-field>
           <!-- cdr: call destination / callee -->
@@ -427,7 +428,8 @@
               :placeholder="$t('filter.callee')"
               :minCharacters="3"
               :searchFields="['title', 'description', 'phoneNumber']"
-              v-model="filter.destinations"
+              @input="onDestinationsInput"
+              @select="onDestinationsSelect"
             />
           </sui-form-field>
           <!-- cdr: call type -->
@@ -451,8 +453,10 @@
               :options="cdrCallDurationMap"
               :placeholder="$t('filter.call_duration_placeholder')"
               :minCharacters="0"
-              v-model="filter.duration"
+              @input="onDurationInput"
+              @select="onDurationSelect"
               @blur="callDurationBlur"
+              ref="duration"
               :showOptionType="false"
               :class="{ 'field-error': errorCallDuration }"
             />
@@ -927,8 +931,8 @@ export default {
       }
     },
     callDurationBlur() {
-      if (this.filter.duration && Number(this.filter.duration.title)) {
-        this.filter.duration.title += ' ' + this.$t('misc.seconds');
+      if (Number(this.$refs.duration.$data.query)) {
+        this.$refs.duration.$data.query += ' ' + this.$t('misc.seconds');
       }
     },
     // add phonebook contacts to filterValues
@@ -940,7 +944,6 @@ export default {
         if (!this._.isEmpty(contact.phones.workphones) && contact.phones.workphones[0] != "") contactNumbers.push(contact.phones.workphones[0])
         return ({
           "title": contact.title,
-          "type": "phonebook",
           "description": `${contact.cleanName} ${contact.company}`,
           "phoneNumber": contactNumbers.join(","),
           "value": contactNumbers.join(",")
@@ -1380,9 +1383,10 @@ export default {
 
       if (this.filter.duration.title && !this.filter.duration.value) {
         // validate custom call duration (free input)
-        const syntaxValid = new RegExp("[0-9]+ " + this.$t("misc.seconds"), "i").test(this.filter.duration.title);
+        const syntaxValid = new RegExp("^[0-9]+$", "i").test(this.filter.duration.title);
+        const syntaxValidWithUnit = new RegExp("^[0-9]+ " + this.$t("misc.seconds") + "$", "i").test(this.filter.duration.title);
 
-        if (!syntaxValid) {
+        if (!syntaxValid && !syntaxValidWithUnit) {
           this.errorCallDuration = true;
           return false;
         }
@@ -1836,7 +1840,25 @@ export default {
       this.filter.callDestinations = [];
       this.filter.patterns = [];
       this.applyFilters()
-    }
+    },
+    onSourcesInput(value) {
+      this.filter.sources = { title: value };
+    },
+    onSourcesSelect(searchResult) {
+      this.filter.sources = searchResult;
+    },
+    onDestinationsInput(value) {
+      this.filter.destinations = { title: value };
+    },
+    onDestinationsSelect(searchResult) {
+      this.filter.destinations = searchResult;
+    },
+    onDurationInput(value) {
+      this.filter.duration = { title: value };
+    },
+    onDurationSelect(searchResult) {
+      this.filter.duration = searchResult;
+    },
   },
   computed: {
     showFilterTime: function () {

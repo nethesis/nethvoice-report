@@ -51,7 +51,7 @@
       "caller": "Caller",
       "callee": "Callee",
       "call_type": "Call type",
-      "call_duration": "Call duration",
+      "call_duration": "Max call duration",
       "call_duration_placeholder": "You can type a custom call duration",
       "trunk": "Trunk",
       "cti_group": "CTI group",

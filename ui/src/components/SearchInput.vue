@@ -2,7 +2,7 @@
   <div class="ui search">
     <sui-input
       :placeholder="placeholder"
-      :value="value.title"
+      v-model="query"
       @input="onInput"
       @focus="onFocus"
       @blur="onBlur"
@@ -37,10 +37,6 @@ export default {
       type: Array,
       required: true,
     },
-    value: {
-      type: Object,
-      required: false,
-    },
     minCharacters: {
       type: Number,
       required: false,
@@ -71,6 +67,7 @@ export default {
   },
   data() {
     return {
+      query: "",
       results: [],
       showResults: false,
     };
@@ -79,8 +76,7 @@ export default {
     search() {
       // clean query
       const cleanRegex = /[^a-zA-Z0-9]/g;
-      const query = this.value.title || "";
-      const queryText = query.replace(cleanRegex, "");
+      const queryText = this.query.replace(cleanRegex, "");
 
       if (queryText.length < this.minCharacters) {
         this.results = [];
@@ -107,15 +103,21 @@ export default {
         if (this.results.length > this.maxResults) {
           this.results = this.results.slice(0, this.maxResults);
         }
+
+        // if query matches exactly the title of a result, select it
+        for (const result of this.results) {
+          if (this.query == result.title) {
+            this.$emit("select", result);
+          }
+        }
+
         this.showResults = true;
       } else {
         this.showResults = false;
       }
     },
     onInput(event) {
-      // free input
-      this.value.title = event;
-      this.$emit("input", { title: event });
+      this.$emit("input", event);
       this.search();
     },
     onFocus() {
@@ -129,8 +131,9 @@ export default {
       }, 300);
     },
     selectResult(result) {
-      this.value.title = result.title;
-      this.$emit("input", result);
+      this.query = result.title;
+      this.$emit("input", this.query);
+      this.$emit("select", result);
       this.showResults = false;
     },
   },
