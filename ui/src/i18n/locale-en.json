@@ -476,6 +476,14 @@
       "avg_cost": "Average cost",
       "total_wait_duration": "Total wait duration",
       "total_avg_duration": "Total avg duration"
+    },
+    "device": {
+      "type": "Device type",
+      "vendor": "Vendor",
+      "model": "Model",
+      "physical": "Physical",
+      "mobile": "Mobile",
+      "webrtc": "WebRTC"
     }
   }
 }
