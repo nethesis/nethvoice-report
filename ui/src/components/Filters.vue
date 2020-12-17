@@ -498,17 +498,17 @@
               v-model="filter.users"
             />
           </sui-form-field>
-          <!-- cdr: destination type -->
-          <sui-form-field v-if="showFilterCdrDestType" width="four">
-            <label>{{$t('filter.destination_type')}}</label>
+          <!-- cdr: call destinations -->
+          <sui-form-field v-if="showFilterCdrCallDestination" width="four">
+            <label>{{$t('filter.call_destination')}}</label>
             <sui-dropdown
               multiple
-              :options="destinationsTypeMap"
-              :placeholder="$t('filter.destination_type')"
+              :options="callDestinationsMap"
+              :placeholder="$t('filter.call_destination')"
               search
               selection
               allow-additions
-              v-model="filter.destination_type"
+              v-model="filter.callDestinations"
             />
           </sui-form-field>
           <!-- cdr: destination -->
@@ -658,10 +658,10 @@
       :showFilterCdrDid="showFilterCdrDid"
       :showFilterCdrCtiGroups="showFilterCdrCtiGroups"
       :showFilterCdrUser="showFilterCdrUser"
-      :showFilterCdrDestType="showFilterCdrDestType"
+      :showFilterCdrCallDestination="showFilterCdrCallDestination"
       :showFilterCdrDestination="showFilterCdrDestination"
       :cdrCallDurationMap="cdrCallDurationMap"
-      :destinationsTypeMap="destinationsTypeMap"
+      :callDestinationsMap="callDestinationsMap"
       :filterValues="filterValues"
     />
   </div>
@@ -717,7 +717,7 @@ export default {
         reasons: [],
         results: [],
         choices: [],
-        destinations: [],
+        destinations: { title: "" },
         origins: [],
         time: {
           group: "",
@@ -737,7 +737,7 @@ export default {
         duration: { title: "" },
         trunks: [],
         users: [],
-        destination_type: [],
+        callDestinations: [],
         patterns: []
       },
       filterValues: {
@@ -1179,7 +1179,7 @@ export default {
         this.filter.duration = filter.duration;
         this.filter.trunks = filter.trunks;
         this.filter.users = filter.users;
-        this.filter.destination_type = filter.destination_type;
+        this.filter.callDestinations = filter.callDestinations;
         this.filter.patterns = filter.patterns;
       }
 
@@ -1419,9 +1419,6 @@ export default {
       if (!this.showFilterTimeSplit || !this.filter.time.division) {
         this.filter.time.division = "60";
       }
-
-      // parse destinations for localstorage
-      if (this.filter.destinations.length == 0) this.filter.destinations = { title: "" }
 
       // save filter to local storage 
       this.set(this.reportFilterStorageName, this.filter);
@@ -1821,7 +1818,7 @@ export default {
       this.filter.sources = { title: "" };
       this.filter.trunks = [];
       this.filter.users = [];
-      this.filter.destination_type = [];
+      this.filter.callDestinations = [];
       this.filter.patterns = [];
       this.applyFilters()
     }
@@ -1912,8 +1909,8 @@ export default {
       return this.isFilterInView("cdr_user", this.filtersMap);
     },
     // cdr destination type
-    showFilterCdrDestType: function () {
-      return this.isFilterInView("cdr_destinationType", this.filtersMap);
+    showFilterCdrCallDestination: function () {
+      return this.isFilterInView("cdr_callDestination", this.filtersMap);
     },
     // cdr destination
     showFilterCdrDestination: function () {

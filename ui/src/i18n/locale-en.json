@@ -56,7 +56,7 @@
       "trunk": "Trunk",
       "cti_group": "CTI group",
       "user": "Utente",
-      "destination_type": "Destination type",
+      "call_destination": "Call destination",
       "destination": "Destination",
       "time_range_label": "Time range",
       "groups": "Groups",
