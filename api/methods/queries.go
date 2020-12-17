@@ -71,7 +71,6 @@ func GetCallDetails(c *gin.Context) {
 	db := source.CDRInstance()
 	results, errQuery := db.Query(`
 	select
-		linkedid,
 		src AS src£phoneNumber,
 		dst AS dst£phoneNumber,
 		DATE_FORMAT(calldate, '%Y-%m-%d %H:%i:%s') AS time,

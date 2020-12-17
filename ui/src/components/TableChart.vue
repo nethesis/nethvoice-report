@@ -1,173 +1,177 @@
 <template>
   <div :id="`container_${chartKey}`" class="table-container">
     <sui-table
-    celled
-    selectable
-    striped
-    :compact="minimal"
-    :collapsing="minimal"
-    class="structured sortable"
-  >
-    <sui-table-header>
-      <!-- top header -->
-      <sui-table-row>
-        <sui-table-header-cell
-          v-for="(header, index) in topHeaders"
-          v-bind:key="index"
-          ref="tableHeader"
-          :class= "[
-            header.subHeaders.length ? 'not-sortable' : 'sortable',
-            header.name == sortedBy ? 'sorted ' + sortedDirection : ''
-          ]"
-          @click="sortTable(header, $event)"
-          :rowspan="
-            singleHeader ||
-            (doubleHeader && header.subHeaders.length) ||
-            (tripleHeader && header.subHeaders.length)
-              ? '1'
-              : doubleHeader && !header.subHeaders.length
-              ? '2'
-              : '3'
-          "
-          :colspan="header.subHeaders ? header.colSpan : '1'"
-        >
-          {{
-            $te("table." + header.name)
-              ? $t("table." + header.name)
-              : header.name
-          }}
-          <a
-            href="#"
-            v-show="header.subHeaders && header.expandible"
-            @click="toggleExpandHeader(header)"
+      celled
+      selectable
+      striped
+      :compact="minimal"
+      :collapsing="minimal"
+      class="structured sortable"
+    >
+      <sui-table-header>
+        <!-- top header -->
+        <sui-table-row>
+          <template v-for="(header, index) in topHeaders">
+            <sui-table-header-cell
+              v-if="!(report == 'cdr' && header.name == 'linkedid')"
+              v-bind:key="index"
+              ref="tableHeader"
+              :class= "[
+                header.subHeaders.length ? 'not-sortable' : 'sortable',
+                header.name == sortedBy ? 'sorted ' + sortedDirection : ''
+              ]"
+              @click="sortTable(header, $event)"
+              :rowspan="
+                singleHeader ||
+                (doubleHeader && header.subHeaders.length) ||
+                (tripleHeader && header.subHeaders.length)
+                  ? '1'
+                  : doubleHeader && !header.subHeaders.length
+                  ? '2'
+                  : '3'
+              "
+              :colspan="header.subHeaders ? header.colSpan : '1'"
+            >
+              {{
+                $te("table." + header.name)
+                  ? $t("table." + header.name)
+                  : header.name
+              }}
+              <a
+                href="#"
+                v-show="header.subHeaders && header.expandible"
+                @click="toggleExpandHeader(header)"
+              >
+                {{
+                  header.expanded
+                    ? "[" + $t("table.collapse") + "]"
+                    : "[" + $t("table.expand") + "]"
+                }}
+              </a>
+            </sui-table-header-cell>
+          </template>
+          <!-- details header for CDR -->
+          <sui-table-header-cell v-if="report == 'cdr'" class="not-sortable">
+            {{ $t('table.actions') }}
+          </sui-table-header-cell>
+        </sui-table-row>
+        <!-- middle header -->
+        <sui-table-row v-if="middleHeaders.length">
+          <sui-table-header-cell
+            v-for="(header, index) in middleHeaders"
+            v-show="header.visible"
+            ref="tableHeader"
+            :class= "[
+              header.subHeaders.length ? 'not-sortable' : 'sortable',
+              header.name == sortedBy ? 'sorted ' + sortedDirection : ''
+            ]"
+            @click="sortTable(header, $event)"
+            v-bind:key="index"
+            :rowspan="tripleHeader && !header.subHeaders.length ? '2' : '1'"
+            :colspan="header.colSpan"
           >
             {{
-              header.expanded
-                ? "[" + $t("table.collapse") + "]"
-                : "[" + $t("table.expand") + "]"
+              $te("table." + header.name)
+                ? $t("table." + header.name)
+                : header.name
             }}
-          </a>
-        </sui-table-header-cell>
-        <!-- details header for CDR -->
-        <sui-table-header-cell v-if="report == 'cdr'" class="not-sortable">
-          {{ $t('table.actions') }}
-        </sui-table-header-cell>
-      </sui-table-row>
-      <!-- middle header -->
-      <sui-table-row v-if="middleHeaders.length">
-        <sui-table-header-cell
-          v-for="(header, index) in middleHeaders"
-          v-show="header.visible"
-          ref="tableHeader"
-          :class= "[
-            header.subHeaders.length ? 'not-sortable' : 'sortable',
-            header.name == sortedBy ? 'sorted ' + sortedDirection : ''
-          ]"
-          @click="sortTable(header, $event)"
-          v-bind:key="index"
-          :rowspan="tripleHeader && !header.subHeaders.length ? '2' : '1'"
-          :colspan="header.colSpan"
-        >
-          {{
-            $te("table." + header.name)
-              ? $t("table." + header.name)
-              : header.name
-          }}
-          <a
-            href="#"
-            v-show="header.subHeaders && header.expandible"
-            @click="toggleExpandHeader(header)"
+            <a
+              href="#"
+              v-show="header.subHeaders && header.expandible"
+              @click="toggleExpandHeader(header)"
+            >
+              {{
+                header.expanded
+                  ? "[" + $t("table.collapse") + "]"
+                  : "[" + $t("table.expand") + "]"
+              }}
+            </a></sui-table-header-cell
           >
-            {{
-              header.expanded
-                ? "[" + $t("table.collapse") + "]"
-                : "[" + $t("table.expand") + "]"
-            }}
-          </a></sui-table-header-cell
-        >
-      </sui-table-row>
+        </sui-table-row>
 
-      <!-- bottom header -->
-      <sui-table-row v-if="bottomHeaders.length">
-        <sui-table-header-cell
-          v-for="(header, index) in bottomHeaders"
-          v-show="header.visible"
-          ref="tableHeader"
-          :class= "[
-            header.subHeaders.length ? 'not-sortable' : 'sortable',
-            header.name == sortedBy ? 'sorted ' + sortedDirection : ''
-          ]"
-          @click="sortTable(header, $event)"
-          v-bind:key="index"
-        >
-          {{
-            $te("table." + header.name)
-              ? $t("table." + header.name)
-              : header.name
-          }}
-        </sui-table-header-cell>
-      </sui-table-row>
-    </sui-table-header>
-
-    <sui-table-body>
-      <sui-table-row
-        v-for="(row, index) in pagination.pageRows"
-        v-bind:key="index"
-      >
-          <sui-table-cell
-            v-for="(element, index) in row"
-            v-show="columns[index] && columns[index].visible"
+        <!-- bottom header -->
+        <sui-table-row v-if="bottomHeaders.length">
+          <sui-table-header-cell
+            v-for="(header, index) in bottomHeaders"
+            v-show="header.visible"
+            ref="tableHeader"
+            :class= "[
+              header.subHeaders.length ? 'not-sortable' : 'sortable',
+              header.name == sortedBy ? 'sorted ' + sortedDirection : ''
+            ]"
+            @click="sortTable(header, $event)"
             v-bind:key="index"
           >
-            <span v-if="columns[index] && columns[index].format == 'num'">
-              {{ element | formatNumber }}
-            </span>
-            <span
-              v-else-if="columns[index] && columns[index].format == 'seconds'"
+            {{
+              $te("table." + header.name)
+                ? $t("table." + header.name)
+                : header.name
+            }}
+          </sui-table-header-cell>
+        </sui-table-row>
+      </sui-table-header>
+
+      <sui-table-body>
+        <sui-table-row
+          v-for="(row, index) in pagination.pageRows"
+          v-bind:key="index"
+        >
+          <template v-for="(element, index) in row">
+            <sui-table-cell
+              v-if="!(report == 'cdr' && columns[index].name == 'linkedid')"
+              v-show="columns[index] && columns[index].visible"
+              :key="index"
             >
-              {{ element | formatTime }}
-            </span>
-            <span
-              v-else-if="columns[index] && columns[index].format == 'percent'"
-            >
-              {{ element | formatPercentage }}
-            </span>
-            <span
-              v-else-if="columns[index] && columns[index].format == 'label'"
-            >
-              {{ $t("table." + element) }}
-            </span>
-            <span
-              v-else-if="columns[index] && columns[index].format == 'monthDate'"
-            >
-              {{ element | formatMonthDate($i18n) }}
-            </span>
-            <span
-              v-else-if="columns[index] && columns[index].format == 'weekDate'"
-            >
-              {{ element | formatWeekDate($i18n) }}
-            </span>
-            <span
-              v-else-if="columns[index] && columns[index].format == 'phonebookName'"
-            >
-              {{ element | reversePhonebookLookup('name', $root) }}
-            </span>
-            <span
-              v-else-if="columns[index] && columns[index].format == 'phonebookCompany'"
-            >
-              {{ element | reversePhonebookLookup('company', $root) }}
-            </span>
-            <span
-              v-else-if="columns[index] && columns[index].format == 'phoneNumber' && $root.devices[element]"
-              v-tooltip="getDeviceTooltip(element)"
-            >
-              {{ element }}
-              <sui-icon :name="$root.devices[element].type == 'physical' ? 'phone' : $root.devices[element].type == 'mobile' ? 'mobile alternate' : 'headphones'" />
-            </span>
-            <span v-else>
-              {{ element }}
-            </span>
-          </sui-table-cell>
+              <span v-if="columns[index] && columns[index].format == 'num'">
+                {{ element | formatNumber }}
+              </span>
+              <span
+                v-else-if="columns[index] && columns[index].format == 'seconds'"
+              >
+                {{ element | formatTime }}
+              </span>
+              <span
+                v-else-if="columns[index] && columns[index].format == 'percent'"
+              >
+                {{ element | formatPercentage }}
+              </span>
+              <span
+                v-else-if="columns[index] && columns[index].format == 'label'"
+              >
+                {{ $t("table." + element) }}
+              </span>
+              <span
+                v-else-if="columns[index] && columns[index].format == 'monthDate'"
+              >
+                {{ element | formatMonthDate($i18n) }}
+              </span>
+              <span
+                v-else-if="columns[index] && columns[index].format == 'weekDate'"
+              >
+                {{ element | formatWeekDate($i18n) }}
+              </span>
+              <span
+                v-else-if="columns[index] && columns[index].format == 'phonebookName'"
+              >
+                {{ element | reversePhonebookLookup('name', $root) }}
+              </span>
+              <span
+                v-else-if="columns[index] && columns[index].format == 'phonebookCompany'"
+              >
+                {{ element | reversePhonebookLookup('company', $root) }}
+              </span>
+              <span
+                v-else-if="columns[index] && columns[index].format == 'phoneNumber' && $root.devices[element]"
+                v-tooltip="getDeviceTooltip(element)"
+              >
+                {{ element }}
+                <sui-icon :name="$root.devices[element].type == 'physical' ? 'phone' : $root.devices[element].type == 'mobile' ? 'mobile alternate' : 'headphones'" />
+              </span>
+              <span v-else>
+                {{ element }}
+              </span>
+            </sui-table-cell>
+          </template>
           <!-- details button for CDR -->
           <sui-table-cell v-if="report == 'cdr'">
             <sui-button
