@@ -37,12 +37,12 @@ var UiMaps = {
             "default": ["cdr_fastTimeRange", "hour", "cdr_caller", "cdr_callee","cdr_did" , "cdr_callType", "cdr_callDuration", "cdr_trunk"],
           },
           "pbx": {
-            "inbound": ["cdr_fastTimeRange", "hour", "cdr_caller", "cdr_callee","cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_ctiGroups", "cdr_user", "cdr_destinationType"],
+            "inbound": ["cdr_fastTimeRange", "hour", "cdr_caller", "cdr_callee","cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_ctiGroups", "cdr_user", "cdr_callDestination"],
             "outbound": ["cdr_fastTimeRange", "hour", "cdr_caller", "cdr_callee","cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_ctiGroups", "cdr_user", "cdr_destination"],
             "local": ["cdr_fastTimeRange", "hour", "cdr_caller", "cdr_callee","cdr_did", "cdr_callType", "cdr_callDuration", "cdr_user", "cdr_ctiGroups"],
           },
           "personal": {
-            "inbound": ["cdr_fastTimeRange", "hour", "cdr_caller", "cdr_callee","cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_destinationType"],
+            "inbound": ["cdr_fastTimeRange", "hour", "cdr_caller", "cdr_callee","cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_callDestination"],
             "outbound": ["cdr_fastTimeRange", "hour", "cdr_caller", "cdr_callee","cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_destination"],
             "local": ["cdr_fastTimeRange", "hour", "cdr_caller", "cdr_callee","cdr_did", "cdr_callType", "cdr_callDuration"],
           },
@@ -90,7 +90,7 @@ var UiMaps = {
         { value: "busy", text: this.$i18n.t('filter.busy') },
         { value: "failed", text: this.$i18n.t('filter.failed') }
       ],
-      destinationsTypeMap: [
+      callDestinationsMap: [
         { value: "dcontext,ext-group", text: this.$i18n.t('filter.call_groups') },
         { value: "lastapp,VoiceMail", text: this.$i18n.t('filter.voicemails') },
         { value: "lastapp,queue", text: this.$i18n.t('filter.queues') },

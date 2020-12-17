@@ -56,7 +56,7 @@
       "trunk": "Fascio",
       "cti_group": "Gruppo CTI",
       "user": "Utente",
-      "destination_type": "Tipo destinazione",
+      "call_destination": "Destinazione chiamata",
       "destination": "Destinazione",
       "time_range_label": "Invervallo temporale",
       "groups": "Gruppi",
