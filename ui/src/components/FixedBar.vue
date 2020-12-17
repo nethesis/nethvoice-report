@@ -230,12 +230,12 @@
           </span>
         </div>
         <!-- label: destination type active filter -->
-        <div class="ui label" v-if="showFilterCdrDestType && activeFilters.destination_type && (activeFilters.destination_type.length > 0)">
+        <div class="ui label" v-if="showFilterCdrCallDestination && activeFilters.callDestinations && (activeFilters.callDestinations.length > 0)">
           <span class="field">
-            {{$t('filter.destination_type')}}:
+            {{$t('filter.call_destination')}}:
           </span>
           <span class="value">
-            {{activeFilters.destination_type}}
+            {{activeFilters.call_destination}}
           </span>
         </div>
         <!-- label: destination patterns type active filter -->
@@ -293,10 +293,10 @@ export default {
     "showFilterCdrCtiGroups",
     "showFilterCdrUser",
     "showFilterCdrCalleeType",
-    "showFilterCdrDestType",
+    "showFilterCdrCallDestination",
     "showFilterCdrDestination",
     "cdrCallDurationMap",
-    "destinationsTypeMap",
+    "callDestinationsMap",
     "filterValues"
   ],
   data() {
@@ -351,9 +351,6 @@ export default {
     clearFilters() {
       this.$root.$emit("clearFilters")
     },
-    isEmptyFilter(value) {
-      console.log(value)
-    }
   },
   watch: {
     "activeFilters.time.interval": function () {
@@ -459,13 +456,13 @@ export default {
         this.activeFilters.users = this.activeFilters.users.join(", ")
       }
     },
-    "activeFilters.destination_type": function () {
-      if (this.activeFilters.destination_type && this.lodash.isArray(this.activeFilters.destination_type) && this.activeFilters.destination_type.length > 0) {
-        this.activeFilters.destination_type.forEach((element, key) => {
-          let destinationsValuesText = this.destinationsTypeMap.find(obj => obj.value === element).text
-          this.activeFilters.destination_type[key] = destinationsValuesText
+    "activeFilters.callDestinations": function () {
+      if (this.activeFilters.callDestinations && this.lodash.isArray(this.activeFilters.callDestinations) && this.activeFilters.callDestinations.length > 0) {
+        this.activeFilters.callDestinations.forEach((element, key) => {
+          let callDestinationsText = this.callDestinationsMap.find(obj => obj.value === element).text
+          this.activeFilters.callDestinations[key] = callDestinationsText
         })
-        this.activeFilters.destination_type = this.activeFilters.destination_type.join(", ")
+        this.activeFilters.callDestinations = this.activeFilters.callDestinations.join(", ")
       }
     },
     "activeFilters.patterns": function () {
