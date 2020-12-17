@@ -430,7 +430,7 @@
               :placeholder="$t('filter.call_type')"
               search
               selection
-              v-model="filter.call_type"
+              v-model="filter.callType"
             />
           </sui-form-field>
           <!-- cdr: call duration -->
@@ -732,7 +732,7 @@ export default {
         contactName: "",
         nullCall: false, ////
         sources: { title: "" },
-        call_type: [],
+        callType: [],
         duration: { title: "" },
         trunks: [],
         users: [],
@@ -1173,7 +1173,7 @@ export default {
         this.filter.contactName = filter.contactName;
         // cdr filters
         this.filter.sources = filter.sources;
-        this.filter.call_type = filter.call_type;
+        this.filter.callType = filter.callType;
         this.filter.duration = filter.duration;
         this.filter.trunks = filter.trunks;
         this.filter.users = filter.users;
@@ -1809,7 +1809,7 @@ export default {
       this.filter.origins = [];
       this.filter.caller = "";
       this.filter.contactName = "";
-      this.filter.call_type = [];
+      this.filter.callType = [];
       this.filter.duration = { title: "" };
       this.filter.sources = { title: "" };
       this.filter.trunks = [];
