@@ -31,10 +31,10 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"regexp"
 	"strings"
 	"text/template"
 	"time"
-	"regexp"
 
 	"github.com/nleeper/goment"
 	"github.com/thoas/go-funk"
@@ -69,7 +69,18 @@ func GetCallDetails(c *gin.Context) {
 	// call detail is not cached, execute query
 
 	db := source.CDRInstance()
-	results, errQuery := db.Query("SELECT * FROM cdr WHERE linkedid = ? ORDER BY calldate", linkedid)
+	results, errQuery := db.Query(`
+	select
+		linkedid,
+		src AS src£phoneNumber,
+		dst AS dst£phoneNumber,
+		DATE_FORMAT(calldate, '%Y-%m-%d %H:%i:%s') AS time,
+		disposition AS result£label,
+		billsec
+	FROM cdr
+	WHERE linkedid = ?
+	ORDER BY calldate
+	`, linkedid)
 	if errQuery != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "error executing SQL query", "status": errQuery.Error()})
 		return
@@ -391,7 +402,7 @@ func buildCdrQuery(queryFile string, filter models.Filter) (string, error) {
 	}
 
 	// get query orders
-        findsO := rO.FindStringSubmatch(queryWithTablePlaceholder)
+	findsO := rO.FindStringSubmatch(queryWithTablePlaceholder)
 	if len(findsO) > 0 {
 		queryOrder := strings.Join(findsO[1:], ",")
 
