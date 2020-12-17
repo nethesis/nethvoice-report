@@ -776,7 +776,7 @@ export default {
       this.getAdminSettings();
     }
 
-    // event "showCostsConfigModal" is triggered by QueueView
+    // event "showCostsConfigModal" is triggered by ContentView
     this.$root.$on("showCostsConfigModal", this.showCostsConfigModal);
 
     // event "logout" is triggered by $http interceptor if token has expired
