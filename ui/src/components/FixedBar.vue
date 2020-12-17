@@ -158,7 +158,7 @@
         </div>
         <!-- start cdr -->
         <!-- label: caller sources active filter -->
-        <div class="ui label" v-if="showFilterCdrCaller && activeFilters.sources && activeFilters.sources.title != ''">
+        <div class="ui label" v-if="showFilterCdrCaller && activeFilters.sources && activeFilters.sources.title">
           <span class="field">
             {{$t('filter.caller_label')}}:
           </span>
@@ -167,7 +167,7 @@
           </span>
         </div>
         <!-- label: caller destinations active filter -->
-        <div class="ui label" v-if="showFilterCdrCallee && activeFilters.destinations && activeFilters.destinations.title != ''">
+        <div class="ui label" v-if="showFilterCdrCallee && activeFilters.destinations && activeFilters.destinations.title">
           <span class="field">
             {{$t('filter.callee')}}:
           </span>
@@ -185,7 +185,7 @@
           </span>
         </div>
         <!-- label: call duration active filter -->
-        <div class="ui label" v-if="showFilterCdrCallDuration &&  activeFilters.duration && activeFilters.duration.title != ''">
+        <div class="ui label" v-if="showFilterCdrCallDuration &&  activeFilters.duration && activeFilters.duration.title">
           <span class="field">
             {{$t('filter.call_duration')}}:
           </span>
