@@ -418,7 +418,7 @@
               :placeholder="$t('filter.callee')"
               :minCharacters="3"
               :searchFields="['title', 'description', 'phoneNumber']"
-              v-model="filter.caller_destinations"
+              v-model="filter.destinations"
             />
           </sui-form-field>
           <!-- cdr: call type -->
@@ -732,7 +732,6 @@ export default {
         contactName: "",
         nullCall: false, ////
         sources: { title: "" },
-        caller_destinations: { title: "" },
         call_type: [],
         duration: { title: "" },
         trunks: [],
@@ -1175,7 +1174,6 @@ export default {
         this.filter.contactName = filter.contactName;
         // cdr filters
         this.filter.sources = filter.sources;
-        this.filter.caller_destinations = filter.caller_destinations;
         this.filter.call_type = filter.call_type;
         this.filter.duration = filter.duration;
         this.filter.trunks = filter.trunks;
@@ -1479,7 +1477,7 @@ export default {
         filterToApply.duration = "";
       }
 
-      // parse call sources berfore apply
+      // parse sources berfore apply
       if (filterToApply.sources && filterToApply.sources.title != "") {
         filterToApply.sources = filterToApply.sources.value != null ? (
           filterToApply.sources.value.split(",")
@@ -1490,17 +1488,16 @@ export default {
         filterToApply.sources = []
       }
 
-      // parse call destinations berfore apply
-      if (filterToApply.caller_destinations && filterToApply.caller_destinations.title != "") {
-        filterToApply.destinations = filterToApply.caller_destinations.value != null ? (
-          filterToApply.caller_destinations.value.split(",")
+      // parse destinations berfore apply
+      if (filterToApply.destinations && filterToApply.destinations.title != "") {
+        filterToApply.destinations = filterToApply.destinations.value != null ? (
+          filterToApply.destinations.value.split(",")
         ) : (
-          [filterToApply.caller_destinations.title]
+          [filterToApply.destinations.title]
         )
       } else {
         filterToApply.destinations = []
       }
-      delete filterToApply.caller_destinations
       
       // parse groups
       if (filterToApply.groups && filterToApply.groups.length > 0) {
@@ -1813,13 +1810,12 @@ export default {
       this.filter.reasons = [];
       this.filter.results = [];
       this.filter.choices = [];
-      this.filter.destinations = [];
+      this.filter.destinations = { title: "" };
       this.filter.origins = [];
       this.filter.caller = "";
       this.filter.contactName = "";
       this.filter.call_type = [];
       this.filter.duration = { title: "" };
-      this.filter.caller_destinations = { title: "" };
       this.filter.sources = { title: "" };
       this.filter.trunks = [];
       this.filter.users = [];
