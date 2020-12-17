@@ -176,12 +176,12 @@
           </span>
         </div>
         <!-- label: call type active filter -->
-        <div class="ui label" v-if="showFilterCdrCallType && activeFilters.call_type && (activeFilters.call_type.length > 0)">
+        <div class="ui label" v-if="showFilterCdrCallType && activeFilters.callType && (activeFilters.callType.length > 0)">
           <span class="field">
             {{$t('filter.call_type')}}:
           </span>
           <span class="value">
-            {{activeFilters.call_type}}
+            {{activeFilters.callType}}
           </span>
         </div>
         <!-- label: call duration active filter -->
@@ -419,12 +419,12 @@ export default {
         }
       }
     },
-    "activeFilters.call_type": function () {
-      if (this.activeFilters.call_type && this.lodash.isArray(this.activeFilters.call_type) && this.activeFilters.call_type.length > 0) {
-        this.activeFilters.call_type = this.activeFilters.call_type.map((element) => {
+    "activeFilters.callType": function () {
+      if (this.activeFilters.callType && this.lodash.isArray(this.activeFilters.callType) && this.activeFilters.callType.length > 0) {
+        this.activeFilters.callType = this.activeFilters.callType.map((element) => {
           return this.$t(`filter.${element}`)
         })
-        this.activeFilters.call_type = this.activeFilters.call_type.join(", ")
+        this.activeFilters.callType = this.activeFilters.callType.join(", ")
       }
     },
     "activeFilters.dids": function () {
