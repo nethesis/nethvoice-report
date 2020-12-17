@@ -167,12 +167,12 @@
           </span>
         </div>
         <!-- label: caller destinations active filter -->
-        <div class="ui label" v-if="showFilterCdrCallee && activeFilters.caller_destinations && activeFilters.caller_destinations.title != ''">
+        <div class="ui label" v-if="showFilterCdrCallee && activeFilters.destinations && activeFilters.destinations.title != ''">
           <span class="field">
             {{$t('filter.callee')}}:
           </span>
           <span class="value">
-            {{activeFilters.caller_destinations.title}}
+            {{activeFilters.destinations.title}}
           </span>
         </div>
         <!-- label: call type active filter -->
@@ -403,11 +403,6 @@ export default {
         this.activeFilters.origins = this.activeFilters.origins.join(", ")
       }
     },
-    "activeFilters.destinations": function () {
-      if (this.activeFilters.destinations && this.lodash.isArray(this.activeFilters.destinations) && this.activeFilters.destinations.length > 0) {
-        this.activeFilters.destinations = this.activeFilters.destinations.join(", ")
-      }
-    },
     "activeFilters.sources": function () {
       if (this.activeFilters.sources && this.activeFilters.sources.title && this.activeFilters.sources.title != "") {
         if (this.activeFilters.sources.value) {
@@ -416,11 +411,11 @@ export default {
         }
       }
     },
-    "activeFilters.caller_destinations": function () {
-      if (this.activeFilters.caller_destinations && this.activeFilters.caller_destinations.title && this.activeFilters.caller_destinations.title != "") {
-        if (this.activeFilters.caller_destinations.value) {
-          let destinationsValues = this.filterValues.cdrCaller.find(obj => obj.value === this.activeFilters.caller_destinations.value)
-          this.activeFilters.caller_destinations.title = destinationsValues.title
+    "activeFilters.destinations": function () {
+      if (this.activeFilters.destinations && this.activeFilters.destinations.title && this.activeFilters.destinations.title != "") {
+        if (this.activeFilters.destinations.value) {
+          let destinationsValues = this.filterValues.cdrCaller.find(obj => obj.value === this.activeFilters.destinations.value)
+          this.activeFilters.destinations.title = destinationsValues.title
         }
       }
     },
