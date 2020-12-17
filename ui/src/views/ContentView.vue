@@ -192,7 +192,7 @@ import SettingsService from "../services/settings";
 import CdrDetailsService from "../services/cdr_details";
 
 export default {
-  name: "QueueDashboard", //// rename, used for CDR too
+  name: "ContentView",
   components: { TableChart, LineChart, BarChart, ExportData, PieChart, RecapChart },
   mixins: [StorageService, QueriesService, UtilService, SettingsService, CdrDetailsService],
   data() {
