@@ -1,8 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-
-/* Queue views */
-import QueueView from "../views/QueueView.vue";
+import ContentView from "../views/ContentView.vue";
 
 Vue.use(VueRouter);
 
@@ -13,7 +11,7 @@ const routes = [
   {
     path: "/queue",
     name: "QueueDashboard",
-    component: QueueView,
+    component: ContentView,
     meta: {
       name: "menu.dashboard",
       parent: "",
@@ -26,7 +24,7 @@ const routes = [
   {
     path: "/queue/data/summary",
     name: "QueueDataSummary",
-    component: QueueView,
+    component: ContentView,
     meta: {
       name: "data.summary",
       parent: "data",
@@ -39,7 +37,7 @@ const routes = [
   {
     path: "/queue/data/agent",
     name: "QueueDataAgent",
-    component: QueueView,
+    component: ContentView,
     meta: {
       name: "data.by_agent",
       parent: "data",
@@ -52,7 +50,7 @@ const routes = [
   {
     path: "/queue/data/session",
     name: "QueueDataSession",
-    component: QueueView,
+    component: ContentView,
     meta: {
       name: "data.by_session",
       parent: "data",
@@ -65,7 +63,7 @@ const routes = [
   {
     path: "/queue/data/caller",
     name: "QueueDataCaller",
-    component: QueueView,
+    component: ContentView,
     meta: {
       name: "data.by_caller",
       parent: "data",
@@ -78,7 +76,7 @@ const routes = [
   {
     path: "/queue/data/call",
     name: "QueueDataCall",
-    component: QueueView,
+    component: ContentView,
     meta: {
       name: "data.by_call",
       parent: "data",
@@ -91,7 +89,7 @@ const routes = [
   {
     path: "/queue/data/lost_call",
     name: "QueueDataLostCall",
-    component: QueueView,
+    component: ContentView,
     meta: {
       name: "data.by_lost_call",
       parent: "data",
@@ -104,7 +102,7 @@ const routes = [
   {
     path: "/queue/data/ivr",
     name: "QueueDataIVR",
-    component: QueueView,
+    component: ContentView,
     meta: {
       name: "data.ivr",
       parent: "data",
@@ -117,7 +115,7 @@ const routes = [
   {
     path: "/queue/performance",
     name: "QueuePerformance",
-    component: QueueView,
+    component: ContentView,
     meta: {
       name: "menu.performance",
       parent: "performance",
@@ -130,7 +128,7 @@ const routes = [
   {
     path: "/queue/distribution/hour",
     name: "QueueDistributionHour",
-    component: QueueView,
+    component: ContentView,
     meta: {
       name: "distribution.by_hour",
       parent: "distribution",
@@ -143,7 +141,7 @@ const routes = [
   {
     path: "/queue/distribution/geo",
     name: "QueueDistributionGeo",
-    component: QueueView,
+    component: ContentView,
     meta: {
       name: "distribution.by_geo",
       parent: "distribution",
@@ -156,7 +154,7 @@ const routes = [
   {
     path: "/queue/graphs/load",
     name: "QueueGraphsLoad",
-    component: QueueView,
+    component: ContentView,
     meta: {
       name: "graphs.load",
       parent: "graphs",
@@ -169,7 +167,7 @@ const routes = [
   {
     path: "/queue/graphs/hour",
     name: "QueueGraphsHour",
-    component: QueueView,
+    component: ContentView,
     meta: {
       name: "graphs.by_hour",
       parent: "graphs",
@@ -182,7 +180,7 @@ const routes = [
   {
     path: "/queue/graphs/agent",
     name: "QueueGraphsAgent",
-    component: QueueView,
+    component: ContentView,
     meta: {
       name: "graphs.by_agent",
       parent: "graphs",
@@ -195,7 +193,7 @@ const routes = [
   {
     path: "/queue/graphs/area",
     name: "QueueGraphsArea",
-    component: QueueView,
+    component: ContentView,
     meta: {
       name: "graphs.by_area",
       parent: "graphs",
@@ -208,7 +206,7 @@ const routes = [
   {
     path: "/queue/graphs/queue_position",
     name: "QueueGraphsQueuePosition",
-    component: QueueView,
+    component: ContentView,
     meta: {
       name: "graphs.queue_position",
       parent: "graphs",
@@ -221,7 +219,7 @@ const routes = [
   {
     path: "/queue/graphs/avg_duration",
     name: "QueueGraphsAvgDuration",
-    component: QueueView,
+    component: ContentView,
     meta: {
       name: "graphs.average_duration",
       parent: "graphs",
@@ -234,7 +232,7 @@ const routes = [
   {
     path: "/queue/graphs/avg_wait",
     name: "QueueGraphsAvgWait",
-    component: QueueView,
+    component: ContentView,
     meta: {
       name: "graphs.average_wait",
       parent: "graphs",
@@ -249,7 +247,7 @@ const routes = [
   {
     path: "/cdr",
     name: "CdrDashboard",
-    component: QueueView,
+    component: ContentView,
     meta: {
       name: "menu.dashboard",
       parent: "",
@@ -262,7 +260,7 @@ const routes = [
   {
     path: "/cdr/pbx/inbound",
     name: "PbxDataIncoming",
-    component: QueueView,
+    component: ContentView,
     meta: {
       name: "menu.inbound",
       parent: "pbx",
@@ -275,7 +273,7 @@ const routes = [
   {
     path: "/cdr/pbx/outbound",
     name: "PbxDataOutgoing",
-    component: QueueView,
+    component: ContentView,
     meta: {
       name: "menu.outbound",
       parent: "pbx",
@@ -288,7 +286,7 @@ const routes = [
   {
     path: "/cdr/pbx/local",
     name: "PbxDataInternal",
-    component: QueueView,
+    component: ContentView,
     meta: {
       name: "menu.local",
       parent: "pbx",
@@ -301,7 +299,7 @@ const routes = [
   {
     path: "/cdr/personal/inbound",
     name: "PersonalDataIncoming",
-    component: QueueView,
+    component: ContentView,
     meta: {
       name: "menu.inbound",
       parent: "personal",
@@ -314,7 +312,7 @@ const routes = [
   {
     path: "/cdr/personal/outbound",
     name: "PersonalDataOutgoing",
-    component: QueueView,
+    component: ContentView,
     meta: {
       name: "menu.outbound",
       parent: "personal",
@@ -327,7 +325,7 @@ const routes = [
   {
     path: "/cdr/personal/local",
     name: "PersonalDataInternal",
-    component: QueueView,
+    component: ContentView,
     meta: {
       name: "menu.local",
       parent: "personal",

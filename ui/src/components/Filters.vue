@@ -819,7 +819,7 @@ export default {
     },
     filtersReady: function () {
       if (this.filtersReady) {
-        // notify QueueView that queries can now be executed
+        // notify ContentView that queries can now be executed
         this.$root.filtersReady = true;
       }
     },
