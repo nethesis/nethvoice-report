@@ -113,7 +113,7 @@
       "personal": "Personal data",
       "inbound": "Incoming calls",
       "outbound": "Outgoing calls",
-      "local": "Internal calls"
+      "local": "Local calls"
     },
     "data": {
       "summary": "Summary",

@@ -503,7 +503,6 @@
               :placeholder="$t('filter.user')"
               search
               selection
-              allow-additions
               v-model="filter.users"
             />
           </sui-form-field>
@@ -516,7 +515,6 @@
               :placeholder="$t('filter.call_destination')"
               search
               selection
-              allow-additions
               v-model="filter.callDestinations"
             />
           </sui-form-field>
@@ -726,7 +724,7 @@ export default {
         reasons: [],
         results: [],
         choices: [],
-        destinations: { title: "" },
+        destinations: {},
         origins: [],
         time: {
           group: "",
@@ -739,9 +737,9 @@ export default {
         },
         caller: "",
         contactName: "",
-        sources: { title: "" },
+        sources: {},
         callType: [],
-        duration: { title: "" },
+        duration: {},
         trunks: [],
         users: [],
         callDestinations: [],
@@ -1498,7 +1496,7 @@ export default {
       }
 
       // parse sources berfore apply
-      if (filterToApply.sources && filterToApply.sources.title != "") {
+      if (filterToApply.sources.title) {
         filterToApply.sources = filterToApply.sources.value != null ? (
           filterToApply.sources.value.split(",")
         ) : (
@@ -1509,7 +1507,7 @@ export default {
       }
 
       // parse destinations berfore apply
-      if (filterToApply.destinations && filterToApply.destinations.title != "") {
+      if (filterToApply.destinations.title) {
         filterToApply.destinations = filterToApply.destinations.value != null ? (
           filterToApply.destinations.value.split(",")
         ) : (
@@ -1826,13 +1824,13 @@ export default {
       this.filter.reasons = [];
       this.filter.results = [];
       this.filter.choices = [];
-      this.filter.destinations = { title: "" };
+      this.filter.destinations = {};
       this.filter.origins = [];
       this.filter.caller = "";
       this.filter.contactName = "";
       this.filter.callType = [];
-      this.filter.duration = { title: "" };
-      this.filter.sources = { title: "" };
+      this.filter.duration = {};
+      this.filter.sources = {};
       this.filter.trunks = [];
       this.filter.users = [];
       this.filter.callDestinations = [];

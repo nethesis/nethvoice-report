@@ -79,7 +79,8 @@ export default {
     search() {
       // clean query
       const cleanRegex = /[^a-zA-Z0-9]/g;
-      const queryText = this.value.title.replace(cleanRegex, "");
+      const query = this.value.title || "";
+      const queryText = query.replace(cleanRegex, "");
 
       if (queryText.length < this.minCharacters) {
         this.results = [];
