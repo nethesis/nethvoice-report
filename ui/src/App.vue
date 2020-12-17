@@ -197,6 +197,10 @@ body {
   margin-left: 1rem !important;
 }
 
+.mg-top-xs {
+  margin-top: 0.5rem !important;
+}
+
 .mg-top-md {
   margin-top: 2rem !important;
   padding-left: 7px;
@@ -426,4 +430,99 @@ body {
 .created-icon {
   margin: 0.5rem 0 0 0 !important;
 }
+
+/* CSS for v-tooltip */
+.tooltip {
+  display: block !important;
+  z-index: 10000;
+  box-shadow: 0px 2px 4px 0px rgba(34, 36, 38, 0.12), 0px 2px 10px 0px rgba(34, 36, 38, 0.15);
+  border: 1px solid #D4D4D5;
+}
+.tooltip .tooltip-inner {
+  background: #FFFFFF;
+  color: rgba(0, 0, 0, 0.87);
+  border-radius: 0.28571429rem;
+  padding: 0.833em 1em;
+}
+.tooltip .tooltip-arrow {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  position: absolute;
+  margin: 5px;
+  border-color: #FFFFFF;
+  z-index: 1;
+}
+.tooltip[x-placement^="top"] {
+  margin-bottom: 5px;
+}
+.tooltip[x-placement^="top"] .tooltip-arrow {
+  border-width: 5px 5px 0 5px;
+  border-left-color: transparent !important;
+  border-right-color: transparent !important;
+  border-bottom-color: transparent !important;
+  bottom: -5px;
+  left: calc(50% - 5px);
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.tooltip[x-placement^="bottom"] {
+  margin-top: 5px;
+}
+.tooltip[x-placement^="bottom"] .tooltip-arrow {
+  border-width: 0 5px 5px 5px;
+  border-left-color: transparent !important;
+  border-right-color: transparent !important;
+  border-top-color: transparent !important;
+  top: -5px;
+  left: calc(50% - 5px);
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.tooltip[x-placement^="right"] {
+  margin-left: 5px;
+}
+.tooltip[x-placement^="right"] .tooltip-arrow {
+  border-width: 5px 5px 5px 0;
+  border-left-color: transparent !important;
+  border-top-color: transparent !important;
+  border-bottom-color: transparent !important;
+  left: -5px;
+  top: calc(50% - 5px);
+  margin-left: 0;
+  margin-right: 0;
+}
+.tooltip[x-placement^="left"] {
+  margin-right: 5px;
+}
+.tooltip[x-placement^="left"] .tooltip-arrow {
+  border-width: 5px 0 5px 5px;
+  border-top-color: transparent !important;
+  border-right-color: transparent !important;
+  border-bottom-color: transparent !important;
+  right: -5px;
+  top: calc(50% - 5px);
+  margin-left: 0;
+  margin-right: 0;
+}
+.tooltip.popover .popover-inner {
+  background: #f9f9f9;
+  color: black;
+  padding: 24px;
+  border-radius: 5px;
+  box-shadow: 0 5px 30px rgba(black, .1);
+}
+.tooltip.popover .popover-arrow {
+  border-color: #f9f9f9;
+}
+.tooltip[aria-hidden='true'] {
+  visibility: hidden;
+  opacity: 0;
+}
+.tooltip[aria-hidden='false'] {
+  visibility: visible;
+  opacity: 1;
+}
+/* end CSS for v-tooltip */
+
 </style>

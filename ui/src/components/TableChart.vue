@@ -159,7 +159,7 @@
             </span>
             <span
               v-else-if="columns[index] && columns[index].format == 'phoneNumber' && $root.devices[element]"
-              :title="$root.devices[element].type == 'physical' ? $root.devices[element].vendor + ' ' + $root.devices[element].model : ''"
+              v-tooltip="getDeviceTooltip(element)"
             >
               {{ element }}
               <sui-icon :name="$root.devices[element].type == 'physical' ? 'phone' : $root.devices[element].type == 'mobile' ? 'mobile alternate' : 'headphones'" />
@@ -937,6 +937,18 @@ export default {
         return rule
       })
       this.updatePagination()
+    },
+    getDeviceTooltip(extension) {
+      let tooltipContent = '<div><b>' + this.$t('device.type') + '</b><br>' + this.$t('device.' + this.$root.devices[extension].type) + '</div>';
+
+      if (this.$root.devices[extension].vendor) {
+        tooltipContent += '<div class="mg-top-xs"><b>' + this.$t('device.vendor') + '</b><br>' + this.$root.devices[extension].vendor + '</div>';
+      }
+
+      if (this.$root.devices[extension].model) {
+        tooltipContent += '<div class="mg-top-xs"><b>' + this.$t('device.model') + '</b><br>' + this.$root.devices[extension].model + '</div>';
+      }
+      return tooltipContent;
     },
   },
 };
