@@ -409,6 +409,7 @@
               :searchFields="['title', 'description', 'phoneNumber']"
               @input="onSourcesInput"
               @select="onSourcesSelect"
+              ref="sources"
             />
           </sui-form-field>
           <!-- cdr: call destination / callee -->
@@ -421,6 +422,7 @@
               :searchFields="['title', 'description', 'phoneNumber']"
               @input="onDestinationsInput"
               @select="onDestinationsSelect"
+              ref="destinations"
             />
           </sui-form-field>
           <!-- cdr: call type -->
@@ -1808,12 +1810,15 @@ export default {
       this.filter.results = [];
       this.filter.choices = [];
       this.filter.destinations = {};
+      this.$refs.destinations.$data.query = "";
       this.filter.origins = [];
       this.filter.caller = "";
       this.filter.contactName = "";
       this.filter.callType = [];
       this.filter.duration = {};
+      this.$refs.duration.$data.query = "";
       this.filter.sources = {};
+      this.$refs.sources.$data.query = "";
       this.filter.trunks = [];
       this.filter.users = [];
       this.filter.callDestinations = [];

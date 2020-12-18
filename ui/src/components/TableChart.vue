@@ -118,7 +118,7 @@
         >
           <template v-for="(element, index) in row">
             <sui-table-cell
-              v-if="!(report == 'cdr' && columns[index].name == 'linkedid')"
+              v-if="!(report == 'cdr' && columns[index] && columns[index].name == 'linkedid')"
               v-show="columns[index] && columns[index].visible"
               :key="index"
             >
