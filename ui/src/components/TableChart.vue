@@ -943,14 +943,10 @@ export default {
       this.updatePagination()
     },
     getDeviceTooltip(extension) {
-      let tooltipContent = '<div><b>' + this.$t('device.type') + '</b><br>' + this.$t('device.' + this.$root.devices[extension].type) + '</div>';
-
-      if (this.$root.devices[extension].vendor) {
-        tooltipContent += '<div class="mg-top-xs"><b>' + this.$t('device.vendor') + '</b><br>' + this.$root.devices[extension].vendor + '</div>';
-      }
+      let tooltipContent = '<div><b class="mg-right-xs">' + this.$t('device.type') + '</b>' + this.$t('device.' + this.$root.devices[extension].type) + '</div>';
 
       if (this.$root.devices[extension].model) {
-        tooltipContent += '<div class="mg-top-xs"><b>' + this.$t('device.model') + '</b><br>' + this.$root.devices[extension].model + '</div>';
+        tooltipContent += '<div class="mg-top-xs"><b class="mg-right-xs">' + this.$t('device.model') + '</b>' + this.$root.devices[extension].vendor + ' ' + this.$root.devices[extension].model + '</div>';
       }
       return tooltipContent;
     },
