@@ -169,6 +169,10 @@ body {
   }
 }
 
+.mg-right-xs {
+  margin-right: 0.5rem !important;
+}
+
 .mg-right-sm {
   margin-right: 1rem !important;
 }
