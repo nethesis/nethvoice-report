@@ -49,7 +49,7 @@
                     $t("recap.total")
                   }}</sui-statistic-label>
                 </sui-statistic>
-                <sui-statistic in-group>
+                <sui-statistic v-if="entry.totalNum" in-group>
                   <sui-button
                     type="button"
                     @click="entry.expanded = true"
@@ -307,8 +307,10 @@ export default {
           avgWaitDuration: row[12],
         };
 
-        entries[type].totalNum += Number(row[2]);
-        entries[type].details.push(entry);
+        if (entries[type]) {
+          entries[type].totalNum += Number(row[2]);
+          entries[type].details.push(entry);
+        }
       }
       this.entries = entries;
     },
