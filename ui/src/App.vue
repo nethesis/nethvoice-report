@@ -43,7 +43,7 @@ export default {
     LeftSidebar: LeftSidebar,
     TopBar: TopBar,
     BackToTop: BackToTop,
-    MobileTopBar: MobileTopBar
+    MobileTopBar: MobileTopBar,
   },
   mixins: [LoginService, StorageService],
   mounted() {
@@ -66,8 +66,8 @@ export default {
 
     // handle viewport width
     this.$nextTick(() => {
-      window.addEventListener('resize', this.resizeHandler, true)
-    })
+      window.addEventListener("resize", this.resizeHandler, true);
+    });
   },
   data() {
     return {
@@ -95,22 +95,25 @@ export default {
     },
     hideSidebar() {
       if (window.innerWidth < this.$mobileBound) {
-        document.querySelector("#docs-menu").style.transform = "translateX(-270px)"
+        document.querySelector("#docs-menu").style.transform =
+          "translateX(-270px)";
         this.$root.$emit("sidebarHide");
       }
     },
     resizeHandler() {
-      let sidebar = document.querySelector("#docs-menu")
-      if ((window.innerWidth > this.$mobileBound) && (sidebar.style.transform == "translateX(-270px)")) {
-        sidebar.style.transform = "translateX(0px)"
+      let sidebar = document.querySelector("#docs-menu");
+      if (
+        window.innerWidth > this.$mobileBound &&
+        sidebar.style.transform == "translateX(-270px)"
+      ) {
+        sidebar.style.transform = "translateX(0px)";
       }
-    }
+    },
   },
 };
 </script>
 
 <style lang="scss">
-
 @import "./styles/theming.scss";
 
 body {
@@ -268,11 +271,11 @@ body {
 }
 
 .component-body {
-    position: relative;
-    margin-left: 3em !important;
-    margin-right: 3em !important;
-    padding: 2em 0em 7em;
-    width: auto;
+  position: relative;
+  margin-left: 3em !important;
+  margin-right: 3em !important;
+  padding: 2em 0em 7em;
+  width: auto;
 }
 
 .modals {
@@ -305,7 +308,7 @@ body {
   }
 
   @media only screen and (max-width: $mobile-bound) {
-     & {
+    & {
       border-bottom: 1px solid rgba(34, 36, 38, 0.15);
       box-shadow: -2px 1px 2px 0 rgba(34, 36, 38, 0.15) !important;
     }
@@ -351,11 +354,11 @@ body {
   padding-right: 0.8rem;
 }
 
-.ui.menu .item.select-rows-per-page>i.dropdown.icon {
+.ui.menu .item.select-rows-per-page > i.dropdown.icon {
   margin: 0;
 }
 
-.ui.menu .ui.dropdown .menu>.item .icon:not(.dropdown).check {
+.ui.menu .ui.dropdown .menu > .item .icon:not(.dropdown).check {
   float: right !important;
   margin-right: 0 !important;
 }
@@ -393,14 +396,13 @@ body {
 
 .mx-datepicker-main {
   margin-top: 5px;
-  border-radius: .28571429rem !important;
-  color: rgba(0,0,0,.87) !important;
+  border-radius: 0.28571429rem !important;
+  color: rgba(0, 0, 0, 0.87) !important;
   font-weight: 600;
 }
 
-
 .ui.dimmer .ui.fix.loader:before {
-  border-color: rgba(0,0,0,.1);
+  border-color: rgba(0, 0, 0, 0.1);
 }
 
 .ui.dimmer .ui.fix.loader:after {
@@ -425,10 +427,16 @@ body {
   animation: blinkOpacity 2s infinite;
 }
 
-@keyframes blinkOpacity{
-  0%		{ opacity: 1;}
-  50%		{ opacity: 0.25;}
-  100%	{ opacity: 1;}
+@keyframes blinkOpacity {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .created-icon {
@@ -439,11 +447,12 @@ body {
 .tooltip {
   display: block !important;
   z-index: 10000;
-  box-shadow: 0px 2px 4px 0px rgba(34, 36, 38, 0.12), 0px 2px 10px 0px rgba(34, 36, 38, 0.15);
-  border: 1px solid #D4D4D5;
+  box-shadow: 0px 2px 4px 0px rgba(34, 36, 38, 0.12),
+    0px 2px 10px 0px rgba(34, 36, 38, 0.15);
+  border: 1px solid #d4d4d5;
 }
 .tooltip .tooltip-inner {
-  background: #FFFFFF;
+  background: #ffffff;
   color: rgba(0, 0, 0, 0.87);
   border-radius: 0.28571429rem;
   padding: 0.833em 1em;
@@ -454,7 +463,7 @@ body {
   border-style: solid;
   position: absolute;
   margin: 5px;
-  border-color: #FFFFFF;
+  border-color: #ffffff;
   z-index: 1;
 }
 .tooltip[x-placement^="top"] {
@@ -514,19 +523,18 @@ body {
   color: black;
   padding: 24px;
   border-radius: 5px;
-  box-shadow: 0 5px 30px rgba(black, .1);
+  box-shadow: 0 5px 30px rgba(black, 0.1);
 }
 .tooltip.popover .popover-arrow {
   border-color: #f9f9f9;
 }
-.tooltip[aria-hidden='true'] {
+.tooltip[aria-hidden="true"] {
   visibility: hidden;
   opacity: 0;
 }
-.tooltip[aria-hidden='false'] {
+.tooltip[aria-hidden="false"] {
   visibility: visible;
   opacity: 1;
 }
 /* end CSS for v-tooltip */
-
 </style>
