@@ -193,8 +193,21 @@ import CdrDetailsService from "../services/cdr_details";
 
 export default {
   name: "ContentView",
-  components: { TableChart, LineChart, BarChart, ExportData, PieChart, RecapChart },
-  mixins: [StorageService, QueriesService, UtilService, SettingsService, CdrDetailsService],
+  components: {
+    TableChart,
+    LineChart,
+    BarChart,
+    ExportData,
+    PieChart,
+    RecapChart,
+  },
+  mixins: [
+    StorageService,
+    QueriesService,
+    UtilService,
+    SettingsService,
+    CdrDetailsService,
+  ],
   data() {
     return {
       SLOW_QUERY_TIMEOUT: 5000,
@@ -228,7 +241,7 @@ export default {
           duration: "",
           cost: "",
           data: [],
-        }
+        },
       },
     };
   },
@@ -393,7 +406,10 @@ export default {
               }
 
               // check if query limit has been hit
-              if (chart.data.length && chart.data.length -1 == this.adminSettings.queryLimit) {
+              if (
+                chart.data.length &&
+                chart.data.length - 1 == this.adminSettings.queryLimit
+              ) {
                 chart.queryLimitHit = true;
               }
 
@@ -465,8 +481,17 @@ export default {
     },
     retrieveDoc(queryName) {
       try {
-        let mdDoc = require("../doc-inline/" + this.$root.currentLocale + "/" + this.$route.meta.report + "/" +
-            this.$route.meta.section + "_" + this.$route.meta.view + "_" + queryName + ".md");
+        let mdDoc = require("../doc-inline/" +
+          this.$root.currentLocale +
+          "/" +
+          this.$route.meta.report +
+          "/" +
+          this.$route.meta.section +
+          "_" +
+          this.$route.meta.view +
+          "_" +
+          queryName +
+          ".md");
         return mdDoc.default;
       } catch (error) {
         return null;
@@ -475,7 +500,11 @@ export default {
     retrieveQueryLimitMessage() {
       try {
         const userType = this.isAdmin ? "admin" : "user";
-        let message = require("../doc-inline/" + this.$root.currentLocale + "/query_limit_hit_" + userType + ".md");
+        let message = require("../doc-inline/" +
+          this.$root.currentLocale +
+          "/query_limit_hit_" +
+          userType +
+          ".md");
         this.queryLimitMessage = message.default;
       } catch (error) {
         this.queryLimitMessage = "";
@@ -510,7 +539,10 @@ export default {
     },
     checkCostsConfiguration() {
       // need to show costs configuration modal?
-      if (!this.costsConfigured && (!this.adminSettings.costs || !this.adminSettings.costs.length)) {
+      if (
+        !this.costsConfigured &&
+        (!this.adminSettings.costs || !this.adminSettings.costs.length)
+      ) {
         this.$root.$emit("showCostsConfigModal");
       }
     },
@@ -534,7 +566,8 @@ export default {
   margin-bottom: 1rem !important;
 }
 
-.ui.table.chart-details, .ui.table.cdr-details {
+.ui.table.chart-details,
+.ui.table.cdr-details {
   margin: 0 auto;
 }
 
@@ -549,7 +582,8 @@ export default {
   margin-left: 0.3rem;
 }
 
-.chart-doc, .chart-query-limit {
+.chart-doc,
+.chart-query-limit {
   text-align: left !important;
   max-width: 35rem !important;
   max-height: 14rem;
