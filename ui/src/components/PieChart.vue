@@ -66,7 +66,7 @@ export default {
     "$root.colorScheme": function () {
       this.options.plugins.colorschemes.scheme = this.$root.colorScheme;
       this.renderChart(this.chartData, this.options);
-    }
+    },
   },
   methods: {
     renderPieChart() {

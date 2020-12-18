@@ -16,9 +16,9 @@
               v-if="!(report == 'cdr' && header.name == 'linkedid')"
               v-bind:key="index"
               ref="tableHeader"
-              :class= "[
+              :class="[
                 header.subHeaders.length ? 'not-sortable' : 'sortable',
-                header.name == sortedBy ? 'sorted ' + sortedDirection : ''
+                header.name == sortedBy ? 'sorted ' + sortedDirection : '',
               ]"
               @click="sortTable(header, $event)"
               :rowspan="
@@ -52,7 +52,7 @@
           </template>
           <!-- details header for CDR -->
           <sui-table-header-cell v-if="report == 'cdr'" class="not-sortable">
-            {{ $t('table.actions') }}
+            {{ $t("table.actions") }}
           </sui-table-header-cell>
         </sui-table-row>
         <!-- middle header -->
@@ -61,9 +61,9 @@
             v-for="(header, index) in middleHeaders"
             v-show="header.visible"
             ref="tableHeader"
-            :class= "[
+            :class="[
               header.subHeaders.length ? 'not-sortable' : 'sortable',
-              header.name == sortedBy ? 'sorted ' + sortedDirection : ''
+              header.name == sortedBy ? 'sorted ' + sortedDirection : '',
             ]"
             @click="sortTable(header, $event)"
             v-bind:key="index"
@@ -95,9 +95,9 @@
             v-for="(header, index) in bottomHeaders"
             v-show="header.visible"
             ref="tableHeader"
-            :class= "[
+            :class="[
               header.subHeaders.length ? 'not-sortable' : 'sortable',
-              header.name == sortedBy ? 'sorted ' + sortedDirection : ''
+              header.name == sortedBy ? 'sorted ' + sortedDirection : '',
             ]"
             @click="sortTable(header, $event)"
             v-bind:key="index"
@@ -118,7 +118,13 @@
         >
           <template v-for="(element, index) in row">
             <sui-table-cell
-              v-if="!(report == 'cdr' && columns[index] && columns[index].name == 'linkedid')"
+              v-if="
+                !(
+                  report == 'cdr' &&
+                  columns[index] &&
+                  columns[index].name == 'linkedid'
+                )
+              "
               v-show="columns[index] && columns[index].visible"
               :key="index"
             >
@@ -141,31 +147,51 @@
                 {{ $t("table." + element) }}
               </span>
               <span
-                v-else-if="columns[index] && columns[index].format == 'monthDate'"
+                v-else-if="
+                  columns[index] && columns[index].format == 'monthDate'
+                "
               >
                 {{ element | formatMonthDate($i18n) }}
               </span>
               <span
-                v-else-if="columns[index] && columns[index].format == 'weekDate'"
+                v-else-if="
+                  columns[index] && columns[index].format == 'weekDate'
+                "
               >
                 {{ element | formatWeekDate($i18n) }}
               </span>
               <span
-                v-else-if="columns[index] && columns[index].format == 'phonebookName'"
+                v-else-if="
+                  columns[index] && columns[index].format == 'phonebookName'
+                "
               >
-                {{ element | reversePhonebookLookup('name', $root) }}
+                {{ element | reversePhonebookLookup("name", $root) }}
               </span>
               <span
-                v-else-if="columns[index] && columns[index].format == 'phonebookCompany'"
+                v-else-if="
+                  columns[index] && columns[index].format == 'phonebookCompany'
+                "
               >
-                {{ element | reversePhonebookLookup('company', $root) }}
+                {{ element | reversePhonebookLookup("company", $root) }}
               </span>
               <span
-                v-else-if="columns[index] && columns[index].format == 'phoneNumber' && $root.devices[element]"
+                v-else-if="
+                  columns[index] &&
+                  columns[index].format == 'phoneNumber' &&
+                  $root.devices[element]
+                "
                 v-tooltip="getDeviceTooltip(element)"
               >
                 {{ element }}
-                <sui-icon :name="$root.devices[element].type == 'physical' ? 'phone' : $root.devices[element].type == 'mobile' ? 'mobile alternate' : 'headphones'" />
+                <sui-icon
+                  :name="
+                    $root.devices[element].type == 'physical'
+                      ? 'phone'
+                      : $root.devices[element].type == 'mobile'
+                      ? 'mobile alternate'
+                      : 'headphones'
+                  "
+                />
               </span>
               <span v-else>
                 {{ element }}
@@ -179,14 +205,16 @@
               @click.native="$parent.showCdrDetailsModal(row)"
               size="tiny"
               icon="zoom"
-              >{{ $t('command.show_details') }}</sui-button
+              >{{ $t("command.show_details") }}</sui-button
             >
           </sui-table-cell>
         </sui-table-row>
       </sui-table-body>
       <sui-table-footer>
         <sui-table-row>
-          <sui-table-header-cell :colspan="report == 'cdr' ? columns.length + 1 : columns.length">
+          <sui-table-header-cell
+            :colspan="report == 'cdr' ? columns.length + 1 : columns.length"
+          >
             <sui-menu pagination class="no-border">
               <span is="sui-menu-item" class="small-pad"
                 >{{ pagination.firstRowIndex + 1 }} -
@@ -282,7 +310,7 @@ export default {
       },
     },
     chartKey: {
-     type: String,
+      type: String,
     },
     officeHours: {
       type: Object,
@@ -349,8 +377,8 @@ export default {
   },
   methods: {
     onApplyFilters() {
-      this.sortedBy = "period"
-      this.sortedDirection = "ascending"
+      this.sortedBy = "period";
+      this.sortedDirection = "ascending";
     },
     dataUpdated() {
       let tableData = this.data;
@@ -536,7 +564,7 @@ export default {
     },
     toggleExpandHeader(header) {
       header.expanded = !header.expanded;
-      this.$root.$emit("expandTable", `#container_${this.chartKey}`)
+      this.$root.$emit("expandTable", `#container_${this.chartKey}`);
       if (header.expanded) {
         this.expandHeader(header);
       } else {
@@ -655,7 +683,11 @@ export default {
         }
         totalsMap[pivotGroup] += pivotValue;
       }
-      const pivotColumnsList = this.generateTimeLabelsLineOrBarChart(this.officeHours, this.filterTimeSplit, this);
+      const pivotColumnsList = this.generateTimeLabelsLineOrBarChart(
+        this.officeHours,
+        this.filterTimeSplit,
+        this
+      );
 
       // process column headers
 
@@ -706,7 +738,6 @@ export default {
       superHeader,
       totalSubHeader
     ) {
-
       // e.g: [ 09:00, 10:00, 11:00, ... ]
       let hoursList;
 
@@ -717,7 +748,11 @@ export default {
       //   "11:00": [ "11:00", "11:15", "11:30", "11:45" ],
       //   ...
       // }
-      let hoursMap = this.generateHoursMap(this.officeHours, this.filterTimeSplit, this);
+      let hoursMap = this.generateHoursMap(
+        this.officeHours,
+        this.filterTimeSplit,
+        this
+      );
 
       // contains pivotGroup -> hour -> pivotColumn -> number (e.g. 2019QueueNameQueueDescription -> 09:00 -> 09:45 -> 2345)
       let pivotMap = {};
@@ -908,45 +943,71 @@ export default {
     },
     sortTable(header, event) {
       // check if the header is sortable
-      if (event.target.classList.contains("not-sortable")) return
+      if (event.target.classList.contains("not-sortable")) return;
       // switch the ordering direction in the header currently sorted by
-      this.sortedDirection == "ascending" && this.sortedBy == header.name ? (
-        this.sortedDirection = "descending"
-      ) : (
-        this.sortedDirection = "ascending"
-      )
+      this.sortedDirection == "ascending" && this.sortedBy == header.name
+        ? (this.sortedDirection = "descending")
+        : (this.sortedDirection = "ascending");
       // set the header currently sorted by
-      this.sortedBy = header.name
+      this.sortedBy = header.name;
       // get the header's column position in the rows array
-      let columnKey = this.columns.indexOf(this.columns.find(obj => obj.name === header.name))
+      let columnKey = this.columns.indexOf(
+        this.columns.find((obj) => obj.name === header.name)
+      );
       // sort table considering direction and column data type
       this.rows.sort((a, b) => {
-        let rule
+        let rule;
         // check if is date
         if (header.format && header.format.toLowerCase().includes("date")) {
-          rule = this.sortedDirection == "ascending" ? Date.parse(a[columnKey]) - Date.parse(b[columnKey]) : Date.parse(b[columnKey]) - Date.parse(a[columnKey])
+          rule =
+            this.sortedDirection == "ascending"
+              ? Date.parse(a[columnKey]) - Date.parse(b[columnKey])
+              : Date.parse(b[columnKey]) - Date.parse(a[columnKey]);
         } else {
           // check if is a number
           if (!Number.isNaN(Number(a[columnKey]))) {
-            rule = this.sortedDirection == "ascending" ? a[columnKey] - b[columnKey] : b[columnKey] - a[columnKey]
-           } else {
+            rule =
+              this.sortedDirection == "ascending"
+                ? a[columnKey] - b[columnKey]
+                : b[columnKey] - a[columnKey];
+          } else {
             // if is a string
-            this.sortedDirection == "ascending" ? (
-              rule = a[columnKey] < b[columnKey] ? -1 : a[columnKey] > b[columnKey] ? 1 : 0
-            ) : (
-              rule = b[columnKey] < a[columnKey] ? -1 : b[columnKey] > a[columnKey] ? 1 : 0
-            )
+            this.sortedDirection == "ascending"
+              ? (rule =
+                  a[columnKey] < b[columnKey]
+                    ? -1
+                    : a[columnKey] > b[columnKey]
+                    ? 1
+                    : 0)
+              : (rule =
+                  b[columnKey] < a[columnKey]
+                    ? -1
+                    : b[columnKey] > a[columnKey]
+                    ? 1
+                    : 0);
           }
         }
-        return rule
-      })
-      this.updatePagination()
+        return rule;
+      });
+      this.updatePagination();
     },
     getDeviceTooltip(extension) {
-      let tooltipContent = '<div><b class="mg-right-xs">' + this.$t('device.type') + '</b>' + this.$t('device.' + this.$root.devices[extension].type) + '</div>';
+      let tooltipContent =
+        '<div><b class="mg-right-xs">' +
+        this.$t("device.type") +
+        "</b>" +
+        this.$t("device." + this.$root.devices[extension].type) +
+        "</div>";
 
       if (this.$root.devices[extension].model) {
-        tooltipContent += '<div class="mg-top-xs"><b class="mg-right-xs">' + this.$t('device.model') + '</b>' + this.$root.devices[extension].vendor + ' ' + this.$root.devices[extension].model + '</div>';
+        tooltipContent +=
+          '<div class="mg-top-xs"><b class="mg-right-xs">' +
+          this.$t("device.model") +
+          "</b>" +
+          this.$root.devices[extension].vendor +
+          " " +
+          this.$root.devices[extension].model +
+          "</div>";
       }
       return tooltipContent;
     },
