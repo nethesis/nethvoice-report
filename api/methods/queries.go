@@ -370,9 +370,23 @@ func buildCdrQuery(queryFile string, filter models.Filter) (string, error) {
 	var queryBuilder strings.Builder
 	var query string
 
+	// GROUP BY and ORDER BY must be applied to the result of UNION ALL
+
 	// define regexps
 	rG := regexp.MustCompile(`<CDR_GROUP: (.+)>`)
 	rO := regexp.MustCompile(`<CDR_ORDER: (.+)>`)
+
+	findsG := rG.FindStringSubmatch(queryWithTablePlaceholder)
+	findsO := rO.FindStringSubmatch(queryWithTablePlaceholder)
+
+	hasGroupByOrOrderBy := len(findsG) > 0 || len(findsO) > 0
+
+	if hasGroupByOrOrderBy {
+		// build a query like this:
+		// SELECT * FROM ( SELECT ... UNION ALL SELECT... UNION ALL SELECT...) t GROUP BY ... ORDER BY ... LIMIT ...
+		// "t" is the alias for derived table
+		queryBuilder.WriteString("SELECT * FROM (")
+	}
 
 	for i, cdrTable := range cdrTables {
 		// clean placeholders
@@ -391,8 +405,12 @@ func buildCdrQuery(queryFile string, filter models.Filter) (string, error) {
 		}
 	}
 
+	if hasGroupByOrOrderBy {
+		// "t" is the alias for derived table
+		queryBuilder.WriteString(") t ")
+	}
+
 	// get query groups
-	findsG := rG.FindStringSubmatch(queryWithTablePlaceholder)
 	if len(findsG) > 0 {
 		queryGroup := strings.Join(findsG[1:], ",")
 
@@ -401,7 +419,6 @@ func buildCdrQuery(queryFile string, filter models.Filter) (string, error) {
 	}
 
 	// get query orders
-	findsO := rO.FindStringSubmatch(queryWithTablePlaceholder)
 	if len(findsO) > 0 {
 		queryOrder := strings.Join(findsO[1:], ",")
 
