@@ -260,6 +260,8 @@
 
 import UtilService from "../services/utils";
 
+import moment from "moment";
+
 export default {
   name: "FixedBar",
   mixins: [
@@ -295,6 +297,7 @@ export default {
     "showFilterCdrCalleeType",
     "showFilterCdrCallDestination",
     "showFilterCdrDestination",
+    "showFilterTimeHour",
     "cdrCallDurationMap",
     "callDestinationsMap",
     "filterValues"
@@ -355,8 +358,9 @@ export default {
   watch: {
     "activeFilters.time.interval": function () {
       if (this.activeFilters.time && this.activeFilters.time.interval) {
-        this.activeFilters.time.interval.start = this.$options.filters.formatDate(this.activeFilters.time.interval.start)
-        this.activeFilters.time.interval.end = this.$options.filters.formatDate(this.activeFilters.time.interval.end)
+        const dateFormat = this.getDateFormat();
+        this.activeFilters.time.interval.start = moment(this.activeFilters.time.interval.start).format(dateFormat);
+        this.activeFilters.time.interval.end = moment(this.activeFilters.time.interval.end).format(dateFormat);
       }
     },
     "activeFilters.queues": function () {
