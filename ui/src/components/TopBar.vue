@@ -2,7 +2,10 @@
   <div class="masthead topbar">
     <sui-container>
       <sui-menu floated="right">
-        <sui-dropdown class="item top floating pointing" icon="paint brush no-margin">
+        <sui-dropdown
+          class="item top floating pointing"
+          icon="paint brush no-margin"
+        >
           <sui-dropdown-menu class="color-scheme">
             <sui-dropdown-item
               v-for="(colorScheme, index) in colorSchemes"
@@ -72,7 +75,7 @@
         <sui-modal-header>{{ $t("menu.settings") }}</sui-modal-header>
         <sui-modal-content scrolling>
           <sui-modal-description>
-            <sui-header>{{ $t('settings.general') }}</sui-header>
+            <sui-header>{{ $t("settings.general") }}</sui-header>
             <!-- office hours -->
             <sui-form-fields>
               <sui-form-field :error="error.settings.officeHourStart">
@@ -84,8 +87,7 @@
                   ref="officeHourStart"
                 ></vue-timepicker>
               </sui-form-field>
-              <sui-form-field :error="error.settings.officeHourEnd"
-              >
+              <sui-form-field :error="error.settings.officeHourEnd">
                 <label>{{ $t("settings.office_hours_end") }}</label>
                 <vue-timepicker
                   hide-clear-button
@@ -95,12 +97,17 @@
                 ></vue-timepicker>
               </sui-form-field>
             </sui-form-fields>
-            <sui-message v-show="error.settings.officeHourStart || error.settings.officeHourEnd" error>
+            <sui-message
+              v-show="
+                error.settings.officeHourStart || error.settings.officeHourEnd
+              "
+              error
+            >
               <p>{{ $t("validation.invalid_value") }}</p>
             </sui-message>
-            <div class="settings-description">{{
-              $t("message.office_hours_description")
-            }}</div>
+            <div class="settings-description">
+              {{ $t("message.office_hours_description") }}
+            </div>
             <!-- query limit -->
             <sui-form-fields>
               <sui-form-field width="three" :error="error.settings.queryLimit">
@@ -146,49 +153,87 @@
             <sui-message v-show="error.settings.currency" error>
               <p>{{ $t("validation.invalid_value") }}</p>
             </sui-message>
-            <div class="settings-description">{{
-              $t("message.currency_description")
-            }}</div>
+            <div class="settings-description">
+              {{ $t("message.currency_description") }}
+            </div>
             <!-- destinations -->
             <sui-header>
-              {{ $t('settings.destinations') }}
+              {{ $t("settings.destinations") }}
               <span>
-                <sui-popup :content="$t('message.configure_to_compute_call_costs')">
-                  <sui-icon v-show="highlightCostsSettings" name="exclamation circle" color="blue" class="blink-opacity blink-icon" slot="trigger"/>
+                <sui-popup
+                  :content="$t('message.configure_to_compute_call_costs')"
+                >
+                  <sui-icon
+                    v-show="highlightCostsSettings"
+                    name="exclamation circle"
+                    color="blue"
+                    class="blink-opacity blink-icon"
+                    slot="trigger"
+                  />
                 </sui-popup>
               </span>
             </sui-header>
-            <div class="settings-description">{{
-              $t("message.destinations_description")
-            }}</div>
+            <div class="settings-description">
+              {{ $t("message.destinations_description") }}
+            </div>
             <sui-card-group :items-per-row="3">
-              <sui-card v-for="(destination, index) in adminSettings.destinations" v-bind:key="'destination-' + index" class="destination">
+              <sui-card
+                v-for="(destination, index) in adminSettings.destinations"
+                v-bind:key="'destination-' + index"
+                class="destination"
+              >
                 <sui-card-content>
-                  <sui-icon name="map marker alternate" class="right floated no-mg" size="large" />
+                  <sui-icon
+                    name="map marker alternate"
+                    class="right floated no-mg"
+                    size="large"
+                  />
                   <sui-card-header>{{ destination }}</sui-card-header>
                   <span v-show="destination == destinationJustCreated">
                     <sui-popup :content="$t('misc.just_created')">
-                      <sui-icon name="check circle" color="green" size="large" class="created-icon" slot="trigger" />
+                      <sui-icon
+                        name="check circle"
+                        color="green"
+                        size="large"
+                        class="created-icon"
+                        slot="trigger"
+                      />
                     </sui-popup>
                   </span>
                 </sui-card-content>
-                <sui-button basic negative attached="bottom" type="button" @click="showDeleteDestinationModal(destination)">
-                  <sui-icon name="trash" /> {{ $t('command.delete') }}
+                <sui-button
+                  basic
+                  negative
+                  attached="bottom"
+                  type="button"
+                  @click="showDeleteDestinationModal(destination)"
+                >
+                  <sui-icon name="trash" /> {{ $t("command.delete") }}
                 </sui-button>
               </sui-card>
               <!-- new destination -->
               <sui-card class="destination">
                 <sui-card-content>
-                  <sui-icon name="map marker alternate" class="right floated no-mg" size="large" />
+                  <sui-icon
+                    name="map marker alternate"
+                    class="right floated no-mg"
+                    size="large"
+                  />
                   <sui-input
                     v-model.trim="newDestination"
                     :placeholder="$t('settings.new_destination')"
                     ref="newDestination"
-                    :class="{'input-error': error.settings.newDestination}"
+                    :class="{ 'input-error': error.settings.newDestination }"
                   />
                 </sui-card-content>
-                <sui-button basic positive attached="bottom" type="button" @click="createDestination()">
-                  <sui-icon name="plus" /> {{ $t('command.create') }}
+                <sui-button
+                  basic
+                  positive
+                  attached="bottom"
+                  type="button"
+                  @click="createDestination()"
+                >
+                  <sui-icon name="plus" /> {{ $t("command.create") }}
                 </sui-button>
               </sui-card>
             </sui-card-group>
@@ -197,25 +242,33 @@
               <sui-accordion-title>
                 <sui-icon name="dropdown" />
                 <a>
-                  {{ $t('settings.call_patterns_accordion') }}
+                  {{ $t("settings.call_patterns_accordion") }}
                   <span>
-                  <sui-popup :content="$t('message.configure_to_compute_call_costs')">
-                    <sui-icon v-show="highlightCostsSettings" name="exclamation circle" color="blue" class="blink-opacity blink-icon" slot="trigger"/>
-                  </sui-popup>
-                </span>
+                    <sui-popup
+                      :content="$t('message.configure_to_compute_call_costs')"
+                    >
+                      <sui-icon
+                        v-show="highlightCostsSettings"
+                        name="exclamation circle"
+                        color="blue"
+                        class="blink-opacity blink-icon"
+                        slot="trigger"
+                      />
+                    </sui-popup>
+                  </span>
                 </a>
               </sui-accordion-title>
               <sui-accordion-content>
-                <div class="settings-description no-mg-top">{{
-                  $t("message.call_patterns_description")
-                }}</div>
-                <sui-form-fields v-for="(callPattern, index) in adminSettings.callPatterns" v-bind:key="'callPattern' + index">
+                <div class="settings-description no-mg-top">
+                  {{ $t("message.call_patterns_description") }}
+                </div>
+                <sui-form-fields
+                  v-for="(callPattern, index) in adminSettings.callPatterns"
+                  v-bind:key="'callPattern' + index"
+                >
                   <sui-form-field width="three">
                     <label>{{ $t("settings.prefix") }}</label>
-                    <sui-input
-                      v-model.trim="callPattern.prefix"
-                      disabled
-                    />
+                    <sui-input v-model.trim="callPattern.prefix" disabled />
                   </sui-form-field>
                   <sui-form-field width="five">
                     <label>{{ $t("settings.destination") }}</label>
@@ -230,22 +283,40 @@
                   </sui-form-field>
                   <sui-form-field>
                     <label class="color-transparent">.</label>
-                    <sui-button basic negative type="button" @click="showDeleteCallPatternModal(callPattern)">
-                      <sui-icon name="trash" /> {{ $t('command.delete') }}
+                    <sui-button
+                      basic
+                      negative
+                      type="button"
+                      @click="showDeleteCallPatternModal(callPattern)"
+                    >
+                      <sui-icon name="trash" /> {{ $t("command.delete") }}
                     </sui-button>
                   </sui-form-field>
                   <sui-form-field>
                     <label class="color-transparent">.</label>
-                    <span v-show="callPattern.prefix == callPatternJustCreated.prefix">
+                    <span
+                      v-show="
+                        callPattern.prefix == callPatternJustCreated.prefix
+                      "
+                    >
                       <sui-popup :content="$t('misc.just_created')">
-                        <sui-icon name="check circle" color="green" size="large" class="created-icon" slot="trigger" />
+                        <sui-icon
+                          name="check circle"
+                          color="green"
+                          size="large"
+                          class="created-icon"
+                          slot="trigger"
+                        />
                       </sui-popup>
                     </span>
                   </sui-form-field>
                 </sui-form-fields>
                 <!-- new call pattern -->
                 <sui-form-fields>
-                  <sui-form-field width="three" :error="error.settings.newCallPatternPrefix">
+                  <sui-form-field
+                    width="three"
+                    :error="error.settings.newCallPatternPrefix"
+                  >
                     <label>{{ $t("settings.prefix") }}</label>
                     <sui-input
                       v-model.trim="newCallPattern.prefix"
@@ -253,7 +324,10 @@
                       ref="newCallPatternPrefix"
                     />
                   </sui-form-field>
-                  <sui-form-field width="five" :error="error.settings.newCallPatternDestination">
+                  <sui-form-field
+                    width="five"
+                    :error="error.settings.newCallPatternDestination"
+                  >
                     <label>{{ $t("settings.destination") }}</label>
                     <sui-dropdown
                       :placeholder="$t('settings.destination')"
@@ -266,29 +340,51 @@
                   </sui-form-field>
                   <sui-form-field>
                     <label class="color-transparent">.</label>
-                    <sui-button basic positive type="button" @click="createCallPattern()">
-                      <sui-icon name="plus" /> {{ $t('command.create') }}
+                    <sui-button
+                      basic
+                      positive
+                      type="button"
+                      @click="createCallPattern()"
+                    >
+                      <sui-icon name="plus" /> {{ $t("command.create") }}
                     </sui-button>
                   </sui-form-field>
                 </sui-form-fields>
-                <sui-message v-show="error.settings.newCallPatternPrefix || error.settings.newCallPatternDestination" error>
+                <sui-message
+                  v-show="
+                    error.settings.newCallPatternPrefix ||
+                    error.settings.newCallPatternDestination
+                  "
+                  error
+                >
                   <p>{{ $t("validation.invalid_value") }}</p>
                 </sui-message>
               </sui-accordion-content>
             </sui-accordion>
             <!-- costs -->
             <sui-header>
-              {{ $t('settings.costs') }}
+              {{ $t("settings.costs") }}
               <span>
-                <sui-popup :content="$t('message.configure_to_compute_call_costs')">
-                  <sui-icon v-show="highlightCostsSettings" name="exclamation circle" color="blue" class="blink-opacity blink-icon" slot="trigger"/>
+                <sui-popup
+                  :content="$t('message.configure_to_compute_call_costs')"
+                >
+                  <sui-icon
+                    v-show="highlightCostsSettings"
+                    name="exclamation circle"
+                    color="blue"
+                    class="blink-opacity blink-icon"
+                    slot="trigger"
+                  />
                 </sui-popup>
               </span>
             </sui-header>
-            <div class="settings-description">{{
-              $t("message.costs_description")
-            }}</div>
-            <sui-form-fields v-for="(cost, index) in adminSettings.costs" v-bind:key="'cost-' + index">
+            <div class="settings-description">
+              {{ $t("message.costs_description") }}
+            </div>
+            <sui-form-fields
+              v-for="(cost, index) in adminSettings.costs"
+              v-bind:key="'cost-' + index"
+            >
               <sui-form-field width="four">
                 <label>{{ $t("settings.trunk") }}</label>
                 <sui-dropdown
@@ -312,34 +408,62 @@
                 />
               </sui-form-field>
               <sui-form-field>
-                <label>{{ $t("settings.cost") + ' (' + adminSettings.currency + ' ' + $t('misc.per_second') + ')' }}</label>
+                <label>{{
+                  $t("settings.cost") +
+                  " (" +
+                  adminSettings.currency +
+                  " " +
+                  $t("misc.per_second") +
+                  ")"
+                }}</label>
                 <input
                   type="number"
                   v-model.number="cost.cost"
                   min="0"
                   step=".01"
-                  :placeholder="adminSettings.currency + ' ' + $t('misc.per_second')"
+                  :placeholder="
+                    adminSettings.currency + ' ' + $t('misc.per_second')
+                  "
                   disabled
-                >
+                />
               </sui-form-field>
               <sui-form-field>
                 <label class="color-transparent">.</label>
-                <sui-button basic negative type="button" @click="showDeleteCostModal(cost)">
-                  <sui-icon name="trash" /> {{ $t('command.delete') }}
+                <sui-button
+                  basic
+                  negative
+                  type="button"
+                  @click="showDeleteCostModal(cost)"
+                >
+                  <sui-icon name="trash" /> {{ $t("command.delete") }}
                 </sui-button>
               </sui-form-field>
               <sui-form-field>
                 <label class="color-transparent">.</label>
-                <span v-show="cost.channelId == costJustCreated.channelId && cost.destination == costJustCreated.destination">
+                <span
+                  v-show="
+                    cost.channelId == costJustCreated.channelId &&
+                    cost.destination == costJustCreated.destination
+                  "
+                >
                   <sui-popup :content="$t('misc.just_created')">
-                    <sui-icon name="check circle" color="green" size="large" class="created-icon" slot="trigger" />
+                    <sui-icon
+                      name="check circle"
+                      color="green"
+                      size="large"
+                      class="created-icon"
+                      slot="trigger"
+                    />
                   </sui-popup>
                 </span>
               </sui-form-field>
             </sui-form-fields>
             <!-- new cost -->
             <sui-form-fields>
-              <sui-form-field width="four" :error="error.settings.newCostChannelId">
+              <sui-form-field
+                width="four"
+                :error="error.settings.newCostChannelId"
+              >
                 <label>{{ $t("settings.trunk") }}</label>
                 <sui-dropdown
                   :placeholder="$t('settings.trunk')"
@@ -351,7 +475,10 @@
                   ref="newCostChannelId"
                 />
               </sui-form-field>
-              <sui-form-field width="four" :error="error.settings.newCostDestination">
+              <sui-form-field
+                width="four"
+                :error="error.settings.newCostDestination"
+              >
                 <label>{{ $t("settings.destination") }}</label>
                 <sui-dropdown
                   :placeholder="$t('settings.destination')"
@@ -364,33 +491,49 @@
                 />
               </sui-form-field>
               <sui-form-field :error="error.settings.newCostValue">
-                <label>{{ $t("settings.cost") + ' (' + adminSettings.currency + ' ' + $t('misc.per_second') + ')' }}</label>
+                <label>{{
+                  $t("settings.cost") +
+                  " (" +
+                  adminSettings.currency +
+                  " " +
+                  $t("misc.per_second") +
+                  ")"
+                }}</label>
                 <input
                   type="number"
                   v-model.number="newCost.cost"
                   min="0"
                   step=".01"
-                  :placeholder="adminSettings.currency + ' ' + $t('misc.per_second')"
+                  :placeholder="
+                    adminSettings.currency + ' ' + $t('misc.per_second')
+                  "
                   ref="newCostValue"
-                >
+                />
               </sui-form-field>
               <sui-form-field width="three">
                 <label class="color-transparent">.</label>
                 <sui-button basic positive type="button" @click="createCost()">
-                  <sui-icon name="plus" /> {{ $t('command.create') }}
+                  <sui-icon name="plus" /> {{ $t("command.create") }}
                 </sui-button>
               </sui-form-field>
             </sui-form-fields>
-            <sui-message v-show="error.settings.newCostChannelId || error.settings.newCostDestination || error.settings.newCostValue" error>
+            <sui-message
+              v-show="
+                error.settings.newCostChannelId ||
+                error.settings.newCostDestination ||
+                error.settings.newCostValue
+              "
+              error
+            >
               <p>{{ $t("validation.invalid_value") }}</p>
             </sui-message>
             <!-- reset admin settings -->
             <sui-header>
-              {{ $t('settings.reset_settings') }}
+              {{ $t("settings.reset_settings") }}
             </sui-header>
-            <div class="settings-description">{{
-              $t("message.reset_settings_description")
-            }}</div>
+            <div class="settings-description">
+              {{ $t("message.reset_settings_description") }}
+            </div>
             <sui-form-fields>
               <sui-form-field>
                 <sui-button
@@ -426,9 +569,9 @@
         <sui-modal-header>{{ $t("message.welcome_in_cdr") }}</sui-modal-header>
         <sui-modal-content>
           <sui-modal-description>
-            <sui-header>{{ $t('message.configure_call_costs') }}</sui-header>
+            <sui-header>{{ $t("message.configure_call_costs") }}</sui-header>
             <p>
-              {{ $t('message.configure_call_costs_description') }}
+              {{ $t("message.configure_call_costs_description") }}
             </p>
           </sui-modal-description>
         </sui-modal-content>
@@ -449,17 +592,23 @@
     <!-- delete destination modal -->
     <sui-form warning>
       <sui-modal v-model="openDeleteDestinationModal" size="tiny">
-        <sui-modal-header>{{ $t('command.delete_destination') }}</sui-modal-header>
+        <sui-modal-header>{{
+          $t("command.delete_destination")
+        }}</sui-modal-header>
         <sui-modal-content>
           <sui-modal-description>
             <sui-message warning>
-              <i class="exclamation triangle icon"></i> {{ $t("message.you_are_about_to_delete") }} <b>{{ destinationToDelete }}</b>
+              <i class="exclamation triangle icon"></i>
+              {{ $t("message.you_are_about_to_delete") }}
+              <b>{{ destinationToDelete }}</b>
             </sui-message>
             <p>{{ $t("message.are_you_sure") }}</p>
           </sui-modal-description>
         </sui-modal-content>
         <sui-modal-actions>
-          <sui-button type="button" @click.native="hideDeleteDestinationModal()"
+          <sui-button
+            type="button"
+            @click.native="hideDeleteDestinationModal()"
             >{{ $t("command.cancel") }}</sui-button
           >
           <sui-button
@@ -476,17 +625,23 @@
     <!-- delete call pattern modal -->
     <sui-form warning>
       <sui-modal v-model="openDeleteCallPatternModal" size="tiny">
-        <sui-modal-header>{{ $t('command.delete_call_pattern') }}</sui-modal-header>
+        <sui-modal-header>{{
+          $t("command.delete_call_pattern")
+        }}</sui-modal-header>
         <sui-modal-content>
           <sui-modal-description>
             <sui-message warning>
-              <i class="exclamation triangle icon"></i> {{ $t("message.you_are_about_to_delete") }} <b>{{ callPatternToDelete.prefix }}</b>
+              <i class="exclamation triangle icon"></i>
+              {{ $t("message.you_are_about_to_delete") }}
+              <b>{{ callPatternToDelete.prefix }}</b>
             </sui-message>
             <p>{{ $t("message.are_you_sure") }}</p>
           </sui-modal-description>
         </sui-modal-content>
         <sui-modal-actions>
-          <sui-button type="button" @click.native="hideDeleteCallPatternModal()"
+          <sui-button
+            type="button"
+            @click.native="hideDeleteCallPatternModal()"
             >{{ $t("command.cancel") }}</sui-button
           >
           <sui-button
@@ -503,19 +658,24 @@
     <!-- delete cost modal -->
     <sui-form warning>
       <sui-modal v-model="openDeleteCostModal" size="tiny">
-        <sui-modal-header>{{ $t('command.delete_cost') }}</sui-modal-header>
+        <sui-modal-header>{{ $t("command.delete_cost") }}</sui-modal-header>
         <sui-modal-content>
           <sui-modal-description>
             <sui-message warning>
-              <i class="exclamation triangle icon"></i> {{ $t("message.you_are_about_to_delete") }} {{ $t('settings.cost') }} <b>{{ costToDelete.channelId }}, {{ costToDelete.destination }}</b>
+              <i class="exclamation triangle icon"></i>
+              {{ $t("message.you_are_about_to_delete") }}
+              {{ $t("settings.cost") }}
+              <b
+                >{{ costToDelete.channelId }}, {{ costToDelete.destination }}</b
+              >
             </sui-message>
             <p>{{ $t("message.are_you_sure") }}</p>
           </sui-modal-description>
         </sui-modal-content>
         <sui-modal-actions>
-          <sui-button type="button" @click.native="hideDeleteCostModal()"
-            >{{ $t("command.cancel") }}</sui-button
-          >
+          <sui-button type="button" @click.native="hideDeleteCostModal()">{{
+            $t("command.cancel")
+          }}</sui-button>
           <sui-button
             negative
             type="button"
@@ -530,19 +690,20 @@
     <!-- reset settings modal -->
     <sui-form warning>
       <sui-modal v-model="openResetSettingsModal" size="tiny">
-        <sui-modal-header>{{ $t('command.reset_settings') }}</sui-modal-header>
+        <sui-modal-header>{{ $t("command.reset_settings") }}</sui-modal-header>
         <sui-modal-content>
           <sui-modal-description>
             <sui-message warning>
-              <i class="exclamation triangle icon"></i> {{ $t("message.you_are_about_to_reset_settings") }}
+              <i class="exclamation triangle icon"></i>
+              {{ $t("message.you_are_about_to_reset_settings") }}
             </sui-message>
             <p>{{ $t("message.are_you_sure") }}</p>
           </sui-modal-description>
         </sui-modal-content>
         <sui-modal-actions>
-          <sui-button type="button" @click.native="hideResetSettingsModal()"
-            >{{ $t("command.cancel") }}</sui-button
-          >
+          <sui-button type="button" @click.native="hideResetSettingsModal()">{{
+            $t("command.cancel")
+          }}</sui-button>
           <sui-button
             negative
             type="button"
@@ -774,7 +935,7 @@ export default {
           newCostChannelId: false,
           newCostDestination: false,
           newCostValue: false,
-        }
+        },
       },
     };
   },
@@ -874,7 +1035,9 @@ export default {
 
         if (!errors) {
           errors = true;
-          this.$nextTick(() => this.$refs.officeHourStart.$el.children[0].focus());
+          this.$nextTick(() =>
+            this.$refs.officeHourStart.$el.children[0].focus()
+          );
         }
       }
 
@@ -885,18 +1048,23 @@ export default {
 
         if (!errors) {
           errors = true;
-          this.$nextTick(() => this.$refs.officeHourEnd.$el.children[0].focus())
+          this.$nextTick(() =>
+            this.$refs.officeHourEnd.$el.children[0].focus()
+          );
         }
       }
 
       // query limit
 
-      if (!this.adminSettings.queryLimit || this.adminSettings.queryLimit < 10) {
+      if (
+        !this.adminSettings.queryLimit ||
+        this.adminSettings.queryLimit < 10
+      ) {
         this.error.settings.queryLimit = true;
 
         if (!errors) {
           errors = true;
-          this.$nextTick(() => this.$refs.queryLimit.$el.children[0].focus())
+          this.$nextTick(() => this.$refs.queryLimit.$el.children[0].focus());
         }
       }
 
@@ -907,7 +1075,7 @@ export default {
 
         if (!errors) {
           errors = true;
-          this.$nextTick(() => this.$refs.currency.$el.children[0].focus())
+          this.$nextTick(() => this.$refs.currency.$el.children[0].focus());
         }
       }
 
@@ -973,13 +1141,15 @@ export default {
           this.adminSettings.destinations = settings.destinations;
 
           // sort call patterns by prefix length
-          this.adminSettings.callPatterns = settings.call_patterns.sort((cp1, cp2) => {
-            return cp2.prefix.length - cp1.prefix.length;
-          });
+          this.adminSettings.callPatterns = settings.call_patterns.sort(
+            (cp1, cp2) => {
+              return cp2.prefix.length - cp1.prefix.length;
+            }
+          );
 
           // destinationOptions is used for destinations dropdown
           this.destinationOptions = this.adminSettings.destinations.map((d) => {
-            return {value: d, text: d}
+            return { value: d, text: d };
           });
 
           // costs
@@ -1025,7 +1195,12 @@ export default {
       this.error.settings.newDestination = false;
 
       // check empty or duplicated
-      if (!this.newDestination || this.adminSettings.destinations.find((d) => d.toLowerCase() == this.newDestination.toLowerCase())) {
+      if (
+        !this.newDestination ||
+        this.adminSettings.destinations.find(
+          (d) => d.toLowerCase() == this.newDestination.toLowerCase()
+        )
+      ) {
         this.error.settings.newDestination = true;
         this.$nextTick(() => this.$refs.newDestination.$el.children[0].focus());
       }
@@ -1053,23 +1228,36 @@ export default {
 
       // prefix
 
-      const prefixDuplicated = this.adminSettings.callPatterns.find((cp) => cp.prefix == this.newCallPattern.prefix);
+      const prefixDuplicated = this.adminSettings.callPatterns.find(
+        (cp) => cp.prefix == this.newCallPattern.prefix
+      );
 
       const prefixValidSyntax = /^[0-9+]+$/.test(this.newCallPattern.prefix);
 
-      if (!this.newCallPattern.prefix || prefixDuplicated || !prefixValidSyntax) {
+      if (
+        !this.newCallPattern.prefix ||
+        prefixDuplicated ||
+        !prefixValidSyntax
+      ) {
         this.error.settings.newCallPatternPrefix = true;
-        this.$nextTick(() => this.$refs.newCallPatternPrefix.$el.children[0].focus());
+        this.$nextTick(() =>
+          this.$refs.newCallPatternPrefix.$el.children[0].focus()
+        );
       }
 
       // destination
 
       if (!this.newCallPattern.destination) {
         this.error.settings.newCallPatternDestination = true;
-        this.$nextTick(() => this.$refs.newCallPatternDestination.$el.children[0].focus());
+        this.$nextTick(() =>
+          this.$refs.newCallPatternDestination.$el.children[0].focus()
+        );
       }
 
-      return !this.error.settings.newCallPatternPrefix && !this.error.settings.newCallPatternDestination;
+      return (
+        !this.error.settings.newCallPatternPrefix &&
+        !this.error.settings.newCallPatternDestination
+      );
     },
     createCallPattern() {
       if (!this.validateAdminSettings() || !this.validateNewCallPattern()) {
@@ -1096,14 +1284,18 @@ export default {
 
       if (!this.newCost.channelId) {
         this.error.settings.newCostChannelId = true;
-        this.$nextTick(() => this.$refs.newCostChannelId.$el.children[0].focus());
+        this.$nextTick(() =>
+          this.$refs.newCostChannelId.$el.children[0].focus()
+        );
       }
 
       // destination
 
       if (!this.newCost.destination) {
         this.error.settings.newCostDestination = true;
-        this.$nextTick(() => this.$refs.newCostDestination.$el.children[0].focus());
+        this.$nextTick(() =>
+          this.$refs.newCostDestination.$el.children[0].focus()
+        );
       }
 
       // cost value
@@ -1115,15 +1307,25 @@ export default {
 
       // check cost duplicated
 
-      const costDuplicated = this.adminSettings.costs.find((c) => c.channelId == this.newCost.channelId && c.destination == this.newCost.destination);
+      const costDuplicated = this.adminSettings.costs.find(
+        (c) =>
+          c.channelId == this.newCost.channelId &&
+          c.destination == this.newCost.destination
+      );
 
       if (costDuplicated) {
         this.error.settings.newCostChannelId = true;
         this.error.settings.newCostDestination = true;
-        this.$nextTick(() => this.$refs.newCostChannelId.$el.children[0].focus());
+        this.$nextTick(() =>
+          this.$refs.newCostChannelId.$el.children[0].focus()
+        );
       }
 
-      return !this.error.settings.newCostChannelId && !this.error.settings.newCostDestination && !this.error.settings.newCostValue;
+      return (
+        !this.error.settings.newCostChannelId &&
+        !this.error.settings.newCostDestination &&
+        !this.error.settings.newCostValue
+      );
     },
     createCost() {
       if (!this.validateAdminSettings() || !this.validateNewCost()) {
@@ -1175,17 +1377,27 @@ export default {
     },
     deleteDestination() {
       this.loader.deleteDestination = true;
-      this.adminSettings.destinations = this.adminSettings.destinations.filter((d) => d !== this.destinationToDelete);
+      this.adminSettings.destinations = this.adminSettings.destinations.filter(
+        (d) => d !== this.destinationToDelete
+      );
       this.saveAdminSettings(false);
     },
     deleteCallPattern() {
       this.loader.deleteCallPattern = true;
-      this.adminSettings.callPatterns = this.adminSettings.callPatterns.filter((cp) => cp.prefix !== this.callPatternToDelete.prefix);
+      this.adminSettings.callPatterns = this.adminSettings.callPatterns.filter(
+        (cp) => cp.prefix !== this.callPatternToDelete.prefix
+      );
       this.saveAdminSettings(false);
     },
     deleteCost() {
       this.loader.deleteCost = true;
-      this.adminSettings.costs = this.adminSettings.costs.filter((c) => !(c.channelId == this.costToDelete.channelId && c.destination == this.costToDelete.destination));
+      this.adminSettings.costs = this.adminSettings.costs.filter(
+        (c) =>
+          !(
+            c.channelId == this.costToDelete.channelId &&
+            c.destination == this.costToDelete.destination
+          )
+      );
       this.saveAdminSettings(false);
     },
     retrieveTrunks() {
@@ -1197,13 +1409,13 @@ export default {
 
           for (const trunkString of trunkStrings) {
             const split = trunkString.split(",");
-            trunks.push({ name: split[0], channelId: split[1]});
+            trunks.push({ name: split[0], channelId: split[1] });
           }
           this.trunks = trunks;
 
           // trunkOptions is used for trunks dropdown
           this.trunkOptions = this.trunks.map((t) => {
-            return {value: t.channelId, text: t.name}
+            return { value: t.channelId, text: t.name };
           });
         },
         (error) => {
@@ -1224,16 +1436,16 @@ export default {
       return costs;
     },
     mapCostsForBackend() {
-        let costsBackend = [];
+      let costsBackend = [];
 
-        for (const c of this.adminSettings.costs) {
-          costsBackend.push({
-            channel_id: c.channelId,
-            destination: c.destination,
-            cost: c.cost.toString(),
-          });
-        }
-        return costsBackend;
+      for (const c of this.adminSettings.costs) {
+        costsBackend.push({
+          channel_id: c.channelId,
+          destination: c.destination,
+          cost: c.cost.toString(),
+        });
+      }
+      return costsBackend;
     },
     showCostsConfigModal() {
       this.openCostsConfigModal = true;
@@ -1264,7 +1476,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 .topbar .top.floating.dropdown .menu {
   left: -60px !important;
   margin-top: 12px !important;
@@ -1272,7 +1483,7 @@ export default {
 
 .filter-button {
   width: calc(100% + 1px);
-  
+
   .icon {
     margin-right: 10px !important;
   }
@@ -1296,22 +1507,23 @@ export default {
   height: 1rem;
 }
 
-.ui.menu:not(.vertical) .right.item, .ui.menu:not(.vertical) .right.menu {
-  border-right: 1px solid rgba(34,36,38,.15);
+.ui.menu:not(.vertical) .right.item,
+.ui.menu:not(.vertical) .right.menu {
+  border-right: 1px solid rgba(34, 36, 38, 0.15);
 }
 
-.filters-form .ui.multiple.search.dropdown>.text {
+.filters-form .ui.multiple.search.dropdown > .text {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .input-warning {
-    background-color: #fffaf3 !important;
-    color: #573a08 !important;
-    border: none !important;
-    -webkit-box-shadow: 0 0 0 1px #c9ba9b inset, 0 0 0 0 transparent !important;
-    box-shadow: 0 0 0 1px #c9ba9b inset, 0 0 0 0 transparent !important;
+  background-color: #fffaf3 !important;
+  color: #573a08 !important;
+  border: none !important;
+  -webkit-box-shadow: 0 0 0 1px #c9ba9b inset, 0 0 0 0 transparent !important;
+  box-shadow: 0 0 0 1px #c9ba9b inset, 0 0 0 0 transparent !important;
 }
 
 .destination {
