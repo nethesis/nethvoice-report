@@ -27,6 +27,7 @@ Queue and CDR/Costs reports
 %build
 %{makedocs}
 perl createlinks
+sed -i 's/_RELEASE_/%{version}/' %{name}.json
 
 %post
 %systemd_post nethvoice-report-api.service
@@ -53,6 +54,15 @@ cp -a %{SOURCE2} %{buildroot}/opt/nethvoice-report/api/
 cp -a %{SOURCE3} %{buildroot}/opt/nethvoice-report/tasks/
 cp collectd/asterisk_stats.py %{buildroot}/%{python2_sitelib}
 cp collectd/asterisk_stats.conf %{buildroot}/etc/collectd.d/
+
+mkdir -p %{buildroot}/usr/share/cockpit/%{name}/
+mkdir -p %{buildroot}/usr/share/cockpit/nethserver/applications/
+mkdir -p %{buildroot}/usr/libexec/nethserver/api/%{name}/
+cp -a manifest.json %{buildroot}/usr/share/cockpit/%{name}/
+cp -a logo.png %{buildroot}/usr/share/cockpit/%{name}/
+cp -a %{name}.json %{buildroot}/usr/share/cockpit/nethserver/applications/
+cp -a api-cockpit/* %{buildroot}/usr/libexec/nethserver/api/%{name}/
+chmod +x %{buildroot}/usr/libexec/nethserver/api/%{name}/*
 
 %{genfilelist} %{buildroot} \
     --dir /var/lib/redis/nethvoice-report 'attr(0755,redis,asterisk)' \
