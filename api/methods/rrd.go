@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 	"time"
+	"math"
 
 	"github.com/nethesis/nethvoice-report/api/configuration"
 	"github.com/nethesis/nethvoice-report/api/models"
@@ -104,6 +105,7 @@ func fetchRrd(dbFile string, start time.Time, end time.Time, label string) ([][]
 
 		for i := 0; i < len(fetchRes.DsNames); i++ {
 			v := fetchRes.ValueAt(i, row)
+			v = math.Round(v)
 
 			// set negative values (missing values) to zero
 			if v < 0 {
