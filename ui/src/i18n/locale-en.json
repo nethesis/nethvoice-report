@@ -129,7 +129,8 @@
       "queuePosition": "Queue position",
       "queueDuration": "Queue duration",
       "queueWait": "Queue wait",
-      "lostCall": "Lost calls"
+      "lostCall": "Lost calls",
+      "dataset": "Values"
     },
     "message": {
       "are_you_sure": "Are you sure?",
