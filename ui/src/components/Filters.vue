@@ -1105,6 +1105,14 @@ export default {
               return { value: queueNumber, text: queueName };
             });
             this.filterValues.queues = queues.sort(this.sortByProperty("text"));
+
+            // add queues to devices list
+            for (const queue of this.filterValues.queues) {
+              const extension = queue.value;
+              this.filterValues.devices[extension] = {
+                type: 'queue',
+              };
+            }
           }
 
           // agents

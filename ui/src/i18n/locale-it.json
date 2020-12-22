@@ -478,12 +478,15 @@
       "total_avg_duration": "Durata attesa media"
     },
     "device": {
-      "type": "Tipo dispositivo",
+      "type": "Tipo",
       "vendor": "Produttore",
       "model": "Modello",
-      "physical": "Fisico",
+      "physical": "Telefono fisico",
       "mobile": "Cellulare",
-      "webrtc": "WebRTC"
+      "webrtc": "WebRTC",
+      "ringgroups": "Gruppo di chiamata",
+      "meetme": "Conferenza",
+      "queue": "Coda"
     }
   }
 }
