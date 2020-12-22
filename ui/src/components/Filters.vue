@@ -1119,12 +1119,17 @@ export default {
               return { value: queueNumber, text: queueName };
             });
             this.filterValues.queues = queues.sort(this.sortByProperty("text"));
-
-            // set queue into root object
             this.$root.queues = {};
-            this.filterValues.queues.forEach(q => {
-              this.$root.queues[q.value] = q.text;
-            });
+
+            for (const queue of this.filterValues.queues) {
+              // set queues into root object
+              this.$root.queues[queue.value] = queue.text;
+
+              // add queues to devices list
+              this.filterValues.devices[queue.value] = {
+                type: 'queue',
+              };
+            }
           }
 
           // agents
