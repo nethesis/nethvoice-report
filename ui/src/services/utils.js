@@ -164,7 +164,7 @@ var UtilService = {
         });
 
         that.datasets.push({
-          label: this._.upperFirst(datasetName),
+          label: that.$t("caption." + datasetName),
           data: datasetValues,
           fill: false,
         });

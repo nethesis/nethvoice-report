@@ -129,7 +129,8 @@
       "queuePosition": "Posizione Coda",
       "queueDuration": "Durata Chiamata",
       "queueWait": "Attesa in Coda",
-      "lostCall": "Chiamate non gestite"
+      "lostCall": "Chiamate non gestite",
+      "dataset": "Valori"
     },
     "message": {
       "are_you_sure": "Sei sicuro?",
