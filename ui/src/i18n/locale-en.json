@@ -484,12 +484,15 @@
       "total_avg_duration": "Total avg duration"
     },
     "device": {
-      "type": "Device type",
+      "type": "Type",
       "vendor": "Vendor",
       "model": "Model",
-      "physical": "Physical",
+      "physical": "Physical phone",
       "mobile": "Mobile",
-      "webrtc": "WebRTC"
+      "webrtc": "WebRTC",
+      "ringgroups": "Call group",
+      "meetme": "Meeting",
+      "queue": "Queue"
     }
   }
 }

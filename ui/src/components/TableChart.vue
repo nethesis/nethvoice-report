@@ -189,7 +189,13 @@
                       ? 'phone'
                       : $root.devices[element].type == 'mobile'
                       ? 'mobile alternate'
-                      : 'headphones'
+                      : $root.devices[element].type == 'webrtc'
+                      ? 'headphones'
+                      : $root.devices[element].type == 'ringgroups'
+                      ? 'users'
+                      : $root.devices[element].type == 'meetme'
+                      ? 'comment alternate outline'
+                      : 'hourglass half'
                   "
                 />
               </span>
