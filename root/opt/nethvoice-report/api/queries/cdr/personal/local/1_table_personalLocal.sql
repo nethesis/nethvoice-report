@@ -6,8 +6,7 @@ SELECT
     DATE_FORMAT(calldate, '%Y-%m-%d %H:%i:%s') AS time£hourDate,
     SUBSTRING_INDEX(dispositions, ',',- 1) AS result£label, -- get last disposition
     duration AS totalDuration£seconds,
-    billsec AS billsec£seconds,
-    cost AS cost£currency
+    billsec AS billsec£seconds
 FROM	`<CDR_TABLE>`
 WHERE	calldate >= "{{ .Time.Interval.Start }}"
 	AND calldate <= "{{ .Time.Interval.End }}"
