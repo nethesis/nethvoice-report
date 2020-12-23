@@ -5,7 +5,8 @@ SELECT
     type AS call_type£label,
     DATE_FORMAT(calldate, '%Y-%m-%d %H:%i:%s') AS time£hourDate,
     SUBSTRING_INDEX(dispositions, ',',- 1) AS result£label, -- get last disposition
-    duration AS billsec£seconds,
+    duration AS duration£seconds,
+    billsec AS billsec£seconds,
     cost AS cost£currency
 FROM	`<CDR_TABLE>`
 WHERE	calldate >= "{{ .Time.Interval.Start }}"
