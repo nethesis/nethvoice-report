@@ -177,27 +177,39 @@
               <span
                 v-else-if="
                   columns[index] &&
-                  columns[index].format == 'phoneNumber' &&
-                  $root.devices[element]
-                "
-                v-tooltip="getDeviceTooltip(element)"
+                  columns[index].format == 'phoneNumber'"
               >
-                {{ element }}
-                <sui-icon
-                  :name="
-                    $root.devices[element].type == 'physical'
-                      ? 'phone'
-                      : $root.devices[element].type == 'mobile'
-                      ? 'mobile alternate'
-                      : $root.devices[element].type == 'webrtc'
-                      ? 'headphones'
-                      : $root.devices[element].type == 'ringgroups'
-                      ? 'users'
-                      : $root.devices[element].type == 'meetme'
-                      ? 'comment alternate outline'
-                      : 'hourglass half'
-                  "
-                />
+                <span v-if="$root.devices[element]"
+                  v-tooltip="getDeviceTooltip(element)"
+                >
+                  {{ element }}
+                  <sui-icon
+                    :name="
+                      $root.devices[element].type == 'physical'
+                        ? 'phone'
+                        : $root.devices[element].type == 'mobile'
+                        ? 'mobile alternate'
+                        : $root.devices[element].type == 'webrtc'
+                        ? 'headphones'
+                        : $root.devices[element].type == 'ringgroups'
+                        ? 'users'
+                        : $root.devices[element].type == 'meetme'
+                        ? 'comment alternate outline'
+                        : 'hourglass half'
+                    "
+                  />
+                </span>
+                <span v-else>
+                  <!-- search phone number in phonebook -->
+                  <span v-if="reversePhonebookSearch(element)" v-tooltip="$options.filters.reversePhonebookLookup(element, 'name|company', $root)">
+                    {{ element }}
+                    <sui-icon name='user' />
+                  </span>
+                  <span v-else>
+                    <!-- phone number not found in phonebook -->
+                    {{ element }}
+                  </span>
+                </span>
               </span>
               <span
                 v-else-if="
@@ -1024,6 +1036,10 @@ export default {
       }
       return tooltipContent;
     },
+    reversePhonebookSearch(element) {
+      const found = this.$options.filters.reversePhonebookLookup(element, "name", this.$root);
+      return found !== "-";
+    }
   },
 };
 </script>
