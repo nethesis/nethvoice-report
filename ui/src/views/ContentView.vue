@@ -511,7 +511,6 @@ export default {
       }
     },
     showCdrDetailsModal(row) {
-      //// adapt to columns index in query
       this.cdr.details.linkedId = row[0];
       this.cdr.details.callType = row[3];
       this.cdr.details.result = row[5];
