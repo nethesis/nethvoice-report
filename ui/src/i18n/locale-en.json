@@ -349,7 +349,9 @@
       "FAILED": "Failed",
       "IN": "Inbound",
       "OUT": "Outbound",
-      "LOCAL": "Local"
+      "LOCAL": "Local",
+      "totalDuration": "Total duration",
+      "billsec": "Actual duration"
     },
     "command": {
       "save": "Save",
