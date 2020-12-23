@@ -356,7 +356,9 @@
       "FAILED": "Fallita",
       "IN": "In entrata",
       "OUT": "In uscita",
-      "LOCAL": "Locale"
+      "LOCAL": "Locale",
+      "totalDuration": "Durata totale",
+      "billsec": "Durata effettiva"
     },
     "command": {
       "save": "Salva",
