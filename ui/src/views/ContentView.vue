@@ -143,13 +143,21 @@
             </sui-statistic>
             <sui-statistic in-group>
               <sui-statistic-value>{{
-                cdr.details.duration | formatTime
+                cdr.details.totalDuration | formatTime
               }}</sui-statistic-value>
               <sui-statistic-label>{{
-                $t("table.duration")
+                $t("table.totalDuration")
               }}</sui-statistic-label>
             </sui-statistic>
-            <sui-statistic in-group :color="'blue'">
+            <sui-statistic in-group>
+              <sui-statistic-value>{{
+                cdr.details.actualDuration | formatTime
+              }}</sui-statistic-value>
+              <sui-statistic-label>{{
+                $t("table.billsec")
+              }}</sui-statistic-label>
+            </sui-statistic>
+            <sui-statistic v-if="cdr.details.cost" in-group :color="'blue'">
               <sui-statistic-value>{{
                 cdr.details.cost | formatCurrency }} {{ adminSettings.currency
               }}</sui-statistic-value>
@@ -238,7 +246,8 @@ export default {
           linkedId: "",
           callType: "",
           result: "",
-          duration: "",
+          totalDuration: "",
+          actualDuration: "",
           cost: "",
           data: [],
         },
@@ -514,8 +523,9 @@ export default {
       this.cdr.details.linkedId = row[0];
       this.cdr.details.callType = row[3];
       this.cdr.details.result = row[5];
-      this.cdr.details.duration = row[6];
-      this.cdr.details.cost = row[7];
+      this.cdr.details.totalDuration = row[6];
+      this.cdr.details.actualDuration = row[7];
+      this.cdr.details.cost = row[8];
       this.cdr.details.data = [];
       this.cdr.openDetailsModal = true;
       const linkedId = this.cdr.details.linkedId;
