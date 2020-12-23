@@ -26,6 +26,7 @@ import (
 	"flag"
 	"io/ioutil"
 	"net/http"
+	"os"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/gzip"
@@ -114,5 +115,14 @@ func main() {
 		c.JSON(http.StatusNotFound, gin.H{"message": "API not found"})
 	})
 
-	router.Run(configuration.Config.ListenAddress)
+	var listenAddress string
+	port := os.Getenv("PORT")
+
+	if port != "" {
+		listenAddress = "0.0.0.0:" + port
+	} else {
+		listenAddress = configuration.Config.ListenAddress
+	}
+
+	router.Run(listenAddress)
 }
