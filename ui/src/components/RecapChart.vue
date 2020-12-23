@@ -2,8 +2,7 @@
   <div>
     <sui-grid class="recap">
       <div
-        v-for="(entry, i) in entries"
-        :key="i"
+        v-if="entry"
         :class="
           entry.expanded
             ? 'sixteen wide column'
@@ -232,6 +231,19 @@ export default {
       entries: {},
       unknownDestinationMessage: null,
     };
+  },
+  computed: {
+    entry: function () {
+      switch (this.$route.meta.view) {
+        case "inbound":
+          return this.entries["IN"];
+        case "outbound":
+          return this.entries["OUT"];
+        case "local":
+          return this.entries["LOCAL"];
+      }
+      return null;
+    },
   },
   mounted() {
     if (this.data) {
