@@ -71,11 +71,12 @@ func GetCallDetails(c *gin.Context) {
 	db := source.CDRInstance()
 	results, errQuery := db.Query(`
 	select
+		DATE_FORMAT(calldate, '%Y-%m-%d %H:%i:%s') AS time£hourDate,
 		src AS src£phoneNumber,
 		dst AS dst£phoneNumber,
-		DATE_FORMAT(calldate, '%Y-%m-%d %H:%i:%s') AS time,
 		disposition AS result£label,
-		billsec
+		duration AS totalDuration£seconds,
+		billsec AS billsec£seconds
 	FROM cdr
 	WHERE linkedid = ?
 	ORDER BY calldate

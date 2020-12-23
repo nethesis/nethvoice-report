@@ -351,7 +351,9 @@
       "OUT": "In uscita",
       "LOCAL": "Locale",
       "totalDuration": "Durata totale",
-      "billsec": "Durata effettiva"
+      "billsec": "Durata effettiva",
+      "src": "Sorgente",
+      "dst": "Destinazione"
     },
     "command": {
       "save": "Salva",
