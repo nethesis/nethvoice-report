@@ -89,7 +89,7 @@ var Filters = {
         return currencyValue.toLocaleString();
     },
     reversePhonebookLookup: function (phoneNumber, field, root) {
-        // field is either "name" or "company"
+        // field can be "name", "company" or "name|company"
 
         if (!root.reversePhonebook[phoneNumber]) {
             // search phone number in phonebook
@@ -115,7 +115,16 @@ var Filters = {
                 }
             }
         }
-        return root.reversePhonebook[phoneNumber][field];
+
+        if (field == "name|company") {
+            if (root.reversePhonebook[phoneNumber]["name"] !== "-") {
+                return root.reversePhonebook[phoneNumber]["name"] + " | " + root.reversePhonebook[phoneNumber]["company"];
+            } else {
+                return "-";
+            }
+        } else {
+            return root.reversePhonebook[phoneNumber][field];
+        }
     }
 };
 
