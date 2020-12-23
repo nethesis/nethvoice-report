@@ -1,0 +1,18 @@
+# Chiamanti Univoci
+
+Numero di chiamanti univoci totali per le code selezionate.
+
+Il grafico a torta mostra il totale dei chiamanti univoci delle chiamate entrate nelle 
+code selezionatee lo mette a confronto in modo proporzionale.
+
+Per chiamanti univoci si intendono tutti i numeri telefonici che hanno contattato la 
+coda contati singolarmente.
+
+Se nessuna coda è stata selezionata, il grafico mostrerà i chiamanti univoci di tutte 
+le code disponibili.
+
+Il grafico può contenere al massimo 8 sezioni. Le code eccedenti questo numero
+verranno visualizzate in una sezione ``Altri``.
+
+Se presente, cliccare il bottone ``Visualizza dettagli`` per visualizzare tutti i dati
+in formato tabellare.
