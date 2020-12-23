@@ -199,6 +199,13 @@
                   "
                 />
               </span>
+              <span
+                v-else-if="
+                  columns[index] && columns[index].format == 'currency'
+                "
+              >
+                {{ element | formatCurrency }} {{ $parent.$data.adminSettings.currency }}
+              </span>
               <span v-else>
                 {{ element }}
               </span>
