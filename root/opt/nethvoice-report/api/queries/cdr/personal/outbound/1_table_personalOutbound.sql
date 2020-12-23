@@ -1,9 +1,9 @@
 SELECT	
     linkedid,
+    DATE_FORMAT(calldate, '%Y-%m-%d %H:%i:%s') AS time£hourDate,
     src AS src£phoneNumber,
     dst AS dst£phoneNumber,
     type AS call_type£label,
-    DATE_FORMAT(calldate, '%Y-%m-%d %H:%i:%s') AS time£hourDate,
     SUBSTRING_INDEX(dispositions, ',',- 1) AS result£label, -- get last disposition
     duration AS totalDuration£seconds,
     billsec AS billsec£seconds,
