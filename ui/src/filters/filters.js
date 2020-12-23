@@ -117,10 +117,16 @@ var Filters = {
         }
 
         if (field == "name|company") {
-            if (root.reversePhonebook[phoneNumber]["name"] !== "-") {
-                return root.reversePhonebook[phoneNumber]["name"] + " | " + root.reversePhonebook[phoneNumber]["company"];
-            } else {
+            const contact = root.reversePhonebook[phoneNumber];
+
+            if (contact.name == "-") {
                 return "-";
+            } else {
+                if (contact.company && contact.company != "-") {
+                    return contact.name + " | " + contact.company;
+                } else {
+                    return contact.name;
+                }
             }
         } else {
             return root.reversePhonebook[phoneNumber][field];
