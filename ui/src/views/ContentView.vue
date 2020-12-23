@@ -521,7 +521,7 @@ export default {
     },
     showCdrDetailsModal(row) {
       this.cdr.details.linkedId = row[0];
-      this.cdr.details.callType = row[3];
+      this.cdr.details.callType = row[4];
       this.cdr.details.result = row[5];
       this.cdr.details.totalDuration = row[6];
       this.cdr.details.actualDuration = row[7];

@@ -357,7 +357,9 @@
       "OUT": "Outbound",
       "LOCAL": "Local",
       "totalDuration": "Total duration",
-      "billsec": "Actual duration"
+      "billsec": "Actual duration",
+      "src": "Source",
+      "dst": "Destination"
     },
     "command": {
       "save": "Save",
