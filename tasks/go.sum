@@ -229,6 +229,12 @@ github.com/nethesis/nethvoice-report/api v0.0.0-20201215155657-e4cdb6b81a43 h1:y
 github.com/nethesis/nethvoice-report/api v0.0.0-20201215155657-e4cdb6b81a43/go.mod h1:EVlrgK6wN3zaCi8E0e8A9YwMlTKj+2u8lbFF811x5K8=
 github.com/nethesis/nethvoice-report/api v0.0.0-20201216131606-e3c510aea411 h1:rnu39QynlVulRyKy/84WefxoshokhQ/KYQNy4EMoyv8=
 github.com/nethesis/nethvoice-report/api v0.0.0-20201216131606-e3c510aea411/go.mod h1:EVlrgK6wN3zaCi8E0e8A9YwMlTKj+2u8lbFF811x5K8=
+github.com/nethesis/nethvoice-report/api v0.0.0-20201216151726-3e081ae888fb h1:MJfUVE5o2DlFiatii+FuqUXrI9IYVrPxBkqYrQe4sFA=
+github.com/nethesis/nethvoice-report/api v0.0.0-20201216151726-3e081ae888fb/go.mod h1:EVlrgK6wN3zaCi8E0e8A9YwMlTKj+2u8lbFF811x5K8=
+github.com/nethesis/nethvoice-report/api v0.0.0-20201217092340-b76685a77e11 h1:xSCeKaPpPlAjVT4khDt2Ebk4iZgLdLQj2PpIMuKwHCQ=
+github.com/nethesis/nethvoice-report/api v0.0.0-20201217092340-b76685a77e11/go.mod h1:EVlrgK6wN3zaCi8E0e8A9YwMlTKj+2u8lbFF811x5K8=
+github.com/nethesis/nethvoice-report/api v0.0.0-20201217114225-be42fc91cf39 h1:GJeyRaT72RGLB4EO1kfZ4dqQM2w5FcrmVsdvJ8HZHkA=
+github.com/nethesis/nethvoice-report/api v0.0.0-20201217114225-be42fc91cf39/go.mod h1:EVlrgK6wN3zaCi8E0e8A9YwMlTKj+2u8lbFF811x5K8=
 github.com/nleeper/goment v1.4.0 h1:k+PnV26S9wnxI+ryxKEkpG7JhVtDJpM6+CzeRxh5S54=
 github.com/nleeper/goment v1.4.0/go.mod h1:zDl5bAyDhqxwQKAvkSXMRLOdCowrdZz53ofRJc4VhTo=
 github.com/oklog/ulid v1.3.1/go.mod h1:CirwcVhetQ6Lv90oh/F+FBtV6XMibvdAFo93nm5qn4U=

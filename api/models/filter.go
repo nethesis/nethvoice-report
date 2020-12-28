@@ -23,18 +23,36 @@
 package models
 
 type Filter struct {
-	Queues           []string `json:"queues"`
-	Groups           []string `json:"groups"`
-	Agents           []string `json:"agents"`
-	Users            []string `json:"users"`
-	IVRs             []string `json:"ivrs"`
-	Phones           []string `json:"phones"`
-	Trunks           []string `json:"trunks"`
-	DIDs             []string `json:"dids"`
-	Sources          []string `json:"sources"`
-	Destinations     []string `json:"destinations"`
-	CallType         []string `json:"callType"`
-	Duration         string   `json:"duration"`
+	Queues       []string `json:"queues"`
+	GroupsUi     []string `json:"groupsUi"`
+	Groups       []string `json:"groups"`
+	Agents       []string `json:"agents"`
+	UsersUi      []string `json:"usersUi"`
+	Users        []string `json:"users"`
+	IVRs         []string `json:"ivrs"`
+	Phones       []string `json:"phones"`
+	Trunks       []string `json:"trunks"`
+	DIDs         []string `json:"dids"`
+	Sources      []string `json:"sources"`
+	Destinations []string `json:"destinations"`
+	SourcesUi    struct {
+		Title       string `json:"title"`
+		Description string `json:"description"`
+		PhoneNumber string `json:"phoneNumber"`
+		Value       string `json:"value"`
+	} `json:"sourcesUi"`
+	DestinationsUi struct {
+		Title       string `json:"title"`
+		Description string `json:"description"`
+		PhoneNumber string `json:"phoneNumber"`
+		Value       string `json:"value"`
+	} `json:"destinationsUi"`
+	CallType   []string `json:"callType"`
+	Duration   string   `json:"duration"`
+	DurationUi struct {
+		Title string `json:"title"`
+		Value string `json:"value"`
+	} `json:"durationUi"`
 	CallDestinations []string `json:"callDestinations"`
 	Patterns         []string `json:"patterns"`
 	Devices          []string `json:"devices"`
