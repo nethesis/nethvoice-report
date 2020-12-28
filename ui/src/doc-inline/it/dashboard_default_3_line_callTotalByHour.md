@@ -1,6 +1,6 @@
 # Chiamate per Orario
 
-Distribuzione oraria delle chiamate totali per le code selezionate.
+Distribuzione oraria delle chiamate *Entrate* nelle code selezionate.
 
 Il grafico mostra nell'orario lavorativo impostato il totale delle chiamate entrate nelle 
 code selezionate.

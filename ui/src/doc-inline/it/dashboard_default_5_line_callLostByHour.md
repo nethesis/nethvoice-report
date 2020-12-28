@@ -1,6 +1,6 @@
 # Chiamate Non Risposte per Orario
 
-Distribuzione oraria delle chiamate no risposte per le code selezionate.
+Distribuzione oraria delle chiamate *Non Risposte* per le code selezionate.
 
 Il grafico mostra nell'orario lavorativo impostato il totale delle chiamate non risposte 
 nelle code selezionate.

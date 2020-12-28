@@ -1,6 +1,6 @@
 # Chiamate per Coda
 
-Numero di chiamate totali per le code selezionate.
+Numero di chiamate *Totali* per le code selezionate.
 
 Il grafico a torta mostra il totale delle chiamate entrate nelle code selezionate 
 e le mette a confronto in modo proporzionale.

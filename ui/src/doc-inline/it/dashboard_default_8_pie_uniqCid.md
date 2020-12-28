@@ -1,6 +1,6 @@
 # Chiamanti Univoci
 
-Numero di chiamanti univoci totali per le code selezionate.
+Numero di chiamanti *Univoci* totali per le code selezionate.
 
 Il grafico a torta mostra il totale dei chiamanti univoci delle chiamate entrate nelle 
 code selezionatee lo mette a confronto in modo proporzionale.

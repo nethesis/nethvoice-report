@@ -1,6 +1,6 @@
 # Totale Chiamate
 
-Numero di chiamate totale di tutte le code del centralino.
+Numero di chiamate *Totale* di tutte le code del centralino.
 
 Il grafico mostra il numero di chiamate entrate in tutte le code del 
 centralino in tempo reale al variare del tempo.

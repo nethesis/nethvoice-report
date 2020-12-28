@@ -1,6 +1,6 @@
 # Chiamate in Coda
 
-Numero di chiamate nelle code selezionate nel tempo.
+Numero di chiamate *in Attesa* nelle code selezionate nel tempo.
 
 Il grafico mostra al variare del tempo il numero di chiamate in attesa nelle code
 selezionate.

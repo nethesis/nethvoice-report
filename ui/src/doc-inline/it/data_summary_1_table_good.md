@@ -1,20 +1,23 @@
 # Chiamate Evase
 
-Dati riguardanti le chiamate risposte per le code selezionate nel periodo 
-impostato raggruppati secondo la scelta fatta nei filtri.
+Dati riguardanti le chiamate *Evase* per le code selezionate nel 
+periodo impostato, i dati vengono raggruppati secondo la scelta fatta 
+nei filtri.
 
-Vengono mostrati per le chiamate risposte: 
+Le chiamate *Evase* sono le chiamate risposte dagli agenti delle code.
 
-- Periodo di raggruppamento
+Le voci mostrate per le chiamate *Evase* sono: 
+
+- Periodo di Raggruppamento
 - Numero Coda
 - Nome Coda
-- Chiamanti Univoci (numeri telefonici che hanno avuto risposta contati 
-singolarmente)
-- Totale chiamate risposte
+- Chiamanti Univoci (totale numeri telefonici che hanno avuto risposta 
+contati singolarmente)
+- Totale Chiamate Evase
 - Attesa massima, minima, media prima della risposta
 - Durata della chiamata massima, minima e media
 - Posizione di entrata in coda massima
-- Posizione di entrata in coda minima
+- Posizione di entrata in coda media
 
-Se nessuna coda è stata selezionata, verranno mostrati i dati  tutte le 
-code disponibili.
+Se nessuna coda è stata selezionata, verranno mostrati i dati di tutte 
+le code disponibili.

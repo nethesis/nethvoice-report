@@ -1,6 +1,6 @@
 # Chiamate Risposte per Orario
 
-Distribuzione oraria delle chiamate risposte per le code selezionate.
+Distribuzione oraria delle chiamate *Risposte* per le code selezionate.
 
 Il grafico mostra nell'orario lavorativo impostato il totale delle chiamate risposte nelle
 code selezionate.

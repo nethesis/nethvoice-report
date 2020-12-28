@@ -1,6 +1,6 @@
 # Chiamate per Agente
 
-Numero di chiamate gestite da ogni agente selezionato delle code selezionate.
+Numero di chiamate *Risposte* da ogni agente selezionato delle code selezionate.
 
 Il grafico a torta mostra il totale delle chiamate risposte da ogni agente selezionato e 
 lo mette a confronto proporzionale con gli altri agenti selezionati, i dati si riferiscono 
