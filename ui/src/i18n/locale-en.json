@@ -469,7 +469,14 @@
       "district": "district",
       "area code": "area code",
       "province": "province",
-      "region": "region"
+      "region": "region",
+      "incoming": "incoming",
+      "inbound": "inbound",
+      "outgoing": "outgoing",
+      "outbound": "outbound",
+      "internal": "internal",
+      "local": "local",
+      "personal": "personal"
     },
     "recap": {
       "inbound_calls": "Inbound calls",
