@@ -360,7 +360,8 @@
       "billsec": "Durata effettiva",
       "src": "Sorgente",
       "dst": "Destinazione",
-      "pbx": "Centralino"
+      "pbx": "Centralino",
+      "did": "DID"
     },
     "command": {
       "save": "Salva",

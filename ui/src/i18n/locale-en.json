@@ -360,7 +360,8 @@
       "billsec": "Actual duration",
       "src": "Source",
       "dst": "Destination",
-      "pbx": "PBX"
+      "pbx": "PBX",
+      "did": "DID"
     },
     "command": {
       "save": "Save",

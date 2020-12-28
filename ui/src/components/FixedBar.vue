@@ -158,21 +158,21 @@
         </div>
         <!-- start cdr -->
         <!-- label: caller sources active filter -->
-        <div class="ui label" v-if="showFilterCdrCaller && activeFilters.sources && activeFilters.sources.title">
+        <div class="ui label" v-if="showFilterCdrCaller && activeFilters.sourcesUi && activeFilters.sourcesUi.title">
           <span class="field">
             {{$t('filter.caller_label')}}:
           </span>
           <span class="value">
-            {{activeFilters.sources.title}}
+            {{activeFilters.sourcesUi.title}}
           </span>
         </div>
         <!-- label: caller destinations active filter -->
-        <div class="ui label" v-if="showFilterCdrCallee && activeFilters.destinations && activeFilters.destinations.title">
+        <div class="ui label" v-if="showFilterCdrCallee && activeFilters.destinationsUi && activeFilters.destinationsUi.title">
           <span class="field">
             {{$t('filter.callee')}}:
           </span>
           <span class="value">
-            {{activeFilters.destinations.title}}
+            {{activeFilters.destinationsUi.title}}
           </span>
         </div>
         <!-- label: call type active filter -->
@@ -185,12 +185,12 @@
           </span>
         </div>
         <!-- label: call duration active filter -->
-        <div class="ui label" v-if="showFilterCdrCallDuration &&  activeFilters.duration && activeFilters.duration.title">
+        <div class="ui label" v-if="showFilterCdrCallDuration &&  activeFilters.durationUi && activeFilters.durationUi.title">
           <span class="field">
             {{$t('filter.call_duration')}}:
           </span>
           <span class="value">
-            {{activeFilters.duration.title}}
+            {{activeFilters.durationUi.title}}
           </span>
         </div>
         <!-- label: did active filter -->
@@ -212,21 +212,21 @@
           </span>
         </div>
         <!-- label: cti groups active filter -->
-        <div class="ui label" v-if="showFilterCdrCtiGroups && activeFilters.groups && (activeFilters.groups.length > 0)">
+        <div class="ui label" v-if="showFilterCdrCtiGroups && activeFilters.groups && (activeFilters.groupsUi.length > 0)">
           <span class="field">
             {{$t('filter.cti_group')}}:
           </span>
           <span class="value">
-            {{activeFilters.groups}}
+            {{activeFilters.groupsUi}}
           </span>
         </div>
         <!-- label: users active filter -->
-        <div class="ui label" v-if="showFilterCdrUser && activeFilters.users && (activeFilters.users.length > 0)">
+        <div class="ui label" v-if="showFilterCdrUser && activeFilters.usersUi && (activeFilters.usersUi.length > 0)">
           <span class="field">
             {{$t('filter.user')}}:
           </span>
           <span class="value">
-            {{activeFilters.users}}
+            {{activeFilters.usersUi}}
           </span>
         </div>
         <!-- label: destination type active filter -->
@@ -368,13 +368,13 @@ export default {
         this.activeFilters.queues = this.activeFilters.queues.join(", ")
       }
     },
-    "activeFilters.groups": function () {
-      if (this.activeFilters.groups && this.lodash.isArray(this.activeFilters.groups) && this.activeFilters.groups.length > 0) {
-        this.activeFilters.groups.forEach((element, key) => {
+    "activeFilters.groupsUi": function () {
+      if (this.activeFilters.groupsUi && this.lodash.isArray(this.activeFilters.groupsUi) && this.activeFilters.groupsUi.length > 0) {
+        this.activeFilters.groupsUi.forEach((element, key) => {
          let groupsValuesText = this.filterValues.ctiGroups.find(obj => obj.value === element).text
-          this.activeFilters.groups[key] = groupsValuesText
+          this.activeFilters.groupsUi[key] = groupsValuesText
         })
-        this.activeFilters.groups = this.activeFilters.groups.join(", ")
+        this.activeFilters.groupsUi = this.activeFilters.groupsUi.join(", ")
       }
     },
     "activeFilters.agents": function () {
@@ -407,22 +407,6 @@ export default {
         this.activeFilters.origins = this.activeFilters.origins.join(", ")
       }
     },
-    "activeFilters.sources": function () {
-      if (this.activeFilters.sources && this.activeFilters.sources.title && this.activeFilters.sources.title != "") {
-        if (this.activeFilters.sources.value) {
-          let sourcesValues = this.filterValues.cdrCaller.find(obj => obj.value === this.activeFilters.sources.value)
-          this.activeFilters.sources.title = sourcesValues.title
-        }
-      }
-    },
-    "activeFilters.destinations": function () {
-      if (this.activeFilters.destinations && this.activeFilters.destinations.title && this.activeFilters.destinations.title != "") {
-        if (this.activeFilters.destinations.value) {
-          let destinationsValues = this.filterValues.cdrCaller.find(obj => obj.value === this.activeFilters.destinations.value)
-          this.activeFilters.destinations.title = destinationsValues.title
-        }
-      }
-    },
     "activeFilters.callType": function () {
       if (this.activeFilters.callType && this.lodash.isArray(this.activeFilters.callType) && this.activeFilters.callType.length > 0) {
         this.activeFilters.callType = this.activeFilters.callType.map((element) => {
@@ -446,13 +430,20 @@ export default {
         this.activeFilters.trunks = this.activeFilters.trunks.join(", ")
       }
     },
-    "activeFilters.users": function () {
-      if (this.activeFilters.users && this.lodash.isArray(this.activeFilters.users) && this.activeFilters.users.length > 0) {
-        this.activeFilters.users.forEach((element, key) => {
+    "activeFilters.usersUi": function () {
+      if (this.activeFilters.usersUi && this.lodash.isArray(this.activeFilters.usersUi) && this.activeFilters.usersUi.length > 0) {
+        this.activeFilters.usersUi.forEach((element, key) => {
           let usersValuesText = this.filterValues.users.find(obj => obj.value === element).text
-          this.activeFilters.users[key] = usersValuesText
+          this.activeFilters.usersUi[key] = usersValuesText
         })
-        this.activeFilters.users = this.activeFilters.users.join(", ")
+        this.activeFilters.usersUi = this.activeFilters.usersUi.join(", ")
+      }
+    },
+    "activeFilters.durationUi": function () {
+      if (this.activeFilters.durationUi && this.activeFilters.durationUi.title) {
+        if (!this.activeFilters.durationUi.value) {
+          this.activeFilters.durationUi.title += " " + this.$t("misc.seconds");
+        }
       }
     },
     "activeFilters.callDestinations": function () {

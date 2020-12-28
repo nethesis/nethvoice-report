@@ -5,6 +5,7 @@ SELECT
     dst AS dst£phoneNumber,
     type AS call_type£label,
     SUBSTRING_INDEX(dispositions, ',',- 1) AS result£label, -- get last disposition
+	  did,
     duration AS totalDuration£seconds,
     billsec AS billsec£seconds
 FROM	`<CDR_TABLE>`

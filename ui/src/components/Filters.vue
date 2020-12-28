@@ -298,19 +298,6 @@
               v-model="filter.queues"
             />
           </sui-form-field>
-          <!-- group not used -->
-          <sui-form-field v-if="showFilterGroup" width="four">
-            <label>{{ $t("filter.groups_label") }}</label>
-            <sui-dropdown
-              multiple
-              :options="filterValues.groups"
-              :placeholder="$t('filter.groups_label')"
-              search
-              selection
-              v-model="filter.groups"
-            />
-          </sui-form-field>
-          <!-- agents and extensions -->
           <sui-form-field v-if="showFilterAgent" width="four">
             <label>{{ $t("filter.agents_label") }}</label>
             <sui-dropdown
@@ -382,7 +369,7 @@
               v-model="filter.origins"
             />
           </sui-form-field>
-          <!-- destination -->
+          <!-- destination //// remove? -->
           <sui-form-field v-if="showFilterDestination" width="four">
             <label>{{ $t("filter.destinations_label") }}</label>
             <sui-dropdown
@@ -452,8 +439,8 @@
           </sui-form-field>
           <!-- CDR ONLY START -->
           <!-- EVERYWHERE -->
-          <!-- cdr: source / caller -->
-          <sui-form-field v-if="showFilterCdrCaller" width="four">
+          <!-- cdr: sources / caller -->
+          <sui-form-field v-show="showFilterCdrCaller" width="four">
             <label>{{ $t("filter.caller") }}</label>
             <SearchInput
               :options="filterValues.cdrCaller"
@@ -462,11 +449,11 @@
               :searchFields="['title', 'description', 'phoneNumber']"
               @input="onSourcesInput"
               @select="onSourcesSelect"
-              ref="sources"
+              ref="sourcesUi"
             />
           </sui-form-field>
-          <!-- cdr: call destination / callee -->
-          <sui-form-field v-if="showFilterCdrCallee" width="four">
+          <!-- cdr: call destinations / callee -->
+          <sui-form-field v-show="showFilterCdrCallee" width="four">
             <label>{{ $t("filter.callee") }}</label>
             <SearchInput
               :options="filterValues.cdrCallee"
@@ -475,7 +462,7 @@
               :searchFields="['title', 'description', 'phoneNumber']"
               @input="onDestinationsInput"
               @select="onDestinationsSelect"
-              ref="destinations"
+              ref="destinationsUi"
             />
           </sui-form-field>
           <!-- cdr: call type -->
@@ -491,7 +478,7 @@
             />
           </sui-form-field>
           <!-- cdr: call duration -->
-          <sui-form-field v-if="showFilterCdrCallDuration" width="four">
+          <sui-form-field v-show="showFilterCdrCallDuration" width="four">
             <label :class="{ 'error-color': errorCallDuration }">
               {{ $t("filter.call_duration") }}
             </label>
@@ -541,7 +528,7 @@
               :placeholder="$t('filter.cti_group')"
               search
               selection
-              v-model="filter.groups"
+              v-model="filter.groupsUi"
             />
           </sui-form-field>
           <!-- cdr: user -->
@@ -553,7 +540,7 @@
               :placeholder="$t('filter.user')"
               search
               selection
-              v-model="filter.users"
+              v-model="filter.usersUi"
             />
           </sui-form-field>
           <!-- cdr: call destinations -->
@@ -732,6 +719,7 @@
       :showFilterCdrUser="showFilterCdrUser"
       :showFilterCdrCallDestination="showFilterCdrCallDestination"
       :showFilterCdrDestination="showFilterCdrDestination"
+      :showFilterTimeHour="showFilterTimeHour"
       :cdrCallDurationMap="cdrCallDurationMap"
       :callDestinationsMap="callDestinationsMap"
       :filterValues="filterValues"
@@ -783,13 +771,13 @@ export default {
       selectedSearch: null,
       filter: {
         queues: [],
-        groups: [],
         agents: [],
         ivrs: [],
         reasons: [],
         results: [],
         choices: [],
-        destinations: {},
+        destinationsUi: {},
+        destinations: [],
         origins: [],
         time: {
           group: "",
@@ -803,13 +791,19 @@ export default {
         caller: "",
         contactName: "",
         nullCall: false, ////
-        sources: {},
+        sourcesUi: {},
+        sources: [],
+        groupsUi: [],
+        groups: [],
         callType: [],
-        duration: {},
+        durationUi: {},
+        duration: "",
         trunks: [],
+        usersUi: [],
         users: [],
         callDestinations: [],
         patterns: [],
+        dids: [],
       },
       filterValues: {
         queues: [],
@@ -1110,7 +1104,7 @@ export default {
             for (const queue of this.filterValues.queues) {
               const extension = queue.value;
               this.filterValues.devices[extension] = {
-                type: 'queue',
+                type: "queue",
               };
             }
           }
@@ -1123,7 +1117,7 @@ export default {
             this.filterValues.agents = agents.sort(this.sortByProperty("text"));
           }
 
-          // groups
+          // groups //// remove?
           if (this.defaultFilter.groups) {
             let groups = this.defaultFilter.groups.map((group) => {
               return { value: group, text: group };
@@ -1277,22 +1271,39 @@ export default {
     setFilterSelection(filter, fromLocalStorage) {
       if (fromLocalStorage) {
         this.filter.queues = filter.queues;
-        this.filter.groups = filter.groups;
+        this.filter.groupsUi = filter.groupsUi;
         this.filter.agents = filter.agents;
         this.filter.reasons = filter.reasons;
         this.filter.results = filter.results;
         this.filter.ivrs = filter.ivrs;
         this.filter.choices = filter.choices;
         this.filter.origins = filter.origins;
-        this.filter.destinations = filter.destinations;
         this.filter.caller = filter.caller;
         this.filter.contactName = filter.contactName;
+
         // cdr filters
-        this.filter.sources = filter.sources;
+
+        // sources
+        this.filter.sourcesUi = filter.sourcesUi;
+        if (filter.sourcesUi.title) {
+          this.$refs.sourcesUi.$data.query = filter.sourcesUi.title;
+        }
+
+        // destinations
+        this.filter.destinationsUi = filter.destinationsUi;
+        if (filter.destinationsUi.title) {
+          this.$refs.destinationsUi.$data.query = filter.destinationsUi.title;
+        }
+
+        // duration
+        if (filter.durationUi && filter.durationUi.title) {
+          this.filter.durationUi = filter.durationUi;
+          this.$refs.duration.$data.query = filter.durationUi.title;
+        }
+
         this.filter.callType = filter.callType;
-        this.filter.duration = filter.duration;
         this.filter.trunks = filter.trunks;
-        this.filter.users = filter.users;
+        this.filter.usersUi = filter.usersUi;
         this.filter.callDestinations = filter.callDestinations;
         this.filter.patterns = filter.patterns;
       }
@@ -1343,6 +1354,7 @@ export default {
 
           if (searchToSelect) {
             this.selectedSearch = searchToSelect;
+            this.setFilterValuesFromSearch();
           }
         },
         (error) => {
@@ -1374,9 +1386,7 @@ export default {
       let search = this.savedSearches.find(
         (s) => s.name === this.selectedSearch
       );
-
-      // set filter values
-      this.filter = JSON.parse(JSON.stringify(search.filter));
+      this.filter = this.prepareFilterForFrontend(search.filter);
     },
     selectTime(range) {
       this.errorTimeInterval = false;
@@ -1480,17 +1490,20 @@ export default {
       return timeIntervalValid && callDurationValid;
     },
     validateCallDuration() {
+      if (!this.showFilterCdrCallDuration) {
+        return true;
+      }
       this.errorCallDuration = false;
 
-      if (this.filter.duration.title && !this.filter.duration.value) {
+      if (this.filter.durationUi.title && !this.filter.durationUi.value) {
         // validate custom call duration (free input)
         const syntaxValid = new RegExp("^[0-9]+$", "i").test(
-          this.filter.duration.title
+          this.filter.durationUi.title
         );
         const syntaxValidWithUnit = new RegExp(
           "^[0-9]+ " + this.$t("misc.seconds") + "$",
           "i"
-        ).test(this.filter.duration.title);
+        ).test(this.filter.durationUi.title);
 
         if (!syntaxValid && !syntaxValidWithUnit) {
           this.errorCallDuration = true;
@@ -1540,6 +1553,161 @@ export default {
       }
       return true;
     },
+    prepareFilterForBackend() {
+      let backendFilter = JSON.parse(JSON.stringify(this.filter));
+
+      // retrieve contact name phones
+
+      backendFilter.phones = [];
+
+      if (this.filter.contactName) {
+        const contact = this.$root.phonebook.find((c) => {
+          return c.title == this.filter.contactName;
+        });
+
+        if (contact) {
+          let phoneNumbers = [];
+
+          for (const [phoneType, phoneList] of Object.entries(contact.phones)) {
+            for (const phoneNumber of phoneList) {
+              if (phoneNumber) {
+                phoneNumbers.push(phoneType + "_" + phoneNumber);
+              }
+            }
+          }
+
+          if (phoneNumbers.length) {
+            backendFilter.phones = phoneNumbers;
+          }
+        } else {
+          // no contact found, clear searched contact name from filters
+          this.filter.contactName = "";
+        }
+      }
+
+      // format time interval
+
+      if (backendFilter.time.interval) {
+        const dateFormat = this.getDateFormat();
+        backendFilter.time.interval.start = moment(
+          backendFilter.time.interval.start
+        ).format(dateFormat);
+        backendFilter.time.interval.end = moment(
+          backendFilter.time.interval.end
+        ).format(dateFormat);
+      }
+
+      // call duration
+
+      if (this.filter.durationUi.title) {
+        if (this.filter.durationUi.value) {
+          // chosen from options
+          backendFilter.duration = this.filter.durationUi.value;
+        } else {
+          // custom call duration (free input)
+          backendFilter.duration = this.filter.durationUi.title.replace(
+            " " + this.$t("misc.seconds"),
+            ""
+          );
+        }
+      } else {
+        // empty call duration
+        backendFilter.duration = "";
+      }
+
+      // sources
+
+      if (backendFilter.sourcesUi && backendFilter.sourcesUi.title) {
+        backendFilter.sources =
+          backendFilter.sourcesUi.value != null
+            ? backendFilter.sourcesUi.value.split(",")
+            : [backendFilter.sourcesUi.title];
+      } else {
+        backendFilter.sources = [];
+      }
+
+      // destinations
+
+      if (backendFilter.destinationsUi && backendFilter.destinationsUi.title) {
+        backendFilter.destinations =
+          backendFilter.destinationsUi.value != null
+            ? backendFilter.destinationsUi.value.split(",")
+            : [backendFilter.destinationsUi.title];
+      } else {
+        backendFilter.destinations = [];
+      }
+
+      // groups
+
+      if (backendFilter.groupsUi && backendFilter.groupsUi.length) {
+        let parsedGroups = [];
+        backendFilter.groupsUi.forEach((groups) => {
+          let groupExt = groups.split(",");
+          parsedGroups = parsedGroups.concat(groupExt);
+        });
+        backendFilter.groups = parsedGroups;
+      }
+
+      // users
+
+      if (backendFilter.usersUi && backendFilter.usersUi.length) {
+        let parsedUsers = [];
+        backendFilter.usersUi.forEach((users) => {
+          let userExt = users.split(",");
+          parsedUsers = parsedUsers.concat(userExt);
+        });
+        backendFilter.users = parsedUsers;
+      }
+      return backendFilter;
+    },
+    prepareFilterForFrontend(backendFilter) {
+      let frontendFilter = JSON.parse(JSON.stringify(backendFilter));
+
+      // convert time interval from string
+
+      const dateFormat = this.getDateFormat();
+      frontendFilter.time.interval.start = moment(
+        backendFilter.time.interval.start,
+        dateFormat
+      ).toDate();
+
+      frontendFilter.time.interval.end = moment(
+        backendFilter.time.interval.end,
+        dateFormat
+      ).toDate();
+
+      // call duration
+
+      if (backendFilter.durationUi.title) {
+        if (backendFilter.durationUi.value) {
+          // duration from options
+          const optionFound = this.cdrCallDurationMap.find((d) => {
+            return d.value == backendFilter.durationUi.value;
+          });
+
+          this.$refs.duration.$data.query = optionFound.title;
+        } else {
+          // custom call duration (free input)
+          this.$refs.duration.$data.query =
+            backendFilter.durationUi.title + " " + this.$t("misc.seconds");
+        }
+      }
+
+      // sources
+
+      if (backendFilter.sourcesUi.title) {
+        this.$refs.sourcesUi.$data.query = backendFilter.sourcesUi.title;
+      }
+
+      // destinations
+
+      if (backendFilter.destinationsUi.title) {
+        this.$refs.destinationsUi.$data.query =
+          backendFilter.destinationsUi.title;
+      }
+
+      return frontendFilter;
+    },
     applyFilters() {
       if (!this.validateFilters()) {
         return;
@@ -1558,102 +1726,7 @@ export default {
       // save filter to local storage
       this.set(this.reportFilterStorageName, this.filter);
 
-      let filterToApply = JSON.parse(JSON.stringify(this.filter));
-      filterToApply.phones = [];
-
-      // retrieve contact name phones
-      if (this.filter.contactName) {
-        const contact = this.$root.phonebook.find((c) => {
-          return c.title == this.filter.contactName;
-        });
-
-        if (contact) {
-          let phoneNumbers = [];
-
-          for (const [phoneType, phoneList] of Object.entries(contact.phones)) {
-            for (const phoneNumber of phoneList) {
-              if (phoneNumber) {
-                phoneNumbers.push(phoneType + "_" + phoneNumber);
-              }
-            }
-          }
-
-          if (phoneNumbers.length) {
-            filterToApply.phones = phoneNumbers;
-          }
-        } else {
-          // no contact found, clear searched contact name from filters
-          this.filter.contactName = "";
-        }
-      }
-
-      // format time interval
-
-      if (filterToApply.time.interval) {
-        const dateFormat = this.getDateFormat();
-        filterToApply.time.interval.start = moment(
-          filterToApply.time.interval.start
-        ).format(dateFormat);
-        filterToApply.time.interval.end = moment(
-          filterToApply.time.interval.end
-        ).format(dateFormat);
-      }
-
-      // call duration
-      if (this.filter.duration.title) {
-        if (this.filter.duration.value) {
-          // chosen from options
-          filterToApply.duration = this.filter.duration.value;
-        } else {
-          // custom call duration (free input)
-          filterToApply.duration = this.filter.duration.title.replace(
-            " " + this.$t("misc.seconds"),
-            ""
-          );
-        }
-      } else {
-        // empty call duration
-        filterToApply.duration = "";
-      }
-
-      // parse sources berfore apply
-      if (filterToApply.sources.title) {
-        filterToApply.sources =
-          filterToApply.sources.value != null
-            ? filterToApply.sources.value.split(",")
-            : [filterToApply.sources.title];
-      } else {
-        filterToApply.sources = [];
-      }
-
-      // parse destinations berfore apply
-      if (filterToApply.destinations.title) {
-        filterToApply.destinations =
-          filterToApply.destinations.value != null
-            ? filterToApply.destinations.value.split(",")
-            : [filterToApply.destinations.title];
-      } else {
-        filterToApply.destinations = [];
-      }
-
-      // parse groups
-      if (filterToApply.groups && filterToApply.groups.length > 0) {
-        let parsedGroups = [];
-        filterToApply.groups.forEach((groups) => {
-          let groupExt = groups.split(",");
-          parsedGroups = parsedGroups.concat(groupExt);
-        });
-        filterToApply.groups = parsedGroups;
-      }
-      // parse users
-      if (filterToApply.users && filterToApply.users.length > 0) {
-        let parsedUsers = [];
-        filterToApply.users.forEach((users) => {
-          let userExt = users.split(",");
-          parsedUsers = parsedUsers.concat(userExt);
-        });
-        filterToApply.users = parsedUsers;
-      }
+      let filterToApply = this.prepareFilterForBackend();
 
       // apply filters
       this.$root.$emit("applyFilters", filterToApply);
@@ -1695,16 +1768,12 @@ export default {
       this.saveSearch(this.newSearchName);
     },
     computeFilterToSave() {
-      let filterToSave = JSON.parse(JSON.stringify(this.filter));
+      let filterToSave = this.prepareFilterForBackend();
 
-      // remove hidden filters
+      // don't save hidden filters
 
       if (!this.showFilterQueue) {
         filterToSave.queues = [];
-      }
-
-      if (!this.showFilterGroup) {
-        filterToSave.groups = [];
       }
 
       if (!this.showFilterAgent) {
@@ -1747,15 +1816,44 @@ export default {
         filterToSave.caller = "";
       }
 
-      // convert time interval to string
-      if (this.filter.time.interval) {
-        const dateFormat = this.getDateFormat();
-        filterToSave.time.interval.start = moment(
-          this.filter.time.interval.start
-        ).format(dateFormat);
-        filterToSave.time.interval.end = moment(
-          this.filter.time.interval.end
-        ).format(dateFormat);
+      if (!this.showFilterCdrCaller) {
+        filterToSave.sources = [];
+      }
+
+      if (!this.showFilterCdrCallee) {
+        filterToSave.destinations = [];
+      }
+
+      if (!this.showFilterCdrCallType) {
+        filterToSave.callType = [];
+      }
+
+      if (!this.showFilterCdrCallDuration) {
+        filterToSave.duration = "";
+      }
+
+      if (!this.showFilterCdrTrunk) {
+        filterToSave.trunks = [];
+      }
+
+      if (!this.showFilterCdrDid) {
+        filterToSave.dids = [];
+      }
+
+      if (!this.showFilterCdrCtiGroups) {
+        filterToSave.groups = [];
+      }
+
+      if (!this.showFilterCdrUser) {
+        filterToSave.users = [];
+      }
+
+      if (!this.showFilterCdrCallDestination) {
+        filterToSave.callDestinations = [];
+      }
+
+      if (!this.showFilterCdrDestination) {
+        filterToSave.patterns = [];
       }
 
       return filterToSave;
@@ -1952,45 +2050,45 @@ export default {
     },
     clearFilters() {
       this.filter.queues = [];
-      this.filter.groups = [];
+      this.filter.groupsUi = [];
       this.filter.agents = [];
       this.filter.ivrs = [];
       this.filter.reasons = [];
       this.filter.results = [];
       this.filter.choices = [];
-      this.filter.destinations = {};
-      this.$refs.destinations.$data.query = "";
+      this.filter.destinationsUi = {};
+      this.$refs.destinationsUi.$data.query = "";
       this.filter.origins = [];
       this.filter.caller = "";
       this.filter.contactName = "";
       this.filter.callType = [];
-      this.filter.duration = {};
+      this.filter.durationUi = {};
       this.$refs.duration.$data.query = "";
-      this.filter.sources = {};
-      this.$refs.sources.$data.query = "";
+      this.filter.sourcesUi = {};
+      this.$refs.sourcesUi.$data.query = "";
       this.filter.trunks = [];
-      this.filter.users = [];
+      this.filter.usersUi = [];
       this.filter.callDestinations = [];
       this.filter.patterns = [];
       this.applyFilters();
     },
     onSourcesInput(value) {
-      this.filter.sources = { title: value };
+      this.filter.sourcesUi = { title: value };
     },
     onSourcesSelect(searchResult) {
-      this.filter.sources = searchResult;
+      this.filter.sourcesUi = searchResult;
     },
     onDestinationsInput(value) {
-      this.filter.destinations = { title: value };
+      this.filter.destinationsUi = { title: value };
     },
     onDestinationsSelect(searchResult) {
-      this.filter.destinations = searchResult;
+      this.filter.destinationsUi = searchResult;
     },
     onDurationInput(value) {
-      this.filter.duration = { title: value };
+      this.filter.durationUi = { title: value };
     },
     onDurationSelect(searchResult) {
-      this.filter.duration = searchResult;
+      this.filter.durationUi = searchResult;
     },
   },
   computed: {
