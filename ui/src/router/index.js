@@ -267,7 +267,7 @@ const routes = [
       section: "pbx",
       view: "inbound",
       report: "cdr",
-      tags: ["pbx", "incoming"],
+      tags: ["pbx", "incoming", "inbound"],
     },
   },
   {
@@ -280,7 +280,7 @@ const routes = [
       section: "pbx",
       view: "outbound",
       report: "cdr",
-      tags: ["pbx", "outgoing"],
+      tags: ["pbx", "outgoing", "outbound"],
     },
   },
   {
@@ -293,7 +293,7 @@ const routes = [
       section: "pbx",
       view: "local",
       report: "cdr",
-      tags: ["pbx", "internal"],
+      tags: ["pbx", "internal", "local"],
     }
   },
   {
@@ -306,7 +306,7 @@ const routes = [
       section: "personal",
       view: "inbound",
       report: "cdr",
-      tags: ["personal", "incoming"],
+      tags: ["personal", "incoming", "inbound"],
     }
   },
   {
@@ -319,7 +319,7 @@ const routes = [
       section: "personal",
       view: "outbound",
       report: "cdr",
-      tags: ["personal", "outgoing"],
+      tags: ["personal", "outgoing", "outbound"],
     }
   },
   {
@@ -332,7 +332,7 @@ const routes = [
       section: "personal",
       view: "local",
       report: "cdr",
-      tags: ["personal", "internal"],
+      tags: ["personal", "internal", "local"],
     }
   }
 ];
