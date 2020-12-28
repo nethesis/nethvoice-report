@@ -108,7 +108,7 @@
       "show_filters": "Visualizza filtri",
       "active_filters": "Filtri attivi",
       "filters": "Filtri",
-      "pbx": "Dati PBX",
+      "pbx": "Dati Centralino",
       "personal": "Dati personali",
       "inbound": "Chiamate in entrata",
       "outbound": "Chiamate in uscita",
@@ -353,7 +353,8 @@
       "totalDuration": "Durata totale",
       "billsec": "Durata effettiva",
       "src": "Sorgente",
-      "dst": "Destinazione"
+      "dst": "Destinazione",
+      "pbx": "Centralino"
     },
     "command": {
       "save": "Salva",

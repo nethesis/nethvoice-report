@@ -353,7 +353,8 @@
       "totalDuration": "Total duration",
       "billsec": "Actual duration",
       "src": "Source",
-      "dst": "Destination"
+      "dst": "Destination",
+      "pbx": "PBX"
     },
     "command": {
       "save": "Save",
