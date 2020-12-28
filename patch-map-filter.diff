@@ -1,0 +1,566 @@
+diff --git a/api/methods/queries.go b/api/methods/queries.go
+index 918e9fc..03cc37d 100644
+--- a/api/methods/queries.go
++++ b/api/methods/queries.go
+@@ -274,6 +274,8 @@ func executeSqlQuery(filter models.Filter, report string, section string, view s
+ 		return "", errors.Wrap(errTpl, "invalid query template compiling")
+ 	}
+ 
++	fmt.Println("*** executing query\n", queryString.String()) ////
++
+ 	// execute query
+ 	db := source.CDRInstance()
+ 	results, errQuery := db.Query(queryString.String())
+diff --git a/api/models/filter.go b/api/models/filter.go
+index a12a1c0..5eba2a5 100644
+--- a/api/models/filter.go
++++ b/api/models/filter.go
+@@ -23,16 +23,30 @@
+ package models
+ 
+ type Filter struct {
+-	Queues           []string `json:"queues"`
+-	Groups           []string `json:"groups"`
+-	Agents           []string `json:"agents"`
+-	Users            []string `json:"users"`
+-	IVRs             []string `json:"ivrs"`
+-	Phones           []string `json:"phones"`
+-	Trunks           []string `json:"trunks"`
+-	DIDs             []string `json:"dids"`
+-	Sources          []string `json:"sources"`
+-	Destinations     []string `json:"destinations"`
++	Queues       []string `json:"queues"`
++	GroupsUi     []string `json:"groupsUi"`
++	Groups       []string `json:"groups"`
++	Agents       []string `json:"agents"`
++	UsersUi      []string `json:"usersUi"`
++	Users        []string `json:"users"`
++	IVRs         []string `json:"ivrs"`
++	Phones       []string `json:"phones"`
++	Trunks       []string `json:"trunks"`
++	DIDs         []string `json:"dids"`
++	Sources      []string `json:"sources"`
++	Destinations []string `json:"destinations"`
++	SourcesUi    struct {
++		Title       string `json:"title`
++		Description string `json:"description`
++		PhoneNumber string `json:"phoneNumber`
++		Value       string `json:"value`
++	} `json:"sourcesUi"`
++	DestinationsUi struct {
++		Title       string `json:"title`
++		Description string `json:"description`
++		PhoneNumber string `json:"phoneNumber`
++		Value       string `json:"value`
++	} `json:"destinationsUi"`
+ 	CallType         []string `json:"callType"`
+ 	Duration         string   `json:"duration"`
+ 	CallDestinations []string `json:"callDestinations"`
+diff --git a/root/opt/nethvoice-report/api/queries/cdr/pbx/inbound/1_table_pbxInbound.sql b/root/opt/nethvoice-report/api/queries/cdr/pbx/inbound/1_table_pbxInbound.sql
+index c26ef41..a3ebc1e 100644
+--- a/root/opt/nethvoice-report/api/queries/cdr/pbx/inbound/1_table_pbxInbound.sql
++++ b/root/opt/nethvoice-report/api/queries/cdr/pbx/inbound/1_table_pbxInbound.sql
+@@ -5,6 +5,7 @@ SELECT
+     type AS call_type£label,
+     DATE_FORMAT(calldate, '%Y-%m-%d %H:%i:%s') AS time,
+     SUBSTRING_INDEX(dispositions, ',',- 1) AS result£label, -- get last disposition
++	did,
+     billsec,
+     cost
+     -- //// clid, dcontext, channel, dstchannel, lastapp, lastdata, duration, disposition, amaflags, accountcode, uniqueid, userfield, did, recordingfile, cnum, cnam, outbound_cnum, outbound_cnam, dst_cnam, peeraccount, sequence, ccompany, dst_ccompany, lastapps, dcontexts, call_type
+diff --git a/root/opt/nethvoice-report/api/views/data_summary_agent.sql b/root/opt/nethvoice-report/api/views/data_summary_agent.sql
+index 670fc19..b25d1ea 100644
+--- a/root/opt/nethvoice-report/api/views/data_summary_agent.sql
++++ b/root/opt/nethvoice-report/api/views/data_summary_agent.sql
+@@ -1,4 +1,4 @@
+-DROP TABLE IF EXISTS data_summary_agent_year;
++-- DROP TABLE IF EXISTS data_summary_agent_year; //// uncomment
+ 
+ DROP TABLE IF EXISTS data_summary_agent_month;
+ 
+@@ -6,36 +6,36 @@ DROP TABLE IF EXISTS data_summary_agent_week;
+ 
+ DROP TABLE IF EXISTS data_summary_agent_day;
+ 
+-CREATE TABLE data_summary_agent_year AS
+-SELECT
+-       Date_format(calldate, "%Y") AS period,
+-       src AS agentNum,
+-       (
+-              SELECT
+-                     name
+-              FROM
+-                     agent_extensions
+-              WHERE
+-                     extension = asteriskcdrdb.cdr.src
+-       ) AS agentName,
+-       Count(*) AS total,
+-       Count(DISTINCT clid) AS uniqCid,
+-       Min(billsec) AS minBill,
+-       Avg(billsec) AS avgBill,
+-       Max(billsec) AS maxBill
+-FROM
+-       asteriskcdrdb.cdr
+-WHERE
+-       billsec != 0
+-       AND src IN (
+-              SELECT
+-                     extension
+-              FROM
+-                     agent_extensions
+-       )
+-GROUP BY
+-       period,
+-       src;
++-- CREATE TABLE data_summary_agent_year AS //// uncomment
++-- SELECT
++--        Date_format(calldate, "%Y") AS period,
++--        src AS agentNum,
++--        (
++--               SELECT
++--                      name
++--               FROM
++--                      agent_extensions
++--               WHERE
++--                      extension = asteriskcdrdb.cdr.src
++--        ) AS agentName,
++--        Count(*) AS total,
++--        Count(DISTINCT clid) AS uniqCid,
++--        Min(billsec) AS minBill,
++--        Avg(billsec) AS avgBill,
++--        Max(billsec) AS maxBill
++-- FROM
++--        asteriskcdrdb.cdr
++-- WHERE
++--        billsec != 0
++--        AND src IN (
++--               SELECT
++--                      extension
++--               FROM
++--                      agent_extensions
++--        )
++-- GROUP BY
++--        period,
++--        src;
+ 
+ CREATE TABLE data_summary_agent_month AS
+ SELECT
+diff --git a/root/opt/nethvoice-report/api/views/performance_talk_time.sql b/root/opt/nethvoice-report/api/views/performance_talk_time.sql
+index d4b7ed4..15f595a 100644
+--- a/root/opt/nethvoice-report/api/views/performance_talk_time.sql
++++ b/root/opt/nethvoice-report/api/views/performance_talk_time.sql
+@@ -1,4 +1,4 @@
+-DROP TABLE IF EXISTS performance_talk_time_total;
++-- DROP TABLE IF EXISTS performance_talk_time_total; //// uncomment
+ 
+ DROP TABLE IF EXISTS performance_talk_time_total_5;
+ 
+@@ -36,23 +36,23 @@ DROP TABLE IF EXISTS performance_talk_time_total_600;
+ 
+ DROP TABLE IF EXISTS performance_talk_time_total_600p;
+ 
+-CREATE TABLE performance_talk_time_total AS
+-SELECT
+-       Date_format(From_unixtime(timestamp_in), '%Y-%m-%d') AS timestamp_in,
+-       Date_format(From_unixtime(timestamp_out), '%Y-%m-%d') AS timestamp_out,
+-       qname,
+-       Count(*) AS count
+-FROM
+-       asteriskcdrdb.report_queue
+-       JOIN asteriskcdrdb.cdr ON asteriskcdrdb.cdr.uniqueid = asteriskcdrdb.report_queue.timestamp_in
+-WHERE
+-       asteriskcdrdb.report_queue.action = 'ANSWER'
+-       AND asteriskcdrdb.cdr.disposition = 'ANSWERED'
+-       AND asteriskcdrdb.cdr.billsec > 0
+-GROUP BY
+-       Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
+-       Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'),
+-       qname;
++-- CREATE TABLE performance_talk_time_total AS //// uncomment
++-- SELECT
++--        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d') AS timestamp_in,
++--        Date_format(From_unixtime(timestamp_out), '%Y-%m-%d') AS timestamp_out,
++--        qname,
++--        Count(*) AS count
++-- FROM
++--        asteriskcdrdb.report_queue
++--        JOIN asteriskcdrdb.cdr ON asteriskcdrdb.cdr.uniqueid = asteriskcdrdb.report_queue.timestamp_in
++-- WHERE
++--        asteriskcdrdb.report_queue.action = 'ANSWER'
++--        AND asteriskcdrdb.cdr.disposition = 'ANSWERED'
++--        AND asteriskcdrdb.cdr.billsec > 0
++-- GROUP BY
++--        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
++--        Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'),
++--        qname;
+ 
+ CREATE TABLE performance_talk_time_total_5 AS
+ SELECT
+diff --git a/tasks/go.mod b/tasks/go.mod
+index f0a82e9..40ff7f8 100644
+--- a/tasks/go.mod
++++ b/tasks/go.mod
+@@ -6,7 +6,7 @@ require (
+ 	github.com/briandowns/spinner v1.11.1
+ 	github.com/fatih/color v1.9.0
+ 	github.com/gin-gonic/gin v1.6.3
+-	github.com/nethesis/nethvoice-report/api v0.0.0-20201216131606-e3c510aea411
++	github.com/nethesis/nethvoice-report/api v0.0.0-20201217114225-be42fc91cf39
+ 	github.com/pkg/errors v0.9.1
+ 	github.com/spf13/cobra v1.0.0
+ 	github.com/spf13/viper v1.7.1
+diff --git a/tasks/go.sum b/tasks/go.sum
+index e346eb9..626631f 100644
+--- a/tasks/go.sum
++++ b/tasks/go.sum
+@@ -230,6 +230,12 @@ github.com/nethesis/nethvoice-report/api v0.0.0-20201215155657-e4cdb6b81a43 h1:y
+ github.com/nethesis/nethvoice-report/api v0.0.0-20201215155657-e4cdb6b81a43/go.mod h1:EVlrgK6wN3zaCi8E0e8A9YwMlTKj+2u8lbFF811x5K8=
+ github.com/nethesis/nethvoice-report/api v0.0.0-20201216131606-e3c510aea411 h1:rnu39QynlVulRyKy/84WefxoshokhQ/KYQNy4EMoyv8=
+ github.com/nethesis/nethvoice-report/api v0.0.0-20201216131606-e3c510aea411/go.mod h1:EVlrgK6wN3zaCi8E0e8A9YwMlTKj+2u8lbFF811x5K8=
++github.com/nethesis/nethvoice-report/api v0.0.0-20201216151726-3e081ae888fb h1:MJfUVE5o2DlFiatii+FuqUXrI9IYVrPxBkqYrQe4sFA=
++github.com/nethesis/nethvoice-report/api v0.0.0-20201216151726-3e081ae888fb/go.mod h1:EVlrgK6wN3zaCi8E0e8A9YwMlTKj+2u8lbFF811x5K8=
++github.com/nethesis/nethvoice-report/api v0.0.0-20201217092340-b76685a77e11 h1:xSCeKaPpPlAjVT4khDt2Ebk4iZgLdLQj2PpIMuKwHCQ=
++github.com/nethesis/nethvoice-report/api v0.0.0-20201217092340-b76685a77e11/go.mod h1:EVlrgK6wN3zaCi8E0e8A9YwMlTKj+2u8lbFF811x5K8=
++github.com/nethesis/nethvoice-report/api v0.0.0-20201217114225-be42fc91cf39 h1:GJeyRaT72RGLB4EO1kfZ4dqQM2w5FcrmVsdvJ8HZHkA=
++github.com/nethesis/nethvoice-report/api v0.0.0-20201217114225-be42fc91cf39/go.mod h1:EVlrgK6wN3zaCi8E0e8A9YwMlTKj+2u8lbFF811x5K8=
+ github.com/nleeper/goment v1.4.0 h1:k+PnV26S9wnxI+ryxKEkpG7JhVtDJpM6+CzeRxh5S54=
+ github.com/nleeper/goment v1.4.0/go.mod h1:zDl5bAyDhqxwQKAvkSXMRLOdCowrdZz53ofRJc4VhTo=
+ github.com/oklog/ulid v1.3.1/go.mod h1:CirwcVhetQ6Lv90oh/F+FBtV6XMibvdAFo93nm5qn4U=
+diff --git a/ui/src/components/Filters.vue b/ui/src/components/Filters.vue
+index 9f64530..48b9267 100644
+--- a/ui/src/components/Filters.vue
++++ b/ui/src/components/Filters.vue
+@@ -298,19 +298,6 @@
+               v-model="filter.queues"
+             />
+           </sui-form-field>
+-          <!-- group not used -->
+-          <sui-form-field v-if="showFilterGroup" width="four">
+-            <label>{{ $t("filter.groups_label") }}</label>
+-            <sui-dropdown
+-              multiple
+-              :options="filterValues.groups"
+-              :placeholder="$t('filter.groups_label')"
+-              search
+-              selection
+-              v-model="filter.groups"
+-            />
+-          </sui-form-field>
+-          <!-- agents and extensions -->
+           <sui-form-field v-if="showFilterAgent" width="four">
+             <label>{{ $t("filter.agents_label") }}</label>
+             <sui-dropdown
+@@ -382,7 +369,7 @@
+               v-model="filter.origins"
+             />
+           </sui-form-field>
+-          <!-- destination -->
++          <!-- destination //// remove? -->
+           <sui-form-field v-if="showFilterDestination" width="four">
+             <label>{{ $t("filter.destinations_label") }}</label>
+             <sui-dropdown
+@@ -452,7 +439,7 @@
+           </sui-form-field>
+           <!-- CDR ONLY START -->
+           <!-- EVERYWHERE -->
+-          <!-- cdr: source / caller -->
++          <!-- cdr: sources / caller -->
+           <sui-form-field v-if="showFilterCdrCaller" width="four">
+             <label>{{ $t("filter.caller") }}</label>
+             <SearchInput
+@@ -462,10 +449,10 @@
+               :searchFields="['title', 'description', 'phoneNumber']"
+               @input="onSourcesInput"
+               @select="onSourcesSelect"
+-              ref="sources"
++              ref="sourcesUi"
+             />
+           </sui-form-field>
+-          <!-- cdr: call destination / callee -->
++          <!-- cdr: call destinations / callee -->
+           <sui-form-field v-if="showFilterCdrCallee" width="four">
+             <label>{{ $t("filter.callee") }}</label>
+             <SearchInput
+@@ -475,7 +462,7 @@
+               :searchFields="['title', 'description', 'phoneNumber']"
+               @input="onDestinationsInput"
+               @select="onDestinationsSelect"
+-              ref="destinations"
++              ref="destinationsUi"
+             />
+           </sui-form-field>
+           <!-- cdr: call type -->
+@@ -541,7 +528,7 @@
+               :placeholder="$t('filter.cti_group')"
+               search
+               selection
+-              v-model="filter.groups"
++              v-model="filter.groupsUi"
+             />
+           </sui-form-field>
+           <!-- cdr: user -->
+@@ -553,7 +540,7 @@
+               :placeholder="$t('filter.user')"
+               search
+               selection
+-              v-model="filter.users"
++              v-model="filter.usersUi"
+             />
+           </sui-form-field>
+           <!-- cdr: call destinations -->
+@@ -732,6 +719,7 @@
+       :showFilterCdrUser="showFilterCdrUser"
+       :showFilterCdrCallDestination="showFilterCdrCallDestination"
+       :showFilterCdrDestination="showFilterCdrDestination"
++      :showFilterTimeHour="showFilterTimeHour"
+       :cdrCallDurationMap="cdrCallDurationMap"
+       :callDestinationsMap="callDestinationsMap"
+       :filterValues="filterValues"
+@@ -783,13 +771,13 @@ export default {
+       selectedSearch: null,
+       filter: {
+         queues: [],
+-        groups: [],
+         agents: [],
+         ivrs: [],
+         reasons: [],
+         results: [],
+         choices: [],
+-        destinations: {},
++        destinationsUi: {},
++        destinations: [],
+         origins: [],
+         time: {
+           group: "",
+@@ -803,10 +791,14 @@ export default {
+         caller: "",
+         contactName: "",
+         nullCall: false, ////
+-        sources: {},
++        sourcesUi: {},
++        sources: [],
++        groupsUi: [],
++        groups: [],
+         callType: [],
+         duration: {},
+         trunks: [],
++        usersUi: [],
+         users: [],
+         callDestinations: [],
+         patterns: [],
+@@ -1115,7 +1107,7 @@ export default {
+             this.filterValues.agents = agents.sort(this.sortByProperty("text"));
+           }
+ 
+-          // groups
++          // groups //// remove?
+           if (this.defaultFilter.groups) {
+             let groups = this.defaultFilter.groups.map((group) => {
+               return { value: group, text: group };
+@@ -1269,23 +1261,23 @@ export default {
+     setFilterSelection(filter, fromLocalStorage) {
+       if (fromLocalStorage) {
+         this.filter.queues = filter.queues;
+-        this.filter.groups = filter.groups;
++        this.filter.groupsUi = filter.groupsUi;
+         this.filter.agents = filter.agents;
+         this.filter.reasons = filter.reasons;
+         this.filter.results = filter.results;
+         this.filter.ivrs = filter.ivrs;
+         this.filter.choices = filter.choices;
+         this.filter.origins = filter.origins;
+-        this.filter.destinations = filter.destinations;
++        this.filter.destinationsUi = filter.destinationsUi;
+         this.filter.caller = filter.caller;
+         this.filter.nullCall = filter.nullCall;
+         this.filter.contactName = filter.contactName;
+         // cdr filters
+-        this.filter.sources = filter.sources;
++        this.filter.sourcesUi = filter.sourcesUi;
+         this.filter.callType = filter.callType;
+         this.filter.duration = filter.duration;
+         this.filter.trunks = filter.trunks;
+-        this.filter.users = filter.users;
++        this.filter.usersUi = filter.usersUi;
+         this.filter.callDestinations = filter.callDestinations;
+         this.filter.patterns = filter.patterns;
+       }
+@@ -1533,24 +1525,7 @@ export default {
+       }
+       return true;
+     },
+-    applyFilters() {
+-      if (!this.validateFilters()) {
+-        return;
+-      }
+-
+-      // time group
+-      if (!this.showFilterTimeGroup || !this.filter.time.group) {
+-        this.filter.time.group = "day";
+-      }
+-
+-      // time split
+-      if (!this.showFilterTimeSplit || !this.filter.time.division) {
+-        this.filter.time.division = "60";
+-      }
+-
+-      // save filter to local storage
+-      this.set(this.reportFilterStorageName, this.filter);
+-
++    prepareFilterForBackend() {
+       let filterToApply = JSON.parse(JSON.stringify(this.filter));
+       filterToApply.phones = [];
+ 
+@@ -1609,44 +1584,68 @@ export default {
+         filterToApply.duration = "";
+       }
+ 
+-      // parse sources berfore apply
+-      if (filterToApply.sources.title) {
++      // sources
++      if (filterToApply.sourcesUi.title) {
+         filterToApply.sources =
+-          filterToApply.sources.value != null
+-            ? filterToApply.sources.value.split(",")
+-            : [filterToApply.sources.title];
++          filterToApply.sourcesUi.value != null
++            ? filterToApply.sourcesUi.value.split(",")
++            : [filterToApply.sourcesUi.title];
+       } else {
+         filterToApply.sources = [];
+       }
+ 
+-      // parse destinations berfore apply
+-      if (filterToApply.destinations.title) {
++      // destinations
++      if (filterToApply.destinationsUi.title) {
+         filterToApply.destinations =
+-          filterToApply.destinations.value != null
+-            ? filterToApply.destinations.value.split(",")
+-            : [filterToApply.destinations.title];
++          filterToApply.destinationsUi.value != null
++            ? filterToApply.destinationsUi.value.split(",")
++            : [filterToApply.destinationsUi.title];
+       } else {
+         filterToApply.destinations = [];
+       }
+ 
+-      // parse groups
+-      if (filterToApply.groups && filterToApply.groups.length > 0) {
++      // groups
++      if (filterToApply.groupsUi.length) {
+         let parsedGroups = [];
+-        filterToApply.groups.forEach((groups) => {
++        filterToApply.groupsUi.forEach((groups) => {
+           let groupExt = groups.split(",");
+           parsedGroups = parsedGroups.concat(groupExt);
+         });
+         filterToApply.groups = parsedGroups;
+       }
+-      // parse users
+-      if (filterToApply.users && filterToApply.users.length > 0) {
++
++      // users
++      if (filterToApply.users.length) {
+         let parsedUsers = [];
+-        filterToApply.users.forEach((users) => {
++        filterToApply.usersUi.forEach((users) => {
+           let userExt = users.split(",");
+           parsedUsers = parsedUsers.concat(userExt);
+         });
+         filterToApply.users = parsedUsers;
+       }
++      return filterToApply;
++    },
++    applyFilters() {
++      if (!this.validateFilters()) {
++        return;
++      }
++
++      // time group
++      if (!this.showFilterTimeGroup || !this.filter.time.group) {
++        this.filter.time.group = "day";
++      }
++
++      // time split
++      if (!this.showFilterTimeSplit || !this.filter.time.division) {
++        this.filter.time.division = "60";
++      }
++
++      // save filter to local storage
++      this.set(this.reportFilterStorageName, this.filter);
++
++      let filterToApply = this.prepareFilterForBackend();
++
++      console.log("filterToApply", filterToApply); ////
+ 
+       // apply filters
+       this.$root.$emit("applyFilters", filterToApply);
+@@ -1696,7 +1695,7 @@ export default {
+         filterToSave.queues = [];
+       }
+ 
+-      if (!this.showFilterGroup) {
++      if (!this.showFilterGroup) { //// remove?
+         filterToSave.groups = [];
+       }
+ 
+@@ -1744,6 +1743,8 @@ export default {
+         filterToSave.contactName = "";
+       }
+ 
++      //// add filters for CDR
++
+       // convert time interval to string
+       if (this.filter.time.interval) {
+         const dateFormat = this.getDateFormat();
+@@ -1949,39 +1950,39 @@ export default {
+     },
+     clearFilters() {
+       this.filter.queues = [];
+-      this.filter.groups = [];
++      this.filter.groupsUi = [];
+       this.filter.agents = [];
+       this.filter.ivrs = [];
+       this.filter.reasons = [];
+       this.filter.results = [];
+       this.filter.choices = [];
+-      this.filter.destinations = {};
+-      this.$refs.destinations.$data.query = "";
++      this.filter.destinationsUi = {};
++      this.$refs.destinationsUi.$data.query = "";
+       this.filter.origins = [];
+       this.filter.caller = "";
+       this.filter.contactName = "";
+       this.filter.callType = [];
+       this.filter.duration = {};
+       this.$refs.duration.$data.query = "";
+-      this.filter.sources = {};
+-      this.$refs.sources.$data.query = "";
++      this.filter.sourcesUi = {};
++      this.$refs.sourcesUi.$data.query = "";
+       this.filter.trunks = [];
+-      this.filter.users = [];
++      this.filter.usersUi = [];
+       this.filter.callDestinations = [];
+       this.filter.patterns = [];
+       this.applyFilters();
+     },
+     onSourcesInput(value) {
+-      this.filter.sources = { title: value };
++      this.filter.sourcesUi = { title: value };
+     },
+     onSourcesSelect(searchResult) {
+-      this.filter.sources = searchResult;
++      this.filter.sourcesUi = searchResult;
+     },
+     onDestinationsInput(value) {
+-      this.filter.destinations = { title: value };
++      this.filter.destinationsUi = { title: value };
+     },
+     onDestinationsSelect(searchResult) {
+-      this.filter.destinations = searchResult;
++      this.filter.destinationsUi = searchResult;
+     },
+     onDurationInput(value) {
+       this.filter.duration = { title: value };
