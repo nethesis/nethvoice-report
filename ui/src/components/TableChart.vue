@@ -207,7 +207,7 @@
                   </span>
                   <span v-else>
                     <!-- phone number not found in phonebook -->
-                    {{ element }}
+                    {{ isNumber(element) ? element : $t(`table.pbx`) }}
                   </span>
                 </span>
               </span>
@@ -401,6 +401,11 @@ export default {
     },
   },
   methods: {
+    isNumber (value) {
+      return (
+        !Number.isNaN(Number(value)) ? true : false
+      )
+    },
     onApplyFilters() {
       this.sortedBy = "period";
       this.sortedDirection = "ascending";
