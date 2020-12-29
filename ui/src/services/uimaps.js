@@ -24,7 +24,7 @@ var UiMaps = {
           },
           "graphs": {
             "load": ["timeGroup", "time", "queue", "origin"],
-            "hour": ["time", "queue", "agent", "destination", "ivr", "choice"],
+            "hour": ["time", "queue", "agent", "ivr", "choice"],
             "agent": ["timeGroup", "time", "queue", "agent"],
             "area": ["timeGroup", "time", "queue"],
             "queue_position": ["time", "queue", "timeSplit"],

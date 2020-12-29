@@ -111,15 +111,6 @@
             {{activeFilters.origins}}
           </span>
         </div>
-        <!-- label: destinations list -->
-        <div class="ui label" v-if="showFilterDestination && activeFilters.destinations && (activeFilters.destinations.length > 0)">
-          <span class="field">
-            {{$t('filter.destinations_label')}}:
-          </span>
-          <span class="value">
-            {{activeFilters.destinations}}
-          </span>
-        </div>
         <!-- label: time split value -->
         <div class="ui label" v-if="showFilterTimeSplit && activeFilters.time && activeFilters.time.division">
           <span class="field">
@@ -280,7 +271,6 @@ export default {
     "showFilterIvr",
     "showFilterChoice",
     "showFilterOrigin",
-    "showFilterDestination",
     "showFilterTimeSplit",
     "showFilterCaller",
     "showFilterContactName",
