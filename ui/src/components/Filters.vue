@@ -1667,12 +1667,16 @@ export default {
           this.$refs.duration.$data.query =
             backendFilter.durationUi.title + " " + this.$t("misc.seconds");
         }
+      } else {
+        this.$refs.duration.$data.query = "";
       }
 
       // sources
 
       if (backendFilter.sourcesUi.title) {
         this.$refs.sourcesUi.$data.query = backendFilter.sourcesUi.title;
+      } else {
+        this.$refs.sourcesUi.$data.query = "";
       }
 
       // destinations
@@ -1680,6 +1684,8 @@ export default {
       if (backendFilter.destinationsUi.title) {
         this.$refs.destinationsUi.$data.query =
           backendFilter.destinationsUi.title;
+      } else {
+        this.$refs.destinationsUi.$data.query = "";
       }
 
       return frontendFilter;
