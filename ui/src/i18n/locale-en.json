@@ -26,7 +26,7 @@
       "time_split_label": "Period",
       "caller_label": "Caller",
       "contact_name_label": "Contact name / Company",
-      "null_call_label": "Null call",
+      "null_call_label": "Null call time (seconds)",
       "reasons_label": "Reason",
       "clear_filters": "Clear all filters",
       "last_two_weeks": "Last 2 weeks",
@@ -156,7 +156,8 @@
       "cdr_not_available": "CDR & Cost report is not available yet, please come back later",
       "loading_filters": "Loading filters",
       "chart_error": "An error occured while loading chart",
-      "query_limit_description": "This is the maximum number of results that can be displayed by a table chart. If this limit is reached a warning icon is shown next to chart title"
+      "query_limit_description": "This is the maximum number of results that can be displayed by a table chart. If this limit is reached a warning icon is shown next to chart title",
+      "null_call_description": "Calls having a duration lesser or equal to this value are considered null"
     },
     "pagination": {
       "page": "page",

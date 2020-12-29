@@ -115,6 +115,20 @@
             <div class="settings-description">{{
               $t("message.query_limit_description")
             }}</div>
+            <!-- null call time -->
+            <sui-form-fields>
+              <sui-form-field>
+                <label>{{ $t("filter.null_call_label") }}</label>
+                <sui-input
+                  v-model.number="nullCallTime"
+                  type="number"
+                  min="0"
+                />
+              </sui-form-field>
+            </sui-form-fields>
+            <div class="settings-description">{{
+              $t("message.null_call_description")
+            }}</div>
           </sui-modal-description>
         </sui-modal-content>
         <sui-modal-actions>
@@ -156,6 +170,7 @@ export default {
       officeHourStart: "",
       officeHourEnd: "",
       queryLimit: 0,
+      nullCallTime: 0,
       isAdmin: false,
       dataAvailable: true,
       colorSchemes: [
@@ -393,6 +408,7 @@ export default {
           start_hour: this.officeHourStart,
           end_hour: this.officeHourEnd,
           query_limit: this.queryLimit.toString(),
+          null_call_time: this.nullCallTime.toString(),
         },
         () => {
           this.loader.saveSettings = false;
@@ -412,6 +428,7 @@ export default {
           this.officeHourStart = settings.start_hour;
           this.officeHourEnd = settings.end_hour;
           this.queryLimit = Number(settings.query_limit);
+          this.nullCallTime = Number(settings.null_call_time);
         },
         (error) => {
           console.error(error.body);

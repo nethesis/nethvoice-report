@@ -28,10 +28,10 @@ import (
 	"fmt"
 	"os"
 	"reflect"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
-	"regexp"
 
 	"github.com/juliangruber/go-intersect"
 	"github.com/nethesis/nethvoice-report/api/cache"
@@ -153,10 +153,10 @@ func Intersect(a []string, b []string, objType string) []string {
 		r := intersect.Simple(a, b).([]interface{})
 
 		// iterate over []interface{}
-                result := make([]string, len(r))
-                for i, v := range r {
-                        result[i] = fmt.Sprint(v)
-                }
+		result := make([]string, len(r))
+		for i, v := range r {
+			result[i] = fmt.Sprint(v)
+		}
 
 		return result
 
@@ -246,6 +246,9 @@ func ExtractOrigins(o []string, plain bool) string {
 }
 
 func ExtractSettings(settingName string) string {
+	// get settings struct from configuration
+	settings := configuration.Config.Settings
+
 	// init cache connection
 	cacheConnection := cache.Instance()
 
@@ -256,24 +259,26 @@ func ExtractSettings(settingName string) string {
 		// settings is cached
 
 		// convert to struct
-		var settingsCache map[string]models.Settings
+		var settingsMap map[string]models.Settings
 
-		errJson := json.Unmarshal([]byte(settingsString), &settingsCache)
+		errJson := json.Unmarshal([]byte(settingsString), &settingsMap)
 		if errJson != nil {
 			return ""
 		}
-		settings := settingsCache["settings"]
+		settingsCache := settingsMap["settings"]
 
-		// reflect settings struct
-		r := reflect.ValueOf(settings)
-		f := reflect.Indirect(r).FieldByName(settingName)
+		v := reflect.ValueOf(&settingsCache).Elem()
+		typeOfV := v.Type()
 
-		// return value
-		return string(f.String())
+		for i := 0; i < v.NumField(); i++ {
+			f := v.Field(i)
+
+			// override default admin setting value if value from cache is nonempty
+			if f.Interface().(string) != "" {
+				reflect.ValueOf(&settings).Elem().FieldByName(typeOfV.Field(i).Name).SetString(f.Interface().(string))
+			}
+		}
 	}
-
-	// get settings struct from configuration
-	settings := configuration.Config.Settings
 
 	// reflect settings struct
 	r := reflect.ValueOf(settings)

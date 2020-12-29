@@ -158,8 +158,7 @@ Each value within the filters in the user interface is obtained from pre-calcula
                "value":"monday"
             },
             "name":"company_name",
-            "agent":"agent_name",
-            "nullCall":true
+            "agent":"agent_name"
          }
       }
     ]
@@ -244,8 +243,7 @@ Each value within the filters in the user interface is obtained from pre-calcula
          "value":"monday"
       },
       "name":"Edoardo Override",
-      "agent":"5555 override",
-      "nullCall":true
+      "agent":"5555 override"
     }
   }
   ```

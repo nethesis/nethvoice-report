@@ -147,15 +147,6 @@
             {{activeFilters.contactName}}
           </span>
         </div>
-        <!-- label: nullCall value -->
-        <div class="ui label" v-if="showFilterNullCall && activeFilters.nullCall">
-          <span class="field">
-            {{$t('filter.null_call_label')}}:
-          </span>
-          <span class="value">
-            {{activeFilters.nullCall}}
-          </span>
-        </div>
         <div class="clear-filters">
           <a @click="clearFilters()">{{$t('filter.clear_filters')}}</a>
         </div>
@@ -190,7 +181,6 @@ export default {
     "showFilterTimeSplit",
     "showFilterCaller",
     "showFilterContactName",
-    "showFilterNullCall"
   ],
   data() {
     return {

@@ -23,12 +23,12 @@
 package cmd
 
 import (
-	"os"
-	"path/filepath"
-	"path"
-	"time"
-	"text/template"
 	"bytes"
+	"os"
+	"path"
+	"path/filepath"
+	"text/template"
+	"time"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
