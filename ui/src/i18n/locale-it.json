@@ -413,7 +413,9 @@
       "per_second": "al secondo",
       "unknown": "Sconosciuto",
       "just_created": "Appena creato",
-      "seconds": "secondi"
+      "seconds": "secondi",
+      "user": "Utente",
+      "contact": "Contatto"
     },
     "validation": {
       "invalid_value": "Valore non valido"

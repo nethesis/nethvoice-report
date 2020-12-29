@@ -413,7 +413,9 @@
       "per_second": "per second",
       "unknown": "Unknown",
       "just_created": "Just created",
-      "seconds": "seconds"
+      "seconds": "seconds",
+      "user": "User",
+      "contact": "Contact"
     },
     "validation": {
       "invalid_value": "Invalid value"

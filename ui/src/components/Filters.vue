@@ -965,6 +965,7 @@ export default {
         filterValues = filterValues.item;
         this.filterValues = filterValues;
         this.$root.devices = this.filterValues.devices;
+        this.$root.users = this.filterValues.users;
 
         // set selected values in filter
         this.setFilterSelection(filter, true);
@@ -1075,6 +1076,7 @@ export default {
                 value: parsedUser[2],
               };
             });
+            this.$root.users = this.filterValues.users;
           }
 
           // queues
