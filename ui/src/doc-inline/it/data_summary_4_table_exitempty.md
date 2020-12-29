@@ -15,10 +15,10 @@ agenti* sono:
 - Periodo di Raggruppamento
 - Numero Coda
 - Nome Coda
-- Chiamanti Univoci (totale numeri telefonici che hanno avuto risposta
+- Chiamanti Univoci (totale numeri telefonici che sono entrati in coda
 contati singolarmente) 
 - Totale Chiamate Uscita No Agenti
-- Attesa massima, minima, media prima della risposta
+- Attesa massima, minima, media prima della uscita dalla coda
 - Posizione di entrata in coda massima
 - Posizione di entrata in coda media
 - Posizione di uscita dalla coda massima

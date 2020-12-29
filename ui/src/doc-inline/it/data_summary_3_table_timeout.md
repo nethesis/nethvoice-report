@@ -13,10 +13,10 @@ Le voci mostrate per le chiamate in *Timeout* sono:
 - Periodo di Raggruppamento
 - Numero Coda
 - Nome Coda
-- Chiamanti Univoci (totale numeri telefonici che hanno avuto risposta
+- Chiamanti Univoci (totale numeri telefonici che sono entrati in coda 
 contati singolarmente) 
 - Totale Chiamate in Timeout
-- Attesa massima, minima, media prima della risposta
+- Attesa massima, minima, media prima del Timeout
 - Posizione di entrata in coda massima
 - Posizione di entrata in coda media
 - Posizione di uscita dalla coda massima

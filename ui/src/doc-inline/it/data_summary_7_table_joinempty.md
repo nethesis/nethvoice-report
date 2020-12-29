@@ -15,7 +15,7 @@ Le voci mostrate per le chiamate in *Entrata No Agenti* sono:
 - Periodo di Raggruppamento
 - Numero Coda
 - Nome Coda
-- Chiamanti Univoci (totale numeri telefonici che hanno avuto risposta
+- Chiamanti Univoci (totale numeri telefonici che sono entrati in coda 
 contati singolarmente) 
 - Totale Chiamate Entrata No Agenti.
 
