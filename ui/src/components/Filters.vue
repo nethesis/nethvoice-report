@@ -369,6 +369,7 @@
               v-model="filter.origins"
             />
           </sui-form-field>
+          <!-- geo group -->
           <sui-form-field v-if="showFilterGeoGroup" width="four">
             <label>{{$t('filter.geo_group')}}</label>
             <sui-dropdown
@@ -376,18 +377,6 @@
               search
               selection
               v-model="filter.geoGroup"
-            />
-          </sui-form-field>
-          <!-- destination -->
-          <sui-form-field v-if="showFilterDestination" width="four">
-            <label>{{ $t("filter.destinations_label") }}</label>
-            <sui-dropdown
-              multiple
-              :options="filterValues.destinations"
-              :placeholder="$t('filter.destinations_label')"
-              search
-              selection
-              v-model="filter.destinations"
             />
           </sui-form-field>
           <!-- time split -->
@@ -712,7 +701,6 @@
       :showFilterIvr="showFilterIvr"
       :showFilterChoice="showFilterChoice"
       :showFilterOrigin="showFilterOrigin"
-      :showFilterDestination="showFilterDestination"
       :showFilterTimeSplit="showFilterTimeSplit"
       :showFilterCaller="showFilterCaller"
       :showFilterContactName="showFilterContactName"
@@ -823,7 +811,6 @@ export default {
         results: [],
         choices: [],
         allChoices: [],
-        destinations: [],
         origins: [],
         callers: [],
         contactNames: [],
@@ -1233,18 +1220,6 @@ export default {
               .sort(this.sortByProperty("text"));
             this.filterValues.origins = Array.from(
               new Map(arr.map((item) => [item.value, item])).values()
-            );
-          }
-
-          // destinations
-          if (this.defaultFilter.destinations) {
-            let destinations = this.defaultFilter.destinations.map(
-              (destination) => {
-                return { value: destination, text: destination };
-              }
-            );
-            this.filterValues.destinations = destinations.sort(
-              this.sortByProperty("text")
             );
           }
 
@@ -1814,10 +1789,6 @@ export default {
         filterToSave.choices = [];
       }
 
-      if (!this.showFilterDestination) {
-        filterToSave.destinations = [];
-      }
-
       if (!this.showFilterOrigin) {
         filterToSave.origins = [];
       }
@@ -2145,9 +2116,6 @@ export default {
     },
     showFilterOrigin: function () {
       return this.isFilterInView("origin", this.filtersMap);
-    },
-    showFilterDestination: function () {
-      return this.isFilterInView("destination", this.filtersMap);
     },
     showFilterCaller: function () {
       return this.isFilterInView("caller", this.filtersMap);
