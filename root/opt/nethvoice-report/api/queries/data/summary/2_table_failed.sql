@@ -7,8 +7,8 @@ SELECT
     max_hold AS waiting$max_hold£seconds,
     min_hold AS waiting$min_hold£seconds,
     avg_hold AS waiting$avg_hold£seconds,
-    max_in_pos AS duration$max_in_pos£seconds,
-    avg_in_pos AS duration$avg_in_pos£seconds,
+    max_in_pos AS duration$max_in_pos£num,
+    avg_in_pos AS duration$avg_in_pos£num,
     max_out_pos AS position$max_out_pos£num,
     avg_out_pos AS position$avg_out_pos£num
 FROM
