@@ -975,6 +975,7 @@ export default {
         filterValues = filterValues.item;
         this.filterValues = filterValues;
         this.$root.devices = this.filterValues.devices;
+        this.$root.users = this.filterValues.users;
 
         // set queue into root object
         this.$root.queues = {};
@@ -1091,6 +1092,7 @@ export default {
                 value: parsedUser[2],
               };
             });
+            this.$root.users = this.filterValues.users;
           }
 
           // queues
