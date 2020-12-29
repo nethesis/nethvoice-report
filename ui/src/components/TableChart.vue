@@ -201,7 +201,7 @@
                 </span>
                 <span v-else>
                   <!-- search phone number in phonebook -->
-                  <span v-if="reversePhonebookSearch(element)" v-tooltip="$options.filters.reversePhonebookLookup(element, 'name|company', $root)">
+                  <span v-if="reversePhonebookSearch(element)" v-tooltip="'<div><b class=\'mg-right-xs\'>' + $t('misc.contact') + '</b>' + $options.filters.reversePhonebookLookup(element, 'name|company', $root) + '</div>'">
                     {{ element }}
                     <sui-icon name='user' />
                   </span>
@@ -1022,7 +1022,21 @@ export default {
       this.updatePagination();
     },
     getDeviceTooltip(extension) {
-      let tooltipContent =
+      let tooltipContent = '';
+
+      const userFound = this.$root.users.find((u) => {
+        return u.value.split(",").includes(extension);
+      });
+
+      if (userFound) {
+        tooltipContent += '<div><b class="mg-right-xs">' +
+        this.$t("misc.user") +
+        "</b>" +
+        userFound.text +
+        "</div>";
+      }
+
+      tooltipContent +=
         '<div><b class="mg-right-xs">' +
         this.$t("device.type") +
         "</b>" +
@@ -1031,7 +1045,7 @@ export default {
 
       if (this.$root.devices[extension].model) {
         tooltipContent +=
-          '<div class="mg-top-xs"><b class="mg-right-xs">' +
+          '<div><b class="mg-right-xs">' +
           this.$t("device.model") +
           "</b>" +
           this.$root.devices[extension].vendor +
