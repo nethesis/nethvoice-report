@@ -46,7 +46,6 @@ SELECT
     ACTION AS result
 FROM
     report_queue
-WHERE agent != "NONE"
 GROUP BY period, cid, qname
 ORDER BY
     period;
@@ -69,8 +68,7 @@ SELECT
     ACTION AS result
 FROM
     report_queue
-WHERE agent != "NONE"
-      AND Date_format(From_unixtime(timestamp_in), "%Y-%m-%d") = Date_format(NOW() - INTERVAL 1 DAY, "%Y-%m-%d")
+WHERE Date_format(From_unixtime(timestamp_in), "%Y-%m-%d") = Date_format(NOW() - INTERVAL 1 DAY, "%Y-%m-%d")
 GROUP BY period, cid, qname
 ORDER BY
     period;
