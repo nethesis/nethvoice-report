@@ -15,11 +15,10 @@ SELECT
        Max(hold) AS max_hold,
        Min(hold) AS min_hold,
        Avg(hold) AS avg_hold,
-       Max(duration) AS max_duration,
-       Min(duration) AS min_duration,
-       Avg(duration) AS avg_duration,
-       Max(position) AS max_position,
-       Avg(position) AS avg_position,
+       Max(duration) AS max_in_pos,
+       Avg(duration) AS avg_in_pos,
+       Max(position) AS max_out_pos,
+       Avg(position) AS avg_out_pos,
        qdescr
 FROM
        report_queue
@@ -43,11 +42,10 @@ SELECT
        Max(hold) AS max_hold,
        Min(hold) AS min_hold,
        Avg(hold) AS avg_hold,
-       Max(duration) AS max_duration,
-       Min(duration) AS min_duration,
-       Avg(duration) AS avg_duration,
-       Max(position) AS max_position,
-       Avg(position) AS avg_position,
+       Max(duration) AS max_in_pos,
+       Avg(duration) AS avg_in_pos,
+       Max(position) AS max_out_pos,
+       Avg(position) AS avg_out_pos,
        qdescr
 FROM
        report_queue
@@ -71,11 +69,10 @@ SELECT
        Max(hold) AS max_hold,
        Min(hold) AS min_hold,
        Avg(hold) AS avg_hold,
-       Max(duration) AS max_duration,
-       Min(duration) AS min_duration,
-       Avg(duration) AS avg_duration,
-       Max(position) AS max_position,
-       Avg(position) AS avg_position,
+       Max(duration) AS max_in_pos,
+       Avg(duration) AS avg_in_pos,
+       Max(position) AS max_out_pos,
+       Avg(position) AS avg_out_pos,
        qdescr
 FROM
        report_queue
@@ -99,11 +96,10 @@ SELECT
        Max(hold) AS max_hold,
        Min(hold) AS min_hold,
        Avg(hold) AS avg_hold,
-       Max(duration) AS max_duration,
-       Min(duration) AS min_duration,
-       Avg(duration) AS avg_duration,
-       Max(position) AS max_position,
-       Avg(position) AS avg_position,
+       Max(duration) AS max_in_pos,
+       Avg(duration) AS avg_in_pos,
+       Max(position) AS max_out_pos,
+       Avg(position) AS avg_out_pos,
        qdescr
 FROM
        report_queue

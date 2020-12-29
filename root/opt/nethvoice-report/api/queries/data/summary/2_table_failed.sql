@@ -7,11 +7,10 @@ SELECT
     max_hold AS waiting$max_hold£seconds,
     min_hold AS waiting$min_hold£seconds,
     avg_hold AS waiting$avg_hold£seconds,
-    max_duration AS duration$max_duration£seconds,
-    min_duration AS duration$min_duration£seconds,
-    avg_duration AS duration$avg_duration£seconds,
-    max_position AS position$max_position£num,
-    avg_position AS position$avg_position£num
+    max_in_pos AS duration$max_in_pos£num,
+    avg_in_pos AS duration$avg_in_pos£num,
+    max_out_pos AS position$max_out_pos£num,
+    avg_out_pos AS position$avg_out_pos£num
 FROM
     data_summary_failed_{{ .Time.Group }}
 WHERE   TRUE
