@@ -361,8 +361,15 @@ func ExtractSettings(settingName string) string {
 			f := v.Field(i)
 
 			// override default admin setting value if value from cache is nonempty
-			if f.Interface().(string) != "" {
+
+			if typeOfV.Field(i).Type.String() == "string" && f.Interface().(string) != "" {
 				reflect.ValueOf(&settings).Elem().FieldByName(typeOfV.Field(i).Name).SetString(f.Interface().(string))
+			} else if typeOfV.Field(i).Type.String() == "[]string" && len(f.Interface().([]string)) != 0 {
+				reflect.ValueOf(&settings).Elem().FieldByName(typeOfV.Field(i).Name).Set(reflect.ValueOf(f.Interface()))
+			} else if typeOfV.Field(i).Type.String() == "[]models.CallPattern" && len(f.Interface().([]models.CallPattern)) != 0 {
+				reflect.ValueOf(&settings).Elem().FieldByName(typeOfV.Field(i).Name).Set(reflect.ValueOf(f.Interface()))
+			} else if typeOfV.Field(i).Type.String() == "[]models.Cost" && len(f.Interface().([]models.Cost)) != 0 {
+				reflect.ValueOf(&settings).Elem().FieldByName(typeOfV.Field(i).Name).Set(reflect.ValueOf(f.Interface()))
 			}
 		}
 	}
