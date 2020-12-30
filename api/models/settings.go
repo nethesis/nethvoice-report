@@ -23,19 +23,23 @@
 package models
 
 type Settings struct {
-	StartHour    string   `json:"start_hour"`
-	EndHour      string   `json:"end_hour"`
-	QueryLimit   string   `json:"query_limit"`
-	NullCallTime string   `json:"null_call_time"`
-	Destinations []string `json:"destinations"`
-	CallPatterns []struct {
-		Prefix      string `json:"prefix"`
-		Destination string `json:"destination"`
-	} `json:"call_patterns"`
-	Currency string `json:"currency"`
-	Costs    []struct {
-		ChannelId   string `json:"channel_id"`
-		Destination string `json:"destination"`
-		Cost        string `json:"cost"`
-	} `json:"costs"`
+	StartHour    string        `json:"start_hour"`
+	EndHour      string        `json:"end_hour"`
+	QueryLimit   string        `json:"query_limit"`
+	NullCallTime string        `json:"null_call_time"`
+	Destinations []string      `json:"destinations"`
+	CallPatterns []CallPattern `json:"call_patterns"`
+	Currency     string        `json:"currency"`
+	Costs        []Cost        `json:"costs"`
+}
+
+type CallPattern struct {
+	Prefix      string `json:"prefix"`
+	Destination string `json:"destination"`
+}
+
+type Cost struct {
+	ChannelId   string `json:"channel_id"`
+	Destination string `json:"destination"`
+	Cost        string `json:"cost"`
 }
