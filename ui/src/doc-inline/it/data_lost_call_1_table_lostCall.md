@@ -18,8 +18,10 @@ Le voci mostrate per i dati *per Chiamate non Gestite* sono:
 - Identificativo Chiamante (numero telefonico del chiamante)
 - Nome (nome associato in rubrica al numero chiamante)
 - Azienda (azienda associata in rubrica al numero chiamante)
+- Direzione (direzione, in Entrata o in Uscita, dell'ultima 
+chiamata del giorno) 
+- Motivo (motivazione del fallimento)
 
 Se nessun chiamante è stato selezionato, verranno mostrate tutte le 
 chiamate, se nessuna coda è stata selezionata, verranno mostrate le
-chiamante di tutte le code disponibili, se nessun agente è stato 
-selezionato verranno mostrate le chiamate gestite da tutti gli agenti.
+chiamante di tutte le code disponibili. 
