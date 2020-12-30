@@ -44,11 +44,9 @@ SELECT
        Count(*) AS count
 FROM
        asteriskcdrdb.report_queue
-       JOIN asteriskcdrdb.cdr ON asteriskcdrdb.cdr.uniqueid = asteriskcdrdb.report_queue.timestamp_in
 WHERE
        asteriskcdrdb.report_queue.action = 'ANSWER'
-       AND asteriskcdrdb.cdr.disposition = 'ANSWERED'
-       AND asteriskcdrdb.cdr.billsec > 0
+       AND asteriskcdrdb.report_queue.duration > 0
 GROUP BY
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
        Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'),
@@ -62,12 +60,10 @@ SELECT
        Count(*) AS count
 FROM
        asteriskcdrdb.report_queue
-       JOIN asteriskcdrdb.cdr ON asteriskcdrdb.cdr.uniqueid = asteriskcdrdb.report_queue.timestamp_in
 WHERE
        asteriskcdrdb.report_queue.action = 'ANSWER'
-       AND asteriskcdrdb.cdr.disposition = 'ANSWERED'
-       AND asteriskcdrdb.cdr.billsec > 0
-       AND asteriskcdrdb.cdr.billsec <= 5
+       AND asteriskcdrdb.report_queue.duration > 0
+       AND asteriskcdrdb.report_queue.duration <= 5
 GROUP BY
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
        Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'),
@@ -81,12 +77,10 @@ SELECT
        Count(*) AS count
 FROM
        asteriskcdrdb.report_queue
-       JOIN asteriskcdrdb.cdr ON asteriskcdrdb.cdr.uniqueid = asteriskcdrdb.report_queue.timestamp_in
 WHERE
        asteriskcdrdb.report_queue.action = 'ANSWER'
-       AND asteriskcdrdb.cdr.disposition = 'ANSWERED'
-       AND asteriskcdrdb.cdr.billsec > 0
-       AND asteriskcdrdb.cdr.billsec <= 10
+       AND asteriskcdrdb.report_queue.duration > 0
+       AND asteriskcdrdb.report_queue.duration <= 10
 GROUP BY
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
        Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'),
@@ -100,12 +94,10 @@ SELECT
        Count(*) AS count
 FROM
        asteriskcdrdb.report_queue
-       JOIN asteriskcdrdb.cdr ON asteriskcdrdb.cdr.uniqueid = asteriskcdrdb.report_queue.timestamp_in
 WHERE
        asteriskcdrdb.report_queue.action = 'ANSWER'
-       AND asteriskcdrdb.cdr.disposition = 'ANSWERED'
-       AND asteriskcdrdb.cdr.billsec > 0
-       AND asteriskcdrdb.cdr.billsec <= 15
+       AND asteriskcdrdb.report_queue.duration > 0
+       AND asteriskcdrdb.report_queue.duration <= 15
 GROUP BY
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
        Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'),
@@ -119,12 +111,10 @@ SELECT
        Count(*) AS count
 FROM
        asteriskcdrdb.report_queue
-       JOIN asteriskcdrdb.cdr ON asteriskcdrdb.cdr.uniqueid = asteriskcdrdb.report_queue.timestamp_in
 WHERE
        asteriskcdrdb.report_queue.action = 'ANSWER'
-       AND asteriskcdrdb.cdr.disposition = 'ANSWERED'
-       AND asteriskcdrdb.cdr.billsec > 0
-       AND asteriskcdrdb.cdr.billsec <= 20
+       AND asteriskcdrdb.report_queue.duration > 0
+       AND asteriskcdrdb.report_queue.duration <= 20
 GROUP BY
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
        Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'),
@@ -138,12 +128,10 @@ SELECT
        Count(*) AS count
 FROM
        asteriskcdrdb.report_queue
-       JOIN asteriskcdrdb.cdr ON asteriskcdrdb.cdr.uniqueid = asteriskcdrdb.report_queue.timestamp_in
 WHERE
        asteriskcdrdb.report_queue.action = 'ANSWER'
-       AND asteriskcdrdb.cdr.disposition = 'ANSWERED'
-       AND asteriskcdrdb.cdr.billsec > 0
-       AND asteriskcdrdb.cdr.billsec <= 25
+       AND asteriskcdrdb.report_queue.duration > 0
+       AND asteriskcdrdb.report_queue.duration <= 25
 GROUP BY
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
        Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'),
@@ -157,12 +145,10 @@ SELECT
        Count(*) AS count
 FROM
        asteriskcdrdb.report_queue
-       JOIN asteriskcdrdb.cdr ON asteriskcdrdb.cdr.uniqueid = asteriskcdrdb.report_queue.timestamp_in
 WHERE
        asteriskcdrdb.report_queue.action = 'ANSWER'
-       AND asteriskcdrdb.cdr.disposition = 'ANSWERED'
-       AND asteriskcdrdb.cdr.billsec > 0
-       AND asteriskcdrdb.cdr.billsec <= 30
+       AND asteriskcdrdb.report_queue.duration > 0
+       AND asteriskcdrdb.report_queue.duration <= 30
 GROUP BY
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
        Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'),
@@ -176,12 +162,10 @@ SELECT
        Count(*) AS count
 FROM
        asteriskcdrdb.report_queue
-       JOIN asteriskcdrdb.cdr ON asteriskcdrdb.cdr.uniqueid = asteriskcdrdb.report_queue.timestamp_in
 WHERE
        asteriskcdrdb.report_queue.action = 'ANSWER'
-       AND asteriskcdrdb.cdr.disposition = 'ANSWERED'
-       AND asteriskcdrdb.cdr.billsec > 0
-       AND asteriskcdrdb.cdr.billsec <= 45
+       AND asteriskcdrdb.report_queue.duration > 0
+       AND asteriskcdrdb.report_queue.duration <= 45
 GROUP BY
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
        Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'),
@@ -195,12 +179,10 @@ SELECT
        Count(*) AS count
 FROM
        asteriskcdrdb.report_queue
-       JOIN asteriskcdrdb.cdr ON asteriskcdrdb.cdr.uniqueid = asteriskcdrdb.report_queue.timestamp_in
 WHERE
        asteriskcdrdb.report_queue.action = 'ANSWER'
-       AND asteriskcdrdb.cdr.disposition = 'ANSWERED'
-       AND asteriskcdrdb.cdr.billsec > 0
-       AND asteriskcdrdb.cdr.billsec <= 60
+       AND asteriskcdrdb.report_queue.duration > 0
+       AND asteriskcdrdb.report_queue.duration <= 60
 GROUP BY
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
        Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'),
@@ -214,12 +196,10 @@ SELECT
        Count(*) AS count
 FROM
        asteriskcdrdb.report_queue
-       JOIN asteriskcdrdb.cdr ON asteriskcdrdb.cdr.uniqueid = asteriskcdrdb.report_queue.timestamp_in
 WHERE
        asteriskcdrdb.report_queue.action = 'ANSWER'
-       AND asteriskcdrdb.cdr.disposition = 'ANSWERED'
-       AND asteriskcdrdb.cdr.billsec > 0
-       AND asteriskcdrdb.cdr.billsec <= 75
+       AND asteriskcdrdb.report_queue.duration > 0
+       AND asteriskcdrdb.report_queue.duration <= 75
 GROUP BY
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
        Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'),
@@ -233,12 +213,10 @@ SELECT
        Count(*) AS count
 FROM
        asteriskcdrdb.report_queue
-       JOIN asteriskcdrdb.cdr ON asteriskcdrdb.cdr.uniqueid = asteriskcdrdb.report_queue.timestamp_in
 WHERE
        asteriskcdrdb.report_queue.action = 'ANSWER'
-       AND asteriskcdrdb.cdr.disposition = 'ANSWERED'
-       AND asteriskcdrdb.cdr.billsec > 0
-       AND asteriskcdrdb.cdr.billsec <= 90
+       AND asteriskcdrdb.report_queue.duration > 0
+       AND asteriskcdrdb.report_queue.duration <= 90
 GROUP BY
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
        Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'),
@@ -252,12 +230,10 @@ SELECT
        Count(*) AS count
 FROM
        asteriskcdrdb.report_queue
-       JOIN asteriskcdrdb.cdr ON asteriskcdrdb.cdr.uniqueid = asteriskcdrdb.report_queue.timestamp_in
 WHERE
        asteriskcdrdb.report_queue.action = 'ANSWER'
-       AND asteriskcdrdb.cdr.disposition = 'ANSWERED'
-       AND asteriskcdrdb.cdr.billsec > 0
-       AND asteriskcdrdb.cdr.billsec <= 105
+       AND asteriskcdrdb.report_queue.duration > 0
+       AND asteriskcdrdb.report_queue.duration <= 105
 GROUP BY
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
        Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'),
@@ -271,12 +247,10 @@ SELECT
        Count(*) AS count
 FROM
        asteriskcdrdb.report_queue
-       JOIN asteriskcdrdb.cdr ON asteriskcdrdb.cdr.uniqueid = asteriskcdrdb.report_queue.timestamp_in
 WHERE
        asteriskcdrdb.report_queue.action = 'ANSWER'
-       AND asteriskcdrdb.cdr.disposition = 'ANSWERED'
-       AND asteriskcdrdb.cdr.billsec > 0
-       AND asteriskcdrdb.cdr.billsec <= 120
+       AND asteriskcdrdb.report_queue.duration > 0
+       AND asteriskcdrdb.report_queue.duration <= 120
 GROUP BY
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
        Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'),
@@ -290,12 +264,10 @@ SELECT
        Count(*) AS count
 FROM
        asteriskcdrdb.report_queue
-       JOIN asteriskcdrdb.cdr ON asteriskcdrdb.cdr.uniqueid = asteriskcdrdb.report_queue.timestamp_in
 WHERE
        asteriskcdrdb.report_queue.action = 'ANSWER'
-       AND asteriskcdrdb.cdr.disposition = 'ANSWERED'
-       AND asteriskcdrdb.cdr.billsec > 0
-       AND asteriskcdrdb.cdr.billsec <= 180
+       AND asteriskcdrdb.report_queue.duration > 0
+       AND asteriskcdrdb.report_queue.duration <= 180
 GROUP BY
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
        Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'),
@@ -309,12 +281,10 @@ SELECT
        Count(*) AS count
 FROM
        asteriskcdrdb.report_queue
-       JOIN asteriskcdrdb.cdr ON asteriskcdrdb.cdr.uniqueid = asteriskcdrdb.report_queue.timestamp_in
 WHERE
        asteriskcdrdb.report_queue.action = 'ANSWER'
-       AND asteriskcdrdb.cdr.disposition = 'ANSWERED'
-       AND asteriskcdrdb.cdr.billsec > 0
-       AND asteriskcdrdb.cdr.billsec <= 240
+       AND asteriskcdrdb.report_queue.duration > 0
+       AND asteriskcdrdb.report_queue.duration <= 240
 GROUP BY
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
        Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'),
@@ -328,12 +298,10 @@ SELECT
        Count(*) AS count
 FROM
        asteriskcdrdb.report_queue
-       JOIN asteriskcdrdb.cdr ON asteriskcdrdb.cdr.uniqueid = asteriskcdrdb.report_queue.timestamp_in
 WHERE
        asteriskcdrdb.report_queue.action = 'ANSWER'
-       AND asteriskcdrdb.cdr.disposition = 'ANSWERED'
-       AND asteriskcdrdb.cdr.billsec > 0
-       AND asteriskcdrdb.cdr.billsec <= 300
+       AND asteriskcdrdb.report_queue.duration > 0
+       AND asteriskcdrdb.report_queue.duration <= 300
 GROUP BY
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
        Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'),
@@ -347,12 +315,10 @@ SELECT
        Count(*) AS count
 FROM
        asteriskcdrdb.report_queue
-       JOIN asteriskcdrdb.cdr ON asteriskcdrdb.cdr.uniqueid = asteriskcdrdb.report_queue.timestamp_in
 WHERE
        asteriskcdrdb.report_queue.action = 'ANSWER'
-       AND asteriskcdrdb.cdr.disposition = 'ANSWERED'
-       AND asteriskcdrdb.cdr.billsec > 0
-       AND asteriskcdrdb.cdr.billsec <= 450
+       AND asteriskcdrdb.report_queue.duration > 0
+       AND asteriskcdrdb.report_queue.duration <= 450
 GROUP BY
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
        Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'),
@@ -366,12 +332,10 @@ SELECT
        Count(*) AS count
 FROM
        asteriskcdrdb.report_queue
-       JOIN asteriskcdrdb.cdr ON asteriskcdrdb.cdr.uniqueid = asteriskcdrdb.report_queue.timestamp_in
 WHERE
        asteriskcdrdb.report_queue.action = 'ANSWER'
-       AND asteriskcdrdb.cdr.disposition = 'ANSWERED'
-       AND asteriskcdrdb.cdr.billsec > 0
-       AND asteriskcdrdb.cdr.billsec <= 600
+       AND asteriskcdrdb.report_queue.duration > 0
+       AND asteriskcdrdb.report_queue.duration <= 600
 GROUP BY
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
        Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'),
@@ -385,11 +349,9 @@ SELECT
        Count(*) AS count
 FROM
        asteriskcdrdb.report_queue
-       JOIN asteriskcdrdb.cdr ON asteriskcdrdb.cdr.uniqueid = asteriskcdrdb.report_queue.timestamp_in
 WHERE
        asteriskcdrdb.report_queue.action = 'ANSWER'
-       AND asteriskcdrdb.cdr.disposition = 'ANSWERED'
-       AND asteriskcdrdb.cdr.billsec > 600
+       AND asteriskcdrdb.report_queue.duration > 600
 GROUP BY
        Date_format(From_unixtime(timestamp_in), '%Y-%m-%d'),
        Date_format(From_unixtime(timestamp_out), '%Y-%m-%d'),
