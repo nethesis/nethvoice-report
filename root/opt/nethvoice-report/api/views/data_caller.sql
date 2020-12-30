@@ -47,7 +47,7 @@ SELECT
     SUM(
         IF(
             ACTION = 'ABANDON'
-            AND hold > 5,
+            AND hold > {{ ExtractSettings "NullCallTime" }},
             1,
             0
         )
@@ -60,7 +60,7 @@ SELECT
     SUM(
         IF(
             ACTION = 'ABANDON'
-            AND hold <= 5,
+            AND hold <= {{ ExtractSettings "NullCallTime" }},
             1,
             0
         )
@@ -98,7 +98,7 @@ SELECT
     SUM(
         IF(
             ACTION = 'ABANDON'
-            AND hold > 5,
+            AND hold > {{ ExtractSettings "NullCallTime" }},
             1,
             0
         )
@@ -111,7 +111,7 @@ SELECT
     SUM(
         IF(
             ACTION = 'ABANDON'
-            AND hold <= 5,
+            AND hold <= {{ ExtractSettings "NullCallTime" }},
             1,
             0
         )
@@ -149,7 +149,7 @@ SELECT
     SUM(
         IF(
             ACTION = 'ABANDON'
-            AND hold > 5,
+            AND hold > {{ ExtractSettings "NullCallTime" }},
             1,
             0
         )
@@ -162,7 +162,7 @@ SELECT
     SUM(
         IF(
             ACTION = 'ABANDON'
-            AND hold <= 5,
+            AND hold <= {{ ExtractSettings "NullCallTime" }},
             1,
             0
         )
@@ -200,7 +200,7 @@ SELECT
     SUM(
         IF(
             ACTION = 'ABANDON'
-            AND hold > 5,
+            AND hold > {{ ExtractSettings "NullCallTime" }},
             1,
             0
         )
@@ -213,7 +213,7 @@ SELECT
     SUM(
         IF(
             ACTION = 'ABANDON'
-            AND hold <= 5,
+            AND hold <= {{ ExtractSettings "NullCallTime" }},
             1,
             0
         )
@@ -253,7 +253,7 @@ SELECT
     SUM(
         IF(
             ACTION = 'ABANDON'
-            AND hold > 5,
+            AND hold > {{ ExtractSettings "NullCallTime" }},
             1,
             0
         )
@@ -266,7 +266,7 @@ SELECT
     SUM(
         IF(
             ACTION = 'ABANDON'
-            AND hold <= 5,
+            AND hold <= {{ ExtractSettings "NullCallTime" }},
             1,
             0
         )

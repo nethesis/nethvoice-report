@@ -26,7 +26,7 @@
       "time_split_label": "Periodo",
       "caller_label": "Chiamante",
       "contact_name_label": "Nome contatto / Azienda",
-      "null_call_label": "Chiamata nulla",
+      "null_call_label": "Durata chiamate nulle (secondi)",
       "reasons_label": "Ragione",
       "clear_filters": "Cancella filtri",
       "last_two_weeks": "Ultime 2 settimane",
@@ -156,7 +156,8 @@
       "cdr_not_available": "Il report CDR & Cost non è ancora disponibile, torna più tardi",
       "loading_filters": "Caricamento filtri",
       "chart_error": "Si è verificato un errore durante il caricamento del grafico",
-      "query_limit_description": "Questo è il numero massimo di risultati che possono essere mostrati da un grafico tabellare. Se questo limite viene raggiunto appare un'icona di avvertimento di fianco al titolo del grafico"
+      "query_limit_description": "Questo è il numero massimo di risultati che possono essere mostrati da un grafico tabellare. Se questo limite viene raggiunto appare un'icona di avvertimento di fianco al titolo del grafico",
+      "null_call_description": "Le chiamate con durata minore o uguale a questo valore sono considerate nulle"
     },
     "pagination": {
       "page": "pagina",
@@ -296,7 +297,7 @@
       "others": "Altri",
       "office_hours_start": "Inizio orario lavorativo",
       "office_hours_end": "Fine orario lavorativo",
-      "query_limit": "Numero massimo di risultati"
+      "query_limit": "Numero max di risultati"
     },
     "tags": {
         "dashboard": "dashboard",

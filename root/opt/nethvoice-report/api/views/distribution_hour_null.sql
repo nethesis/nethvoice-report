@@ -26,7 +26,7 @@ FROM
        report_queue
 WHERE
        ACTION = 'ABANDON'
-       AND hold <= 5
+       AND hold <={{ ExtractSettings "NullCallTime" }}
 GROUP BY
        period,
        qname,
@@ -56,7 +56,7 @@ FROM
        report_queue
 WHERE
        ACTION = 'ABANDON'
-       AND hold <= 5
+       AND hold <={{ ExtractSettings "NullCallTime" }}
 GROUP BY
        period,
        qname,
@@ -86,7 +86,7 @@ FROM
        report_queue
 WHERE
        ACTION = 'ABANDON'
-       AND hold <= 5
+       AND hold <={{ ExtractSettings "NullCallTime" }}
 GROUP BY
        period,
        qname,
@@ -116,7 +116,7 @@ FROM
        report_queue
 WHERE
        ACTION = 'ABANDON'
-       AND hold <= 5
+       AND hold <={{ ExtractSettings "NullCallTime" }}
 GROUP BY
        period,
        qname,
@@ -154,7 +154,7 @@ FROM
        report_queue
 WHERE
        ACTION = 'ABANDON'
-       AND hold <= 5
+       AND hold <={{ ExtractSettings "NullCallTime" }}
 GROUP BY
        period,
        qname,
@@ -184,7 +184,7 @@ FROM
        report_queue
 WHERE
        ACTION = 'ABANDON'
-       AND hold <= 5
+       AND hold <={{ ExtractSettings "NullCallTime" }}
 GROUP BY
        period,
        qname,
@@ -214,7 +214,7 @@ FROM
        report_queue
 WHERE
        ACTION = 'ABANDON'
-       AND hold <= 5
+       AND hold <={{ ExtractSettings "NullCallTime" }}
 GROUP BY
        period,
        qname,
@@ -244,7 +244,7 @@ FROM
        report_queue
 WHERE
        ACTION = 'ABANDON'
-       AND hold <= 5
+       AND hold <={{ ExtractSettings "NullCallTime" }}
 GROUP BY
        period,
        qname,
@@ -282,7 +282,7 @@ FROM
        report_queue
 WHERE
        ACTION = 'ABANDON'
-       AND hold <= 5
+       AND hold <={{ ExtractSettings "NullCallTime" }}
 GROUP BY
        period,
        qname,
@@ -312,7 +312,7 @@ FROM
        report_queue
 WHERE
        ACTION = 'ABANDON'
-       AND hold <= 5
+       AND hold <={{ ExtractSettings "NullCallTime" }}
 GROUP BY
        period,
        qname,
@@ -342,7 +342,7 @@ FROM
        report_queue
 WHERE
        ACTION = 'ABANDON'
-       AND hold <= 5
+       AND hold <={{ ExtractSettings "NullCallTime" }}
 GROUP BY
        period,
        qname,
@@ -372,7 +372,7 @@ FROM
        report_queue
 WHERE
        ACTION = 'ABANDON'
-       AND hold <= 5
+       AND hold <={{ ExtractSettings "NullCallTime" }}
 GROUP BY
        period,
        qname,
@@ -410,7 +410,7 @@ FROM
        report_queue
 WHERE
        ACTION = 'ABANDON'
-       AND hold <= 5
+       AND hold <={{ ExtractSettings "NullCallTime" }}
 GROUP BY
        period,
        qname,
@@ -440,7 +440,7 @@ FROM
        report_queue
 WHERE
        ACTION = 'ABANDON'
-       AND hold <= 5
+       AND hold <={{ ExtractSettings "NullCallTime" }}
 GROUP BY
        period,
        qname,
@@ -470,7 +470,7 @@ FROM
        report_queue
 WHERE
        ACTION = 'ABANDON'
-       AND hold <= 5
+       AND hold <={{ ExtractSettings "NullCallTime" }}
 GROUP BY
        period,
        qname,
@@ -500,7 +500,7 @@ FROM
        report_queue
 WHERE
        ACTION = 'ABANDON'
-       AND hold <= 5
+       AND hold <={{ ExtractSettings "NullCallTime" }}
 GROUP BY
        period,
        qname,

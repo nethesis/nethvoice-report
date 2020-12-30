@@ -25,6 +25,7 @@ package methods
 import (
 	"encoding/json"
 	"net/http"
+	"reflect"
 
 	"github.com/gin-gonic/gin"
 	"github.com/nethesis/nethvoice-report/api/cache"
@@ -33,20 +34,41 @@ import (
 )
 
 func GetSettings(c *gin.Context) {
+	// get settings struct from configuration
+	settings := configuration.Config.Settings
+
 	// init cache connection
 	cacheConnection := cache.Instance()
 
 	// check if settings is locally cached
-	settings, errCache := cacheConnection.Get("admin_settings").Result()
+	settingsString, errCache := cacheConnection.Get("admin_settings").Result()
 
-	// settings is cached, return immediately
 	if errCache == nil {
-		c.Data(http.StatusOK, "application/json; charset=utf-8", []byte(settings))
-		return
+		// settings is cached
+
+		// convert to struct
+		var settingsMap map[string]models.Settings
+
+		errJson := json.Unmarshal([]byte(settingsString), &settingsMap)
+		if errJson != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"message": "error unmarshalling admin settings from cache", "status": errJson})
+		}
+		settingsCache := settingsMap["settings"]
+
+		v := reflect.ValueOf(&settingsCache).Elem()
+		typeOfV := v.Type()
+
+		for i := 0; i < v.NumField(); i++ {
+			f := v.Field(i)
+
+			// override default admin setting value if value from cache is nonempty
+			if f.Interface().(string) != "" {
+				reflect.ValueOf(&settings).Elem().FieldByName(typeOfV.Field(i).Name).SetString(f.Interface().(string))
+			}
+		}
 	}
 
-	// return default settings
-	c.JSON(http.StatusOK, gin.H{"settings": configuration.Config.Settings})
+	c.JSON(http.StatusOK, gin.H{"settings": settings})
 
 }
 

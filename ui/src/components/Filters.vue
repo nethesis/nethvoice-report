@@ -332,10 +332,6 @@
               </div>
             </div>
           </sui-form-field>
-          <sui-form-field v-if="showFilterNullCall" width="four">
-            <label>{{$t('filter.null_call_label')}}</label>
-            <sui-checkbox label toggle v-model="filter.nullCall" />
-          </sui-form-field>
         </sui-grid>
         <sui-form-fields class="mg-top-md filter-actions">
           <sui-button
@@ -459,7 +455,6 @@
       :showFilterTimeSplit="showFilterTimeSplit"
       :showFilterCaller="showFilterCaller"
       :showFilterContactName="showFilterContactName"
-      :showFilterNullCall="showFilterNullCall"
     />
   </div>
 </template>
@@ -519,7 +514,6 @@ export default {
         },
         caller: "",
         contactName: "",
-        nullCall: false, ////
       },
       filterValues: {
         queues: [],
@@ -866,7 +860,6 @@ export default {
         this.filter.origins = filter.origins;
         this.filter.destinations = filter.destinations;
         this.filter.caller = filter.caller;
-        this.filter.nullCall = filter.nullCall;
         this.filter.contactName = filter.contactName;
       }
 
@@ -892,9 +885,6 @@ export default {
       }
 
       this.selectTime(filter.time.range);
-
-      // null call
-      this.filter.nullCall = filter.nullCall;
 
       if (!fromLocalStorage) {
         // save filter to local storage
@@ -1269,10 +1259,6 @@ export default {
         filterToSave.caller = "";
       }
 
-      if (!this.showFilterNullCall) {
-        filterToSave.contactName = "";
-      }
-
       // convert time interval to string
       if (this.filter.time.interval) {
         const dateFormat = this.getDateFormat();
@@ -1544,9 +1530,6 @@ export default {
     },
     showFilterContactName: function () {
       return this.isFilterInView("contactName");
-    },
-    showFilterNullCall: function () {
-      return this.isFilterInView("nullCall");
     },
     reportFilterStorageName: function () {
       return "reportFilter-" + this.get("loggedUser").username;

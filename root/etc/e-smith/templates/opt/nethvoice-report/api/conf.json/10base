@@ -49,14 +49,14 @@
             \}
           \},
           "name": "",
-          "agent": "",
-          "nullCall": false
+          "agent": ""
         \},
         "api_endpoint": "http://localhost:8585/api",
         "api_key": "{{$key}}",
         "settings": \{
           "start_hour": "09:00",
           "end_hour": "18:00",
-          "query_limit": "2000"
+          "query_limit": "2000",
+          "null_call_time": "5"
         \}
 \}

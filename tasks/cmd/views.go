@@ -23,9 +23,11 @@
 package cmd
 
 import (
-	"io/ioutil"
+	"bytes"
 	"os"
+	"path"
 	"path/filepath"
+	"text/template"
 	"time"
 
 	"github.com/pkg/errors"
@@ -33,6 +35,7 @@ import (
 
 	"github.com/nethesis/nethvoice-report/api/configuration"
 	"github.com/nethesis/nethvoice-report/api/source"
+	"github.com/nethesis/nethvoice-report/api/utils"
 	"github.com/nethesis/nethvoice-report/tasks/helper"
 )
 
@@ -57,28 +60,31 @@ func executeReportViews() {
 	viewsPath := configuration.Config.ViewsPath
 
 	// get all .sql files inside views path
-	errWalk := filepath.Walk(viewsPath, func(path string, info os.FileInfo, err error) error {
+	errWalk := filepath.Walk(viewsPath, func(pathS string, info os.FileInfo, err error) error {
 		// handle file different from sql
-		if filepath.Ext(path) != ".sql" {
+		if filepath.Ext(pathS) != ".sql" {
 			return nil
 		}
-		helper.LogDebug("\nExecuting query %s", path)
+		helper.LogDebug("\nExecuting query %s", pathS)
 
 		// get value name
-		value := filepath.Base(path)
+		value := filepath.Base(pathS)
 
-		// read value content
-		queryString, errRead := ioutil.ReadFile(viewsPath + "/" + value)
+		// parse template
+		queryFile := viewsPath + "/" + value
+		q := template.Must(template.New(path.Base(queryFile)).Funcs(template.FuncMap{"ExtractSettings": utils.ExtractSettings}).ParseFiles(queryFile))
 
-		// handle reading error
-		if errRead != nil {
-			return errors.Wrap(errRead, "Error reading views content:"+viewsPath+"/"+value)
+		// compile query with filter object
+		var queryString bytes.Buffer
+		errTpl := q.Execute(&queryString, nil)
+		if errTpl != nil {
+			return errors.Wrap(errTpl, "Error in query template compiling")
 		}
 
 		// execute query
 		db := source.QueueInstance()
 		start := time.Now()
-		rows, errQuery := db.Query(string(queryString))
+		rows, errQuery := db.Query(queryString.String())
 		if errQuery != nil {
 			return errors.Wrap(errQuery, "Error in query execution: "+viewsPath+"/"+value)
 		}
