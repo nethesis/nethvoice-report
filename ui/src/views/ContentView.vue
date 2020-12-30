@@ -523,9 +523,9 @@ export default {
       this.cdr.details.linkedId = row[0];
       this.cdr.details.callType = row[4];
       this.cdr.details.result = row[5];
-      this.cdr.details.totalDuration = row[6];
-      this.cdr.details.actualDuration = row[7];
-      this.cdr.details.cost = row[8];
+      this.cdr.details.totalDuration = row[7];
+      this.cdr.details.actualDuration = row[8];
+      this.cdr.details.cost = row[9];
       this.cdr.details.data = [];
       this.cdr.openDetailsModal = true;
       const linkedId = this.cdr.details.linkedId;
