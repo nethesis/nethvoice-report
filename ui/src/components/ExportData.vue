@@ -58,6 +58,8 @@ export default {
   methods: {
     exportToCSV () {
       let data = this._.cloneDeep(this.data)
+      // if 'src£phoneNumber' / 'dst£phoneNumber' columns are present, generate 'srcDevice' / 'dstDevice' columns
+      data = this.checkDeviceColumns(data);
       // translate col labels
       for (let key in data[0]) data[0][key] = this.$t(this.parseColHeader(data[0][key]))
       // convert data obj to csv
@@ -117,7 +119,50 @@ export default {
       let parsedHeader = this.parseTableChartHeader(header)
       let resHeader = parsedHeader.bottomHeaderName || parsedHeader.middleHeaderName || parsedHeader.topHeaderName
       return resHeader
-    }
+    },
+    checkDeviceColumns (data) {
+      const columns = data[0];
+      const srcPos = columns.indexOf("src£phoneNumber");
+      const dstPos = columns.indexOf("dst£phoneNumber");
+
+      if (srcPos > -1 && dstPos > -1) {
+        // generate 'srcDevice' and 'dstDevice' columns
+        // add new columns near src/dst (add right-most column first)
+
+        if (srcPos < dstPos) {
+          columns.splice(dstPos + 1, 0, "dstDevice");
+          columns.splice(srcPos + 1, 0, "srcDevice");
+        } else {
+          columns.splice(srcPos + 1, 0, "srcDevice");
+          columns.splice(dstPos + 1, 0, "dstDevice");
+        }
+        const rows = data.slice(1);
+
+        for (const row of rows) {
+          const srcElem = row[srcPos];
+          const dstElem = row[dstPos];
+          let srcDevice = "";
+          let dstDevice = "";
+
+          if (this.$root.devices[srcElem]) {
+            srcDevice = this.$root.devices[srcElem].type;
+          }
+
+          if (this.$root.devices[dstElem]) {
+            dstDevice = this.$root.devices[dstElem].type;
+          }
+
+          if (srcPos < dstPos) {
+            row.splice(dstPos + 1, 0, dstDevice);
+            row.splice(srcPos + 1, 0, srcDevice);
+          } else {
+            row.splice(srcPos + 1, 0, srcDevice);
+            row.splice(dstPos + 1, 0, dstDevice);
+          }
+        }
+      }
+      return data;
+    },
   },
   watch: {
     "filename": function () {
