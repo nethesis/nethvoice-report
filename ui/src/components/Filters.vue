@@ -420,11 +420,6 @@
               </div>
             </div>
           </sui-form-field>
-          <!-- null call not used -->
-          <sui-form-field v-if="showFilterNullCall" width="four">
-            <label>{{ $t("filter.null_call_label") }}</label>
-            <sui-checkbox label toggle v-model="filter.nullCall" />
-          </sui-form-field>
           <!-- CDR ONLY START -->
           <!-- EVERYWHERE -->
           <!-- cdr: sources / caller -->
@@ -694,7 +689,6 @@
       :showFilterTimeSplit="showFilterTimeSplit"
       :showFilterCaller="showFilterCaller"
       :showFilterContactName="showFilterContactName"
-      :showFilterNullCall="showFilterNullCall"
       :showFilterCdrFastTimeRange="showFilterCdrFastTimeRange"
       :showFilterCdrCaller="showFilterCdrCaller"
       :showFilterCdrCallee="showFilterCdrCallee"
@@ -777,7 +771,6 @@ export default {
         },
         caller: "",
         contactName: "",
-        nullCall: false, ////
         sourcesUi: {},
         sources: [],
         groupsUi: [],
@@ -1311,9 +1304,6 @@ export default {
       if (!this.showFilterTimeSplit || !this.filter.time.division) {
         this.filter.time.division = "60";
       }
-
-      // null call
-      this.filter.nullCall = filter.nullCall;
 
       if (!fromLocalStorage) {
         // save filter to local storage
@@ -2111,9 +2101,6 @@ export default {
     },
     showFilterContactName: function () {
       return this.isFilterInView("contactName", this.filtersMap);
-    },
-    showFilterNullCall: function () {
-      return this.isFilterInView("nullCall", this.filtersMap);
     },
     // cdr filters check
     showFilterCdrFastTimeRange: function () {
