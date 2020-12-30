@@ -20,11 +20,9 @@ risultato ANSWER)
 - Posizione all'entrata in coda
 - Attesa (tempo di attesa in coda)
 - Durata (durata della chiamata se risposta da un agente)
-- Risultato (possibili risultati: ANSWER->Risposta, ABANDON->Abbandonata, 
-EXITWITHKEY->Menù Uscita, EXITWITHTIMEOUT->Attesa massima, FULL->Coda 
-piena, JOINEMPTY->Coda vuota in entrata, LEAVEEMPTY->Coda vuota dopo 
-l'entrata, JOINUNAVAIL->Coda senza agenti disponibili in entrata, 
-LEAVEUNAVAIL->Coda senza agenti disponibili dopo l'entrata) 
+- Risultato (possibili risultati: Risposta, Abbandono, Menù Uscita, 
+Timeout, Coda piena, Entrata con Nessun Agente in coda, Uscita per 
+Nessun Agente disponibile)
 
 Se nessun chiamante è stato selezionato, verranno mostrate tutte le 
 chiamate, se nessuna coda è stata selezionata, verranno mostrate le 
