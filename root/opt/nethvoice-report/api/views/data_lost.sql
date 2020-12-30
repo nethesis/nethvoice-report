@@ -11,7 +11,7 @@ SELECT
     cid,
     `name`,
     company,
-    `action` AS state,
+    direction,
     `event` AS reason
 FROM
     queue_failed

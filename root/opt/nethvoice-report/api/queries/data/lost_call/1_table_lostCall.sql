@@ -6,7 +6,7 @@ SELECT
     cid,
     name,
     company,
-    state AS state£label,
+    direction AS direction£label,
     reason AS reason£label
 FROM
     data_lost
