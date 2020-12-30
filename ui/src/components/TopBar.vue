@@ -206,6 +206,7 @@
                   </span>
                 </sui-card-content>
                 <sui-button
+                  v-if="adminSettings.destinations.length > 1"
                   basic
                   negative
                   attached="bottom"
@@ -288,6 +289,7 @@
                   <sui-form-field>
                     <label class="color-transparent">.</label>
                     <sui-button
+                      v-if="adminSettings.callPatterns.length > 1"
                       basic
                       negative
                       type="button"
