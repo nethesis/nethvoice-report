@@ -6,8 +6,8 @@ SELECT
     cid,
     name,
     company,
-    state,
-    reason
+    state AS state£label,
+    reason AS reason£label
 FROM
     data_lost
 WHERE   TRUE

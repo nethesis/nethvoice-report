@@ -10,7 +10,7 @@ SELECT
     position,
     hold AS hold£seconds,
     duration AS duration£seconds,
-    result
+    result AS result£label
 FROM
     data_call
 WHERE TRUE
