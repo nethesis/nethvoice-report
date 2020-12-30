@@ -128,15 +128,19 @@
             }}</div>
             <!-- null call time -->
             <sui-form-fields>
-              <sui-form-field>
+              <sui-form-field width="three" :error="error.settings.nullCallTime">
                 <label>{{ $t("settings.null_call") }}</label>
                 <sui-input
                   v-model.number="adminSettings.nullCallTime"
                   type="number"
                   min="0"
+                  ref="nullCallTime"
                 />
               </sui-form-field>
             </sui-form-fields>
+            <sui-message v-show="error.settings.nullCallTime" error>
+              <p>{{ $t("validation.invalid_value") }}</p>
+            </sui-message>
             <div class="settings-description">{{
               $t("message.null_call_description")
             }}</div>
@@ -928,6 +932,7 @@ export default {
           officeHourStart: false,
           officeHourEnd: false,
           queryLimit: false,
+          nullCallTime: false,
           currency: false,
           newDestination: false,
           newCallPatternPrefix: false,
@@ -1065,6 +1070,19 @@ export default {
         if (!errors) {
           errors = true;
           this.$nextTick(() => this.$refs.queryLimit.$el.children[0].focus());
+        }
+      }
+
+      // null call
+
+      if (
+        this.adminSettings.nullCallTime < 0
+      ) {
+        this.error.settings.nullCallTime = true;
+
+        if (!errors) {
+          errors = true;
+          this.$nextTick(() => this.$refs.nullCallTime.$el.children[0].focus());
         }
       }
 
