@@ -129,7 +129,7 @@
             <!-- null call time -->
             <sui-form-fields>
               <sui-form-field>
-                <label>{{ $t("filter.null_call_label") }}</label>
+                <label>{{ $t("settings.null_call") }}</label>
                 <sui-input
                   v-model.number="adminSettings.nullCallTime"
                   type="number"

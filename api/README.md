@@ -196,8 +196,7 @@ To reduce the numbers of record inside the `cdr`table, the templates query split
         "value": "monday"
       },
       "name": "Edoardo",
-      "agent": "5555",
-      "null_call": true
+      "agent": "5555"
     }
   }
   ```
