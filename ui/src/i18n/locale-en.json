@@ -361,7 +361,9 @@
       "src": "Source",
       "dst": "Destination",
       "pbx": "PBX",
-      "did": "DID"
+      "did": "DID",
+      "srcDevice": "Source device",
+      "dstDevice": "Destination device"
     },
     "command": {
       "save": "Save",

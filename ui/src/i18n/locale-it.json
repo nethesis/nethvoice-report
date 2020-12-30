@@ -361,7 +361,9 @@
       "src": "Sorgente",
       "dst": "Destinazione",
       "pbx": "Centralino",
-      "did": "DID"
+      "did": "DID",
+      "srcDevice": "Dispositivo sorgente",
+      "dstDevice": "Dispositivo destinazione"
     },
     "command": {
       "save": "Salva",
