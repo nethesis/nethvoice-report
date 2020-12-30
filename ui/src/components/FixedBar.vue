@@ -138,15 +138,6 @@
             {{activeFilters.contactName}}
           </span>
         </div>
-        <!-- label: nullCall value -->
-        <div class="ui label" v-if="showFilterNullCall && activeFilters.nullCall">
-          <span class="field">
-            {{$t('filter.null_call_label')}}:
-          </span>
-          <span class="value">
-            {{activeFilters.nullCall}}
-          </span>
-        </div>
         <!-- start cdr -->
         <!-- label: caller sources active filter -->
         <div class="ui label" v-if="showFilterCdrCaller && activeFilters.sourcesUi && activeFilters.sourcesUi.title">
@@ -274,7 +265,6 @@ export default {
     "showFilterTimeSplit",
     "showFilterCaller",
     "showFilterContactName",
-    "showFilterNullCall",
     "showFilterCdrFastTimeRange",
     "showFilterCdrCaller",
     "showFilterCdrCallee",
