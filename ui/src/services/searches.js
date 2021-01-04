@@ -1,9 +1,9 @@
 var SearchesService = {
   methods: {
-    getSearches(success, error) {
+    getSearches(report, success, error) {
       this.$http
         .get(
-          this.$root.apiScheme + this.$root.apiEndpoint + "/searches",
+          this.$root.apiScheme + this.$root.apiEndpoint + "/searches/" + report,
           {
             headers: {
               Authorization:
@@ -15,9 +15,9 @@ var SearchesService = {
         )
         .then(success, error);
     },
-    createSearch(body, success, error) {
+    createSearch(report, body, success, error) {
       this.$http
-        .post(this.$root.apiScheme + this.$root.apiEndpoint + "/searches", body,
+        .post(this.$root.apiScheme + this.$root.apiEndpoint + "/searches/" + report, body,
           {
             headers: {
               Authorization:

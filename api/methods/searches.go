@@ -38,6 +38,9 @@ func GetSearches(c *gin.Context) {
 	// get current user
 	user := GetClaims(c)["id"].(string)
 
+	// get report param
+	report := c.Param("report")
+
 	// init cache connection
 	cacheConnection := cache.Instance()
 
@@ -70,6 +73,11 @@ func GetSearches(c *gin.Context) {
 			search.Report = "queue"
 		}
 
+		// consider only searches matching request report
+		if report != search.Report {
+			continue
+		}
+
 		// convert filter string to struct
 		errJson := json.Unmarshal([]byte(v), &filter)
 		if errJson != nil {
@@ -92,6 +100,9 @@ func SetSearches(c *gin.Context) {
 	// get current user
 	user := GetClaims(c)["id"].(string)
 
+	// get report param
+	report := c.Param("report")
+
 	// bind json body
 	var jsonSearch models.Search
 	if err := c.BindJSON(&jsonSearch); err != nil {
@@ -108,7 +119,6 @@ func SetSearches(c *gin.Context) {
 	}
 
 	// extract report, section, view, filter
-	report := jsonSearch.Report
 	section := jsonSearch.Section
 	view := jsonSearch.View
 	filter := jsonSearch.Filter
@@ -128,7 +138,14 @@ func SetSearches(c *gin.Context) {
 
 	// handle cache error
 	if errCache != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "error on saving to cache", "status": errCache.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "error saving to cache", "status": errCache.Error()})
+		return
+	}
+
+	// ensure old saved searches keys are deleted (to avoid duplicates)
+	errCache = cacheConnection.HDel(user, name+"_"+section+"_"+view).Err()
+	if errCache != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "error deleting old saved search from cache", "status": errCache.Error()})
 		return
 	}
 
