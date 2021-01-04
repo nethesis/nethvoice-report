@@ -537,4 +537,9 @@ body {
   opacity: 1;
 }
 /* end CSS for v-tooltip */
+
+.ui.inline.loader.loading-filters {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
 </style>
