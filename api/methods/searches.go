@@ -60,18 +60,12 @@ func GetSearches(c *gin.Context) {
 		var search models.Search
 		var filter models.Filter
 
-		// extract name, section, view
+		// search key is: search_REPORT_SECTION_VIEW_NAME
 		s := strings.Split(k, "_")
-		search.Name = s[0]
-		search.Section = s[1]
-		search.View = s[2]
-
-		if len(s) == 4 {
-			search.Report = s[3]
-		} else {
-			// old saved searches do not have report attribute
-			search.Report = "queue"
-		}
+		search.Report = s[1]
+		search.Section = s[2]
+		search.View = s[3]
+		search.Name = s[4]
 
 		// consider only searches matching request report
 		if report != search.Report {
@@ -133,19 +127,12 @@ func SetSearches(c *gin.Context) {
 	// init cache connection
 	cacheConnection := cache.Instance()
 
-	// set custom search to cache
-	errCache := cacheConnection.HSet(user, name+"_"+section+"_"+view+"_"+report, filterString).Err()
+	// set custom search to cache, search key is: search_REPORT_SECTION_VIEW_NAME
+	errCache := cacheConnection.HSet(user, "search_"+report+"_"+section+"_"+view+"_"+name, filterString).Err()
 
 	// handle cache error
 	if errCache != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "error saving to cache", "status": errCache.Error()})
-		return
-	}
-
-	// ensure old saved searches keys are deleted (to avoid duplicates)
-	errCache = cacheConnection.HDel(user, name+"_"+section+"_"+view).Err()
-	if errCache != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "error deleting old saved search from cache", "status": errCache.Error()})
 		return
 	}
 
