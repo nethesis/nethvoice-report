@@ -63,6 +63,13 @@ func GetSearches(c *gin.Context) {
 		search.Section = s[1]
 		search.View = s[2]
 
+		if len(s) == 4 {
+			search.Report = s[3]
+		} else {
+			// old saved searches do not have report attribute
+			search.Report = "queue"
+		}
+
 		// convert filter string to struct
 		errJson := json.Unmarshal([]byte(v), &filter)
 		if errJson != nil {
@@ -100,7 +107,8 @@ func SetSearches(c *gin.Context) {
 		name = guuid.New().String()
 	}
 
-	// extract section, view, filter
+	// extract report, section, view, filter
+	report := jsonSearch.Report
 	section := jsonSearch.Section
 	view := jsonSearch.View
 	filter := jsonSearch.Filter
@@ -116,7 +124,7 @@ func SetSearches(c *gin.Context) {
 	cacheConnection := cache.Instance()
 
 	// set custom search to cache
-	errCache := cacheConnection.HSet(user, name+"_"+section+"_"+view, filterString).Err()
+	errCache := cacheConnection.HSet(user, name+"_"+section+"_"+view+"_"+report, filterString).Err()
 
 	// handle cache error
 	if errCache != nil {
