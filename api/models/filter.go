@@ -81,6 +81,7 @@ type Filter struct {
 
 type Search struct {
 	Name    string `json:"name"`
+	Report  string `json:"report"`
 	Section string `json:"section"`
 	View    string `json:"view"`
 	Filter  Filter `json:"filter"`
