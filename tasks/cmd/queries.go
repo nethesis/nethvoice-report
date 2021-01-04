@@ -89,6 +89,13 @@ func getSearchesFromCache() ([]models.Search, error) {
 			search.Section = s[1]
 			search.View = s[2]
 
+			if len(s) == 4 {
+				search.Report = s[3]
+			} else {
+				// old saved searches do not have report attribute
+				search.Report = "queue"
+			}
+
 			// convert filter string to struct
 			errJson := json.Unmarshal([]byte(v), &filter)
 			if errJson != nil {

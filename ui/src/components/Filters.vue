@@ -850,10 +850,16 @@ export default {
       phonebookReady: false,
       showSearchResults: false,
       searchContactResults: [],
+      currentReport: "",
     };
   },
   watch: {
     $route: function () {
+      if (this.currentReport !== this.$route.meta.report) {
+        this.currentReport = this.$route.meta.report;
+        this.getSavedSearches();
+      }
+
       // sort saved searches
       if (this.savedSearches) {
         this.mapSavedSearches(this.savedSearches);
@@ -942,6 +948,7 @@ export default {
   },
   mounted() {
     this.retrieveFilter();
+    this.currentReport = this.$route.meta.report;
     this.getSavedSearches();
 
     // views request to apply filter on loading
@@ -1336,6 +1343,7 @@ export default {
     },
     getSavedSearches(searchToSelect) {
       this.getSearches(
+        this.currentReport,
         (success) => {
           const savedSearches = success.body.searches;
           this.mapSavedSearches(savedSearches);
@@ -1607,7 +1615,7 @@ export default {
 
       if (backendFilter.sourcesUi && backendFilter.sourcesUi.title) {
         backendFilter.sources =
-          backendFilter.sourcesUi.value != null
+          backendFilter.sourcesUi.value
             ? backendFilter.sourcesUi.value.split(",")
             : [backendFilter.sourcesUi.title];
       } else {
@@ -1618,7 +1626,7 @@ export default {
 
       if (backendFilter.destinationsUi && backendFilter.destinationsUi.title) {
         backendFilter.destinations =
-          backendFilter.destinationsUi.value != null
+          backendFilter.destinationsUi.value
             ? backendFilter.destinationsUi.value.split(",")
             : [backendFilter.destinationsUi.title];
       } else {
@@ -1853,6 +1861,7 @@ export default {
       let filterToSave = this.computeFilterToSave();
 
       this.createSearch(
+        this.currentReport,
         {
           name: searchName,
           section: this.$route.meta.section,

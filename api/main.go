@@ -102,7 +102,7 @@ func main() {
 			graph.GET("", methods.GetGraphData)
 		}
 
-		searches := api.Group("/searches")
+		searches := api.Group("/searches/:report")
 		{
 			searches.GET("", methods.GetSearches)
 			searches.POST("", methods.SetSearches)
