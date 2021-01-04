@@ -57,7 +57,7 @@ func init() {
 }
 
 // Get saved searches from redis cache.
-func getSearchesFromCache() ([]models.Search, error) {
+func getSearchesFromCache(report string) ([]models.Search, error) {
 	// get users list from authorizations file
 	userAuthorizationsList, err := methods.ParseUserAuthorizationsFile()
 	if err != nil {
@@ -96,6 +96,11 @@ func getSearchesFromCache() ([]models.Search, error) {
 				search.Report = "queue"
 			}
 
+			// consider only searches matching request report
+			if report != search.Report {
+				continue
+			}
+
 			// convert filter string to struct
 			errJson := json.Unmarshal([]byte(v), &filter)
 			if errJson != nil {
@@ -113,10 +118,10 @@ func getSearchesFromCache() ([]models.Search, error) {
 }
 
 // Retrieve the list of queries for the report, organized by section and view
-func getQueryTree(jwtToken string) (map[string]map[string][]string, error) {
+func getQueryTree(report string, jwtToken string) (map[string]map[string][]string, error) {
 	// create request
 	client := &http.Client{}
-	requestUrl := configuration.Config.APIEndpoint + "/query_tree"
+	requestUrl := configuration.Config.APIEndpoint + "/query_tree/" + report
 	req, err := http.NewRequest("GET", requestUrl, nil)
 	if err != nil {
 		return nil, errors.Wrap(err, "Error creating request")
@@ -144,7 +149,7 @@ func getQueryTree(jwtToken string) (map[string]map[string][]string, error) {
 }
 
 // Request the execution of a report query specifying an input filter
-func executeQuery(queryName string, filter models.Filter, section string, view string, jwtToken string) (string, error) {
+func executeQuery(queryName string, filter models.Filter, report string, section string, view string, jwtToken string) (string, error) {
 	client := &http.Client{}
 
 	// encode filter for request URL
@@ -159,7 +164,7 @@ func executeQuery(queryName string, filter models.Filter, section string, view s
 	queryName = tokens[0]
 	queryType := tokens[1]
 
-	requestUrl := fmt.Sprintf("%s/queues/%s/%s?filter=%s&graph=%s&type=%s", configuration.Config.APIEndpoint, section, view, filterEncoded, queryName, queryType)
+	requestUrl := fmt.Sprintf("%s/graph/%s/%s/%s?filter=%s&graph=%s&type=%s", configuration.Config.APIEndpoint, report, section, view, filterEncoded, queryName, queryType)
 
 	// create request
 	req, err := http.NewRequest("GET", requestUrl, nil)
@@ -197,38 +202,40 @@ func executeReportQueries() {
 		helper.FatalError(err)
 	}
 
-	// get query tree
-	queryTree, err := getQueryTree(jwtToken)
-	if err != nil {
-		helper.FatalError(err)
-	}
+	for _, report := range []string{"queue", "cdr"} {
+		// get query tree
+		queryTree, err := getQueryTree(report, jwtToken)
+		if err != nil {
+			helper.FatalError(err)
+		}
 
-	// get saved searches
-	searches, err := getSearchesFromCache()
-	if err != nil {
-		helper.FatalError(err)
-	}
-	helper.LogDebug("\n\nExecuting queries for %d saved searches", len(searches))
+		// get saved searches
+		searches, err := getSearchesFromCache(report)
+		if err != nil {
+			helper.FatalError(err)
+		}
+		helper.LogDebug("\n\nExecuting queries for %s report (%d saved searches)", strings.ToUpper(report), len(searches))
 
-	for _, search := range searches {
-		// get section, view, and query names for current search
-		section := search.Section
-		view := search.View
-		queryNames := queryTree[section][view]
+		for _, search := range searches {
+			// get section, view, and query names for current search
+			section := search.Section
+			view := search.View
+			queryNames := queryTree[section][view]
 
-		// exectue queries of section/view
-		for _, queryName := range queryNames {
-			helper.LogDebug("\n    [QUERY]: %s [SEARCH]: %#v", queryName, search)
-			start := time.Now()
-			_, err := executeQuery(queryName, search.Filter, section, view, jwtToken)
+			// exectue queries of section/view
+			for _, queryName := range queryNames {
+				helper.LogDebug("\n    [QUERY]: %s [SEARCH]: %#v", queryName, search)
+				start := time.Now()
+				_, err := executeQuery(queryName, search.Filter, report, section, view, jwtToken)
 
-			if err != nil {
-				helper.LogError(errors.Wrap(err, fmt.Sprintf("[QUERY]: %s [SEARCH]: %#v", queryName, search)))
-				continue
+				if err != nil {
+					helper.LogError(errors.Wrap(err, fmt.Sprintf("[QUERY]: %s [SEARCH]: %#v", queryName, search)))
+					continue
+				}
+
+				duration := time.Since(start)
+				helper.LogDebug("    %s completed in %s", queryName, duration)
 			}
-
-			duration := time.Since(start)
-			helper.LogDebug("    %s completed in %s", queryName, duration)
 		}
 	}
 }
