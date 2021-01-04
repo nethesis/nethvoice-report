@@ -194,7 +194,7 @@
           </span>
         </div>
         <!-- label: cti groups active filter -->
-        <div class="ui label" v-if="showFilterCdrCtiGroups && activeFilters.groups && (activeFilters.groupsUi.length > 0)">
+        <div class="ui label" v-if="showFilterCdrCtiGroups && activeFilters.groupsUi && (activeFilters.groupsUi.length > 0)">
           <span class="field">
             {{$t('filter.cti_group')}}:
           </span>
