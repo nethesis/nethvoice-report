@@ -1890,9 +1890,11 @@ export default {
         (s) => s.name === this.selectedSearch
       );
 
-      const searchId = search.name + "_" + search.section + "_" + search.view;
+      // search key is: search_REPORT_SECTION_VIEW_NAME
+      const searchId = "search_" + this.currentReport + "_" + search.section + "_" + search.view + "_" + search.name;
 
       this.deleteSearch(
+        this.currentReport,
         searchId,
         () => {
           this.loader.deleteSearch = false;
