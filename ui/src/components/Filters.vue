@@ -766,7 +766,8 @@ export default {
           // reasons
           if (this.defaultFilter.reasons) {
             let reasons = this.defaultFilter.reasons.map((reason) => {
-              return { value: reason, text: reason };
+              const reasonText = this.$te("filter." + reason) ? this.$t("filter." + reason) : reason;
+              return { value: reason, text: reasonText };
             });
             this.filterValues.reasons = reasons.sort(
               this.sortByProperty("text")
