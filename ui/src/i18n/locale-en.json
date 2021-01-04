@@ -207,7 +207,7 @@
       "enter_name_for_saved_search": "Enter a name for your new saved search",
       "search_name_required": "Search name is required",
       "search_name_already_exist": "A search with the same name already exists",
-      "search_name_validation": "Search name must begin with a letter and contain only letters, spaces, numbers and dashes",
+      "search_name_validation": "Search name must begin with a letter and contain only letters, spaces, numbers and any of the following symbols: - , /",
       "coming_soon": "Coming soon",
       "cdr_not_available": "CDR & Cost report is not available yet, please come back later",
       "loading_filters": "Loading filters",

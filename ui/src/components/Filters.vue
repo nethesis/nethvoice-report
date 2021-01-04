@@ -1740,7 +1740,7 @@ export default {
         return;
       }
 
-      if (!/^[a-zA-Z][a-zA-Z0-9 -,/]+$/.test(this.newSearchName)) {
+      if (!/^[a-zA-Z][a-zA-Z0-9 \-,/]+$/.test(this.newSearchName)) {
         this.errorNewSearch = true;
         this.errorMessage = this.$i18n.t("message.search_name_validation");
         return;
