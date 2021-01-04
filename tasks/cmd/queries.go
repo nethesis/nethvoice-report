@@ -74,7 +74,7 @@ func getSearchesFromCache(report string) ([]models.Search, error) {
 		// get saved searches for this section and view
 		results, errCache := cacheConnection.HGetAll(username).Result()
 		if errCache != nil {
-			return nil, errors.Wrap(err, "Error reading cache")
+			return nil, errors.Wrap(errCache, "Error reading cache")
 		}
 
 		// iterate over results
@@ -83,18 +83,12 @@ func getSearchesFromCache(report string) ([]models.Search, error) {
 			var search models.Search
 			var filter models.Filter
 
-			// extract name, section, view
+			// search key is: search_REPORT_SECTION_VIEW_NAME
 			s := strings.Split(k, "_")
-			search.Name = s[0]
-			search.Section = s[1]
-			search.View = s[2]
-
-			if len(s) == 4 {
-				search.Report = s[3]
-			} else {
-				// old saved searches do not have report attribute
-				search.Report = "queue"
-			}
+			search.Report = s[1]
+			search.Section = s[2]
+			search.View = s[3]
+			search.Name = s[4]
 
 			// consider only searches matching request report
 			if report != search.Report {

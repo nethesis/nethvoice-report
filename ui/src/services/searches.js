@@ -29,9 +29,9 @@ var SearchesService = {
         )
         .then(success, error);
     },
-    deleteSearch(searchId, success, error) {
+    deleteSearch(report, searchId, success, error) {
       this.$http
-        .delete(this.$root.apiScheme + this.$root.apiEndpoint + "/searches/" + searchId,
+        .delete(this.$root.apiScheme + this.$root.apiEndpoint + "/searches/" + report + "/" + searchId,
           {
             headers: {
               Authorization:
