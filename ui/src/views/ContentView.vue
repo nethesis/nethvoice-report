@@ -11,7 +11,7 @@
   </div>
   <div v-show="dataAvailable">
     <div v-if="!$root.filtersReady">
-      <sui-loader active centered inline class="mg-bottom-sm" />
+      <sui-loader active centered inline class="loading-filters" />
       <div>{{ $t("message.loading_filters") }}...</div>
     </div>
     <div class="chart-container">
