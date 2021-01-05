@@ -44,7 +44,11 @@
           <sui-form-field v-if="showFilterCdrFastTimeRange" width="four">
             <label class="ellipsis">{{ $t("filter.time_range") }}</label>
             <sui-dropdown
-              :options="$route.meta.section == 'dashboard' ? fastCdrDashboardTimeRangeValuesMap() : fastCdrTimeRangeValuesMap"
+              :options="
+                $route.meta.section == 'dashboard'
+                  ? fastCdrDashboardTimeRangeValuesMap()
+                  : fastCdrTimeRangeValuesMap
+              "
               :placeholder="$t('filter.time_range_label')"
               @click="selectTime(fastCdrRange)"
               search
@@ -439,6 +443,7 @@
               @input="onSourcesInput"
               @select="onSourcesSelect"
               ref="sourcesUi"
+              key="sourcesUi"
             />
           </sui-form-field>
           <!-- cdr: call destinations / callee -->
@@ -452,6 +457,7 @@
               @input="onDestinationsInput"
               @select="onDestinationsSelect"
               ref="destinationsUi"
+              key="destinationsUi"
             />
           </sui-form-field>
           <!-- cdr: call type -->
@@ -479,6 +485,7 @@
               @select="onDurationSelect"
               @blur="callDurationBlur"
               ref="duration"
+              key="duration"
               :showOptionType="false"
               :class="{ 'field-error': errorCallDuration }"
             />
@@ -852,6 +859,7 @@ export default {
       if (this.currentReport !== this.$route.meta.report) {
         this.currentReport = this.$route.meta.report;
         this.getSavedSearches();
+        this.setSearchInputs(this.filter);
       }
 
       // sort saved searches
@@ -1251,6 +1259,36 @@ export default {
         }
       );
     },
+    setSearchInputs(filter) {
+      // sources
+      if (filter.sourcesUi.title) {
+        this.$nextTick(() => {
+          this.$refs.sourcesUi.$data.query = filter.sourcesUi.title;
+        });
+      }
+
+      // destinations
+      if (filter.destinationsUi.title) {
+        this.$nextTick(() => {
+          this.$refs.destinationsUi.$data.query = filter.destinationsUi.title;
+        });
+      }
+
+      // duration
+      if (filter.durationUi && filter.durationUi.title) {
+        if (filter.durationUi.value) {
+          // duration from options
+          this.$nextTick(() => {
+            this.$refs.duration.$data.query = filter.durationUi.title;
+          });
+        } else {
+          this.$nextTick(() => {
+            this.$refs.duration.$data.query =
+              filter.durationUi.title + " " + this.$t("misc.seconds");
+          });
+        }
+      }
+    },
     setFilterSelection(filter, fromLocalStorage) {
       if (fromLocalStorage) {
         this.filter.queues = filter.queues;
@@ -1266,23 +1304,11 @@ export default {
 
         // cdr filters
 
-        // sources
+        // sources, destinations, duration
         this.filter.sourcesUi = filter.sourcesUi;
-        if (filter.sourcesUi.title) {
-          this.$refs.sourcesUi.$data.query = filter.sourcesUi.title;
-        }
-
-        // destinations
         this.filter.destinationsUi = filter.destinationsUi;
-        if (filter.destinationsUi.title) {
-          this.$refs.destinationsUi.$data.query = filter.destinationsUi.title;
-        }
-
-        // duration
-        if (filter.durationUi && filter.durationUi.title) {
-          this.filter.durationUi = filter.durationUi;
-          this.$refs.duration.$data.query = filter.durationUi.title;
-        }
+        this.filter.durationUi = filter.durationUi;
+        this.setSearchInputs(filter);
 
         this.filter.callType = filter.callType;
         this.filter.trunks = filter.trunks;
@@ -1535,7 +1561,9 @@ export default {
 
       // check time interval start is not after time interval end
 
-      const start = this.moment(this.filter.time.interval.start).format(dateFormat);
+      const start = this.moment(this.filter.time.interval.start).format(
+        dateFormat
+      );
       const end = this.moment(this.filter.time.interval.end).format(dateFormat);
 
       if (this.moment(start).isAfter(this.moment(end))) {
@@ -1609,10 +1637,9 @@ export default {
       // sources
 
       if (backendFilter.sourcesUi && backendFilter.sourcesUi.title) {
-        backendFilter.sources =
-          backendFilter.sourcesUi.value
-            ? backendFilter.sourcesUi.value.split(",")
-            : [backendFilter.sourcesUi.title];
+        backendFilter.sources = backendFilter.sourcesUi.value
+          ? backendFilter.sourcesUi.value.split(",")
+          : [backendFilter.sourcesUi.title];
       } else {
         backendFilter.sources = [];
       }
@@ -1620,10 +1647,9 @@ export default {
       // destinations
 
       if (backendFilter.destinationsUi && backendFilter.destinationsUi.title) {
-        backendFilter.destinations =
-          backendFilter.destinationsUi.value
-            ? backendFilter.destinationsUi.value.split(",")
-            : [backendFilter.destinationsUi.title];
+        backendFilter.destinations = backendFilter.destinationsUi.value
+          ? backendFilter.destinationsUi.value.split(",")
+          : [backendFilter.destinationsUi.title];
       } else {
         backendFilter.destinations = [];
       }
@@ -1886,7 +1912,15 @@ export default {
       );
 
       // search key is: search_REPORT_SECTION_VIEW_NAME
-      const searchId = "search_" + this.currentReport + "_" + search.section + "_" + search.view + "_" + search.name;
+      const searchId =
+        "search_" +
+        this.currentReport +
+        "_" +
+        search.section +
+        "_" +
+        search.view +
+        "_" +
+        search.name;
 
       this.deleteSearch(
         this.currentReport,
