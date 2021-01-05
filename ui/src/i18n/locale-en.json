@@ -213,7 +213,7 @@
       "loading_filters": "Loading filters",
       "chart_error": "An error occured while loading chart",
       "query_limit_description": "This is the maximum number of results that can be displayed by a table chart. If this limit is reached a warning icon is shown next to chart title",
-      "null_call_description": "Calls having a duration lesser or equal to this value are considered null",
+      "null_call_description": "Calls having a duration lesser than or equal to this value are considered null",
       "slow_query": "Processing is taking a while. Please narrow search filters, or keep waiting",
       "cdr_details_wait": "This operation can take a while, please wait or come back later...",
       "welcome_in_cdr": "Welcome in CDR & Cost report",
@@ -420,7 +420,18 @@
       "contact": "Contact"
     },
     "validation": {
-      "invalid_value": "Invalid value"
+      "office_hours_invalid": "Invalid time",
+      "query_limit_invalid": "Max results must be greater than or equal to 10",
+      "null_call_invalid": "Null call time must be greater than or equal to 0",
+      "currency_empty": "Currency cannot be empty",
+      "call_pattern_prefix_empty": "Prefix cannot be empty",
+      "call_pattern_prefix_duplicated": "This prefix already exists",
+      "call_pattern_prefix_invalid": "Invalid prefix",
+      "call_pattern_destination_empty": "Destination cannot be empty",
+      "cost_channel_id_empty": "Trunk cannot be empty",
+      "cost_destination_empty": "Destination cannot be empty",
+      "cost_value_invalid": "Invalid cost",
+      "cost_duplicated": "This trunk and this destination already exist"
     },
     "search": {
       "contact": "Contact",

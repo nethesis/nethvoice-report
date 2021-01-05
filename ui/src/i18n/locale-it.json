@@ -222,7 +222,7 @@
       "currency_description": "Valuta usata per mostrare il costo delle chiamate",
       "destinations_description": "Le destinazioni sono usate per raggruppare i prefissi di destinazione delle chiamate e calcolare i costi delle chiamate",
       "costs_description": "Configura il costo delle chiamate per fasci specifici e destinazioni specifiche",
-      "call_patterns_description": "I prefissi di destinazione son usati per configurare la destinazione dei numeri di telefono usando il loro prefisso. La destinazione è selezionata in base al prefisso più specifico (lungo)",
+      "call_patterns_description": "I prefissi di destinazione sono usati per configurare la destinazione dei numeri di telefono tramite il loro prefisso. La destinazione è selezionata in base al prefisso più specifico (lungo)",
       "configure_to_compute_call_costs": "Configura questa impostazione per calcolare e visualizzare i costi delle chiamate",
       "access_cdr_report": "Accedi al Report Chiamate & Costi",
       "reset_settings_description": "Ripristina tutte le impostazioni ai loro valori predefiniti",
@@ -420,7 +420,18 @@
       "contact": "Contatto"
     },
     "validation": {
-      "invalid_value": "Valore non valido"
+      "office_hours_invalid": "Orario non valido",
+      "query_limit_invalid": "Il numero massimo di risultati deve essere maggiore o uguale a 10",
+      "null_call_invalid": "la durata chiamate nulle deve essere maggiore o uguale a 0",
+      "currency_empty": "La valuta non può essere vuota",
+      "call_pattern_prefix_empty": "Il prefisso non può essere vuoto",
+      "call_pattern_prefix_duplicated": "Prefisso già esistente",
+      "call_pattern_prefix_invalid": "Prefisso non valido",
+      "call_pattern_destination_empty": "La destinazione non può essere vuota",
+      "cost_channel_id_empty": "Il fascio non può essere vuoto",
+      "cost_destination_empty": "La destinazione non può essere vuota",
+      "cost_value_invalid": "Costo non valido",
+      "cost_duplicated": "Fascio e destinazione già esistenti"
     },
     "search": {
       "contact": "Contatto",
