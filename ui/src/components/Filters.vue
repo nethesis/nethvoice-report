@@ -44,7 +44,7 @@
           <sui-form-field v-if="showFilterCdrFastTimeRange" width="four">
             <label class="ellipsis">{{ $t("filter.time_range") }}</label>
             <sui-dropdown
-              :options="fastCdrTimeRangeValuesMap"
+              :options="$route.meta.section == 'dashboard' ? fastCdrDashboardTimeRangeValuesMap() : fastCdrTimeRangeValuesMap"
               :placeholder="$t('filter.time_range_label')"
               @click="selectTime(fastCdrRange)"
               search
@@ -192,6 +192,7 @@
               :disabled-date="fromToday"
               :class="{ 'field-error': errorTimeInterval }"
               :formatter="momentFormatter"
+              :lang="$i18n.vm.locale"
             ></date-picker>
             <!-- date / week / month / year -->
             <date-picker
@@ -212,6 +213,7 @@
               :disabled-date="fromToday"
               :class="{ 'field-error': errorTimeInterval }"
               :formatter="momentFormatter"
+              :lang="$i18n.vm.locale"
             ></date-picker>
             <sui-icon name="right arrow time-filter" />
             <!-- time interval end -->
@@ -226,6 +228,7 @@
               :disabled-date="fromToday"
               :class="{ 'field-error': errorTimeInterval }"
               :formatter="momentFormatter"
+              :lang="$i18n.vm.locale"
             ></date-picker>
             <!-- date / week / month / year -->
             <date-picker
@@ -246,6 +249,7 @@
               :disabled-date="fromToday"
               :class="{ 'field-error': errorTimeInterval }"
               :formatter="momentFormatter"
+              :lang="$i18n.vm.locale"
             ></date-picker>
           </sui-form-field>
           <!-- CDR ONLY START -->
@@ -268,6 +272,7 @@
               :disabled-date="fromToday"
               :class="{ 'field-error': errorTimeInterval }"
               :formatter="momentFormatter"
+              :lang="$i18n.vm.locale"
             ></date-picker>
             <sui-icon name="right arrow time-filter" />
             <!-- time interval end -->
@@ -281,6 +286,7 @@
               :disabled-date="fromToday"
               :class="{ 'field-error': errorTimeInterval }"
               :formatter="momentFormatter"
+              :lang="$i18n.vm.locale"
             ></date-picker>
           </sui-form-field>
           <!-- CDR ONLY END -->
@@ -722,8 +728,6 @@ import FilterService from "../services/filter";
 import SettingsService from "../services/settings";
 import SearchInput from "../components/SearchInput";
 
-import moment from "moment";
-
 export default {
   name: "Filters",
   components: {
@@ -826,14 +830,14 @@ export default {
       momentFormatter: {
         stringify: (date) => {
           const dateFormat = this.getDateFormat();
-          return date ? moment(date).format(dateFormat) : "";
+          return date ? window.moment(date).format(dateFormat) : "";
         },
         parse: (value) => {
           const dateFormat = this.getDateFormat();
-          return value ? moment(value, dateFormat).toDate() : null;
+          return value ? window.moment(value, dateFormat).toDate() : null;
         },
         getWeek(date) {
-          return moment(date).isoWeek();
+          return window.moment(date).isoWeek();
         },
       },
       phonebookDb: null,
@@ -878,7 +882,7 @@ export default {
         // convert to date object if needed
         if (typeof this.filter.time.interval.start == "string") {
           const dateFormat = this.getDateFormat();
-          this.filter.time.interval.start = moment(
+          this.filter.time.interval.start = this.moment(
             this.filter.time.interval.start,
             dateFormat
           ).toDate();
@@ -886,7 +890,7 @@ export default {
 
         if (typeof this.filter.time.interval.end == "string") {
           const dateFormat = this.getDateFormat();
-          this.filter.time.interval.end = moment(
+          this.filter.time.interval.end = this.moment(
             this.filter.time.interval.end,
             dateFormat
           ).toDate();
@@ -946,6 +950,9 @@ export default {
     this.$root.$on("clearFilters", this.clearFilters);
   },
   methods: {
+    moment(...args) {
+      return window.moment(...args);
+    },
     onRequestApplyFilter() {
       if (this.loader.filter == false) {
         this.applyFilters();
@@ -1294,10 +1301,10 @@ export default {
         // set time interval from time range
         this.selectTime(this.filter.time.range);
       } else {
-        this.filter.time.interval.start = moment(
+        this.filter.time.interval.start = this.moment(
           filter.time.interval.start
         ).toDate();
-        this.filter.time.interval.end = moment(
+        this.filter.time.interval.end = this.moment(
           filter.time.interval.end
         ).toDate();
       }
@@ -1443,12 +1450,22 @@ export default {
         };
       } else if (range == "past_week") {
         this.filter.time.interval = {
-          start: this.getPastPeriod("start", "week"),
-          end: this.getPastPeriod("end", "week"),
+          start: this.getPastPeriod("start", "isoWeek"),
+          end: this.getPastPeriod("end", "isoWeek"),
         };
       } else if (range == "past_month") {
         this.filter.time.interval = {
           start: this.getPastPeriod("start", "month"),
+          end: this.getPastPeriod("end", "month"),
+        };
+      } else if (range == "past_quarter") {
+        this.filter.time.interval = {
+          start: this.getPastPeriod("start", "quarter"),
+          end: this.getPastPeriod("end", "month"),
+        };
+      } else if (range == "past_semester") {
+        this.filter.time.interval = {
+          start: this.getPastPeriod("start", "quarter", 2),
           end: this.getPastPeriod("end", "month"),
         };
       } else if (range == "past_year") {
@@ -1500,12 +1517,12 @@ export default {
 
       const dateFormat = this.getDateFormat();
 
-      let formatStartValid = moment(
+      let formatStartValid = this.moment(
         this.filter.time.interval.start,
         dateFormat,
         true
       ).isValid();
-      let formatEndValid = moment(
+      let formatEndValid = this.moment(
         this.filter.time.interval.end,
         dateFormat,
         true
@@ -1518,10 +1535,10 @@ export default {
 
       // check time interval start is not after time interval end
 
-      const start = moment(this.filter.time.interval.start).format(dateFormat);
-      const end = moment(this.filter.time.interval.end).format(dateFormat);
+      const start = this.moment(this.filter.time.interval.start).format(dateFormat);
+      const end = this.moment(this.filter.time.interval.end).format(dateFormat);
 
-      if (moment(start).isAfter(moment(end))) {
+      if (this.moment(start).isAfter(this.moment(end))) {
         this.errorTimeInterval = true;
         return false;
       }
@@ -1563,10 +1580,10 @@ export default {
 
       if (backendFilter.time.interval) {
         const dateFormat = this.getDateFormat();
-        backendFilter.time.interval.start = moment(
+        backendFilter.time.interval.start = this.moment(
           backendFilter.time.interval.start
         ).format(dateFormat);
-        backendFilter.time.interval.end = moment(
+        backendFilter.time.interval.end = this.moment(
           backendFilter.time.interval.end
         ).format(dateFormat);
       }
@@ -1640,12 +1657,12 @@ export default {
       // convert time interval from string
 
       const dateFormat = this.getDateFormat();
-      frontendFilter.time.interval.start = moment(
+      frontendFilter.time.interval.start = this.moment(
         backendFilter.time.interval.start,
         dateFormat
       ).toDate();
 
-      frontendFilter.time.interval.end = moment(
+      frontendFilter.time.interval.end = this.moment(
         backendFilter.time.interval.end,
         dateFormat
       ).toDate();

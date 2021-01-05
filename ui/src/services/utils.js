@@ -1,5 +1,3 @@
-import moment from "moment";
-
 var UtilService = {
   data() {
     return {
@@ -7,6 +5,9 @@ var UtilService = {
     }
   },
   methods: {
+    moment(...args) {
+      return window.moment(...args);
+    },
     sortByProperty(property) {
       return function (a, b) {
         if (a[property] < b[property]) {
@@ -48,7 +49,7 @@ var UtilService = {
           // no formatting needed
           return value;
         case "monthDate":
-          return this.$options.filters.formatMonthDate(value, this.$i18n);
+          return this.$options.filters.formatMonthDate(value);
         case "weekDate":
           return this.$options.filters.formatWeekDate(value, this.$i18n);
         case "dayDate":
@@ -238,7 +239,7 @@ var UtilService = {
       // returns a moment object that represents today at the start of hour specified by timeString
       // e.g. timestring: 09:35 -> 09:00
       // e.g. timestring: 10:00 -> 10:00
-      let momentTime = moment().zone('GMT');
+      let momentTime = this.moment().zone('GMT');
 
       // timeString is expressed in HH:mm format
       let hhmm = timeString.split(/:/);
@@ -249,7 +250,7 @@ var UtilService = {
       // returns a moment object that represents today at the next hour specified by timeString
       // e.g. timestring: 09:25 -> 10:00
       // e.g. timestring: 10:00 -> 10:00
-      let momentTime = moment().zone('GMT');
+      let momentTime = this.moment().zone('GMT');
 
       // timeString is expressed in HH:mm format
       let hhmm = timeString.split(/:/);
@@ -309,8 +310,8 @@ var UtilService = {
       today.setHours(0, 0, 0, 0);
       return today;
     },
-    getYesterday(startOrEnd="start") {
-      const yesterday = moment().subtract(1, 'day');
+    getYesterday(startOrEnd = "start") {
+      const yesterday = this.moment().subtract(1, 'day');
 
       if (startOrEnd == "start") {
         return yesterday.startOf('day').toDate();
@@ -319,7 +320,7 @@ var UtilService = {
       }
     },
     getLastTwoDays(startOrEnd) {
-      const twoDaysAgo = moment().subtract(2, 'day');
+      const twoDaysAgo = this.moment().subtract(2, 'day');
 
       if (startOrEnd == "start") {
         return twoDaysAgo.startOf('day').toDate();
@@ -328,16 +329,16 @@ var UtilService = {
       }
     },
     getCurrentWeek(startOrEnd) {
-      const today = moment();
+      const today = this.moment();
 
       if (startOrEnd == "start") {
-        return today.weekday(0).toDate();
+        return today.isoWeekday(1).startOf('day').toDate();
       } else {
-        return today.weekday(7).toDate();
+        return today.isoWeekday(7).endOf('day').toDate();
       }
     },
     getCurrentMonth(startOrEnd) {
-      const today = moment();
+      const today = this.moment();
 
       if (startOrEnd == "start") {
         return today.startOf('month').toDate();
@@ -346,7 +347,7 @@ var UtilService = {
       }
     },
     getLastThreeMonths(startOrEnd) {
-      const threeMonthsAgo = moment().subtract(3, 'months');
+      const threeMonthsAgo = this.moment().subtract(3, 'months');
 
       if (startOrEnd == "start") {
         return threeMonthsAgo.startOf('day').toDate();
@@ -355,7 +356,7 @@ var UtilService = {
       }
     },
     getCurrentYear(startOrEnd) {
-      const currentYear = moment();
+      const currentYear = this.moment();
 
       if (startOrEnd == "start") {
         return currentYear.startOf('year').toDate();
@@ -364,7 +365,7 @@ var UtilService = {
       }
     },
     getLastWeek(startOrEnd) {
-      const aWeekAgo = moment().subtract(1, 'week');
+      const aWeekAgo = this.moment().subtract(1, 'week');
 
       if (startOrEnd == "start") {
         return aWeekAgo.startOf('day').toDate();
@@ -373,7 +374,7 @@ var UtilService = {
       }
     },
     getLastTwoWeeks(startOrEnd) {
-      const twoWeeksAgo = moment().subtract(2, 'weeks');
+      const twoWeeksAgo = this.moment().subtract(2, 'weeks');
 
       if (startOrEnd == "start") {
         return twoWeeksAgo.startOf('day').toDate();
@@ -382,7 +383,7 @@ var UtilService = {
       }
     },
     getLastMonth(startOrEnd) {
-      const aMonthAgo = moment().subtract(1, 'month');
+      const aMonthAgo = this.moment().subtract(1, 'month');
 
       if (startOrEnd == "start") {
         return aMonthAgo.startOf('day').toDate();
@@ -391,7 +392,7 @@ var UtilService = {
       }
     },
     getLastTwoMonths(startOrEnd) {
-      const twoMonthsAgo = moment().subtract(2, 'months');
+      const twoMonthsAgo = this.moment().subtract(2, 'months');
 
       if (startOrEnd == "start") {
         return twoMonthsAgo.startOf('day').toDate();
@@ -400,7 +401,7 @@ var UtilService = {
       }
     },
     getLastSixMonths(startOrEnd) {
-      const sixMonthsAgo = moment().subtract(6, 'months');
+      const sixMonthsAgo = this.moment().subtract(6, 'months');
 
       if (startOrEnd == "start") {
         return sixMonthsAgo.startOf('day').toDate();
@@ -409,7 +410,7 @@ var UtilService = {
       }
     },
     getLastYear(startOrEnd) {
-      const aYearAgo = moment().subtract(1, 'year');
+      const aYearAgo = this.moment().subtract(1, 'year');
 
       if (startOrEnd == "start") {
         return aYearAgo.startOf('day').toDate();
@@ -418,7 +419,7 @@ var UtilService = {
       }
     },
     getLastTwoYears(startOrEnd) {
-      const twoYearsAgo = moment().subtract(2, 'years');
+      const twoYearsAgo = this.moment().subtract(2, 'years');
 
       if (startOrEnd == "start") {
         return twoYearsAgo.startOf('day').toDate();
@@ -427,7 +428,7 @@ var UtilService = {
       }
     },
     getLastThreeYears(startOrEnd) {
-      const threeYearsAgo = moment().subtract(3, 'years');
+      const threeYearsAgo = this.moment().subtract(3, 'years');
 
       if (startOrEnd == "start") {
         return threeYearsAgo.startOf('day').toDate();
@@ -435,13 +436,13 @@ var UtilService = {
         return threeYearsAgo.endOf('day').toDate();
       }
     },
-    getPastPeriod(startOrEnd, periodName) {
-      const pastWeek = moment().subtract(1, periodName);
+    getPastPeriod(startOrEnd, periodName, num = 1) {
+      const pastPeriod = this.moment().subtract(num, periodName);
 
       if (startOrEnd == "start") {
-        return pastWeek.startOf(periodName).toDate();
+        return pastPeriod.startOf(periodName).toDate();
       } else {
-        return pastWeek.endOf(periodName).toDate();
+        return pastPeriod.endOf(periodName).toDate();
       }
     },
     fromToday(date) {

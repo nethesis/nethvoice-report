@@ -426,7 +426,7 @@ export default {
             }
           },
           (error) => {
-            console.error(error.body);
+            console.error(error);
             chart.error = true;
           }
         );
