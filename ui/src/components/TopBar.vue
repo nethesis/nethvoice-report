@@ -78,7 +78,7 @@
             <sui-header>{{ $t("settings.general") }}</sui-header>
             <!-- office hours -->
             <sui-form-fields>
-              <sui-form-field :error="error.settings.officeHourStart">
+              <sui-form-field :error="error.settings.officeHourStart != ''">
                 <label>{{ $t("settings.office_hours_start") }}</label>
                 <vue-timepicker
                   hide-clear-button
@@ -87,7 +87,7 @@
                   ref="officeHourStart"
                 ></vue-timepicker>
               </sui-form-field>
-              <sui-form-field :error="error.settings.officeHourEnd">
+              <sui-form-field :error="error.settings.officeHourEnd != ''">
                 <label>{{ $t("settings.office_hours_end") }}</label>
                 <vue-timepicker
                   hide-clear-button
@@ -103,14 +103,17 @@
               "
               error
             >
-              <p>{{ $t("validation.invalid_value") }}</p>
+              <p>{{ $t("validation.office_hours_invalid") }}</p>
             </sui-message>
             <div class="settings-description">
               {{ $t("message.office_hours_description") }}
             </div>
             <!-- query limit -->
             <sui-form-fields>
-              <sui-form-field width="three" :error="error.settings.queryLimit">
+              <sui-form-field
+                width="three"
+                :error="error.settings.queryLimit != ''"
+              >
                 <label>{{ $t("settings.query_limit") }}</label>
                 <sui-input
                   v-model.number="adminSettings.queryLimit"
@@ -121,14 +124,17 @@
               </sui-form-field>
             </sui-form-fields>
             <sui-message v-show="error.settings.queryLimit" error>
-              <p>{{ $t("validation.invalid_value") }}</p>
+              <p>{{ $t("validation." + error.settings.queryLimit) }}</p>
             </sui-message>
-            <div class="settings-description">{{
-              $t("message.query_limit_description")
-            }}</div>
+            <div class="settings-description">
+              {{ $t("message.query_limit_description") }}
+            </div>
             <!-- null call time -->
             <sui-form-fields>
-              <sui-form-field width="three" :error="error.settings.nullCallTime">
+              <sui-form-field
+                width="three"
+                :error="error.settings.nullCallTime != ''"
+              >
                 <label>{{ $t("settings.null_call") }}</label>
                 <sui-input
                   v-model.number="adminSettings.nullCallTime"
@@ -139,14 +145,17 @@
               </sui-form-field>
             </sui-form-fields>
             <sui-message v-show="error.settings.nullCallTime" error>
-              <p>{{ $t("validation.invalid_value") }}</p>
+              <p>{{ $t("validation." + error.settings.nullCallTime) }}</p>
             </sui-message>
-            <div class="settings-description">{{
-              $t("message.null_call_description")
-            }}</div>
+            <div class="settings-description">
+              {{ $t("message.null_call_description") }}
+            </div>
             <!-- currency -->
             <sui-form-fields>
-              <sui-form-field width="three" :error="error.settings.currency">
+              <sui-form-field
+                width="three"
+                :error="error.settings.currency != ''"
+              >
                 <label>{{ $t("settings.currency") }}</label>
                 <sui-input
                   v-model.trim="adminSettings.currency"
@@ -155,7 +164,7 @@
               </sui-form-field>
             </sui-form-fields>
             <sui-message v-show="error.settings.currency" error>
-              <p>{{ $t("validation.invalid_value") }}</p>
+              <p>{{ $t("validation." + error.settings.currency) }}</p>
             </sui-message>
             <div class="settings-description">
               {{ $t("message.currency_description") }}
@@ -228,7 +237,9 @@
                     v-model.trim="newDestination"
                     :placeholder="$t('settings.new_destination')"
                     ref="newDestination"
-                    :class="{ 'input-error': error.settings.newDestination }"
+                    :class="{
+                      'input-error': error.settings.newDestination,
+                    }"
                   />
                 </sui-card-content>
                 <sui-button
@@ -321,7 +332,7 @@
                 <sui-form-fields>
                   <sui-form-field
                     width="three"
-                    :error="error.settings.newCallPatternPrefix"
+                    :error="error.settings.newCallPatternPrefix != ''"
                   >
                     <label>{{ $t("settings.prefix") }}</label>
                     <sui-input
@@ -332,7 +343,7 @@
                   </sui-form-field>
                   <sui-form-field
                     width="five"
-                    :error="error.settings.newCallPatternDestination"
+                    :error="error.settings.newCallPatternDestination != ''"
                   >
                     <label>{{ $t("settings.destination") }}</label>
                     <sui-dropdown
@@ -356,14 +367,24 @@
                     </sui-button>
                   </sui-form-field>
                 </sui-form-fields>
+                <sui-message v-show="error.settings.newCallPatternPrefix" error>
+                  <p>
+                    {{
+                      $t("validation." + error.settings.newCallPatternPrefix)
+                    }}
+                  </p>
+                </sui-message>
                 <sui-message
-                  v-show="
-                    error.settings.newCallPatternPrefix ||
-                    error.settings.newCallPatternDestination
-                  "
+                  v-show="error.settings.newCallPatternDestination"
                   error
                 >
-                  <p>{{ $t("validation.invalid_value") }}</p>
+                  <p>
+                    {{
+                      $t(
+                        "validation." + error.settings.newCallPatternDestination
+                      )
+                    }}
+                  </p>
                 </sui-message>
               </sui-accordion-content>
             </sui-accordion>
@@ -468,7 +489,7 @@
             <sui-form-fields>
               <sui-form-field
                 width="four"
-                :error="error.settings.newCostChannelId"
+                :error="error.settings.newCostChannelId != ''"
               >
                 <label>{{ $t("settings.trunk") }}</label>
                 <sui-dropdown
@@ -483,7 +504,7 @@
               </sui-form-field>
               <sui-form-field
                 width="four"
-                :error="error.settings.newCostDestination"
+                :error="error.settings.newCostDestination != ''"
               >
                 <label>{{ $t("settings.destination") }}</label>
                 <sui-dropdown
@@ -496,7 +517,7 @@
                   ref="newCostDestination"
                 />
               </sui-form-field>
-              <sui-form-field :error="error.settings.newCostValue">
+              <sui-form-field :error="error.settings.newCostValue != ''">
                 <label>{{
                   $t("settings.cost") +
                   " (" +
@@ -523,16 +544,20 @@
                 </sui-button>
               </sui-form-field>
             </sui-form-fields>
-            <sui-message
-              v-show="
-                error.settings.newCostChannelId ||
-                error.settings.newCostDestination ||
-                error.settings.newCostValue
-              "
-              error
-            >
-              <p>{{ $t("validation.invalid_value") }}</p>
+            <sui-message v-if="error.settings.newCostChannelId == 'cost_duplicated' && error.settings.newCostDestination == 'cost_duplicated'" error>
+              <p>{{ $t("validation.cost_duplicated") }}</p>
             </sui-message>
+            <template v-else>
+              <sui-message v-show="error.settings.newCostChannelId" error>
+                <p>{{ $t("validation." + error.settings.newCostChannelId) }}</p>
+              </sui-message>
+              <sui-message v-show="error.settings.newCostDestination" error>
+                <p>{{ $t("validation." + error.settings.newCostDestination) }}</p>
+              </sui-message>
+              <sui-message v-show="error.settings.newCostValue" error>
+                <p>{{ $t("validation." + error.settings.newCostValue) }}</p>
+              </sui-message>
+            </template>
             <!-- reset admin settings -->
             <sui-header>
               {{ $t("settings.reset_settings") }}
@@ -931,17 +956,17 @@ export default {
       },
       error: {
         settings: {
-          officeHourStart: false,
-          officeHourEnd: false,
-          queryLimit: false,
-          nullCallTime: false,
-          currency: false,
-          newDestination: false,
-          newCallPatternPrefix: false,
-          newCallPatternDestination: false,
-          newCostChannelId: false,
-          newCostDestination: false,
-          newCostValue: false,
+          officeHourStart: "",
+          officeHourEnd: "",
+          queryLimit: "",
+          nullCallTime: "",
+          currency: "",
+          newDestination: "",
+          newCallPatternPrefix: "",
+          newCallPatternDestination: "",
+          newCostChannelId: "",
+          newCostDestination: "",
+          newCostValue: "",
         },
       },
     };
@@ -1031,14 +1056,14 @@ export default {
     validateAdminSettings() {
       // reset errors
       for (const key of Object.keys(this.error.settings)) {
-        this.error.settings[key] = false;
+        this.error.settings[key] = "";
       }
       let errors = false;
 
       // office hour start
 
       if (!this.adminSettings.officeHourStart) {
-        this.error.settings.officeHourStart = true;
+        this.error.settings.officeHourStart = "office_hours_invalid";
 
         if (!errors) {
           errors = true;
@@ -1051,7 +1076,7 @@ export default {
       // office hour end
 
       if (!this.adminSettings.officeHourEnd) {
-        this.error.settings.officeHourEnd = true;
+        this.error.settings.officeHourEnd = "office_hours_invalid";
 
         if (!errors) {
           errors = true;
@@ -1067,7 +1092,7 @@ export default {
         !this.adminSettings.queryLimit ||
         this.adminSettings.queryLimit < 10
       ) {
-        this.error.settings.queryLimit = true;
+        this.error.settings.queryLimit = "query_limit_invalid";
 
         if (!errors) {
           errors = true;
@@ -1077,10 +1102,8 @@ export default {
 
       // null call
 
-      if (
-        this.adminSettings.nullCallTime < 0
-      ) {
-        this.error.settings.nullCallTime = true;
+      if (this.adminSettings.nullCallTime < 0) {
+        this.error.settings.nullCallTime = "null_call_invalid";
 
         if (!errors) {
           errors = true;
@@ -1091,7 +1114,7 @@ export default {
       // currency
 
       if (!this.adminSettings.currency) {
-        this.error.settings.currency = true;
+        this.error.settings.currency = "currency_empty";
 
         if (!errors) {
           errors = true;
@@ -1212,7 +1235,7 @@ export default {
     },
     validateNewDestination() {
       // reset error
-      this.error.settings.newDestination = false;
+      this.error.settings.newDestination = "";
 
       // check empty or duplicated
       if (
@@ -1221,7 +1244,7 @@ export default {
           (d) => d.toLowerCase() == this.newDestination.toLowerCase()
         )
       ) {
-        this.error.settings.newDestination = true;
+        this.error.settings.newDestination = "destination_invalid";
         this.$nextTick(() => this.$refs.newDestination.$el.children[0].focus());
       }
       return !this.error.settings.newDestination;
@@ -1243,8 +1266,8 @@ export default {
     },
     validateNewCallPattern() {
       // reset errors
-      this.error.settings.newCallPatternPrefix = false;
-      this.error.settings.newCallPatternDestination = false;
+      this.error.settings.newCallPatternPrefix = "";
+      this.error.settings.newCallPatternDestination = "";
 
       // prefix
 
@@ -1252,14 +1275,22 @@ export default {
         (cp) => cp.prefix == this.newCallPattern.prefix
       );
 
-      const prefixValidSyntax = /^[0-9+]+$/.test(this.newCallPattern.prefix);
+      const prefixValidSyntax = /^\+?[0-9]+$/.test(this.newCallPattern.prefix);
 
-      if (
-        !this.newCallPattern.prefix ||
-        prefixDuplicated ||
-        !prefixValidSyntax
-      ) {
-        this.error.settings.newCallPatternPrefix = true;
+      if (!this.newCallPattern.prefix) {
+        this.error.settings.newCallPatternPrefix = "call_pattern_prefix_empty";
+        this.$nextTick(() =>
+          this.$refs.newCallPatternPrefix.$el.children[0].focus()
+        );
+      } else if (!prefixValidSyntax) {
+        this.error.settings.newCallPatternPrefix =
+          "call_pattern_prefix_invalid";
+        this.$nextTick(() =>
+          this.$refs.newCallPatternPrefix.$el.children[0].focus()
+        );
+      } else if (prefixDuplicated) {
+        this.error.settings.newCallPatternPrefix =
+          "call_pattern_prefix_duplicated";
         this.$nextTick(() =>
           this.$refs.newCallPatternPrefix.$el.children[0].focus()
         );
@@ -1268,7 +1299,8 @@ export default {
       // destination
 
       if (!this.newCallPattern.destination) {
-        this.error.settings.newCallPatternDestination = true;
+        this.error.settings.newCallPatternDestination =
+          "call_pattern_destination_empty";
         this.$nextTick(() =>
           this.$refs.newCallPatternDestination.$el.children[0].focus()
         );
@@ -1289,21 +1321,21 @@ export default {
       this.callPatternJustCreated = this.newCallPattern;
       setTimeout(() => {
         this.callPatternJustCreated = { prefix: "", destination: null };
-      }, 5000);
+      }, 7000);
 
       this.saveAdminSettings(false);
       this.newCallPattern = { prefix: "", destination: null };
     },
     validateNewCost() {
       // reset errors
-      this.error.settings.newCostChannelId = false;
-      this.error.settings.newCostDestination = false;
-      this.error.settings.newCostValue = false;
+      this.error.settings.newCostChannelId = "";
+      this.error.settings.newCostDestination = "";
+      this.error.settings.newCostValue = "";
 
       // channel id (trunk)
 
       if (!this.newCost.channelId) {
-        this.error.settings.newCostChannelId = true;
+        this.error.settings.newCostChannelId = "cost_channel_id_empty";
         this.$nextTick(() =>
           this.$refs.newCostChannelId.$el.children[0].focus()
         );
@@ -1312,7 +1344,7 @@ export default {
       // destination
 
       if (!this.newCost.destination) {
-        this.error.settings.newCostDestination = true;
+        this.error.settings.newCostDestination = "cost_destination_empty";
         this.$nextTick(() =>
           this.$refs.newCostDestination.$el.children[0].focus()
         );
@@ -1321,7 +1353,7 @@ export default {
       // cost value
 
       if (!this.newCost.cost.toString().length || this.newCost.cost < 0) {
-        this.error.settings.newCostValue = true;
+        this.error.settings.newCostValue = "cost_value_invalid";
         this.$nextTick(() => this.$refs.newCostValue.focus());
       }
 
@@ -1334,8 +1366,8 @@ export default {
       );
 
       if (costDuplicated) {
-        this.error.settings.newCostChannelId = true;
-        this.error.settings.newCostDestination = true;
+        this.error.settings.newCostChannelId = "cost_duplicated";
+        this.error.settings.newCostDestination = "cost_duplicated";
         this.$nextTick(() =>
           this.$refs.newCostChannelId.$el.children[0].focus()
         );
@@ -1484,6 +1516,11 @@ export default {
           this.loader.resetSettings = false;
           this.getAdminSettings();
           this.hideResetSettingsModal();
+
+          // reset validation errors
+          for (const key of Object.keys(this.error.settings)) {
+            this.error.settings[key] = "";
+          }
         },
         (error) => {
           console.error(error.body);
