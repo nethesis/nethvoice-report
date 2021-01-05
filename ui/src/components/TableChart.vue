@@ -151,7 +151,7 @@
                   columns[index] && columns[index].format == 'monthDate'
                 "
               >
-                {{ element | formatMonthDate($i18n) }}
+                {{ element | formatMonthDate }}
               </span>
               <span
                 v-else-if="

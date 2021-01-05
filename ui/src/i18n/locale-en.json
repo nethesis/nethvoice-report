@@ -84,6 +84,8 @@
       "paynumber": "Pay number",
       "past_week": "Past week",
       "past_month": "Past month",
+      "past_quarter": "Past quarter",
+      "past_semester": "Past semester",
       "past_year": "Past year",
       "answered": "Answered",
       "no_answer": "No answer",

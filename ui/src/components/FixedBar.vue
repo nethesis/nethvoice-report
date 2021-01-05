@@ -242,8 +242,6 @@
 
 import UtilService from "../services/utils";
 
-import moment from "moment";
-
 export default {
   name: "FixedBar",
   mixins: [
@@ -308,6 +306,9 @@ export default {
     window.removeEventListener('scroll', this.scrollHandler);
   },
   methods: {
+    moment(...args) {
+      return window.moment(...args);
+    },
     onApplyFilters() {
       this.activeFilters = this.lodash.cloneDeep(this.filter)
       this.activeSelectedSearch = this.lodash.cloneDeep(this.selectedSearch)
@@ -339,8 +340,8 @@ export default {
     "activeFilters.time.interval": function () {
       if (this.activeFilters.time && this.activeFilters.time.interval) {
         const dateFormat = this.getDateFormat();
-        this.activeFilters.time.interval.start = moment(this.activeFilters.time.interval.start).format(dateFormat);
-        this.activeFilters.time.interval.end = moment(this.activeFilters.time.interval.end).format(dateFormat);
+        this.activeFilters.time.interval.start = this.moment(this.activeFilters.time.interval.start).format(dateFormat);
+        this.activeFilters.time.interval.end = this.moment(this.activeFilters.time.interval.end).format(dateFormat);
       }
     },
     "activeFilters.queues": function () {

@@ -34,17 +34,17 @@ var UiMaps = {
         },
         "cdr": {
           "dashboard": {
-            "default": ["cdr_fastTimeRange", "hour", "cdr_caller", "cdr_callee","cdr_did" , "cdr_callType", "cdr_callDuration", "cdr_trunk"],
+            "default": ["cdr_fastTimeRange", "hour", "cdr_caller", "cdr_callee", "cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk"],
           },
           "pbx": {
-            "inbound": ["cdr_fastTimeRange", "hour", "cdr_caller", "cdr_callee","cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_ctiGroups", "cdr_user", "cdr_callDestination"],
-            "outbound": ["cdr_fastTimeRange", "hour", "cdr_caller", "cdr_callee","cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_ctiGroups", "cdr_user", "cdr_destination"],
-            "local": ["cdr_fastTimeRange", "hour", "cdr_caller", "cdr_callee","cdr_did", "cdr_callType", "cdr_callDuration", "cdr_user", "cdr_ctiGroups"],
+            "inbound": ["cdr_fastTimeRange", "hour", "cdr_caller", "cdr_callee", "cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_ctiGroups", "cdr_user", "cdr_callDestination"],
+            "outbound": ["cdr_fastTimeRange", "hour", "cdr_caller", "cdr_callee", "cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_ctiGroups", "cdr_user", "cdr_destination"],
+            "local": ["cdr_fastTimeRange", "hour", "cdr_caller", "cdr_callee", "cdr_did", "cdr_callType", "cdr_callDuration", "cdr_user", "cdr_ctiGroups"],
           },
           "personal": {
-            "inbound": ["cdr_fastTimeRange", "hour", "cdr_caller", "cdr_callee","cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_callDestination"],
-            "outbound": ["cdr_fastTimeRange", "hour", "cdr_caller", "cdr_callee","cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_destination"],
-            "local": ["cdr_fastTimeRange", "hour", "cdr_caller", "cdr_callee","cdr_did", "cdr_callType", "cdr_callDuration"],
+            "inbound": ["cdr_fastTimeRange", "hour", "cdr_caller", "cdr_callee", "cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_callDestination"],
+            "outbound": ["cdr_fastTimeRange", "hour", "cdr_caller", "cdr_callee", "cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_destination"],
+            "local": ["cdr_fastTimeRange", "hour", "cdr_caller", "cdr_callee", "cdr_did", "cdr_callType", "cdr_callDuration"],
           },
         }
       },
@@ -107,6 +107,29 @@ var UiMaps = {
         { value: "fixed", text: this.$i18n.t('filter.fixed') },
       ]
     }
-  }
+  },
+  methods: {
+    moment(...args) {
+      return window.moment(...args);
+    },
+    fastCdrDashboardTimeRangeValuesMap() {
+      const timeRangeOptions = [
+        { value: "past_week", text: this.$i18n.t('filter.past_week') },
+        { value: "past_month", text: this.$i18n.t('filter.past_month') },
+        { value: "past_quarter", text: this.$i18n.t('filter.past_quarter') },
+        { value: "past_semester", text: this.$i18n.t('filter.past_semester') },
+        { value: "past_year", text: this.$i18n.t('filter.past_year') },
+      ];
+
+      // return current_week option only if today is not Monday
+
+      if (this.moment().isoWeekday() !== 1) {
+        const currentWeekOption = { value: "current_week", text: this.$i18n.t('filter.current_week') };
+        // insert at first position
+        timeRangeOptions.splice(0, 0, currentWeekOption);
+      }
+      return timeRangeOptions;
+    },
+  },
 }
 export default UiMaps;

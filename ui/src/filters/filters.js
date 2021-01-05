@@ -1,6 +1,9 @@
 import Vue from "vue"
 import lodash from 'lodash';
-import moment from "moment";
+
+function moment(...args) {
+    return window.moment(...args);
+}
 
 var Filters = {
     formatDate(date) {
@@ -16,22 +19,18 @@ var Filters = {
 
         return [year, month, day].join('-');
     },
-    formatMonthDate(value, i18n) {
-        moment.locale(i18n.vm.locale);
-
+    formatMonthDate(value) {
         // value: e.g. "2020-10"
         const monthYear = moment(value, "YYYY-MM").format("MMMM YYYY");
         return lodash.upperFirst(monthYear);
     },
     formatWeekDate(value, i18n) {
-        moment.locale(i18n.vm.locale);
-
         // value: e.g. "2019-W50" (week 50 of 2019)
         const tokens = value.split("-W");
         const year = tokens[0];
         const weekNum = parseInt(tokens[1]);
-        const firstDay = moment().year(year).week(weekNum).day(0).format('YYYY-MM-DD');
-        const lastDay = moment().year(year).week(weekNum).day(6).format('YYYY-MM-DD');
+        const firstDay = moment().year(year).week(weekNum).isoWeekday(1).format('YYYY-MM-DD');
+        const lastDay = moment().year(year).week(weekNum).isoWeekday(7).format('YYYY-MM-DD');
         return (i18n ? i18n.t("misc.week") : "week") + " " + weekNum + " (" + firstDay + " - " + lastDay + ")";
     },
     formatNumber(value) {
