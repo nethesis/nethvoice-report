@@ -10,7 +10,8 @@ import VTooltip from "v-tooltip";
 
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
-
+import 'vue2-datepicker/locale/en';
+import 'vue2-datepicker/locale/it';
 
 import App from "./App.vue";
 import router from "./router";
@@ -51,6 +52,10 @@ const i18n = new VueI18n({
   locale: langConf.locale,
   messages: langConf.messages,
 });
+
+// momentjs
+window.moment = require("moment");
+window.moment.locale(i18n.vm.locale);
 
 // global variable
 Vue.prototype.$mobileBound = 1193 // px
