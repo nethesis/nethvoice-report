@@ -263,7 +263,7 @@ export default {
     "showFilterTimeSplit",
     "showFilterCaller",
     "showFilterContactName",
-    "showFilterCdrFastTimeRange",
+    "showFilterCdrTimeRange",
     "showFilterCdrCaller",
     "showFilterCdrCallee",
     "showFilterCdrCallType",

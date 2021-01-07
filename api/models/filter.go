@@ -53,10 +53,9 @@ type Filter struct {
 		Title string `json:"title"`
 		Value string `json:"value"`
 	} `json:"durationUi"`
-	CallDestinations      []string `json:"callDestinations"`
-	Patterns              []string `json:"patterns"`
-	Devices               []string `json:"devices"`
-	CdrDashboardTimeRange string   `json:"cdrDashboardTimeRange"`
+	CallDestinations []string `json:"callDestinations"`
+	Patterns         []string `json:"patterns"`
+	Devices          []string `json:"devices"`
 
 	Reasons []string `json:"reasons"`
 	Results []string `json:"results"`
@@ -64,10 +63,11 @@ type Filter struct {
 	Origins []string `json:"origins"`
 
 	Time struct {
-		Group    string `json:"group"`
-		Division string `json:"division"`
-		Range    string `json:"range"`
-		Interval struct {
+		Group             string `json:"group"`
+		Division          string `json:"division"`
+		Range             string `json:"range"`
+		CdrDashboardRange string `json:"cdrDashboardRange"`
+		Interval          struct {
 			Start string `json:"start"`
 			End   string `json:"end"`
 		} `json:"interval"`

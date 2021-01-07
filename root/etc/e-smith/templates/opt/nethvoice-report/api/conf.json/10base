@@ -44,6 +44,7 @@
             "group": "day",
             "division": "60",
             "range": "yesterday",
+            "cdrDashboardRange": "past_week",
             "interval": \{
                 "start": "",
                 "end": ""
