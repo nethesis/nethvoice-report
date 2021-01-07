@@ -50,7 +50,6 @@
                   : fastCdrTimeRangeValuesMap
               "
               :placeholder="$t('filter.time_range_label')"
-              @click="selectTime(fastCdrRange)"
               search
               selection
               v-model="fastCdrRange"
@@ -277,6 +276,7 @@
               :class="{ 'field-error': errorTimeInterval }"
               :formatter="momentFormatter"
               :lang="$i18n.vm.locale"
+              :disabled="$route.meta.section == 'dashboard'"
             ></date-picker>
             <sui-icon name="right arrow time-filter" />
             <!-- time interval end -->
@@ -291,6 +291,7 @@
               :class="{ 'field-error': errorTimeInterval }"
               :formatter="momentFormatter"
               :lang="$i18n.vm.locale"
+              :disabled="$route.meta.section == 'dashboard'"
             ></date-picker>
           </sui-form-field>
           <!-- CDR ONLY END -->
@@ -878,6 +879,9 @@ export default {
     },
     "filter.ivrs": function () {
       this.updateIvrChoices();
+    },
+    fastCdrRange: function () {
+      this.selectTime(this.fastCdrRange);
     },
     "filter.time.interval": function () {
       if (
