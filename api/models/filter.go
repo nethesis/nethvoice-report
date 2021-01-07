@@ -53,9 +53,10 @@ type Filter struct {
 		Title string `json:"title"`
 		Value string `json:"value"`
 	} `json:"durationUi"`
-	CallDestinations []string `json:"callDestinations"`
-	Patterns         []string `json:"patterns"`
-	Devices          []string `json:"devices"`
+	CallDestinations      []string `json:"callDestinations"`
+	Patterns              []string `json:"patterns"`
+	Devices               []string `json:"devices"`
+	CdrDashboardTimeRange string   `json:"cdrDashboardTimeRange"`
 
 	Reasons []string `json:"reasons"`
 	Results []string `json:"results"`
