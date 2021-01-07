@@ -40,19 +40,26 @@
         <!-- time interval section -->
         <sui-form-fields class="interval-buttons">
           <!-- CDR ONLY START -->
-          <!-- cdr: fast time range for -->
-          <sui-form-field v-if="showFilterCdrFastTimeRange" width="four">
+          <!-- cdr time range -->
+          <sui-form-field v-if="showFilterCdrTimeRange" width="four">
+            <label class="ellipsis">{{ $t("filter.time_range") }}</label>
+            <sui-dropdown :text="$t('filter.select_time_range')" class="mg-top-xs">
+              <sui-dropdown-menu>
+                <sui-dropdown-item v-for="timeRange in cdrTimeRangeValues" :key="timeRange" @click="selectTime(timeRange)">
+                  {{ $t("filter." + timeRange) }}
+                </sui-dropdown-item>
+              </sui-dropdown-menu>
+            </sui-dropdown>
+          </sui-form-field>
+          <!-- cdr dashboard time range -->
+          <sui-form-field v-if="showFilterCdrDashboardTimeRange" width="four">
             <label class="ellipsis">{{ $t("filter.time_range") }}</label>
             <sui-dropdown
-              :options="
-                $route.meta.section == 'dashboard'
-                  ? fastCdrDashboardTimeRangeValuesMap()
-                  : fastCdrTimeRangeValuesMap
-              "
+              :options="cdrDashboardTimeRangeValuesMap()"
               :placeholder="$t('filter.time_range_label')"
               search
               selection
-              v-model="fastCdrRange"
+              v-model="filter.time.cdrDashboardRange"
             />
           </sui-form-field>
           <!-- CDR ONLY END -->
@@ -713,7 +720,7 @@
       :showFilterTimeSplit="showFilterTimeSplit"
       :showFilterCaller="showFilterCaller"
       :showFilterContactName="showFilterContactName"
-      :showFilterCdrFastTimeRange="showFilterCdrFastTimeRange"
+      :showFilterCdrTimeRange="showFilterCdrTimeRange"
       :showFilterCdrCaller="showFilterCdrCaller"
       :showFilterCdrCallee="showFilterCdrCallee"
       :showFilterCdrCallType="showFilterCdrCallType"
@@ -786,6 +793,7 @@ export default {
           group: "",
           division: "",
           range: null,
+          cdrDashboardRange: "",
           interval: {
             start: null,
             end: null,
@@ -829,7 +837,6 @@ export default {
         cdrPatterns: [],
         dids: [],
       },
-      fastCdrRange: null,
       savedSearches: [],
       openSaveSearchModal: false,
       openOverwriteSearchModal: false,
@@ -877,9 +884,15 @@ export default {
       if (this.savedSearches) {
         this.mapSavedSearches(this.savedSearches);
       }
+
+      if (this.currentReport == 'cdr' && this.$route.meta.section == 'dashboard') {
+        this.selectTime(this.filter.time.cdrDashboardRange);
+      }
     },
     selectedSearch: function () {
-      this.setFilterValuesFromSearch();
+      if (this.selectedSearch) {
+        this.setFilterValuesFromSearch();
+      }
     },
     filtersReady: function () {
       if (this.filtersReady) {
@@ -890,8 +903,10 @@ export default {
     "filter.ivrs": function () {
       this.updateIvrChoices();
     },
-    fastCdrRange: function () {
-      this.selectTime(this.fastCdrRange);
+    "filter.time.cdrDashboardRange": function () {
+      if (this.currentReport == 'cdr' && this.$route.meta.section == 'dashboard') {
+        this.selectTime(this.filter.time.cdrDashboardRange);
+      }
     },
     "filter.time.interval": function () {
       if (
@@ -970,6 +985,10 @@ export default {
     // views request to apply filter on loading
     this.$root.$on("requestApplyFilter", this.onRequestApplyFilter);
     this.$root.$on("clearFilters", this.clearFilters);
+
+    if (this.currentReport == 'cdr' && this.$route.meta.section == 'dashboard') {
+      this.selectTime(this.filter.time.cdrDashboardRange);
+    }
   },
   methods: {
     moment(...args) {
@@ -1343,6 +1362,7 @@ export default {
 
       // time
       this.filter.time.range = filter.time.range;
+      this.filter.time.cdrDashboardRange = filter.time.cdrDashboardRange;
 
       if (
         this.filter.time.range &&
@@ -1809,7 +1829,7 @@ export default {
         return;
       }
 
-      if (!/^[a-zA-Z][a-zA-Z0-9 \-,/]+$/.test(this.newSearchName)) {
+      if (!/^[a-zA-Z][a-zA-Z0-9 \-,]+$/.test(this.newSearchName)) {
         this.errorNewSearch = true;
         this.errorMessage = this.$i18n.t("message.search_name_validation");
         return;
@@ -1907,12 +1927,16 @@ export default {
       this.loader.saveSearch = true;
       let filterToSave = this.computeFilterToSave();
 
+      const search = this.savedSearches.find(
+        (s) => s.name === searchName
+      );
+
       this.createSearch(
         this.currentReport,
         {
           name: searchName,
-          section: this.$route.meta.section,
-          view: this.$route.meta.view,
+          section: search ? search.section : this.$route.meta.section,
+          view: search ? search.view : this.$route.meta.view,
           filter: filterToSave,
         },
         () => {
@@ -1954,6 +1978,7 @@ export default {
         () => {
           this.loader.deleteSearch = false;
           this.showDeleteSearchModal(false);
+          this.selectedSearch = null;
           this.getSavedSearches();
         },
         (error) => {
@@ -2191,8 +2216,11 @@ export default {
       return this.isFilterInView("contactName", this.filtersMap);
     },
     // cdr filters check
-    showFilterCdrFastTimeRange: function () {
-      return this.isFilterInView("cdr_fastTimeRange", this.filtersMap);
+    showFilterCdrTimeRange: function () {
+      return this.isFilterInView("cdr_timeRange", this.filtersMap);
+    },
+    showFilterCdrDashboardTimeRange: function () {
+      return this.isFilterInView("cdr_dashboardTimeRange", this.filtersMap);
     },
     // cdr caller check
     showFilterCdrCaller: function () {
