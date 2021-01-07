@@ -121,12 +121,25 @@ var UiMaps = {
         { value: "past_year", text: this.$i18n.t('filter.past_year') },
       ];
 
-      // return current_week option only if today is not Monday
+      // current_week: only if today is not Monday
 
       if (this.moment().isoWeekday() !== 1) {
-        const currentWeekOption = { value: "current_week", text: this.$i18n.t('filter.current_week') };
-        // insert at first position
-        timeRangeOptions.splice(0, 0, currentWeekOption);
+        const currentWeek = { value: "current_week", text: this.$i18n.t('filter.current_week') };
+        timeRangeOptions.push(currentWeek);
+      }
+
+      // current_month: only if today is not the first day of month
+
+      if (this.moment().date() !== 1) {
+        const currentMonth = { value: "current_month", text: this.$i18n.t('filter.current_month') };
+        timeRangeOptions.push(currentMonth);
+      }
+
+      // current_year: only if today is not the first day of year
+
+      if (this.moment().dayOfYear() !== 1) {
+        const currentYear = { value: "current_year", text: this.$i18n.t('filter.current_year') };
+        timeRangeOptions.push(currentYear);
       }
       return timeRangeOptions;
     },
