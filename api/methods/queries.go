@@ -260,12 +260,16 @@ func executeSqlQuery(filter models.Filter, report string, section string, view s
 			filter.Destinations = funk.UniqString(filter.Destinations)
 		}
 
-		// retrieve partitioned CDR tables
-		query, err := buildCdrQuery(queryFile, filter)
-		if err != nil {
-			return "", err
+		if section == "dashboard" {
+			q = template.Must(q.ParseFiles(queryFile))
+		} else {
+			// retrieve partitioned CDR tables
+			query, err := buildCdrQuery(queryFile, filter)
+			if err != nil {
+				return "", err
+			}
+			q = template.Must(q.Parse(query))
 		}
-		q = template.Must(q.Parse(query))
 	}
 
 	// compile query with filter object
