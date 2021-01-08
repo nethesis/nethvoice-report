@@ -1358,6 +1358,7 @@ export default {
         this.filter.usersUi = filter.usersUi;
         this.filter.callDestinations = filter.callDestinations;
         this.filter.patterns = filter.patterns;
+        this.filter.dids = filter.dids;
       }
 
       // time
@@ -2151,6 +2152,7 @@ export default {
       this.filter.usersUi = [];
       this.filter.callDestinations = [];
       this.filter.patterns = [];
+      this.filter.dids = [];
       this.applyFilters();
     },
     onSourcesInput(value) {

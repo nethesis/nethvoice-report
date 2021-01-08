@@ -217,7 +217,7 @@
             {{$t('filter.call_destination')}}:
           </span>
           <span class="value">
-            {{activeFilters.call_destination}}
+            {{activeFilters.callDestinations}}
           </span>
         </div>
         <!-- label: destination patterns type active filter -->
