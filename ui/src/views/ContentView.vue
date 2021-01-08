@@ -222,7 +222,7 @@ export default {
       queryTree: null,
       queryNames: [],
       charts: [],
-      MAX_CHART_ENTRIES: 2,
+      MAX_CHART_ENTRIES: 8,
       openDetailsModal: false,
       chartDetails: null,
       dataAvailable: true,
