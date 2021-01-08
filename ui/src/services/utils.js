@@ -171,7 +171,7 @@ var UtilService = {
       for (let row of rows) {
         datasetSet.add(row[0]);
 
-        if (datasetSet.size > that.MAX_ENTRIES) {
+        if (datasetSet.size > that.$parent.MAX_CHART_ENTRIES) {
           tooMany = true;
           break;
         }
@@ -206,7 +206,7 @@ var UtilService = {
       const datasetTotalListSorted = datasetTotalList.sort(that.sortByProperty("total")).reverse();
 
       // extract most relevant datasets
-      const topDatasetNames = datasetTotalListSorted.filter((_, i) => i < that.MAX_ENTRIES - 1).map(dataset => dataset.name);
+      const topDatasetNames = datasetTotalListSorted.filter((_, i) => i < that.$parent.MAX_CHART_ENTRIES - 1).map(dataset => dataset.name);
       let topDatasetsRows = [];
       let others = {};
 

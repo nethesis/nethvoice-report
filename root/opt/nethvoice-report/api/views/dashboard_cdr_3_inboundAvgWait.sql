@@ -1,38 +1,24 @@
-/*
-  1 - Total INBOUND call per Route
-  2 - Average duration call per Route
-  3 - Average wait call per Route
-  4 - Hourly distribution per Route
-  5 - Monthly distribution per Route
-  6 - Origin (region) INBOUND distribution per Route
-  7 - Origin (province) INBOUND distribution per Route
-  8 - Total OUTBOUND call per Route
-  9 - Total OUTBOUND call per Group
- 10 - Total OUTBOUND cost per Group
- 11 - Top 10 cost users per OUTBOUND call
- 12 - Origin (region) OUTBOUND distribution per Route
- 13 - Origin (province) OUTBOUND distribution per Route
-*/
+/* 3 - INBOUND average wait call per Route */
 
 /* VARIABLES */
 SELECT CONCAT('cdr_', DATE_FORMAT(NOW() - INTERVAL 1 YEAR - INTERVAL 1 DAY, "%Y")) INTO @from;
 SELECT CONCAT('cdr_', DATE_FORMAT(NOW() - INTERVAL 1 DAY, "%Y")) INTO @to;
 
 /* DROPS */
-DROP TABLE IF EXISTS dashboard_cdr_1_past_week;
-DROP TABLE IF EXISTS dashboard_cdr_1_current_week;
-DROP TABLE IF EXISTS dashboard_cdr_1_past_month;
-DROP TABLE IF EXISTS dashboard_cdr_1_current_month;
-DROP TABLE IF EXISTS dashboard_cdr_1_past_quarter;
-DROP TABLE IF EXISTS dashboard_cdr_1_past_semester;
-DROP TABLE IF EXISTS dashboard_cdr_1_past_year;
-DROP TABLE IF EXISTS dashboard_cdr_1_current_year;
+DROP TABLE IF EXISTS dashboard_cdr_3_past_week;
+DROP TABLE IF EXISTS dashboard_cdr_3_current_week;
+DROP TABLE IF EXISTS dashboard_cdr_3_past_month;
+DROP TABLE IF EXISTS dashboard_cdr_3_current_month;
+DROP TABLE IF EXISTS dashboard_cdr_3_past_quarter;
+DROP TABLE IF EXISTS dashboard_cdr_3_past_semester;
+DROP TABLE IF EXISTS dashboard_cdr_3_past_year;
+DROP TABLE IF EXISTS dashboard_cdr_3_current_year;
 
 /* QUERIES */
 SET @q_past_year = CONCAT('
-CREATE TABLE dashboard_cdr_1_past_year AS SELECT inbound, sum(total) FROM
+CREATE TABLE dashboard_cdr_3_past_year AS SELECT inbound, Avg(avg_wait) AS avg_wait FROM
        (SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS inbound, 
-              Count(*)                                                   AS total 
+              Avg(duration) - Avg(billsec) AS avg_wait
        FROM   ',@from,' 
        WHERE  type = "IN" 
               AND calldate >= (SELECT MAKEDATE(YEAR(NOW()-INTERVAL 1 YEAR),1)) 
@@ -40,7 +26,7 @@ CREATE TABLE dashboard_cdr_1_past_year AS SELECT inbound, sum(total) FROM
        GROUP BY inbound	
        UNION ALL
        SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS inbound, 
-              Count(*)                                                   AS total 
+              Avg(duration) - Avg(billsec) AS avg_wait
        FROM   ',@to,'
        WHERE  type = "IN" 
               AND calldate >= (SELECT MAKEDATE(YEAR(NOW()-INTERVAL 1 YEAR),1))
@@ -49,11 +35,11 @@ CREATE TABLE dashboard_cdr_1_past_year AS SELECT inbound, sum(total) FROM
        ) t
 WHERE  inbound IS NOT NULL
 GROUP  BY inbound
-ORDER  BY total DESC');
+ORDER  BY avg_wait DESC');
 SET @q_current_year = CONCAT('
-CREATE TABLE dashboard_cdr_1_current_year AS SELECT inbound, sum(total) FROM
+CREATE TABLE dashboard_cdr_3_current_year AS SELECT inbound, Avg(avg_wait) AS avg_wait FROM
        (SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS inbound,
-              Count(*)                                                   AS total
+              Avg(duration) - Avg(billsec) AS avg_wait
        FROM   ',@from,'
        WHERE  type = "IN"
               AND calldate >= (SELECT MAKEDATE(YEAR(NOW()),1))
@@ -61,7 +47,7 @@ CREATE TABLE dashboard_cdr_1_current_year AS SELECT inbound, sum(total) FROM
        GROUP BY inbound
        UNION ALL
        SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS inbound,
-              Count(*)                                                   AS total
+              Avg(duration) - Avg(billsec) AS avg_wait
        FROM   ',@to,'
        WHERE  type = "IN"
               AND calldate >= (SELECT MAKEDATE(YEAR(NOW()),1))
@@ -70,11 +56,11 @@ CREATE TABLE dashboard_cdr_1_current_year AS SELECT inbound, sum(total) FROM
        ) t
 WHERE  inbound IS NOT NULL
 GROUP  BY inbound
-ORDER  BY total DESC');
+ORDER  BY avg_wait DESC');
 SET @q_past_semester = CONCAT('
-CREATE TABLE dashboard_cdr_1_past_semester AS SELECT inbound, sum(total) FROM
+CREATE TABLE dashboard_cdr_3_past_semester AS SELECT inbound, Avg(avg_wait) AS avg_wait FROM
        (SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS inbound,
-              Count(*)                                                   AS total
+              Avg(duration) - Avg(billsec) AS avg_wait
        FROM   ',@from,'
        WHERE  type = "IN"
               AND calldate >= (SELECT DATE_FORMAT(NOW()-INTERVAL 6 MONTH, "%Y-%m-01"))
@@ -82,7 +68,7 @@ CREATE TABLE dashboard_cdr_1_past_semester AS SELECT inbound, sum(total) FROM
        GROUP BY inbound
        UNION ALL
        SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS inbound,
-              Count(*)                                                   AS total
+              Avg(duration) - Avg(billsec) AS avg_wait
        FROM   ',@to,'
        WHERE  type = "IN"
               AND calldate >= (SELECT DATE_FORMAT(NOW()-INTERVAL 6 MONTH, "%Y-%m-01"))
@@ -91,11 +77,11 @@ CREATE TABLE dashboard_cdr_1_past_semester AS SELECT inbound, sum(total) FROM
        ) t
 WHERE  inbound IS NOT NULL
 GROUP  BY inbound
-ORDER  BY total DESC');
+ORDER  BY avg_wait DESC');
 SET @q_past_quarter = CONCAT('
-CREATE TABLE dashboard_cdr_1_past_quarter AS SELECT inbound, sum(total) FROM
+CREATE TABLE dashboard_cdr_3_past_quarter AS SELECT inbound, Avg(avg_wait) AS avg_wait FROM
        (SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS inbound,
-              Count(*)                                                   AS total
+              Avg(duration) - Avg(billsec) AS avg_wait
        FROM   ',@from,'
        WHERE  type = "IN"
               AND calldate >= (SELECT DATE_FORMAT(NOW()-INTERVAL 3 MONTH, "%Y-%m-01"))
@@ -103,7 +89,7 @@ CREATE TABLE dashboard_cdr_1_past_quarter AS SELECT inbound, sum(total) FROM
        GROUP BY inbound
        UNION ALL
        SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS inbound,
-              Count(*)                                                   AS total
+              Avg(duration) - Avg(billsec) AS avg_wait
        FROM   ',@to,'
        WHERE  type = "IN"
               AND calldate >= (SELECT DATE_FORMAT(NOW()-INTERVAL 3 MONTH, "%Y-%m-01"))
@@ -112,11 +98,11 @@ CREATE TABLE dashboard_cdr_1_past_quarter AS SELECT inbound, sum(total) FROM
        ) t
 WHERE  inbound IS NOT NULL
 GROUP  BY inbound
-ORDER  BY total DESC');
+ORDER  BY avg_wait DESC');
 SET @q_past_month = CONCAT('
-CREATE TABLE dashboard_cdr_1_past_month AS SELECT inbound, sum(total) FROM
+CREATE TABLE dashboard_cdr_3_past_month AS SELECT inbound, Avg(avg_wait) AS avg_wait FROM
        (SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS inbound,
-              Count(*)                                                   AS total
+              Avg(duration) - Avg(billsec) AS avg_wait
        FROM   ',@from,'
        WHERE  type = "IN"
               AND calldate >= (SELECT DATE_FORMAT(NOW()-INTERVAL 1 MONTH, "%Y-%m-01"))
@@ -124,7 +110,7 @@ CREATE TABLE dashboard_cdr_1_past_month AS SELECT inbound, sum(total) FROM
        GROUP BY inbound
        UNION ALL
        SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS inbound,
-              Count(*)                                                   AS total
+              Avg(duration) - Avg(billsec) AS avg_wait
        FROM   ',@to,'
        WHERE  type = "IN"
               AND calldate >= (SELECT DATE_FORMAT(NOW()-INTERVAL 1 MONTH, "%Y-%m-01"))
@@ -133,11 +119,11 @@ CREATE TABLE dashboard_cdr_1_past_month AS SELECT inbound, sum(total) FROM
        ) t
 WHERE  inbound IS NOT NULL
 GROUP  BY inbound
-ORDER  BY total DESC');
+ORDER  BY avg_wait DESC');
 SET @q_current_month = CONCAT('
-CREATE TABLE dashboard_cdr_1_current_month AS SELECT inbound, sum(total) FROM
+CREATE TABLE dashboard_cdr_3_current_month AS SELECT inbound, Avg(avg_wait) AS avg_wait FROM
        (SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS inbound,
-              Count(*)                                                   AS total
+              Avg(duration) - Avg(billsec) AS avg_wait
        FROM   ',@from,'
        WHERE  type = "IN"
               AND calldate >= (SELECT DATE_FORMAT(NOW(), "%Y-%m-01"))
@@ -145,7 +131,7 @@ CREATE TABLE dashboard_cdr_1_current_month AS SELECT inbound, sum(total) FROM
        GROUP BY inbound
        UNION ALL
        SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS inbound,
-              Count(*)                                                   AS total
+              Avg(duration) - Avg(billsec) AS avg_wait
        FROM   ',@to,'
        WHERE  type = "IN"
               AND calldate >= (SELECT DATE_FORMAT(NOW(), "%Y-%m-01"))
@@ -154,11 +140,11 @@ CREATE TABLE dashboard_cdr_1_current_month AS SELECT inbound, sum(total) FROM
        ) t
 WHERE  inbound IS NOT NULL
 GROUP  BY inbound
-ORDER  BY total DESC');
+ORDER  BY avg_wait DESC');
 SET @q_past_week = CONCAT('
-CREATE TABLE dashboard_cdr_1_past_week AS SELECT inbound, sum(total) FROM
+CREATE TABLE dashboard_cdr_3_past_week AS SELECT inbound, Avg(avg_wait) AS avg_wait FROM
        (SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS inbound,
-              Count(*)                                                   AS total
+              Avg(duration) - Avg(billsec) AS avg_wait
        FROM   ',@from,'
        WHERE  type = "IN"
               AND calldate >= (SELECT DATE_FORMAT(DATE_ADD(NOW()-INTERVAL 1 WEEK, INTERVAL(-WEEKDAY(NOW()-INTERVAL 1 WEEK)) DAY), "%Y-%m-%d"))
@@ -166,7 +152,7 @@ CREATE TABLE dashboard_cdr_1_past_week AS SELECT inbound, sum(total) FROM
        GROUP BY inbound
        UNION ALL
        SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS inbound,
-              Count(*)                                                   AS total
+              Avg(duration) - Avg(billsec) AS avg_wait
        FROM   ',@to,'
        WHERE  type = "IN"
               AND calldate >= (SELECT DATE_FORMAT(DATE_ADD(NOW()-INTERVAL 1 WEEK, INTERVAL(-WEEKDAY(NOW()-INTERVAL 1 WEEK)) DAY), "%Y-%m-%d"))
@@ -175,11 +161,11 @@ CREATE TABLE dashboard_cdr_1_past_week AS SELECT inbound, sum(total) FROM
        ) t
 WHERE  inbound IS NOT NULL
 GROUP  BY inbound
-ORDER  BY total DESC');
+ORDER  BY avg_wait DESC');
 SET @q_current_week = CONCAT('
-CREATE TABLE dashboard_cdr_1_current_week AS SELECT inbound, sum(total) FROM
+CREATE TABLE dashboard_cdr_3_current_week AS SELECT inbound, Avg(avg_wait) AS avg_wait FROM
        (SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS inbound,
-              Count(*)                                                   AS total
+              Avg(duration) - Avg(billsec) AS avg_wait
        FROM   ',@from,'
        WHERE  type = "IN"
               AND calldate >= (SELECT DATE_FORMAT(DATE_ADD(NOW(), INTERVAL(-WEEKDAY(NOW())) DAY), "%Y-%m-%d"))
@@ -187,7 +173,7 @@ CREATE TABLE dashboard_cdr_1_current_week AS SELECT inbound, sum(total) FROM
        GROUP BY inbound
        UNION ALL
        SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS inbound,
-              Count(*)                                                   AS total
+              Avg(duration) - Avg(billsec) AS avg_wait
        FROM   ',@to,'
        WHERE  type = "IN"
               AND calldate >= (SELECT DATE_FORMAT(DATE_ADD(NOW(), INTERVAL(-WEEKDAY(NOW())) DAY), "%Y-%m-%d"))
@@ -196,7 +182,7 @@ CREATE TABLE dashboard_cdr_1_current_week AS SELECT inbound, sum(total) FROM
        ) t
 WHERE  inbound IS NOT NULL
 GROUP  BY inbound
-ORDER  BY total DESC');
+ORDER  BY avg_wait DESC');
 
 /* STATMENTS */
 PREPARE stmt_past_year from @q_past_year;

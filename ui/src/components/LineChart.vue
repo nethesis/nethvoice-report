@@ -33,7 +33,6 @@ export default {
   },
   data() {
     return {
-      MAX_ENTRIES: 8,
       labels: [],
       datasets: [],
       chartData: {},

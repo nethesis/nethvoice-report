@@ -218,6 +218,13 @@
               >
                 {{ element | formatCurrency }} {{ $parent.$data.adminSettings.currency }}
               </span>
+              <span
+                v-else-if="
+                  columns[index] && columns[index].format == 'twoDecimals'
+                "
+              >
+                {{ element | formatTwoDecimals }}
+              </span>
               <span v-else>
                 {{ element }}
               </span>
