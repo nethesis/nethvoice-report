@@ -54,6 +54,7 @@ var Filters = {
             return '-'
         }
 
+        value = Math.round(value);
         var ret = "";
         let days = parseInt(Math.floor(value / (3600 * 24)));
         let hours = parseInt(Math.floor((value - days * (3600 * 24)) / 3600));
@@ -77,6 +78,15 @@ var Filters = {
             }
             return ret;
         }
+    },
+    formatTwoDecimals: function (value) {
+        if (value == "") {
+            value = 0;
+        }
+
+        // round to two decimal places
+        const currencyValue = Math.round((parseFloat(value) + Number.EPSILON) * 100) / 100;
+        return currencyValue.toLocaleString();
     },
     formatCurrency: function (value) {
         if (value == "") {

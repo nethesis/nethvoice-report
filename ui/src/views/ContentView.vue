@@ -159,7 +159,7 @@
             </sui-statistic>
             <sui-statistic v-if="cdr.details.cost" in-group :color="'blue'">
               <sui-statistic-value>{{
-                cdr.details.cost | formatCurrency }} {{ adminSettings.currency
+                cdr.details.cost | formatTwoDecimals }} {{ adminSettings.currency
               }}</sui-statistic-value>
               <sui-statistic-label>{{
                 $t("table.cost")
@@ -222,7 +222,7 @@ export default {
       queryTree: null,
       queryNames: [],
       charts: [],
-      MAX_CHART_ENTRIES: 8,
+      MAX_CHART_ENTRIES: 2,
       openDetailsModal: false,
       chartDetails: null,
       dataAvailable: true,
