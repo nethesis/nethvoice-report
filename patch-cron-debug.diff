@@ -1,0 +1,33 @@
+diff --git a/root/etc/cron.d/nethvoice-report-tasks b/root/etc/cron.d/nethvoice-report-tasks
+index c459804..5c5192d 100644
+--- a/root/etc/cron.d/nethvoice-report-tasks
++++ b/root/etc/cron.d/nethvoice-report-tasks
+@@ -1,11 +1,24 @@
+ # Launch miners and tasks at night
+-00 00 * * *  asterisk /opt/nethvoice-report/scripts/queue-miner.php && /opt/nethvoice-report/tasks/tasks views && /opt/nethvoice-report/tasks/tasks queries
++# 00 00 * * *  asterisk /opt/nethvoice-report/scripts/queue-miner.php && /opt/nethvoice-report/tasks/tasks views && /opt/nethvoice-report/tasks/tasks queries
+ 
+ # precalculate phonebook numbers during night
+-10 00 * * *     asterisk /opt/nethvoice-report/tasks/tasks phonebook
++# 10 00 * * *     asterisk /opt/nethvoice-report/tasks/tasks phonebook
+ 
+ # precalculate filter values during night
+-20 00 * * *     asterisk /opt/nethvoice-report/tasks/tasks values
++# 20 00 * * *     asterisk /opt/nethvoice-report/tasks/tasks values
+ 
+ # execute cdr task to split cdr table and calculate costs
+-30 00 * * *	asterisk /opt/nethvoice-report/tasks/tasks cdr && /opt/nethvoice-report/tasks/tasks cost
++# 30 00 * * *	asterisk /opt/nethvoice-report/tasks/tasks cdr && /opt/nethvoice-report/tasks/tasks cost
++
++
++# DEBUG  //// remove
++00 00 * * *  asterisk /opt/nethvoice-report/scripts/queue-miner.php && logger -t nvreport completed queue-miner.php && /opt/nethvoice-report/tasks/tasks views && logger -t nvreport completed tasks views && /opt/nethvoice-report/tasks/tasks queries && logger -t nvreport completed tasks queries
++
++# precalculate phonebook numbers during night
++10 00 * * *     asterisk /opt/nethvoice-report/tasks/tasks phonebook && logger -t nvreport completed tasks phonebook 
++
++# precalculate filter values during night
++20 00 * * *     asterisk /opt/nethvoice-report/tasks/tasks values && logger -t nvreport completed tasks values
++
++# execute cdr task to split cdr table and calculate costs
++30 00 * * *	asterisk /opt/nethvoice-report/tasks/tasks cdr && logger -t nvreport completed tasks cdr && /opt/nethvoice-report/tasks/tasks cost && logger -t nvreport completed tasks cost
