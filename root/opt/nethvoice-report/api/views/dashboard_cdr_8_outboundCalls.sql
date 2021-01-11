@@ -1,4 +1,4 @@
-/* 1 - Total OUTBOUND call per Route */
+/* 8 - Total OUTBOUND call per Route */
 
 /* VARIABLES */
 SELECT CONCAT('cdr_', DATE_FORMAT(NOW() - INTERVAL 1 YEAR - INTERVAL 1 DAY, "%Y")) INTO @from;

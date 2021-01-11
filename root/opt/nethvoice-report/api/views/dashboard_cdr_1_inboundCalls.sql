@@ -16,7 +16,8 @@ DROP TABLE IF EXISTS dashboard_cdr_1_current_year;
 
 /* QUERIES */
 SET @q_past_year = CONCAT('
-CREATE TABLE dashboard_cdr_1_past_year AS SELECT inbound, sum(total) AS total FROM
+CREATE TABLE dashboard_cdr_1_past_year AS
+SELECT inbound, sum(total) AS total FROM
        (SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS inbound, 
               Count(*)                                                   AS total 
        FROM   ',@from,' 

@@ -16,7 +16,8 @@ DROP TABLE IF EXISTS dashboard_cdr_2_current_year;
 
 /* QUERIES */
 SET @q_past_year = CONCAT('
-CREATE TABLE dashboard_cdr_2_past_year AS SELECT inbound, Avg(avg_duration) AS avg_duration FROM
+CREATE TABLE dashboard_cdr_2_past_year AS
+SELECT inbound, Avg(avg_duration) AS avg_duration FROM
        (SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS inbound, 
               Avg(duration)                                                   AS avg_duration 
        FROM   ',@from,' 
