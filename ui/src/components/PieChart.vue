@@ -139,6 +139,8 @@ export default {
         return this.$options.filters.formatTwoDecimals(value);
       } else if (this.format && this.format == "seconds") {
         return this.$options.filters.formatTime(value);
+      } else if (this.format && this.format == "currency") {
+        return this.$options.filters.formatCurrency(value) + " " + this.$parent.$data.adminSettings.currency;
       } else {
         return value;
       }

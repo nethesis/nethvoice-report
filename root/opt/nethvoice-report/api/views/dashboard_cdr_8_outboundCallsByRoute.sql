@@ -16,7 +16,8 @@ DROP TABLE IF EXISTS dashboard_cdr_8_current_year;
 
 /* QUERIES */
 SET @q_past_year = CONCAT('
-CREATE TABLE dashboard_cdr_8_past_year AS SELECT outbound, sum(total) AS total FROM
+CREATE TABLE dashboard_cdr_8_past_year AS
+SELECT outbound, sum(total) AS total FROM
        (SELECT Substring_index(Substring_index(dstchannel, \'-\', 1), \'/\', -1) AS outbound, 
               Count(*)                                                   AS total 
        FROM   ',@from,' 
@@ -37,7 +38,8 @@ WHERE  outbound IS NOT NULL
 GROUP  BY outbound
 ORDER  BY total DESC');
 SET @q_current_year = CONCAT('
-CREATE TABLE dashboard_cdr_8_current_year AS SELECT outbound, sum(total) AS total FROM
+CREATE TABLE dashboard_cdr_8_current_year AS
+SELECT outbound, sum(total) AS total FROM
        (SELECT Substring_index(Substring_index(dstchannel, \'-\', 1), \'/\', -1) AS outbound,
               Count(*)                                                   AS total
        FROM   ',@from,'
@@ -58,7 +60,8 @@ WHERE  outbound IS NOT NULL
 GROUP  BY outbound
 ORDER  BY total DESC');
 SET @q_past_semester = CONCAT('
-CREATE TABLE dashboard_cdr_8_past_semester AS SELECT outbound, sum(total) AS total FROM
+CREATE TABLE dashboard_cdr_8_past_semester AS
+SELECT outbound, sum(total) AS total FROM
        (SELECT Substring_index(Substring_index(dstchannel, \'-\', 1), \'/\', -1) AS outbound,
               Count(*)                                                   AS total
        FROM   ',@from,'
@@ -79,7 +82,8 @@ WHERE  outbound IS NOT NULL
 GROUP  BY outbound
 ORDER  BY total DESC');
 SET @q_past_quarter = CONCAT('
-CREATE TABLE dashboard_cdr_8_past_quarter AS SELECT outbound, sum(total) AS total FROM
+CREATE TABLE dashboard_cdr_8_past_quarter AS
+SELECT outbound, sum(total) AS total FROM
        (SELECT Substring_index(Substring_index(dstchannel, \'-\', 1), \'/\', -1) AS outbound,
               Count(*)                                                   AS total
        FROM   ',@from,'
@@ -100,7 +104,8 @@ WHERE  outbound IS NOT NULL
 GROUP  BY outbound
 ORDER  BY total DESC');
 SET @q_past_month = CONCAT('
-CREATE TABLE dashboard_cdr_8_past_month AS SELECT outbound, sum(total) AS total FROM
+CREATE TABLE dashboard_cdr_8_past_month AS
+SELECT outbound, sum(total) AS total FROM
        (SELECT Substring_index(Substring_index(dstchannel, \'-\', 1), \'/\', -1) AS outbound,
               Count(*)                                                   AS total
        FROM   ',@from,'
@@ -121,7 +126,8 @@ WHERE  outbound IS NOT NULL
 GROUP  BY outbound
 ORDER  BY total DESC');
 SET @q_current_month = CONCAT('
-CREATE TABLE dashboard_cdr_8_current_month AS SELECT outbound, sum(total) AS total FROM
+CREATE TABLE dashboard_cdr_8_current_month AS
+SELECT outbound, sum(total) AS total FROM
        (SELECT Substring_index(Substring_index(dstchannel, \'-\', 1), \'/\', -1) AS outbound,
               Count(*)                                                   AS total
        FROM   ',@from,'
@@ -142,7 +148,8 @@ WHERE  outbound IS NOT NULL
 GROUP  BY outbound
 ORDER  BY total DESC');
 SET @q_past_week = CONCAT('
-CREATE TABLE dashboard_cdr_8_past_week AS SELECT outbound, sum(total) AS total FROM
+CREATE TABLE dashboard_cdr_8_past_week AS
+SELECT outbound, sum(total) AS total FROM
        (SELECT Substring_index(Substring_index(dstchannel, \'-\', 1), \'/\', -1) AS outbound,
               Count(*)                                                   AS total
        FROM   ',@from,'
@@ -163,7 +170,8 @@ WHERE  outbound IS NOT NULL
 GROUP  BY outbound
 ORDER  BY total DESC');
 SET @q_current_week = CONCAT('
-CREATE TABLE dashboard_cdr_8_current_week AS SELECT outbound, sum(total) AS total FROM
+CREATE TABLE dashboard_cdr_8_current_week AS
+SELECT outbound, sum(total) AS total FROM
        (SELECT Substring_index(Substring_index(dstchannel, \'-\', 1), \'/\', -1) AS outbound,
               Count(*)                                                   AS total
        FROM   ',@from,'
