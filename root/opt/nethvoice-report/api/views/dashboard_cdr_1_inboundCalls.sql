@@ -38,7 +38,8 @@ WHERE  inbound IS NOT NULL
 GROUP  BY inbound
 ORDER  BY total DESC');
 SET @q_current_year = CONCAT('
-CREATE TABLE dashboard_cdr_1_current_year AS SELECT inbound, sum(total) AS total FROM
+CREATE TABLE dashboard_cdr_1_current_year AS
+SELECT inbound, sum(total) AS total FROM
        (SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS inbound,
               Count(*)                                                   AS total
        FROM   ',@from,'
@@ -59,7 +60,8 @@ WHERE  inbound IS NOT NULL
 GROUP  BY inbound
 ORDER  BY total DESC');
 SET @q_past_semester = CONCAT('
-CREATE TABLE dashboard_cdr_1_past_semester AS SELECT inbound, sum(total) AS total FROM
+CREATE TABLE dashboard_cdr_1_past_semester AS 
+SELECT inbound, sum(total) AS total FROM
        (SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS inbound,
               Count(*)                                                   AS total
        FROM   ',@from,'
@@ -80,7 +82,8 @@ WHERE  inbound IS NOT NULL
 GROUP  BY inbound
 ORDER  BY total DESC');
 SET @q_past_quarter = CONCAT('
-CREATE TABLE dashboard_cdr_1_past_quarter AS SELECT inbound, sum(total) AS total FROM
+CREATE TABLE dashboard_cdr_1_past_quarter AS 
+SELECT inbound, sum(total) AS total FROM
        (SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS inbound,
               Count(*)                                                   AS total
        FROM   ',@from,'
@@ -101,7 +104,8 @@ WHERE  inbound IS NOT NULL
 GROUP  BY inbound
 ORDER  BY total DESC');
 SET @q_past_month = CONCAT('
-CREATE TABLE dashboard_cdr_1_past_month AS SELECT inbound, sum(total) AS total FROM
+CREATE TABLE dashboard_cdr_1_past_month AS 
+SELECT inbound, sum(total) AS total FROM
        (SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS inbound,
               Count(*)                                                   AS total
        FROM   ',@from,'
@@ -122,7 +126,8 @@ WHERE  inbound IS NOT NULL
 GROUP  BY inbound
 ORDER  BY total DESC');
 SET @q_current_month = CONCAT('
-CREATE TABLE dashboard_cdr_1_current_month AS SELECT inbound, sum(total) AS total FROM
+CREATE TABLE dashboard_cdr_1_current_month AS 
+SELECT inbound, sum(total) AS total FROM
        (SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS inbound,
               Count(*)                                                   AS total
        FROM   ',@from,'
@@ -143,7 +148,8 @@ WHERE  inbound IS NOT NULL
 GROUP  BY inbound
 ORDER  BY total DESC');
 SET @q_past_week = CONCAT('
-CREATE TABLE dashboard_cdr_1_past_week AS SELECT inbound, sum(total) AS total FROM
+CREATE TABLE dashboard_cdr_1_past_week AS 
+SELECT inbound, sum(total) AS total FROM
        (SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS inbound,
               Count(*)                                                   AS total
        FROM   ',@from,'
@@ -164,7 +170,8 @@ WHERE  inbound IS NOT NULL
 GROUP  BY inbound
 ORDER  BY total DESC');
 SET @q_current_week = CONCAT('
-CREATE TABLE dashboard_cdr_1_current_week AS SELECT inbound, sum(total) AS total FROM
+CREATE TABLE dashboard_cdr_1_current_week AS 
+SELECT inbound, sum(total) AS total FROM
        (SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS inbound,
               Count(*)                                                   AS total
        FROM   ',@from,'
