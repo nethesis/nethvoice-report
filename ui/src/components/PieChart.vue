@@ -135,7 +135,9 @@ export default {
       this.values = firstValues;
     },
     formatValue(value) {
-      if (this.format && this.format == "twoDecimals") {
+      if (!this.format || this.format == "num") {
+        return this.$options.filters.formatNumber(value);
+      } else if (this.format && this.format == "twoDecimals") {
         return this.$options.filters.formatTwoDecimals(value);
       } else if (this.format && this.format == "seconds") {
         return this.$options.filters.formatTime(value);
