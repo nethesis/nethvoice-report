@@ -27,7 +27,7 @@ FROM   (SELECT LEFT(dst, 4)               AS prefix,
        FROM   ',@from,' 
        WHERE  type = "OUT" 
               AND calldate >= (SELECT MAKEDATE(YEAR(NOW()-INTERVAL 1 YEAR),1)) 
-              AND calldate <= (SELECT LAST_DAY(DATE_ADD(NOW()-INTERVAL 1 YEAR, INTERVAL 12-MONTH(NOW()-INTERVAL 1 YEAR) MONTH)))
+              AND calldate <= (SELECT DATE_FORMAT(NOW()-INTERVAL 1 YEAR, "%Y-12-31"))
        GROUP  BY LEFT(dst, 4)
        UNION ALL
        SELECT LEFT(dst, 4)               AS prefix, 
@@ -38,7 +38,7 @@ FROM   (SELECT LEFT(dst, 4)               AS prefix,
        FROM   ',@to,'
        WHERE  type = "OUT" 
               AND calldate >= (SELECT MAKEDATE(YEAR(NOW()-INTERVAL 1 YEAR),1))
-              AND calldate <= (SELECT LAST_DAY(DATE_ADD(NOW()-INTERVAL 1 YEAR, INTERVAL 12-MONTH(NOW()-INTERVAL 1 YEAR) MONTH)))
+              AND calldate <= (SELECT DATE_FORMAT(NOW()-INTERVAL 1 YEAR, "%Y-12-31"))
        GROUP  BY LEFT(dst, 4)
        ) t
 WHERE  province IS NOT NULL 
@@ -56,7 +56,7 @@ FROM   (SELECT LEFT(dst, 4)               AS prefix,
        FROM   ',@from,' 
        WHERE  type = "OUT" 
               AND calldate >= (SELECT MAKEDATE(YEAR(NOW()),1))
-              AND calldate <= (SELECT LAST_DAY(DATE_ADD(NOW(), INTERVAL 12-MONTH(NOW()) MONTH)))
+              AND calldate <= (SELECT DATE_FORMAT(NOW(), "%Y-12-31"))
        GROUP  BY LEFT(dst, 4)
        UNION ALL
        SELECT LEFT(dst, 4)               AS prefix, 
@@ -67,7 +67,7 @@ FROM   (SELECT LEFT(dst, 4)               AS prefix,
        FROM   ',@to,'
        WHERE  type = "OUT" 
               AND calldate >= (SELECT MAKEDATE(YEAR(NOW()),1))
-              AND calldate <= (SELECT LAST_DAY(DATE_ADD(NOW(), INTERVAL 12-MONTH(NOW()) MONTH)))
+              AND calldate <= (SELECT DATE_FORMAT(NOW(), "%Y-12-31"))
        GROUP  BY LEFT(dst, 4)
        ) t
 WHERE  province IS NOT NULL 
@@ -84,8 +84,8 @@ FROM   (SELECT LEFT(dst, 4)               AS prefix,
               WHERE  prefisso = prefix) AS province 
        FROM   ',@from,' 
        WHERE  type = "OUT" 
-              AND calldate >= (SELECT DATE_FORMAT(NOW()-INTERVAL 6 MONTH, "%Y-%m-01"))
-              AND calldate <= (SELECT LAST_DAY(NOW()-INTERVAL 6 MONTH))
+              AND calldate >= (SELECT IF(MONTH(NOW()) < 7, DATE_FORMAT(NOW() - INTERVAL 1 YEAR, "%Y-07-01"), DATE_FORMAT(NOW(), "%Y-01-01")))
+              AND calldate <= (SELECT IF(MONTH(NOW()) < 7, DATE_FORMAT(NOW() - INTERVAL 1 YEAR, "%Y-12-31"), DATE_FORMAT(NOW(), "%Y-06-30")))
        GROUP  BY LEFT(dst, 4)
        UNION ALL
        SELECT LEFT(dst, 4)               AS prefix, 
@@ -95,8 +95,8 @@ FROM   (SELECT LEFT(dst, 4)               AS prefix,
               WHERE  prefisso = prefix) AS province 
        FROM   ',@to,'
        WHERE  type = "OUT" 
-              AND calldate >= (SELECT DATE_FORMAT(NOW()-INTERVAL 6 MONTH, "%Y-%m-01"))
-              AND calldate <= (SELECT LAST_DAY(NOW()-INTERVAL 6 MONTH))
+              AND calldate >= (SELECT IF(MONTH(NOW()) < 7, DATE_FORMAT(NOW() - INTERVAL 1 YEAR, "%Y-07-01"), DATE_FORMAT(NOW(), "%Y-01-01")))
+              AND calldate <= (SELECT IF(MONTH(NOW()) < 7, DATE_FORMAT(NOW() - INTERVAL 1 YEAR, "%Y-12-31"), DATE_FORMAT(NOW(), "%Y-06-30")))
        GROUP  BY LEFT(dst, 4)
        ) t
 WHERE  province IS NOT NULL 
@@ -113,8 +113,8 @@ FROM   (SELECT LEFT(dst, 4)               AS prefix,
               WHERE  prefisso = prefix) AS province 
        FROM   ',@from,' 
        WHERE  type = "OUT" 
-              AND calldate >= (SELECT DATE_FORMAT(NOW()-INTERVAL 3 MONTH, "%Y-%m-01"))
-              AND calldate <= (SELECT LAST_DAY(NOW()-INTERVAL 3 MONTH))
+              AND calldate >= (select if(quarter(NOW()) > 1, date_format(NOW(), "%Y-01-01") + INTERVAL (quarter(NOW()) - 2) QUARTER, date_format(NOW() - INTERVAL 1 YEAR, "%Y-10-01")))
+              AND calldate <= (select if(quarter(NOW()) > 1, date_format(NOW(), "%Y-01-01") + INTERVAL (quarter(NOW()) - 1) QUARTER - INTERVAL 1 DAY, date_format(NOW() - INTERVAL 1 YEAR, "%Y-12-31")))
        GROUP  BY LEFT(dst, 4)
        UNION ALL
        SELECT LEFT(dst, 4)               AS prefix, 
@@ -124,8 +124,8 @@ FROM   (SELECT LEFT(dst, 4)               AS prefix,
               WHERE  prefisso = prefix) AS province 
        FROM   ',@to,'
        WHERE  type = "OUT" 
-              AND calldate >= (SELECT DATE_FORMAT(NOW()-INTERVAL 3 MONTH, "%Y-%m-01"))
-              AND calldate <= (SELECT LAST_DAY(NOW()-INTERVAL 3 MONTH))
+              AND calldate >= (select if(quarter(NOW()) > 1, date_format(NOW(), "%Y-01-01") + INTERVAL (quarter(NOW()) - 2) QUARTER, date_format(NOW() - INTERVAL 1 YEAR, "%Y-10-01")))
+              AND calldate <= (select if(quarter(NOW()) > 1, date_format(NOW(), "%Y-01-01") + INTERVAL (quarter(NOW()) - 1) QUARTER - INTERVAL 1 DAY, date_format(NOW() - INTERVAL 1 YEAR, "%Y-12-31")))
        GROUP  BY LEFT(dst, 4)
        ) t
 WHERE  province IS NOT NULL 
