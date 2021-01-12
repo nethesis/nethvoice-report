@@ -126,10 +126,9 @@ var UtilService = {
       // initialize chart data
 
       Object.entries(datasetMap).forEach(([datasetName, data]) => {
-        const sortedLabels = Object.keys(data).sort();
         let datasetValues = [];
 
-        sortedLabels.forEach((label) => {
+        that.labels.forEach((label) => {
           datasetValues.push(data[label]);
         });
 
