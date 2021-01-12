@@ -18,7 +18,7 @@
       <div
         v-for="(chart, index) in charts" v-bind:key="index"
         :id="`export_${index}`"
-        :class="{'table-chart': chart.type == 'table', 'line-chart': chart.type == 'line', 'pie-chart': chart.type == 'pie', 'bar-chart': chart.type == 'bar', 'recap-chart': chart.type == 'recap'}"
+        :class="{'table-chart': chart.type == 'table', 'line-chart': chart.type == 'line', 'pie-chart': chart.type == 'pie', 'bar-chart': chart.type == 'bar', 'recap-chart': chart.type == 'recap', 'rank-chart': chart.type == 'rank'}"
       >
         <div class="align-center h-20">
           <h4 is="sui-header" class="chart-caption">
@@ -95,6 +95,10 @@
             <!-- recap chart -->
             <div v-if="chart.type == 'recap'">
               <RecapChart :data="chart.data" :caption="chart.caption" :currency="adminSettings.currency"></RecapChart>
+            </div>
+            <!-- rank chart -->
+            <div v-if="chart.type == 'rank'">
+              <RankChart :data="chart.data" :caption="chart.caption"/>
             </div>
           </div>
         </div>
@@ -192,6 +196,7 @@ import BarChart from "../components/BarChart.vue";
 import PieChart from "../components/PieChart.vue";
 import ExportData from "../components/ExportData.vue";
 import RecapChart from "../components/RecapChart.vue";
+import RankChart from "../components/RankChart.vue";
 
 import QueriesService from "../services/queries";
 import StorageService from "../services/storage";
@@ -208,6 +213,7 @@ export default {
     ExportData,
     PieChart,
     RecapChart,
+    RankChart,
   },
   mixins: [
     StorageService,
