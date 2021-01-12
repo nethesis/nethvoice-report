@@ -1,4 +1,4 @@
 SELECT
     region,
-    total
+    total AS total£num
 FROM dashboard_cdr_6_{{ .Time.CdrDashboardRange }}
