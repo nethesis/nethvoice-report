@@ -235,6 +235,12 @@ body {
   margin: 2rem;
 }
 
+.rank-chart {
+  min-width: 25rem;
+  max-width: 35rem;
+  margin: 2rem;
+}
+
 .line-chart {
   width: 95%;
   margin: 2rem;
