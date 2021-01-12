@@ -26,7 +26,7 @@ FROM   (SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS
        FROM   ',@from,' 
        WHERE  type = "IN" 
               AND calldate >= (SELECT MAKEDATE(YEAR(NOW()-INTERVAL 1 YEAR),1)) 
-              AND calldate <= (SELECT LAST_DAY(DATE_ADD(NOW()-INTERVAL 1 YEAR, INTERVAL 12-MONTH(NOW()-INTERVAL 1 YEAR) MONTH)))
+              AND calldate <= (SELECT DATE_FORMAT(NOW()-INTERVAL 1 YEAR, "%Y-12-31"))
        GROUP  BY Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1), 
                  Date_format(calldate, "%H:00") 
        UNION ALL
@@ -36,7 +36,7 @@ FROM   (SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS
        FROM   ',@to,'
        WHERE  type = "IN" 
               AND calldate >= (SELECT MAKEDATE(YEAR(NOW()-INTERVAL 1 YEAR),1))
-              AND calldate <= (SELECT LAST_DAY(DATE_ADD(NOW()-INTERVAL 1 YEAR, INTERVAL 12-MONTH(NOW()-INTERVAL 1 YEAR) MONTH)))
+              AND calldate <= (SELECT DATE_FORMAT(NOW()-INTERVAL 1 YEAR, "%Y-12-31"))
        GROUP  BY Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1), 
                  Date_format(calldate, "%H:00") 
        ) t
@@ -54,7 +54,7 @@ FROM   (SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS
        FROM   ',@from,' 
        WHERE  type = "IN" 
               AND calldate >= (SELECT MAKEDATE(YEAR(NOW()),1))
-              AND calldate <= (SELECT LAST_DAY(DATE_ADD(NOW(), INTERVAL 12-MONTH(NOW()) MONTH)))
+              AND calldate <= (SELECT DATE_FORMAT(NOW(), "%Y-12-31"))
        GROUP  BY Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1), 
                  Date_format(calldate, "%H:00") 
        UNION ALL
@@ -64,7 +64,7 @@ FROM   (SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS
        FROM   ',@to,'
        WHERE  type = "IN" 
               AND calldate >= (SELECT MAKEDATE(YEAR(NOW()),1))
-              AND calldate <= (SELECT LAST_DAY(DATE_ADD(NOW(), INTERVAL 12-MONTH(NOW()) MONTH)))
+              AND calldate <= (SELECT DATE_FORMAT(NOW(), "%Y-12-31"))
        GROUP  BY Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1), 
                  Date_format(calldate, "%H:00") 
        ) t
@@ -81,8 +81,8 @@ FROM   (SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS
        Count(*)                                                           AS total 
        FROM   ',@from,' 
        WHERE  type = "IN" 
-              AND calldate >= (SELECT DATE_FORMAT(NOW()-INTERVAL 6 MONTH, "%Y-%m-01"))
-              AND calldate <= (SELECT LAST_DAY(NOW()-INTERVAL 6 MONTH))
+              AND calldate >= (SELECT IF(MONTH(NOW()) < 7, DATE_FORMAT(NOW() - INTERVAL 1 YEAR, "%Y-07-01"), DATE_FORMAT(NOW(), "%Y-01-01")))
+              AND calldate <= (SELECT IF(MONTH(NOW()) < 7, DATE_FORMAT(NOW() - INTERVAL 1 YEAR, "%Y-12-31"), DATE_FORMAT(NOW(), "%Y-06-30")))
        GROUP  BY Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1), 
                  Date_format(calldate, "%H:00") 
        UNION ALL
@@ -91,8 +91,8 @@ FROM   (SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS
        Count(*)                                                           AS total 
        FROM   ',@to,'
        WHERE  type = "IN" 
-              AND calldate >= (SELECT DATE_FORMAT(NOW()-INTERVAL 6 MONTH, "%Y-%m-01"))
-              AND calldate <= (SELECT LAST_DAY(NOW()-INTERVAL 6 MONTH))
+              AND calldate >= (SELECT IF(MONTH(NOW()) < 7, DATE_FORMAT(NOW() - INTERVAL 1 YEAR, "%Y-07-01"), DATE_FORMAT(NOW(), "%Y-01-01")))
+              AND calldate <= (SELECT IF(MONTH(NOW()) < 7, DATE_FORMAT(NOW() - INTERVAL 1 YEAR, "%Y-12-31"), DATE_FORMAT(NOW(), "%Y-06-30")))
        GROUP  BY Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1), 
                  Date_format(calldate, "%H:00") 
        ) t
@@ -109,8 +109,8 @@ FROM   (SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS
        Count(*)                                                           AS total 
        FROM   ',@from,' 
        WHERE  type = "IN" 
-              AND calldate >= (SELECT DATE_FORMAT(NOW()-INTERVAL 3 MONTH, "%Y-%m-01"))
-              AND calldate <= (SELECT LAST_DAY(NOW()-INTERVAL 3 MONTH))
+              AND calldate >= (select if(quarter(NOW()) > 1, date_format(NOW(), "%Y-01-01") + INTERVAL (quarter(NOW()) - 2) QUARTER, date_format(NOW() - INTERVAL 1 YEAR, "%Y-10-01")))
+              AND calldate <= (select if(quarter(NOW()) > 1, date_format(NOW(), "%Y-01-01") + INTERVAL (quarter(NOW()) - 1) QUARTER - INTERVAL 1 DAY, date_format(NOW() - INTERVAL 1 YEAR, "%Y-12-31")))
        GROUP  BY Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1), 
                  Date_format(calldate, "%H:00") 
        UNION ALL
@@ -119,8 +119,8 @@ FROM   (SELECT Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1) AS
        Count(*)                                                           AS total 
        FROM   ',@to,'
        WHERE  type = "IN" 
-              AND calldate >= (SELECT DATE_FORMAT(NOW()-INTERVAL 3 MONTH, "%Y-%m-01"))
-              AND calldate <= (SELECT LAST_DAY(NOW()-INTERVAL 3 MONTH))
+              AND calldate >= (select if(quarter(NOW()) > 1, date_format(NOW(), "%Y-01-01") + INTERVAL (quarter(NOW()) - 2) QUARTER, date_format(NOW() - INTERVAL 1 YEAR, "%Y-10-01")))
+              AND calldate <= (select if(quarter(NOW()) > 1, date_format(NOW(), "%Y-01-01") + INTERVAL (quarter(NOW()) - 1) QUARTER - INTERVAL 1 DAY, date_format(NOW() - INTERVAL 1 YEAR, "%Y-12-31")))
        GROUP  BY Substring_index(Substring_index(channel, \'-\', 1), \'/\', -1), 
                  Date_format(calldate, "%H:00") 
        ) t
