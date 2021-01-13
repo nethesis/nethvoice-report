@@ -1,30 +1,38 @@
 <template>
   <div v-if="isVisible && data && data.length > 1" class="right-floated mt-30m">
     <!-- button only csv if is table or recap -->
-    <sui-button
+    <sui-popup
       v-if="type === 'table' || type === 'recap' || type === 'rank'"
-      @click="exportToCSV()"
-      class="custom-btn"
-      basic
       :content="$t('command.export_csv')"
-      icon="download"
-    />
-    <!-- dropdown for csv and pdf export -->
-    <sui-dropdown
-      v-else
-      class="icon basic"
-      :class="{ transparent: transparent }"
-      icon="download"
-      button
-      pointing="top right"
     >
-      {{ $t("command.export") }}
-      <sui-dropdown-menu>
-        <sui-dropdown-item @click="exportToCSV()">{{ $t("command.export_csv") }}</sui-dropdown-item>
-        <sui-dropdown-item v-if="isPdf" @click="exportToPDF('canvas')">{{ $t("command.export_pdf") }}
-        </sui-dropdown-item>
-      </sui-dropdown-menu>
-    </sui-dropdown>
+      <sui-button
+        @click="exportToCSV()"
+        class="custom-btn"
+        basic
+        icon="download"
+        slot="trigger"
+      />
+    </sui-popup>
+    <!-- dropdown for csv and pdf export -->
+    <sui-popup
+      v-else
+      :content="$t('command.export')"
+    >
+      <sui-dropdown
+        class="icon basic"
+        :class="{ transparent: transparent }"
+        icon="download"
+        button
+        pointing="top right"
+        slot="trigger"
+      >
+        <sui-dropdown-menu>
+          <sui-dropdown-item @click="exportToCSV()">{{ $t("command.export_csv") }}</sui-dropdown-item>
+          <sui-dropdown-item v-if="isPdf" @click="exportToPDF('canvas')">{{ $t("command.export_pdf") }}
+          </sui-dropdown-item>
+        </sui-dropdown-menu>
+      </sui-dropdown>
+    </sui-popup>
   </div>
 </template>
 
