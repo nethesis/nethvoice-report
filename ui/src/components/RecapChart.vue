@@ -162,24 +162,22 @@
                             detail.avgWaitDuration | formatTime
                           }}</sui-statistic-value>
                           <sui-statistic-label>{{
-                            $t("recap.total_avg_duration")
+                            $t("recap.avg_wait_duration")
                           }}</sui-statistic-label>
                         </sui-statistic>
                         <template v-if="detail.type == 'OUT'">
                           <sui-statistic in-group color="blue">
                             <sui-statistic-value
-                              >{{ detail.totalCost | formatCurrency }}
-                              {{ currency }}</sui-statistic-value
-                            >
+                              >{{ detail.totalCost | formatCurrency(currency) }}
+                            </sui-statistic-value>
                             <sui-statistic-label>{{
                               $t("recap.total_cost")
                             }}</sui-statistic-label>
                           </sui-statistic>
                           <sui-statistic in-group color="blue">
                             <sui-statistic-value
-                              >{{ detail.avgCost | formatCurrency }}
-                              {{ currency }}</sui-statistic-value
-                            >
+                              >{{ detail.avgCost | formatCurrency(currency) }}
+                            </sui-statistic-value>
                             <sui-statistic-label>{{
                               $t("recap.avg_cost")
                             }}</sui-statistic-label>

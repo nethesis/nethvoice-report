@@ -13,7 +13,7 @@
         <sui-table-row>
           <template v-for="(header, index) in topHeaders">
             <sui-table-header-cell
-              v-if="!(report == 'cdr' && header.name == 'linkedid')"
+              v-if="!(report == 'cdr' && (header.name == 'linkedid' || header.name == 'call_type'))"
               v-bind:key="index"
               ref="tableHeader"
               :class="[
@@ -122,7 +122,8 @@
                 !(
                   report == 'cdr' &&
                   columns[index] &&
-                  columns[index].name == 'linkedid'
+                  (columns[index].name == 'linkedid' ||
+                  columns[index].name == 'call_type')
                 )
               "
               v-show="columns[index] && columns[index].visible"
