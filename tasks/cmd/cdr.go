@@ -57,14 +57,14 @@ var cdrCmd = &cobra.Command{
 				helper.FatalError(errors.New("Missing <from> flag"))
 			}
 			if !cmd.Flags().Changed("to") {
-                                helper.FatalError(errors.New("Missing <to> flag"))
-                        }
+				helper.FatalError(errors.New("Missing <to> flag"))
+			}
 			if !cmd.Flags().Changed("destination") {
-                                helper.FatalError(errors.New("Missing <destination> flag"))
-                        }
+				helper.FatalError(errors.New("Missing <destination> flag"))
+			}
 			if !cmd.Flags().Changed("pattern") {
-                                helper.FatalError(errors.New("Missing <pattern> flag"))
-                        }
+				helper.FatalError(errors.New("Missing <pattern> flag"))
+			}
 
 			// execute command with flags
 			executeReportCDR(true)
@@ -90,11 +90,11 @@ func init() {
 
 // Define objects and utilities
 type CDRObj struct {
-	Year  int
-	Month int
+	Year        int
+	Month       int
 	Destination string
-	Pattern	string
-	Table string
+	Pattern     string
+	Table       string
 }
 
 func yearMap(year int) string {
@@ -108,7 +108,7 @@ func monthMap(month int) string {
 // Entry point for "cdr" command
 func executeReportCDR(flags bool) {
 	// define db instance
-        db := source.CDRInstance()
+	db := source.CDRInstance()
 
 	// check if flags is passed
 	if flags {
@@ -123,9 +123,9 @@ func executeReportCDR(flags bool) {
 		}
 
 		tTo, errTo := time.Parse("2006-01-02", to)
-                if errTo != nil {
+		if errTo != nil {
 			helper.FatalError(errors.Wrap(errTo, "Error parsing <to> date. Format date: YYYY-MM-DD"))
-                }
+		}
 
 		// iterate over dates
 		var tables []string
@@ -151,25 +151,25 @@ func executeReportCDR(flags bool) {
 			templateCDR := configuration.Config.TemplatePath + "/cdr_update.sql"
 
 			// define query
-                        var query bytes.Buffer
+			var query bytes.Buffer
 
 			tpl := template.Must(template.New(path.Base(templateCDR)).ParseFiles(templateCDR))
-                        errTpl := tpl.Execute(&query, &objTemplate)
-                        if errTpl != nil {
-                                helper.FatalError(errors.Wrap(errTpl, "invalid query template compiling"))
-                        }
+			errTpl := tpl.Execute(&query, &objTemplate)
+			if errTpl != nil {
+				helper.FatalError(errors.Wrap(errTpl, "invalid query template compiling"))
+			}
 
 			helper.LogDebug("\nExecuting query %s for [%s]:\n%s", templateCDR, t, query.String())
 
 			// execute query
-                        rows, errQueryCDR := db.Query(query.String())
-                        if errQueryCDR != nil {
+			rows, errQueryCDR := db.Query(query.String())
+			if errQueryCDR != nil {
 				helper.LogDebug(errQueryCDR.Error() + ". Skipping...")
 				continue
-                        }
+			}
 
-                        // close results
-                        rows.Close()
+			// close results
+			rows.Close()
 		}
 	} else {
 		// define vars
@@ -191,6 +191,14 @@ func executeReportCDR(flags bool) {
 		if errQueryMinMax != nil {
 			helper.FatalError(errors.Wrap(errQueryMinMax, "error getting min and max year"))
 		}
+
+		// get min month of min year
+		rowMinMax = db.QueryRow("SELECT month(min(calldate)) FROM `cdr_" + strconv.Itoa(minYear) + "`")
+		errQueryMinMax = rowMinMax.Scan(&minMonth)
+
+		// save minYear and minMonth in cache
+		cacheConnection := cache.Instance()
+		errCache := cacheConnection.Set("cdr_first_month", fmt.Sprintf("%d-%02d", minYear, minMonth), 0).Err()
 
 		// loop years
 		for y := minYear; y <= maxYear; y++ {
@@ -219,10 +227,6 @@ func executeReportCDR(flags bool) {
 			// get min and max month
 			rowMinMax = db.QueryRow("SELECT month(min(calldate)), month(max(calldate)) FROM `cdr_" + strconv.Itoa(y) + "`")
 			errQueryMinMax = rowMinMax.Scan(&minMonth, &maxMonth)
-
-			// save minYear and minMonth in cache
-			cacheConnection := cache.Instance()
-			errCache := cacheConnection.Set("cdr_first_month", fmt.Sprintf("%d-%02d", minYear, minMonth), 0).Err()
 
 			// handle cache error
 			if errCache != nil {
