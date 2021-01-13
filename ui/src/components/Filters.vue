@@ -1788,8 +1788,6 @@ export default {
 
       let filterToApply = this.prepareFilterForBackend();
 
-      console.log("filterToApply", filterToApply); ////
-
       // apply filters
       this.$root.$emit("applyFilters", filterToApply);
     },
