@@ -1228,10 +1228,12 @@ export default {
       this.showSettingsModal(true);
       this.highlightCostsSettings = true;
       this.set("costsConfigured", true);
+      this.$root.$emit("reloadAdminSettings");
     },
     skipCostsConfiguration() {
       this.openCostsConfigModal = false;
       this.set("costsConfigured", true);
+      this.$root.$emit("reloadAdminSettings");
     },
     validateNewDestination() {
       // reset error

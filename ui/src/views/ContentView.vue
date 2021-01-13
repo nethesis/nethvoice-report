@@ -262,6 +262,8 @@ export default {
   mounted() {
     // event "dataNotAvailable" is triggered by $http interceptor if report tables don't exist yet
     this.$root.$on("dataNotAvailable", this.onDataNotAvailable);
+    // event "reloadAdminSettings" is triggered by TopBar when configuring costs
+    this.$root.$on("reloadAdminSettings", this.getAdminSettings);
     this.$root.$on("applyFilters", this.applyFilters);
 
     // get office hours
