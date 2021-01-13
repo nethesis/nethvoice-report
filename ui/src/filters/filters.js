@@ -24,6 +24,11 @@ var Filters = {
         const monthYear = moment(value, "YYYY-MM").format("MMMM YYYY");
         return lodash.upperFirst(monthYear);
     },
+    formatMonth(value) {
+        // value: e.g. "10" (october)
+        const monthName = moment(value, "MM").format("MMMM");
+        return lodash.upperFirst(monthName);
+    },
     formatWeekDate(value, i18n) {
         // value: e.g. "2019-W50" (week 50 of 2019)
         const tokens = value.split("-W");
@@ -88,14 +93,14 @@ var Filters = {
         const currencyValue = Math.round((parseFloat(value) + Number.EPSILON) * 100) / 100;
         return currencyValue.toLocaleString();
     },
-    formatCurrency: function (value) {
+    formatCurrency: function (value, currency) {
         if (value == "") {
             value = 0;
         }
 
         // round to two decimal places
         const currencyValue = Math.round((parseFloat(value) + Number.EPSILON) * 100) / 100;
-        return currencyValue.toLocaleString();
+        return currencyValue.toLocaleString() + " " + currency;
     },
     reversePhonebookLookup: function (phoneNumber, field, root) {
         // field can be "name", "company" or "name|company"

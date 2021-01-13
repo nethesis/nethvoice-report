@@ -2,7 +2,7 @@
   <div v-if="isVisible && data && data.length > 1" class="right-floated mt-30m">
     <!-- button only csv if is table or recap -->
     <sui-button
-      v-if="type === 'table' || type === 'recap'"
+      v-if="type === 'table' || type === 'recap' || type === 'rank'"
       @click="exportToCSV()"
       class="custom-btn"
       basic

@@ -77,9 +77,7 @@ export default {
       let valuesInfo =
         this.data[0] && this.data[0][2] ? this.data[0][2].split("£") : "";
       let format = valuesInfo[1] ? valuesInfo[1] : "";
-      return format && format == "seconds"
-        ? this.formatValue(value, format)
-        : value;
+      return this.formatValue(value, format, this.$parent.$data.adminSettings.currency);
     },
   },
   watch: {
