@@ -1032,7 +1032,7 @@ export default {
       let tooltipContent = '';
 
       const userFound = this.$root.users.find((u) => {
-        return u.value.split(",").includes(extension);
+        return u.value && u.value.split(",").includes(extension);
       });
 
       if (userFound) {
