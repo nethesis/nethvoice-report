@@ -11,7 +11,16 @@
           {{ entry[0] }}
         </sui-table-cell>
         <sui-table-cell>
-          <strong>{{ formatValue(entry[1]) }}</strong>
+          <strong>
+            <span v-if="format == 'num'">
+              {{ entry[1] | formatNum }}
+            </span>
+            <span v-else-if="format == 'currency'">
+              {{
+                entry[1] | formatCurrency($parent.$data.adminSettings.currency)
+              }}
+            </span>
+          </strong>
         </sui-table-cell>
       </sui-table-row>
     </sui-table-body>
@@ -19,8 +28,11 @@
 </template>
 
 <script>
+import UtilService from "../services/utils";
+
 export default {
   name: "RankChart",
+  mixins: [UtilService],
   props: {
     caption: {
       type: String,
@@ -42,29 +54,6 @@ export default {
         this.entries = this.data.slice(1);
       } else {
         this.entries = [];
-      }
-    },
-  },
-  methods: {
-    formatValue(value) {
-
-      console.log("this.$parent.$data.adminSettings.currency", this.$parent.$data.adminSettings.currency); ////
-      console.log("this.format", this.format); ////
-
-      if (!this.format || this.format == "num") {
-        return this.$options.filters.formatNumber(value);
-      } else if (this.format && this.format == "twoDecimals") {
-        return this.$options.filters.formatTwoDecimals(value);
-      } else if (this.format && this.format == "seconds") {
-        return this.$options.filters.formatTime(value);
-      } else if (this.format && this.format == "currency") {
-        return (
-          this.$options.filters.formatCurrency(value) +
-          " " +
-          this.$parent.$data.adminSettings.currency
-        );
-      } else {
-        return value;
       }
     },
   },

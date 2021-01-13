@@ -35,6 +35,8 @@ export default {
     return {
       labels: [],
       datasets: [],
+      labelFormat: "",
+      valueFormat: "",
       options: {
         responsive: true,
         maintainAspectRatio: false,
@@ -44,6 +46,20 @@ export default {
         plugins: {
           colorschemes: {
             scheme: this.$root.colorScheme,
+          },
+        },
+        tooltips: {
+          callbacks: {
+            label: (tooltipItem, data) => {
+              const datasetIndex = tooltipItem.datasetIndex;
+              const datasetName = data.datasets[datasetIndex].label;
+              const formattedValue = this.formatValue(
+                tooltipItem.value,
+                this.valueFormat,
+                this.$parent.$data.adminSettings.currency
+              );
+              return datasetName + ": " + formattedValue;
+            },
           },
         },
       },

@@ -163,8 +163,7 @@
             </sui-statistic>
             <sui-statistic v-if="cdr.details.cost" in-group :color="'blue'">
               <sui-statistic-value>{{
-                cdr.details.cost | formatTwoDecimals }} {{ adminSettings.currency
-              }}</sui-statistic-value>
+                cdr.details.cost | formatCurrency(adminSettings.currency) }}</sui-statistic-value>
               <sui-statistic-label>{{
                 $t("table.cost")
               }}</sui-statistic-label>
