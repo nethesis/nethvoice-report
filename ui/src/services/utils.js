@@ -35,7 +35,7 @@ var UtilService = {
       const expiry = new Date().getTime() + ttlMinutes * 60 * 1000;
       this.set(key, { item: item, expiry: expiry });
     },
-    formatValue(value, format) {
+    formatValue(value, format, currency) {
       switch (format) {
         case "num":
           return this.$options.filters.formatNumber(value);
@@ -55,6 +55,14 @@ var UtilService = {
         case "dayDate":
           // no formatting needed
           return value;
+        case "twoDecimals":
+          return this.$options.filters.formatTwoDecimals(value);
+        case "currency":
+          return this.$options.filters.formatCurrency(value, currency);
+        case "month":
+          return this.$options.filters.formatMonth(value);
+        default:
+          return value;
       }
     },
     watchDataLineOrBarChart(that) {
@@ -65,6 +73,9 @@ var UtilService = {
 
       that.labels = [];
       that.datasets = [];
+
+      that.labelFormat = that.data[0][1].split("£")[1];
+      that.valueFormat = that.data[0][2].split("£")[1];
 
       // remove first element (query columns)
       let rows = that.data.filter((_, i) => i !== 0);
@@ -138,6 +149,9 @@ var UtilService = {
           fill: false,
         });
       });
+
+      // format labels
+      that.labels = that.labels.map(l => this.formatValue(l, that.labelFormat, that.$parent.$data.adminSettings.currency));
 
       // render chart
 

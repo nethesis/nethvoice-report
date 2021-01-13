@@ -1,8 +1,10 @@
 <script>
 import { Pie } from "vue-chartjs";
+import UtilService from "../services/utils";
 
 export default {
   extends: Pie,
+  mixins: [UtilService],
   props: {
     caption: {
       type: String,
@@ -44,7 +46,9 @@ export default {
               const index = tooltipItem.index;
               const label = data.labels[index];
               const formattedValue = this.formatValue(
-                data.datasets[0].data[index]
+                data.datasets[0].data[index],
+                this.format,
+                this.$parent.$data.adminSettings.currency
               );
               return label + ": " + formattedValue;
             },
@@ -133,19 +137,6 @@ export default {
 
       firstValues.push(othersValue);
       this.values = firstValues;
-    },
-    formatValue(value) {
-      if (!this.format || this.format == "num") {
-        return this.$options.filters.formatNumber(value);
-      } else if (this.format && this.format == "twoDecimals") {
-        return this.$options.filters.formatTwoDecimals(value);
-      } else if (this.format && this.format == "seconds") {
-        return this.$options.filters.formatTime(value);
-      } else if (this.format && this.format == "currency") {
-        return this.$options.filters.formatCurrency(value) + " " + this.$parent.$data.adminSettings.currency;
-      } else {
-        return value;
-      }
     },
   },
 };
