@@ -710,7 +710,6 @@
       :showFilterTimeGroup="showFilterTimeGroup"
       :showFilterTime="showFilterTime"
       :showFilterQueue="showFilterQueue"
-      :showFilterGroup="showFilterGroup"
       :showFilterAgent="showFilterAgent"
       :showFilterReason="showFilterReason"
       :showFilterResult="showFilterResult"
@@ -817,7 +816,6 @@ export default {
       },
       filterValues: {
         queues: [],
-        groups: [],
         agents: [],
         ivrs: [],
         reasons: [],
@@ -1160,14 +1158,6 @@ export default {
               return { value: agent, text: agent };
             });
             this.filterValues.agents = agents.sort(this.sortByProperty("text"));
-          }
-
-          // groups //// remove?
-          if (this.defaultFilter.groups) {
-            let groups = this.defaultFilter.groups.map((group) => {
-              return { value: group, text: group };
-            });
-            this.filterValues.groups = groups.sort(this.sortByProperty("text"));
           }
 
           // ivr
@@ -1798,6 +1788,8 @@ export default {
 
       let filterToApply = this.prepareFilterForBackend();
 
+      console.log("filterToApply", filterToApply); ////
+
       // apply filters
       this.$root.$emit("applyFilters", filterToApply);
     },
@@ -2189,9 +2181,6 @@ export default {
     },
     showFilterAgent: function () {
       return this.isFilterInView("agent", this.filtersMap);
-    },
-    showFilterGroup: function () {
-      return this.isFilterInView("group", this.filtersMap);
     },
     showFilterQueue: function () {
       return this.isFilterInView("queue", this.filtersMap);
