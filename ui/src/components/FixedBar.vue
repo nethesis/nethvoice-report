@@ -48,15 +48,6 @@
             {{activeFilters.queues}}
           </span>
         </div>
-        <!-- label: groups list -->
-        <div class="ui label" v-if="showFilterGroup && activeFilters.groups && (activeFilters.groups.length > 0)">
-          <span class="field">
-            {{$t('filter.groups_label')}}:
-          </span>
-          <span class="value">
-            {{activeFilters.groups}}
-          </span>
-        </div>
         <!-- label: agents list -->
         <div class="ui label" v-if="showFilterAgent && activeFilters.agents && (activeFilters.agents.length > 0)">
           <span class="field">
@@ -253,7 +244,6 @@ export default {
     "showFilterTimeGroup",
     "showFilterTime",
     "showFilterQueue",
-    "showFilterGroup",
     "showFilterAgent",
     "showFilterReason",
     "showFilterResult",
