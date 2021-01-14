@@ -112,8 +112,8 @@
       "filters": "Filters",
       "pbx": "PBX data",
       "personal": "Personal data",
-      "inbound": "Incoming calls",
-      "outbound": "Outgoing calls",
+      "inbound": "Inbound calls",
+      "outbound": "Outbound calls",
       "local": "Local calls"
     },
     "data": {
