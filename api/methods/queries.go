@@ -221,7 +221,7 @@ func executeSqlQuery(filter models.Filter, report string, section string, view s
 		q = template.Must(q.ParseFiles(queryFile))
 	} else {
 		// set sources and destinations for personal calls
-		if section == "personal" && (user != "admin" || user != "X") {
+		if section == "personal" && user != "admin" && user != "X" {
 			// get user extensions
 			extensionsString := utils.ExtractUserExtensions(user)
 			extensions := strings.Split(extensionsString, ",")
@@ -236,8 +236,13 @@ func executeSqlQuery(filter models.Filter, report string, section string, view s
 			}
 
 			if view == "local" {
-				filter.Sources = extensions
-				filter.Destinations = extensions
+				if len(filter.Sources) == 0 {
+					filter.Sources = extensions
+				}
+
+				if len(filter.Destinations) == 0 {
+					filter.Destinations = extensions
+				}
 			}
 		}
 
