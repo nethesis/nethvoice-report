@@ -41,7 +41,7 @@
         <sui-form-fields class="interval-buttons">
           <!-- CDR ONLY START -->
           <!-- cdr time range -->
-          <sui-form-field v-if="showFilterCdrTimeRange" width="four">
+          <sui-form-field v-if="showFilterCdrTimeRange" width="three">
             <label class="ellipsis">{{ $t("filter.time_range") }}</label>
             <sui-dropdown :text="$t('filter.select_time_range')" class="mg-top-xs">
               <sui-dropdown-menu>
@@ -1609,6 +1609,88 @@ export default {
       }
       return true;
     },
+    clearHiddenFilters(filter) {
+      if (!this.showFilterQueue) {
+        filter.queues = [];
+      }
+
+      if (!this.showFilterAgent) {
+        filter.agents = [];
+      }
+
+      if (!this.showFilterIvr) {
+        filter.ivrs = [];
+      }
+
+      if (!this.showFilterReason) {
+        filter.reasons = [];
+      }
+
+      if (!this.showFilterResult) {
+        filter.results = [];
+      }
+
+      if (!this.showFilterChoice) {
+        filter.choices = [];
+      }
+
+      if (!this.showFilterOrigin) {
+        filter.origins = [];
+      }
+
+      if (!this.showFilterTimeGroup) {
+        filter.time.group = "day";
+      }
+
+      if (!this.showFilterTimeSplit) {
+        filter.time.division = "60";
+      }
+
+      if (!this.showFilterCaller) {
+        filter.caller = "";
+      }
+
+      if (!this.showFilterCdrCaller) {
+        filter.sources = [];
+      }
+
+      if (!this.showFilterCdrCallee) {
+        filter.destinations = [];
+      }
+
+      if (!this.showFilterCdrCallType) {
+        filter.callType = [];
+      }
+
+      if (!this.showFilterCdrCallDuration) {
+        filter.duration = "";
+      }
+
+      if (!this.showFilterCdrTrunk) {
+        filter.trunks = [];
+      }
+
+      if (!this.showFilterCdrDid) {
+        filter.dids = [];
+      }
+
+      if (!this.showFilterCdrCtiGroups) {
+        filter.groups = [];
+      }
+
+      if (!this.showFilterCdrUser) {
+        filter.users = [];
+      }
+
+      if (!this.showFilterCdrCallDestination) {
+        filter.callDestinations = [];
+      }
+
+      if (!this.showFilterCdrDestination) {
+        filter.patterns = [];
+      }
+      return filter;
+    },
     prepareFilterForBackend() {
       let backendFilter = JSON.parse(JSON.stringify(this.filter));
 
@@ -1712,6 +1794,8 @@ export default {
         });
         backendFilter.users = parsedUsers;
       }
+
+      backendFilter = this.clearHiddenFilters(backendFilter);
       return backendFilter;
     },
     prepareFilterForFrontend(backendFilter) {
@@ -1827,96 +1911,9 @@ export default {
       }
       this.saveSearch(this.newSearchName);
     },
-    computeFilterToSave() {
-      let filterToSave = this.prepareFilterForBackend();
-
-      // don't save hidden filters
-
-      if (!this.showFilterQueue) {
-        filterToSave.queues = [];
-      }
-
-      if (!this.showFilterAgent) {
-        filterToSave.agents = [];
-      }
-
-      if (!this.showFilterIvr) {
-        filterToSave.ivrs = [];
-      }
-
-      if (!this.showFilterReason) {
-        filterToSave.reasons = [];
-      }
-
-      if (!this.showFilterResult) {
-        filterToSave.results = [];
-      }
-
-      if (!this.showFilterChoice) {
-        filterToSave.choices = [];
-      }
-
-      if (!this.showFilterOrigin) {
-        filterToSave.origins = [];
-      }
-
-      if (!this.showFilterTimeGroup) {
-        filterToSave.time.group = "day";
-      }
-
-      if (!this.showFilterTimeSplit) {
-        filterToSave.time.division = "60";
-      }
-
-      if (!this.showFilterCaller) {
-        filterToSave.caller = "";
-      }
-
-      if (!this.showFilterCdrCaller) {
-        filterToSave.sources = [];
-      }
-
-      if (!this.showFilterCdrCallee) {
-        filterToSave.destinations = [];
-      }
-
-      if (!this.showFilterCdrCallType) {
-        filterToSave.callType = [];
-      }
-
-      if (!this.showFilterCdrCallDuration) {
-        filterToSave.duration = "";
-      }
-
-      if (!this.showFilterCdrTrunk) {
-        filterToSave.trunks = [];
-      }
-
-      if (!this.showFilterCdrDid) {
-        filterToSave.dids = [];
-      }
-
-      if (!this.showFilterCdrCtiGroups) {
-        filterToSave.groups = [];
-      }
-
-      if (!this.showFilterCdrUser) {
-        filterToSave.users = [];
-      }
-
-      if (!this.showFilterCdrCallDestination) {
-        filterToSave.callDestinations = [];
-      }
-
-      if (!this.showFilterCdrDestination) {
-        filterToSave.patterns = [];
-      }
-
-      return filterToSave;
-    },
     saveSearch(searchName) {
       this.loader.saveSearch = true;
-      let filterToSave = this.computeFilterToSave();
+      let filterToSave = this.prepareFilterForBackend();
 
       const search = this.savedSearches.find(
         (s) => s.name === searchName
