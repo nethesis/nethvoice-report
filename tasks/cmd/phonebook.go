@@ -67,7 +67,7 @@ func executeReportPhonebook() {
 
 	// handle reading error
 	if errRead != nil {
-		helper.FatalError(errors.Wrap(errRead, "Error reading values content"))
+		helper.FatalError(errors.Wrap(errRead, "Error reading phonebook query"))
 	}
 
 	// execute query
