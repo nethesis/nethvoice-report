@@ -8,10 +8,10 @@ FROM
    phonebook
 WHERE
    (
-      name IS NOT NULL
-      OR name != ""
-      OR company IS NOT NULL
-      OR company != ""
+      (name IS NOT NULL
+      AND name != "")
+      OR (company IS NOT NULL
+      AND company != "")
    )
    AND
    (
