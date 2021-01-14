@@ -42,9 +42,9 @@ var UiMaps = {
             "local": ["cdr_timeRange", "hour", "cdr_caller", "cdr_callee", "cdr_did", "cdr_callType", "cdr_callDuration", "cdr_user", "cdr_ctiGroups"],
           },
           "personal": {
-            "inbound": ["cdr_timeRange", "hour", "cdr_caller", "cdr_callee", "cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_callDestination"],
-            "outbound": ["cdr_timeRange", "hour", "cdr_caller", "cdr_callee", "cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_destination"],
-            "local": ["cdr_timeRange", "hour", "cdr_caller", "cdr_callee", "cdr_did", "cdr_callType", "cdr_callDuration"],
+            "inbound": ["cdr_timeRange", "hour", "cdr_caller", "cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_callDestination"],
+            "outbound": ["cdr_timeRange", "hour", "cdr_callee", "cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_destination"],
+            "local": ["cdr_timeRange", "hour", "cdr_did", "cdr_callType", "cdr_callDuration"],
           },
         }
       },
