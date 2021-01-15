@@ -41,7 +41,7 @@
         <sui-form-fields class="interval-buttons">
           <!-- CDR ONLY START -->
           <!-- cdr time range -->
-          <sui-form-field v-if="showFilterCdrTimeRange" width="three">
+          <sui-form-field v-if="showFilterCdrTimeRange" width="four">
             <label class="ellipsis">{{ $t("filter.time_range") }}</label>
             <sui-dropdown
               :text="$t('filter.select_time_range')"
