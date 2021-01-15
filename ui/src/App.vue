@@ -548,4 +548,17 @@ body {
   margin-top: 2rem;
   margin-bottom: 1rem;
 }
+
+.doc-info-icon {
+  color: #2185d0;
+  margin-left: 0.3rem !important;
+  margin-right: 0 !important;
+}
+
+.doc-info {
+  text-align: left !important;
+  max-width: 35rem !important;
+  max-height: 14rem;
+  overflow-y: auto;
+}
 </style>

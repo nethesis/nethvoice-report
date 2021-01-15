@@ -25,6 +25,7 @@
       "results_label": "Results",
       "time_split_label": "Period",
       "caller_label": "Caller",
+      "caller_callee_placeholder": "Contact or phone number",
       "contact_name_label": "Contact name / Company",
       "reasons_label": "Reason",
       "clear_filters": "Clear all filters",
@@ -51,7 +52,6 @@
       "callee": "Callee",
       "call_type": "Call type",
       "call_duration": "Max call duration",
-      "call_duration_placeholder": "You can type a custom call duration",
       "trunk": "Trunk",
       "cti_group": "CTI group",
       "user": "User",
@@ -230,7 +230,9 @@
       "configure_to_compute_call_costs": "Configure this setting to compute and display call costs",
       "access_cdr_report": "Access CDR & Cost report",
       "reset_settings_description": "Reset all settings to their default values",
-      "you_are_about_to_reset_settings": "You are about to reset ALL settings to default values. This action cannot be undone"
+      "you_are_about_to_reset_settings": "You are about to reset ALL settings to default values. This action cannot be undone",
+      "call_duration_info": "You can select a value from the dropdown or type a call duration in seconds",
+      "caller_callee_info": "Search for a contact or type phone number"
     },
     "pagination": {
       "page": "page",

@@ -43,9 +43,16 @@
           <!-- cdr time range -->
           <sui-form-field v-if="showFilterCdrTimeRange" width="three">
             <label class="ellipsis">{{ $t("filter.time_range") }}</label>
-            <sui-dropdown :text="$t('filter.select_time_range')" class="mg-top-xs">
+            <sui-dropdown
+              :text="$t('filter.select_time_range')"
+              class="mg-top-xs"
+            >
               <sui-dropdown-menu>
-                <sui-dropdown-item v-for="timeRange in cdrTimeRangeValues" :key="timeRange" @click="selectTime(timeRange)">
+                <sui-dropdown-item
+                  v-for="timeRange in cdrTimeRangeValues"
+                  :key="timeRange"
+                  @click="selectTime(timeRange)"
+                >
                   {{ $t("filter." + timeRange) }}
                 </sui-dropdown-item>
               </sui-dropdown-menu>
@@ -452,10 +459,22 @@
           <!-- EVERYWHERE -->
           <!-- cdr: sources / caller -->
           <sui-form-field v-show="showFilterCdrCaller" width="four">
-            <label>{{ $t("filter.caller") }}</label>
+            <label :key="caller">
+              <span>{{ $t("filter.caller") }}</span>
+              <sui-popup flowing hoverable position="top center">
+                <div class="doc-info">
+                  {{ $t('message.caller_callee_info') }}
+                </div>
+                <sui-icon
+                  name="info circle"
+                  class="doc-info-icon"
+                  slot="trigger"
+                />
+              </sui-popup>
+            </label>
             <SearchInput
               :options="filterValues.cdrCaller"
-              :placeholder="$t('filter.caller_label')"
+              :placeholder="$t('filter.caller_callee_placeholder')"
               :minCharacters="3"
               :searchFields="['title', 'description', 'phoneNumber']"
               @input="onSourcesInput"
@@ -466,10 +485,22 @@
           </sui-form-field>
           <!-- cdr: call destinations / callee -->
           <sui-form-field v-show="showFilterCdrCallee" width="four">
-            <label>{{ $t("filter.callee") }}</label>
+            <label :key="callee">
+              <span>{{ $t("filter.callee") }}</span>
+              <sui-popup flowing hoverable position="top center">
+                <div class="doc-info">
+                  {{ $t('message.caller_callee_info') }}
+                </div>
+                <sui-icon
+                  name="info circle"
+                  class="doc-info-icon"
+                  slot="trigger"
+                />
+              </sui-popup>
+            </label>
             <SearchInput
               :options="filterValues.cdrCallee"
-              :placeholder="$t('filter.callee')"
+              :placeholder="$t('filter.caller_callee_placeholder')"
               :minCharacters="3"
               :searchFields="['title', 'description', 'phoneNumber']"
               @input="onDestinationsInput"
@@ -492,12 +523,22 @@
           </sui-form-field>
           <!-- cdr: call duration -->
           <sui-form-field v-show="showFilterCdrCallDuration" width="four">
-            <label :class="{ 'error-color': errorCallDuration }">
-              {{ $t("filter.call_duration") }}
+            <label :class="{ 'error-color': errorCallDuration }" :key="duration">
+              <span>{{ $t("filter.call_duration") }}</span>
+              <sui-popup flowing hoverable position="top center">
+                <div class="doc-info">
+                  {{ $t('message.call_duration_info') }}
+                </div>
+                <sui-icon
+                  name="info circle"
+                  class="doc-info-icon"
+                  slot="trigger"
+                />
+              </sui-popup>
             </label>
             <SearchInput
               :options="cdrCallDurationMap"
-              :placeholder="$t('filter.call_duration_placeholder')"
+              :placeholder="$t('filter.call_duration')"
               :minCharacters="0"
               @input="onDurationInput"
               @select="onDurationSelect"
@@ -883,7 +924,10 @@ export default {
         this.mapSavedSearches(this.savedSearches);
       }
 
-      if (this.currentReport == 'cdr' && this.$route.meta.section == 'dashboard') {
+      if (
+        this.currentReport == "cdr" &&
+        this.$route.meta.section == "dashboard"
+      ) {
         this.selectTime(this.filter.time.cdrDashboardRange);
       }
     },
@@ -902,7 +946,10 @@ export default {
       this.updateIvrChoices();
     },
     "filter.time.cdrDashboardRange": function () {
-      if (this.currentReport == 'cdr' && this.$route.meta.section == 'dashboard') {
+      if (
+        this.currentReport == "cdr" &&
+        this.$route.meta.section == "dashboard"
+      ) {
         this.selectTime(this.filter.time.cdrDashboardRange);
       }
     },
@@ -984,7 +1031,10 @@ export default {
     this.$root.$on("requestApplyFilter", this.onRequestApplyFilter);
     this.$root.$on("clearFilters", this.clearFilters);
 
-    if (this.currentReport == 'cdr' && this.$route.meta.section == 'dashboard') {
+    if (
+      this.currentReport == "cdr" &&
+      this.$route.meta.section == "dashboard"
+    ) {
       this.selectTime(this.filter.time.cdrDashboardRange);
     }
   },
@@ -1915,9 +1965,7 @@ export default {
       this.loader.saveSearch = true;
       let filterToSave = this.prepareFilterForBackend();
 
-      const search = this.savedSearches.find(
-        (s) => s.name === searchName
-      );
+      const search = this.savedSearches.find((s) => s.name === searchName);
 
       this.createSearch(
         this.currentReport,

@@ -26,10 +26,10 @@
           </h4>
           <span v-if="chart.doc">
             <sui-popup flowing hoverable position="top center">
-              <div class="chart-doc">
+              <div class="doc-info">
                 <VueShowdown :markdown="chart.doc"></VueShowdown>
               </div>
-              <sui-icon name="info circle" class="chart-doc-icon" slot="trigger" />
+              <sui-icon name="info circle" class="doc-info-icon" slot="trigger" />
             </sui-popup>
           </span>
           <span v-if="chart.queryLimitHit">
@@ -587,18 +587,11 @@ export default {
   margin: 0 auto;
 }
 
-.chart-doc-icon {
-  color: #2185d0;
-  margin-left: 0.3rem;
-  margin-right: 0;
-}
-
 .chart-query-limit-icon {
   color: #f2711c;
   margin-left: 0.3rem;
 }
 
-.chart-doc,
 .chart-query-limit {
   text-align: left !important;
   max-width: 35rem !important;
