@@ -19,13 +19,13 @@
       <div class="report-switch-container">
         <sui-dropdown :text="$t('menu.' + selectedReport)">
           <sui-dropdown-menu>
-            <sui-dropdown-item @click="selectReport('queue')">
-              <router-link to="/queue" class="menu-item-color">
+            <sui-dropdown-item @click="selectReport('queue')" class="report-select">
+              <router-link to="/queue" class="menu-item-color report-link">
                 {{ $t("menu.queue") }}
               </router-link>
             </sui-dropdown-item>
-            <sui-dropdown-item @click="selectReport('cdr')">
-              <router-link to="/cdr" class="menu-item-color">
+            <sui-dropdown-item @click="selectReport('cdr')" class="report-select">
+              <router-link to="/cdr" class="menu-item-color report-link">
                 {{ $t("menu.cdr") }}
               </router-link>
             </sui-dropdown-item>
@@ -559,5 +559,16 @@ export default {
 
 .menu-item-color {
   color: rgba(0, 0, 0, 0.87) !important;
+}
+
+.ui.menu .ui.dropdown .menu>.item.report-select {
+  padding: 0 !important;
+}
+
+.report-link {
+  padding: .78571429em 1.14285714em !important;
+  display: inline-block;
+  width: 100%;
+  height: 100%;
 }
 </style>
