@@ -97,7 +97,7 @@
     },
     "menu": {
       "queue": "Queue report",
-      "cdr": "CDR & Cost report",
+      "cdr": "CDR & cost report",
       "dashboard": "Dashboard",
       "data": "Data",
       "performance": "Performance",
@@ -232,7 +232,7 @@
       "reset_settings_description": "Reset all settings to their default values",
       "you_are_about_to_reset_settings": "You are about to reset ALL settings to default values. This action cannot be undone",
       "call_duration_info": "You can select a value from the dropdown or type a call duration in seconds",
-      "caller_callee_info": "Search for a contact or type phone number"
+      "caller_callee_info": "Search for a contact or type a phone number"
     },
     "pagination": {
       "page": "page",
