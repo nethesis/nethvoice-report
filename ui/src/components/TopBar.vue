@@ -1,6 +1,6 @@
 <template>
   <div class="masthead topbar">
-    <sui-container>
+    <sui-container class="align-left">
       <sui-menu floated="right">
         <sui-dropdown
           class="item top floating pointing"
@@ -66,6 +66,14 @@
       <h1 is="sui-header" class="view-title">
         {{ title }}
       </h1>
+      <span v-if="viewDoc">
+        <sui-popup flowing hoverable position="bottom center">
+          <div class="doc-info">
+            <VueShowdown :markdown="viewDoc"></VueShowdown>
+          </div>
+          <sui-icon name="info circle" class="doc-info-icon doc-info-view-title" slot="trigger" />
+        </sui-popup>
+      </span>
     </sui-container>
     <Filters :showFiltersForm="showFilters" />
 
@@ -969,6 +977,7 @@ export default {
           newCostValue: "",
         },
       },
+      viewDoc: null,
     };
   },
   mounted() {
@@ -993,6 +1002,7 @@ export default {
     // event "dataNotAvailable" is triggered by $http interceptor if report tables don't exist yet
     this.$root.$on("dataNotAvailable", this.onDataNotAvailable);
 
+    this.viewDoc = this.retrieveViewDoc();
     this.retrieveColorScheme();
   },
   watch: {
@@ -1005,6 +1015,7 @@ export default {
             ? this.$i18n.t("menu." + this.$route.meta.section) + ": "
             : "") + this.$i18n.t(this.$route.meta.name);
       }
+      this.viewDoc = this.retrieveViewDoc();
     },
   },
   computed: {
@@ -1530,6 +1541,22 @@ export default {
         }
       );
     },
+    retrieveViewDoc() {
+      try {
+        let mdDoc = require("../doc-inline/" +
+          this.$root.currentLocale +
+          "/" +
+          this.$route.meta.report +
+          "/" +
+          this.$route.meta.section +
+          "_" +
+          this.$route.meta.view +
+          ".md");
+        return mdDoc.default;
+      } catch (error) {
+        return null;
+      }
+    },
   },
 };
 </script>
@@ -1549,7 +1576,7 @@ export default {
 }
 
 .view-title {
-  text-align: left;
+  display: inline-block;
 }
 
 .component-head-menu {
@@ -1603,5 +1630,11 @@ export default {
 
 .call-patterns-accordion .title {
   display: inline-block;
+}
+
+.doc-info-view-title {
+  position: relative;
+  top: -0.25rem;
+  left: 0.25rem;
 }
 </style>

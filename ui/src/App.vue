@@ -561,4 +561,12 @@ body {
   max-height: 14rem;
   overflow-y: auto;
 }
+
+.align-center {
+    text-align: center !important;
+}
+
+.align-left {
+    text-align: left !important;
+}
 </style>
