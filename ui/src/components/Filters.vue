@@ -459,7 +459,7 @@
           <!-- EVERYWHERE -->
           <!-- cdr: sources / caller -->
           <sui-form-field v-show="showFilterCdrCaller" width="four">
-            <label :key="caller">
+            <label key="caller_label">
               <span>{{ $t("filter.caller") }}</span>
               <sui-popup flowing hoverable position="top center">
                 <div class="doc-info">
@@ -485,7 +485,7 @@
           </sui-form-field>
           <!-- cdr: call destinations / callee -->
           <sui-form-field v-show="showFilterCdrCallee" width="four">
-            <label :key="callee">
+            <label key="callee_label">
               <span>{{ $t("filter.callee") }}</span>
               <sui-popup flowing hoverable position="top center">
                 <div class="doc-info">
@@ -523,7 +523,7 @@
           </sui-form-field>
           <!-- cdr: call duration -->
           <sui-form-field v-show="showFilterCdrCallDuration" width="four">
-            <label :class="{ 'error-color': errorCallDuration }" :key="duration">
+            <label :class="{ 'error-color': errorCallDuration }" key="duration_label">
               <span>{{ $t("filter.call_duration") }}</span>
               <sui-popup flowing hoverable position="top center">
                 <div class="doc-info">
