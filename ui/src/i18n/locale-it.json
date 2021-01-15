@@ -392,7 +392,8 @@
       "delete_cost": "Elimina costo",
       "expand": "Espandi",
       "collapse": "Chiudi",
-      "reset_settings": "Ripristina impostazioni"
+      "reset_settings": "Ripristina impostazioni",
+      "export_png": "Esporta PNG"
     },
     "settings": {
       "office_hours_start": "Inizio orario lavorativo",
