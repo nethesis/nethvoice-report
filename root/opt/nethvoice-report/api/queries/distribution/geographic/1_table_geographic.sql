@@ -1,12 +1,9 @@
 SELECT period AS period£{{ .Time.Group }}Date,
        qname, 
-       qdescr, 
-       prefisso, 
-       comune, 
-       provincia, 
-       regione, 
+       qdescr,
+       {{ .GeoGroup }},
        total AS total£num 
-FROM   distribution_geo_{{ .Time.Group }} 
+FROM   distribution_geo_{{ .Time.Group }}_{{ .GeoGroup }} 
 WHERE  TRUE 
         {{ if and .Time.Interval.Start .Time.Interval.End }}
             AND period >= "{{ .Time.Interval.Start }}"
