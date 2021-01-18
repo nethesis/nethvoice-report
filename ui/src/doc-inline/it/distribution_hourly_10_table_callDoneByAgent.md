@@ -5,7 +5,7 @@ Agente* per gli agenti selezionati nel periodo impostato, i dati
 vengono raggruppati secondo la scelta fatta nei filtri.
 
 La *Distribuzione Oraria Chiamate Effettuate per Agente* mostra la 
-divisione delle chiamate fatte dalgi agenti nell'orario lavorativo 
+divisione delle chiamate fatte dagli agenti nell'orario lavorativo 
 impostato.
 
 Le voci mostrate per la *Distribuzione Oraria Chiamate Effettuate 
