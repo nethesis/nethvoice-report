@@ -18,5 +18,4 @@ Le voci mostrate per la *Distribuzione Oraria Chiamate Nulle* sono:
 fasce di tempo impostate nel filtro
 
 Se nessuna coda è stata selezionata, non verranno mostrati i dati.
-chiamante prima dell'attesa minima impostata)
-
+chiamante prima dell'attesa minima impostata).

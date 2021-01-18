@@ -1,0 +1,14 @@
+# Calls made by agents
+
+Number of calls *Made* by each selected agent.
+
+The pie chart shows the total number of calls made by each selected agent 
+and it compares it proportionally with the other selected agents.
+
+If no agent has been selected, the graph will show no data.
+
+The chart can contain a maximum of 8 sections. Agents exceeding this number
+will appear in an ``Others`` section.
+
+If present, click the ``View details`` button to view all the data
+in table format.

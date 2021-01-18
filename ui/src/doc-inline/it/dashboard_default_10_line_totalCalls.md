@@ -7,4 +7,3 @@ centralino in tempo reale al variare del tempo.
 
 Viene mostrata la variazione del numero di chiamate in coda nel'orario 
 lavorativo impostato.
-

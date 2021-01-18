@@ -14,4 +14,3 @@ verranno visualizzate in una sezione ``Altri``.
 
 Se presente, cliccare il bottone ``Visualizza dettagli`` per visualizzare tutti i dati
 in formato tabellare.
-

@@ -1,0 +1,48 @@
+# Performace
+
+Data regarding the selected queues useful to summarize the
+operation and evaluate its *Performance* over time.
+
+The *Performance* data of the queues is used to give an evaluation
+the functioning of the queues and to highlight the critical issues.
+
+The items shown for *Performace*  are:
+
+- Grouping Period
+- Queue number
+- Queue name
+- Total incoming calls
+- Total Calls Fulfilled (answered calls)
+- Percentage on Incoming Calls of Fulfilled Calls
+- Calls Fulfilled before the service level (data of
+configuration in the queue)
+- Percentage on Incoming Calls of Calls Fulfilled before
+service level
+- Total unanswered calls (missed calls)
+- Percentage on incoming calls of unanswered calls
+- Total Calls not processed due to Abandonment (calls closed since
+caller after the set minimum wait)
+- Percentage on Incoming Calls of Abandoned Calls
+- Total unanswered calls for Timeout (unanswered calls
+within the configured maximum waiting time)
+- Percentage on Incoming Calls of Calls in Timeout
+- Total Unanswered Calls for Exit No Agents (failed calls for
+lack of online / available / free agents)
+- Percentage on Incoming Calls of Exit No Agents Calls
+- Total unanswered calls for Exit Menu (calls in which the
+caller used the Exit Menu to exit the queue)
+- Percentage on Incoming Calls of Calls in Exit Menu
+- Total unanswered calls for Full queue (calls not entered in
+queue for maximum number of calls waiting in queue reached)
+- Percentage on Incoming Calls of Calls in Full Queue
+- Total unanswered calls for Entry No Agents (calls not
+queue due to absence of online / available / free agents)
+- Percentage on Incoming Calls of Entry No Agents Calls
+- Total Null Calls (calls queued and closed since
+caller before the set minimum wait)
+- Percentage of Incoming Calls of Null Calls
+- Maximum, minimum, average wait before the answer
+- Maximum, minimum and average call duration
+
+If no queues have been selected, the data of all will be shown
+the queues available.

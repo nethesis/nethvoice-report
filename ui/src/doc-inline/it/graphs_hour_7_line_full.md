@@ -1,4 +1,4 @@
-# Distribuzione Oraria Chiamata Coda Piena
+# Distribuzione Oraria Chiamate Coda Piena
 
 *Distribuzione Oraria Chiamate Coda Piena* per le code selezionate
 nell'orario lavorativo impostato.

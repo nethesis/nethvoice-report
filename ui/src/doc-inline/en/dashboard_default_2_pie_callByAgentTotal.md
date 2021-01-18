@@ -1,0 +1,15 @@
+# Calls for Agent
+
+Number of calls *Answered* from each selected agent of the selected queues.
+
+The pie chart shows the total number of calls answered by each selected agent 
+and compares it proportionally with the other selected agents, the data refer
+to all the switchboard queues.
+
+If no agents have been selected, the graph will show all available agents.
+
+The chart can contain a maximum of 8 sections. Agents exceeding this number
+will appear in an ``Others`` section.
+
+If present, click the ``View details`` button to view all the data
+in table format.
