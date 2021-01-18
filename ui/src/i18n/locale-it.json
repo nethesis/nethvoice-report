@@ -38,7 +38,8 @@
       "area_code": "Prefisso",
       "district": "Zona",
       "province": "Provincia",
-      "region": "Regione"
+      "region": "Regione",
+      "geo_group": "Raggruppa origine per"
     },
     "menu": {
       "queue": "Report Code",

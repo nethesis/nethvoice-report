@@ -47,7 +47,7 @@ var UtilService = {
         },
         "distribution": {
           "hourly": ["timeGroup", "time", "queue", "timeSplit", "agent", "ivr"],
-          "geographic": ["timeGroup", "time", "queue", "origin"],
+          "geographic": ["timeGroup", "time", "queue", "origin", "geoGroup"],
         },
         "graphs": {
           "load": ["timeGroup", "time", "queue", "origin"],

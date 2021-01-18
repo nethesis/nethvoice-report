@@ -47,6 +47,7 @@ type Filter struct {
 
 	Caller   string `json:"caller"`
 	Name     string `json:"contactName"`
+	GeoGroup string `json:"geoGroup"`
 }
 
 type Search struct {
