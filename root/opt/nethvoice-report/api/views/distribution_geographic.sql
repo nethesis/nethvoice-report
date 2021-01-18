@@ -23,7 +23,7 @@ SELECT
        Date_format(From_unixtime(timestamp_in), "%Y") AS period,
        qname,
        qdescr,
-       regione,
+       regione,provincia,comune,prefisso,
        Count(id) AS total
 FROM
        report_queue_callers
@@ -43,7 +43,7 @@ SELECT
        Date_format(From_unixtime(timestamp_in), "%Y") AS period,
        qname,
        qdescr,
-       provincia,
+       regione,provincia,comune,prefisso,
        Count(id) AS total
 FROM
        report_queue_callers
@@ -63,7 +63,7 @@ SELECT
        Date_format(From_unixtime(timestamp_in), "%Y") AS period,
        qname,
        qdescr,
-       comune,
+       regione,provincia,comune,prefisso,
        Count(id) AS total
 FROM
        report_queue_callers
@@ -83,7 +83,7 @@ SELECT
        Date_format(From_unixtime(timestamp_in), "%Y") AS period,
        qname,
        qdescr,
-       prefisso,
+       regione,provincia,comune,prefisso,
        Count(id) AS total
 FROM
        report_queue_callers
@@ -104,7 +104,7 @@ SELECT
        Date_format(From_unixtime(timestamp_in), "%Y-%m") AS period,
        qname,
        qdescr,
-       regione,
+       regione,provincia,comune,prefisso,
        Count(id) AS total
 FROM
        report_queue_callers
@@ -124,7 +124,7 @@ SELECT
        Date_format(From_unixtime(timestamp_in), "%Y-%m") AS period,
        qname,
        qdescr,
-       provincia,
+       regione,provincia,comune,prefisso,
        Count(id) AS total
 FROM
        report_queue_callers
@@ -144,7 +144,7 @@ SELECT
        Date_format(From_unixtime(timestamp_in), "%Y-%m") AS period,
        qname,
        qdescr,
-       comune,
+       regione,provincia,comune,prefisso,
        Count(id) AS total
 FROM
        report_queue_callers
@@ -164,7 +164,7 @@ SELECT
        Date_format(From_unixtime(timestamp_in), "%Y-%m") AS period,
        qname,
        qdescr,
-       prefisso,
+       regione,provincia,comune,prefisso,
        Count(id) AS total
 FROM
        report_queue_callers
@@ -185,7 +185,7 @@ SELECT
        Date_format(From_unixtime(timestamp_in), "%x-W%v") AS period,
        qname,
        qdescr,
-       regione,
+       regione,provincia,comune,prefisso,
        Count(id) AS total
 FROM
        report_queue_callers
@@ -205,7 +205,7 @@ SELECT
        Date_format(From_unixtime(timestamp_in), "%x-W%v") AS period,
        qname,
        qdescr,
-       provincia,
+       regione,provincia,comune,prefisso,
        Count(id) AS total
 FROM
        report_queue_callers
@@ -225,7 +225,7 @@ SELECT
        Date_format(From_unixtime(timestamp_in), "%x-W%v") AS period,
        qname,
        qdescr,
-       comune,
+       regione,provincia,comune,prefisso,
        Count(id) AS total
 FROM
        report_queue_callers
@@ -245,7 +245,7 @@ SELECT
        Date_format(From_unixtime(timestamp_in), "%x-W%v") AS period,
        qname,
        qdescr,
-       prefisso,
+       regione,provincia,comune,prefisso,
        Count(id) AS total
 FROM
        report_queue_callers
@@ -266,7 +266,7 @@ SELECT
        Date_format(From_unixtime(timestamp_in), "%Y-%m-%d") AS period,
        qname,
        qdescr,
-       regione,
+       regione,provincia,comune,prefisso,
        Count(id) AS total
 FROM
        report_queue_callers
@@ -286,7 +286,7 @@ SELECT
        Date_format(From_unixtime(timestamp_in), "%Y-%m-%d") AS period,
        qname,
        qdescr,
-       provincia,
+       regione,provincia,comune,prefisso,
        Count(id) AS total
 FROM
        report_queue_callers
@@ -306,7 +306,7 @@ SELECT
        Date_format(From_unixtime(timestamp_in), "%Y-%m-%d") AS period,
        qname,
        qdescr,
-       comune,
+       regione,provincia,comune,prefisso,
        Count(id) AS total
 FROM
        report_queue_callers
@@ -326,7 +326,7 @@ SELECT
        Date_format(From_unixtime(timestamp_in), "%Y-%m-%d") AS period,
        qname,
        qdescr,
-       prefisso,
+       regione,provincia,comune,prefisso,
        Count(id) AS total
 FROM
        report_queue_callers
