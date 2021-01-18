@@ -85,6 +85,10 @@ var UtilService = {
         case "dayDate":
           // no formatting needed
           return value;
+        case "queue":
+          return this.$root.queues[value];
+        default:
+          return value;
       }
     },
     watchDataLineOrBarChart(that) {
@@ -164,7 +168,7 @@ var UtilService = {
         });
 
         that.datasets.push({
-          label: that.$te("caption." + datasetName) ? that.$t("caption." + datasetName) : datasetName,
+          label: that.formatLineOrBarChartDatasetName(datasetName, that),
           data: datasetValues,
           fill: false,
         });
@@ -178,6 +182,16 @@ var UtilService = {
       };
       that.chartData = chartData;
       that.renderChart(that.chartData, that.options);
+    },
+    formatLineOrBarChartDatasetName(datasetName, that) {
+      const format = datasetName.split("£")[1];
+
+      if (format) {
+        const datasetWithoutFormat = datasetName.split("£")[0];
+        return that.formatValue(datasetWithoutFormat, format);
+      } else {
+        return that.$te("caption." + datasetName) ? that.$t("caption." + datasetName) : datasetName
+      }
     },
     parseTableChartHeader(rawColumn) {
       const colRegex = /^([^$£#]+)(?:£([^$£#]+))?(?:\$([^$£#]+)(?:£([^$£#]+))?(#)?)?(?:\$([^$£#]+)(?:£([^$£#]+))?(#)?)?$/;

@@ -68,6 +68,7 @@ new Vue({
     phonebook: [],
     reversePhonebook: {},
     colorScheme: "",
+    queues: {}
   },
   render: (h) => h(App),
 }).$mount("#app");

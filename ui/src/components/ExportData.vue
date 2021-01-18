@@ -60,6 +60,18 @@ export default {
       let data = this._.cloneDeep(this.data)
       // translate col labels
       for (let key in data[0]) data[0][key] = this.$t(this.parseColHeader(data[0][key]))
+
+      // rrd charts may contain queue labels such as "7000£queue", remove the format part ("£queue")
+      if (this.type == "line") {
+        for (let row of data.slice(1)) {
+          const format = row[0].split("£")[1];
+
+          if (format) {
+            row[0] = row[0].split("£")[0];
+          }
+        }
+      }
+
       // convert data obj to csv
       let blob = new Blob([Papa.unparse(data)], { type: 'text/csv;charset=utf-8;' }),
           link = document.createElement("a"),

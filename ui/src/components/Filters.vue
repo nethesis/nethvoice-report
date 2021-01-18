@@ -703,6 +703,12 @@ export default {
 
         this.filterValues = filterValues;
 
+        // set queue into root object
+        this.$root.queues = {};
+        this.filterValues.queues.forEach(q => {
+          this.$root.queues[q.value] = q.text;
+        });
+
         // set selected values in filter
         this.setFilterSelection(filter, true);
       } else {
@@ -724,6 +730,12 @@ export default {
               return { value: queueNumber, text: queueName };
             });
             this.filterValues.queues = queues.sort(this.sortByProperty("text"));
+
+            // set queue into root object
+            this.$root.queues = {};
+            this.filterValues.queues.forEach(q => {
+              this.$root.queues[q.value] = q.text;
+            });
           }
 
           // agents
