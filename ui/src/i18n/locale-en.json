@@ -38,7 +38,8 @@
       "area_code": "Area code",
       "district": "District",
       "province": "Province",
-      "region": "Region"
+      "region": "Region",
+      "geo_group": "Group origin by"
     },
     "menu": {
       "queue": "Queue report",

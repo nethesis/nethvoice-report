@@ -277,6 +277,15 @@
               v-model="filter.origins"
             />
           </sui-form-field>
+          <sui-form-field v-if="showFilterGeoGroup" width="four">
+            <label>{{$t('filter.geo_group')}}</label>
+            <sui-dropdown
+              :options="this.geoGroupValues"
+              search
+              selection
+              v-model="filter.geoGroup"
+            />
+          </sui-form-field>
           <sui-form-field v-if="showFilterDestination" width="four">
             <label>{{$t('filter.destinations_label')}}</label>
             <sui-dropdown
@@ -514,6 +523,7 @@ export default {
         },
         caller: "",
         contactName: "",
+        geoGroup: "",
       },
       filterValues: {
         queues: [],
@@ -553,6 +563,12 @@ export default {
         { value: "30", text: "30 minutes" },
         { value: "15", text: "15 minutes" },
         { value: "10", text: "10 minutes" },
+      ],
+      geoGroupValues: [
+        { value: "regione", text: this.$i18n.t('filter.region') },
+        { value: "provincia", text: this.$i18n.t('filter.province') },
+        { value: "comune", text: this.$i18n.t('filter.district') },
+        { value: "prefisso", text: this.$i18n.t('filter.area_code') },
       ],
       queueReportViewFilterMap: null,
       momentFormatter: {
@@ -886,6 +902,7 @@ export default {
       }
 
       this.selectTime(filter.time.range);
+      this.filter.geoGroup = filter.geoGroup;
 
       if (!fromLocalStorage) {
         // save filter to local storage
@@ -1531,6 +1548,9 @@ export default {
     },
     showFilterContactName: function () {
       return this.isFilterInView("contactName");
+    },
+    showFilterGeoGroup: function () {
+      return this.isFilterInView("geoGroup");
     },
     reportFilterStorageName: function () {
       return "reportFilter-" + this.get("loggedUser").username;
