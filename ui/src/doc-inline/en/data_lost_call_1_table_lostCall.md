@@ -12,15 +12,15 @@ by an agent.
 
 The items shown for data *for Unhandled Calls* are:
 
-- Grouping Period
-- Queue number
-- Queue name
-- Caller ID (phone number of the caller)
-- Name (name associated in the directory with the calling number)
-- Company (company associated with the calling number in the address book)
-- Direction (direction, inbound or outbound, of the last one
-call of the day)
-- Reason (reason for failure)
+- `Grouping Period`
+- `Queue Number`
+- `Queue Name`
+- `Caller ID`: phone number of the caller
+- `Name`: name associated in the directory with the calling number
+- `Company`: company associated with the calling number in the phonebook
+- `Direction`: direction, inbound or outbound, of the last one
+call of the day
+- `Reason`: reason for failure
 
 If no callers have been selected, all calls will be shown
 calls, if no queue has been selected, the
