@@ -77,6 +77,7 @@ func GetDefaultFilter(c *gin.Context) {
 	defaultFilter.Time.Division = filterFromConfig.Time.Division
 	defaultFilter.Time.Range = filterFromConfig.Time.Range
 	defaultFilter.Time.CdrDashboardRange = filterFromConfig.Time.CdrDashboardRange
+	defaultFilter.GeoGroup = filterFromConfig.GeoGroup
 
 	// read user authorizations
 	auths, _ := GetUserAuthorizations(user)

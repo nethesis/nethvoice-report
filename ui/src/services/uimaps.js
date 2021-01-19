@@ -66,22 +66,6 @@ var UiMaps = {
         { value: "comune", text: this.$i18n.t('filter.district') },
         { value: "prefisso", text: this.$i18n.t('filter.area_code') },
       ],
-      fastCdrTimeRangeValuesMap: [
-        { value: "yesterday", text: this.$i18n.t('filter.yesterday') },
-        { value: "last_two_days", text: this.$i18n.t('filter.last_two_days') },
-        { value: "last_week", text: this.$i18n.t('filter.last_week') },
-        { value: "last_month", text: this.$i18n.t('filter.last_month') },
-        { value: "last_two_months", text: this.$i18n.t('filter.last_two_months') },
-        { value: "last_three_months", text: this.$i18n.t('filter.last_three_months') },
-        { value: "last_six_months", text: this.$i18n.t('filter.last_six_months') },
-        { value: "last_year", text: this.$i18n.t('filter.last_year') },
-        { value: "current_week", text: this.$i18n.t('filter.current_week') },
-        { value: "past_week", text: this.$i18n.t('filter.past_week') },
-        { value: "current_month", text: this.$i18n.t('filter.current_month') },
-        { value: "past_month", text: this.$i18n.t('filter.past_month') },
-        { value: "current_year", text: this.$i18n.t('filter.current_year') },
-        { value: "past_year", text: this.$i18n.t('filter.past_year') },
-      ],
       cdrTimeRangeValues: [
         "yesterday", "last_two_days", "last_week", "last_month", "last_two_months", "last_three_months", "last_six_months",  "last_year", "current_week", "past_week", "current_month", "past_month", "current_year", "past_year"
       ],
