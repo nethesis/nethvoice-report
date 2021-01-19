@@ -854,6 +854,7 @@ export default {
         callDestinations: [],
         patterns: [],
         dids: [],
+        geoGroup: "",
       },
       filterValues: {
         queues: [],
