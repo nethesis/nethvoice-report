@@ -9,7 +9,7 @@ Selected IVR was made.
 If no IVR has been selected, the graph will show data for all available IVRs.
 
 The chart can contain a maximum of 8 sections. Selections exceeding this number
-will appear in an ``Others`` section.
+will appear in ``Others`` section.
 
 If present, click the ``View details`` button to view all data
 in table format.

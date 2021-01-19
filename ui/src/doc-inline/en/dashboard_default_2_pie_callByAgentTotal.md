@@ -9,7 +9,7 @@ to all the switchboard queues.
 If no agents have been selected, the graph will show all available agents.
 
 The chart can contain a maximum of 8 sections. Agents exceeding this number
-will appear in an ``Others`` section.
+will appear in ``Others`` section.
 
 If present, click the ``View details`` button to view all the data
 in table format.
