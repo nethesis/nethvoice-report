@@ -1,6 +1,6 @@
 # Calls Answered by Time
 
-Hourly distribution of calls *Answered* for selected queues.
+Hourly distribution of *Answered* calls for selected queues.
 
 The graph shows the total number of calls answered in the working hours for the 
 selected queues.
