@@ -210,9 +210,10 @@
                     <!-- phone number not found in phonebook -->
                     {{ isNumber(element) ? element : $t(`table.pbx`) }}
                     <country-flag
-                      v-if="$route.meta.view == 'outbound' && columns[index].name == 'dst' && isNumber(element)"
-                      :country="getCountry(element,  columns[index]) || 'undefined'"
+                      v-if="$route.meta.view == 'outbound' && columns[index].name == 'dst' && isNumber(element) && getCountryCode(element)"
+                      :country="getCountryCode(element)"
                       size="small"
+                      v-tooltip="getCountryName(element)"
                     />
                   </span>
                 </span>
@@ -334,6 +335,10 @@ import HorizontalScrollers from "../components/HorizontalScrollers.vue";
 import parsePhoneNumber from 'libphonenumber-js';
 import CountryFlag from 'vue-country-flag';
 
+let countries = require("i18n-iso-countries");
+countries.registerLocale(require("i18n-iso-countries/langs/en.json"));
+countries.registerLocale(require("i18n-iso-countries/langs/it.json"));
+
 export default {
   name: "TableChart",
   props: {
@@ -416,16 +421,33 @@ export default {
     },
   },
   methods: {
-    getCountry (number) {
+    getCountryCode (number) {
       if (!number) return null
       // adapt number for libphonenumber
       number = number.replace(/^00/g, "+")
       // parse number
       const parsedNumber = parsePhoneNumber(number)
+
       // return country
       return (
         parsedNumber ? (
           parsedNumber.country
+        ) : (
+          null
+        )
+      )
+    },
+    getCountryName (number) {
+      if (!number) return null
+      // adapt number for libphonenumber
+      number = number.replace(/^00/g, "+")
+      // parse number
+      const parsedNumber = parsePhoneNumber(number)
+
+      // return country
+      return (
+        parsedNumber ? (
+          countries.getName(parsedNumber.country, this.$root.currentLocale, {select: "official"})
         ) : (
           null
         )
