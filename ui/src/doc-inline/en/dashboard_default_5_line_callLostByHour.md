@@ -2,7 +2,7 @@
 
 *Unanswered* hourly calls distribution for selected queues.
 
-The graph shows the total number of unanswered calls in the working hours for the 
+The graph shows the total number of unanswered calls during working hours for the 
 selected queues.
 
 If no queues have been selected, the graph will show data from all available queues.
