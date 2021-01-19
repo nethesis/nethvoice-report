@@ -1,6 +1,6 @@
 # Calls in Queue
 
-Number of calls *on Hold* in selected queues over time.
+Number of *on Hold* calls in the selected queues over time.
 
 The graph shows the number of calls waiting in the queues over time
 selected.
