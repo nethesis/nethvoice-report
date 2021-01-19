@@ -12,12 +12,12 @@ automaticamente.
 
 Le voci mostrate per le chiamate in *Entrata No Agenti* sono:
 
-- Periodo di Raggruppamento
-- Numero Coda
-- Nome Coda
-- Chiamanti Univoci (totale numeri telefonici che sono entrati in coda 
-contati singolarmente) 
-- Totale Chiamate Entrata No Agenti.
+- `Periodo di Raggruppamento`
+- `Numero Coda`
+- `Nome Coda`
+- `Chiamanti Univoci`: totale numeri telefonici che sono entrati in coda 
+contati singolarmente 
+- `Totale Chiamate Entrata No Agenti`
 
 Se nessuna coda è stata selezionata, verranno mostrati i dati di tutte
 le code disponibili.

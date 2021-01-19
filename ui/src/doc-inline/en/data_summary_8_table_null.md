@@ -9,12 +9,12 @@ were closed by the caller before the minimum delay set.
 
 The items shown for *Null* calls are:
 
-- Grouping Period
-- Queue number
-- Queue name
-- Unique Callers (total telephone numbers that have entered the queue
-counted individually)
-- Total Null Calls
+- `Grouping Period`
+- `Queue Number`
+- `Queue Name`
+- `Unique Callers`: total telephone numbers that have entered the queue
+counted individually
+- `Total Null Calls`
 
 If no queues have been selected, the data of all will be shown
 the queues available.

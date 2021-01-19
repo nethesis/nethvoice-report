@@ -12,17 +12,17 @@ queue) and consequently were dropped from the queue.
 The entries shown for calls in *Leaving queue for lack of
 agents* are:
 
-- Grouping Period
-- Queue number
-- Queue name
-- Unique Callers (total telephone numbers that have entered the queue
-counted individually)
-- Total Outgoing Calls No Agents
-- Maximum, minimum, average wait before exiting the queue
-- Maximum queue entry position
-- Average queue entry position
-- Maximum exit queue position
-- Medium queue exit position
+- `Grouping Period`
+- `Queue Number`
+- `Queue Name`
+- `Unique Callers`: total telephone numbers that have entered the queue
+counted individually
+- `Total Failed Calls No Agents`
+- `Maximum, minimum, average wait`: before exiting the queue
+- `Maximum queue entry position`
+- `Average queue entry position`
+- `Maximum exit queue position`
+- `Medium queue exit positioni`
 
 If no queues have been selected, the data of all will be shown
 the queues available.

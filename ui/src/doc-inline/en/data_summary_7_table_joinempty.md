@@ -12,12 +12,12 @@ automatically.
 
 The items shown for incoming calls *Entry No Agents* are:
 
-- Grouping Period
-- Queue number
-- Queue name
-- Unique Callers (total telephone numbers that have entered the queue
-counted individually)
-- Total Incoming Calls No Agents.
+- `Grouping Period`
+- `Queue Number`
+- `Queue Name`
+- `Unique Callers`: total telephone numbers that have entered the queue
+counted individually
+- `Total Entry No Agents Calls`
 
 If no queues have been selected, the data of all will be shown
 the queues available.

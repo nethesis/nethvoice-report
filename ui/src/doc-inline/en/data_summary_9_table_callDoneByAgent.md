@@ -9,13 +9,13 @@ completed by each selected agent.
 
 The items shown for *Made by Agent* calls are:
 
-- Grouping Period
-- Agent number
-- Agent name
-- Total Calls Made
-- Unique Callers (total telephone numbers that have been called
-counted individually)
-- Minimum, Average, Maximum Duration
+- `Grouping Period`
+- `Agent Number`
+- `Agent Name`
+- `Total Calls Made`
+- `Unique Callers`: total telephone numbers that have been called
+counted individually
+- `Minimum, Average, Maximum Duration`
 
 If no agent has been selected, all data will be shown
 agents available.

@@ -11,12 +11,12 @@ automaticamente.
 
 Le voci mostrate per le chiamate in *Coda Piena* sono:
 
-- Periodo di Raggruppamento
-- Numero Coda
-- Nome Coda
-- Chiamanti Univoci (totale numeri telefonici che sono entrati in coda 
-contati singolarmente) 
-- Totale Chiamate Coda Piena
+- `Periodo di Raggruppamento`
+- `Numero Coda`
+- `Nome Coda`
+- `Chiamanti Univoci`: totale numeri telefonici che sono entrati in coda 
+contati singolarmente 
+- `Totale Chiamate Coda Piena`
 
 Se nessuna coda è stata selezionata, verranno mostrati i dati di tutte
 le code disponibili.

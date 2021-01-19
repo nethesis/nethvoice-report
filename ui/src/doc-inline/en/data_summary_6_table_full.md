@@ -11,12 +11,12 @@ automatically.
 
 The entries shown for calls in *Full Queue* are:
 
-- Grouping Period
-- Queue number
-- Queue name
-- Unique Callers (total telephone numbers that have entered the queue
-counted individually)
-- Total Calls Full Queue
+- `Grouping Period`
+- `Queue Number`
+- `Queue Name`
+- `Unique Callers`: total telephone numbers that have entered the queue
+counted individually
+- `Total Full Queue Calls`
 
 If no queues have been selected, the data of all will be shown
 the queues available.
