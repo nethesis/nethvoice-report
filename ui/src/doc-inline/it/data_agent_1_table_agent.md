@@ -1,8 +1,7 @@
 # Per Agente
 
-Dati suddivisi *per Agente* selezionato nelle code selezionate nel 
-periodo impostato, i dati vengono raggruppati secondo la scelta fatta 
-nei filtri.
+Dati suddivisi *per Agente* e code selezionati nel periodo impostato, 
+i dati vengono raggruppati secondo la scelta fatta nei filtri.
 
 I dati *per Agente* mostrano l'attività lavorativa e il carico delle 
 telefonate di ogni agente selezionato.

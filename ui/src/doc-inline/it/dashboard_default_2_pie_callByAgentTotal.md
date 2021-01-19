@@ -1,8 +1,6 @@
 # Chiamate per Agente
 
-Numero di chiamate *Risposte* da ogni agente selezionato delle code selezionate.
-
-Il grafico a torta mostra il totale delle chiamate risposte da ogni agente selezionato e 
+Il grafico a torta mostra il totale delle chiamate *Risposte* da ogni agente selezionato e 
 lo mette a confronto con gli altri agenti selezionati, i dati si riferiscono 
 a tutte le code del centralino. 
 

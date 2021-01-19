@@ -1,6 +1,6 @@
 # For Agent
 
-Data broken down *by Agent* selected in the queues selected in
+Data broken down *by Agent* and the queues selected in
 set period, the data are grouped according to the choice made
 in the filters.
 
