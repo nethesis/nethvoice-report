@@ -2,7 +2,7 @@
 
 Hourly distribution of calls *Entered* the selected queues.
 
-The graph shows the total number of calls received in the working hours for the 
+The graph shows the total number of calls received during working hours for the 
 selected queues.
 
 If no queues have been selected, the graph will show data from all available queues.
