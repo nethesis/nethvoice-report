@@ -1,4 +1,4 @@
-# Calls by queue
+# Calls by Queue
 
 *Total* calls received by selected queues.
 
