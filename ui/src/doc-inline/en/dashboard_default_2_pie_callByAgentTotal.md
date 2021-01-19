@@ -3,7 +3,7 @@
 Number of *Answered* calls from each selected agent of the selected queues.
 
 The pie chart shows the total number of calls answered by each selected agent 
-and compares it proportionally with the selected agents, the data refer
+and compares it with the selected agents, the data refer
 to all the switchboard queues.
 
 If no agents have been selected, the graph will show all available agents.
