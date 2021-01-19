@@ -10,11 +10,11 @@ minima impostata nell'orario lavorativo impostato.
 
 Le voci mostrate per la *Distribuzione Oraria Chiamate Nulle* sono:
 
-- Periodo di Raggruppamento
-- Numero Coda
-- Nome Coda
-- Totale Chiamate Nulle
-- Numero Chiamate Nulle durante l'orario lavorativo diviso nelle
+- `Periodo di Raggruppamento`
+- `Numero Coda`
+- `Nome Coda`
+- `Totale Chiamate Nulle`
+- `Numero Chiamate Nulle`: durante l'orario lavorativo diviso nelle
 fasce di tempo impostate nel filtro
 
 Se nessuna coda è stata selezionata, non verranno mostrati i dati.

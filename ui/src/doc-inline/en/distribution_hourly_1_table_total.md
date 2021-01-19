@@ -9,11 +9,11 @@ calls during the set working hours.
 
 The items shown for the *Total Hourly Distribution* are:
 
-- Grouping Period
-- Queue number
-- Queue name
-- Total incoming calls
-- Number of incoming calls during working hours divided into
+- `Grouping Period`
+- `Queue Number`
+- `Queue Name`
+- `Total Incoming Calls`
+- `Number of Incoming Calls`: during working hours divided into
 time bands set in the filter
 
 If no queue has been selected, no data will be shown.

@@ -10,11 +10,11 @@ minimum set in the set working hours.
 
 The items shown for the *Hourly Distribution of Null Calls* are:
 
-- Grouping Period
-- Queue number
-- Queue name
-- Total Null Calls
-- Number of Null Calls during working hours divided into
+- `Grouping Period`
+- `Queue Number`
+- `Queue Name`
+- `Total Null Calls`
+- `Number of Null Calls`: during working hours divided into
 time bands set in the filter
 
 If no queue has been selected, no data will be shown.

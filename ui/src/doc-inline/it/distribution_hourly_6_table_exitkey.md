@@ -11,11 +11,11 @@ Uscita per uscire dalla coda nell'orario lavorativo impostato.
 Le voci mostrate per la *Distribuzione Oraria Chiamate Menù 
 Uscita* sono:
 
-- Periodo di Raggruppamento
-- Numero Coda
-- Nome Coda
-- Totale Chiamate Menù Uscita
-- Numero Chiamate Menù Uscita durante l'orario lavorativo diviso 
+- `Periodo di Raggruppamento`
+- `Numero Coda`
+- `Nome Coda`
+- `Totale Chiamate Menù Uscita`
+- `Numero Chiamate Menù Uscita`: durante l'orario lavorativo diviso 
 nelle fasce di tempo impostate nel filtro
 
 Se nessuna coda è stata selezionata, non verranno mostrati i dati.

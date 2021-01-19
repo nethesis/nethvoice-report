@@ -1,4 +1,4 @@
-# Time Distribution Calls Exit Menu
+# Time Distribution Exit Menu Calls
 
 Data concerning the *Time Distribution Exit Menu Calls*
 for the queues selected in the set period, the data is
@@ -11,11 +11,11 @@ to exit the queue during the set working hours.
 The items shown for the *Time Distribution Exit Menu 
 Calls* are:
 
-- Grouping Period
-- Queue number
-- Queue name
-- Total Calls Exit Menu
-- Number of Exit Menu Calls during working hours divided
+- `Grouping Period`
+- `Queue Number`
+- `Queue Name`
+- `Total Exit Menu Calls`
+- `Number of Exit Menu Calls`: during working hours divided
 in the time bands set in the filter
 
 If no queue has been selected, no data will be shown.

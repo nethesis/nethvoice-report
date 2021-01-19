@@ -11,11 +11,11 @@ set to.
 The items shown for the *Hourly Dialed Call Distribution
 for Agent* are:
 
-- Grouping Period
-- Queue number
-- Queue name
-- Total Calls Made per Agent
-- Number of Calls Made per Agent during working hours
+- `Grouping Period`
+- `Queue Number`
+- `Queue Name`
+- `Total Calls Made by Agent`
+- `Number of Calls Made by Agent`: during working hours
 divided into the time bands set in the filter
 
 If no agent has been selected, no data will be shown.

@@ -8,9 +8,9 @@ queues divided into pre-determined time bands.
 
 The items shown for *Quality of Service (QoS)* are:
  
-- Response time
-- Number of replies made
-- Percentage of total responses
+- `Response time`
+- `Number of replies made`
+- `Percentage of total responses`
 
 If no queues have been selected, the data of all will be shown
 the queues available.

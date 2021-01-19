@@ -11,11 +11,11 @@ impostato.
 Le voci mostrate per la *Distribuzione Oraria Chiamate Effettuate 
 per Agente* sono:
 
-- Periodo di Raggruppamento
-- Numero Coda
-- Nome Coda
-- Totale Chiamate Effettuate per Agente
-- Numero Chiamate Effettuate per Agente durante l'orario lavorativo 
+- `Periodo di Raggruppamento`
+- `Numero Coda`
+- `Nome Coda`
+- `Totale Chiamate Effettuate per Agente`
+- `Numero Chiamate Effettuate per Agente`: durante l'orario lavorativo 
 diviso nelle fasce di tempo impostate nel filtro
 
 Se nessun agente è stato selezionato, non verranno mostrati i dati.

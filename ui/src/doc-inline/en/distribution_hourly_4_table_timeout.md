@@ -11,11 +11,11 @@ configured in the set working hours.
 The items shown for the *Hourly Distribution of Calls in Timeout*
 are:
 
-- Grouping Period
-- Queue number
-- Queue name
-- Total Calls in Timeout
-- Number of Calls in Timeout during working hours divided into
+- `Grouping Period`
+- `Queue Number`
+- `Queue Name`
+- `Total Calls in Timeout`
+- `Number of Calls in Timeout`: during working hours divided into
 time bands set in the filter
 
 If no queue has been selected, no data will be shown.

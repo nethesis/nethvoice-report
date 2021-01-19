@@ -9,15 +9,15 @@ carried out in IVRs during the set working hours.
 
 The items shown for the *IVR Hourly Distribution* are:
 
-- Grouping Period
-- IVR identifier (the unique identification code of each IVR)
-- IVR name
-- IVR choices (choices made within the IVR, in addition to those
+- `Grouping Period`
+- `IVR Identifier`: the unique identification code of each IVR
+- `IVR Name`
+- `IVR Choices`: choices made within the IVR, in addition to those
 numerics provided, the i choice indicating who made it is possible
 an invalid choice, ie not foreseen by the IVR, and the t choice that
 indicates who has not made any choice, his call is diverted
-to the timeout destination)
-- Number of choices made during working hours divided into
+to the timeout destination
+- `Number of Choices Made`: during working hours divided into
 time bands set in the filter
 
 If no IVR has been selected, no data will be shown.

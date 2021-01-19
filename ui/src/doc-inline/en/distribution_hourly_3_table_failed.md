@@ -11,11 +11,11 @@ set in the working hours set.
 The items shown for the *Hourly Distribution of Failed Calls*
 are:
 
-- Grouping Period
-- Queue number
-- Queue name
-- Total Abandoned Calls
-- Number of Failed Calls during working hours divided
+- `Grouping Period`
+- `Queue Number`
+- `Queue Name`
+- `Total Failed Calls`
+- `Number of Failed Calls`: during working hours divided
 in the time bands set in the filter
 
 If no queue has been selected, no data will be shown.

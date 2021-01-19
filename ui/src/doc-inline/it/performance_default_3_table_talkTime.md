@@ -8,9 +8,9 @@ chiamate divisi in fasce di tempo pre determinate.
 
 Le voci mostrate per le *Tempo di Conversazione* sono:
 
-- Tempo di Conversazione
-- Durata
-- Percentuale sul totale delle chiamate
+- `Tempo di Conversazione`
+- `Durata`
+- `Percentuale sul totale delle chiamate`
 
 Se nessuna coda è stata selezionata, verranno mostrati i dati di tutte
 le code disponibili.

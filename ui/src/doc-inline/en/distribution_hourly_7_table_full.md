@@ -11,11 +11,11 @@ waiting in queue reached within the set working hours.
 The items shown for the * Hourly Distribution Full Queue Calls *
 I'm:
 
-- Grouping Period
-- Queue number
-- Queue name
-- Total Calls Full Queue
-- Number of Full Queue Calls during working hours divided into
+- `Grouping Period`
+- `Queue Number`
+- `Queue Name`
+- `Total Full Queue Calls`
+- `Number of Full Queue Calls`: during working hours divided into
 time bands set in the filter
 
 If no queue has been selected, no data will be shown.

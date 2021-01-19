@@ -11,11 +11,11 @@ online / available / free in the set working hours.
 The items shown for *Hourly Distribution Entry No Agents 
 Calls* are:
 
-- Grouping Period
-- Queue number
-- Queue name
-- Total Incoming Calls No Agents
-- Number of Entry No Agents calls during working hours
+- `Grouping Period`
+- `Queue Number`
+- `Queue Name`
+- `Total Entry No Agents Calls`
+- `Number of Entry No Agents Calls`: during working hours
 divided into the time bands set in the filter
 
 If no queue has been selected, no data will be shown.

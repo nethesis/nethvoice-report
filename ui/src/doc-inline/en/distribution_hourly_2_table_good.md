@@ -9,11 +9,11 @@ calls answered within the set working hours.
 
 The items shown for the *Hourly Distribution of Answered Calls* are:
 
-- Grouping Period
-- Queue number
-- Queue name
-- Total Calls Fulfilled (answered calls)
-- Number of Answered Calls during working hours divided into
+- `Grouping Period`
+- `Queue Number`
+- `Queue Name`
+- `Total Answered calls`
+- `Number of Answered Calls`: during working hours divided into
 time bands set in the filter
 
 If no queue has been selected, no data will be shown.

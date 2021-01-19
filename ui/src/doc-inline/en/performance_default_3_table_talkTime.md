@@ -8,9 +8,9 @@ calls divided into pre-determined time bands.
 
 The items shown for the *Talk Time* are:
  
-- Talk Time
-- Duration
-- Percentage of total calls
+- `Talk Time`
+- `Duration`
+- `Percentage of total calls`
 
 If no queues have been selected, the data of all will be shown
 the queues available.

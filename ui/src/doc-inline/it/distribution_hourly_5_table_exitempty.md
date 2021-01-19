@@ -11,11 +11,11 @@ online/disponibili/liberi nell'orario lavorativo impostato.
 Le voci mostrate per la *Distribuzione Oraria Chiamate Uscita 
 No Agenti* sono:
 
-- Periodo di Raggruppamento
-- Numero Coda
-- Nome Coda
-- Totale Chiamate Uscita No Agenti
-- Numero Chiamate Uscita No Agenti durante l'orario lavorativo 
+- `Periodo di Raggruppamento`
+- `Numero Coda`
+- `Nome Coda`
+- `Totale Chiamate Uscita No Agenti`
+- `Numero Chiamate Uscita No Agenti`: durante l'orario lavorativo 
 diviso nelle fasce di tempo impostate nel filtro
 
 Se nessuna coda è stata selezionata, non verranno mostrati i dati.

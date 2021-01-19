@@ -11,11 +11,11 @@ configurato nell'orario lavorativo impostato.
 Le voci mostrate per la *Distribuzione Oraria Chiamate in Timeout* 
 sono:
 
-- Periodo di Raggruppamento
-- Numero Coda
-- Nome Coda
-- Totale Chiamate in Timeout
-- Numero Chiamate in Timeout durante l'orario lavorativo diviso nelle
+- `Periodo di Raggruppamento`
+- `Numero Coda`
+- `Nome Coda`
+- `Totale Chiamate in Timeout`
+- `Numero Chiamate in Timeout`: durante l'orario lavorativo diviso nelle
 fasce di tempo impostate nel filtro
 
 Se nessuna coda è stata selezionata, non verranno mostrati i dati.
