@@ -10,7 +10,7 @@ l'orario lavorativo.
 Se nessuna coda è stata selezionata, non verranno mostrati i dati.
 
 Il grafico può contenere al massimo 8 sezioni. Le code eccedenti questo
-numero verranno visualizzate in una sezione ``Altri``.
+numero verranno visualizzate in una sezione `Altri`.
 
-Se presente, cliccare il bottone ``Visualizza dettagli`` per visualizzare
+Se presente, cliccare il bottone `Visualizza dettagli` per visualizzare
 tutti i dati in formato tabellare.

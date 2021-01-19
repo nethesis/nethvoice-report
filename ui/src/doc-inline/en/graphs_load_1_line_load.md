@@ -8,7 +8,7 @@ in the selected time frame.
 If no queues have been selected, the graph will show all available queues.
 
 The chart can contain a maximum of 8 sections. Queues exceeding this number
-will appear in ``Others`` section.
+will appear in `Others` section.
 
-If present, click the ``View details`` button to view all data
+If present, click the `View details` button to view all data
 in table format.

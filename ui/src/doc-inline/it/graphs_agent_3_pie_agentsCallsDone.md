@@ -8,7 +8,7 @@ lo mette a confronto proporzionale con gli altri agenti selezionati.
 Se nessuna agente è stato selezionato, il grafico non mostrerà dati.
 
 Il grafico può contenere al massimo 8 sezioni. Gli agenti eccedenti questo numero
-verranno visualizzate in una sezione ``Altri``.
+verranno visualizzate in una sezione `Altri`.
 
-Se presente, cliccare il bottone ``Visualizza dettagli`` per visualizzare tutti i dati
+Se presente, cliccare il bottone `Visualizza dettagli` per visualizzare tutti i dati
 in formato tabellare.

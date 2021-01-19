@@ -9,7 +9,7 @@ IVR selezionati è stata fatta.
 Se nessun IVR è stato selezionato, il grafico mostrerà i dati di tutti gli IVR disponibili.
 
 Il grafico può contenere al massimo 8 sezioni. Le selezioni eccedenti questo numero
-verranno visualizzate in una sezione ``Altri``.
+verranno visualizzate in una sezione `Altri`.
 
-Se presente, cliccare il bottone ``Visualizza dettagli`` per visualizzare tutti i dati
+Se presente, cliccare il bottone `Visualizza dettagli` per visualizzare tutti i dati
 in formato tabellare. 
