@@ -1,4 +1,4 @@
-# Calls in Queue
+# Queued calls
 
 Number of *on Hold* calls in the selected queues over time.
 
