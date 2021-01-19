@@ -30,5 +30,5 @@ tempo effettivo in ore)
 - Durata Minima, Massima e Media (durata delle chiamate risposte)
 
 Se nessun agente è stato selezionato, verranno mostrati i dati di tutti 
-gli agenti, se nessuna coda è stata selezionata, verranno mostrati gli 
+gli agenti. Se nessuna coda è stata selezionata, verranno mostrati gli 
 agenti di tutte le code disponibili.
