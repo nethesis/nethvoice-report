@@ -1,6 +1,6 @@
 # Calls by Agent
 
-Number of calls *Answered* from each selected agent of the selected queues.
+Number of *Answered* calls from each selected agent of the selected queues.
 
 The pie chart shows the total number of calls answered by each selected agent 
 and compares it proportionally with the other selected agents, the data refer
