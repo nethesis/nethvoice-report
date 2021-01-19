@@ -12,4 +12,4 @@ The chart can contain a maximum of 8 sections. Agents exceeding this number
 will appear in ``Others`` section.
 
 If present, click the ``View details`` button to view all the data
-in table format.
+in tabular format.
