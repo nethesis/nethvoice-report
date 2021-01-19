@@ -1,6 +1,6 @@
 # Calls by Time
 
-Hourly distribution of calls *Entered* in selected queues.
+Hourly distribution of calls *Entered* the selected queues.
 
 The graph shows the total number of calls received in the working hours for the 
 selected queues.
