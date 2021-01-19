@@ -9,20 +9,20 @@ indicating the outcome and relative values.
 
 The items shown for the *by Call* data are:
 
-- Grouping Period
-- Caller ID (phone number of the caller)
-- Name (name associated in the directory with the calling number)
-- Company (company associated with the calling number in the address book)
-- Queue number
-- Queue name
-- Agent (agent who answered the call in case of a call with
-ANSWER result)
-- Position at the entrance to the queue
-- Waiting (waiting time in queue)
-- Duration (duration of the call if answered by an agent)
-- Result (possible results: Answer, Abandon, Exit Menu,
+- `Grouping Period`
+- `Caller ID`: phone number of the caller
+- `Name`: name associated in the directory with the calling number
+- `Company`: company associated with the calling number in the phonebook
+- `Queue Number`
+- `Queue Name`
+- `Agent`: agent who answered the call in case of a call with
+ANSWER result
+- `Position`: postion of the call at the entrance to the queue
+- `Waiting`: waiting time in queue
+- `Duration`: duration of the call if answered by an agent
+- `Result`: possible results: Answer, Abandon, Exit Menu,
 Timeout, Queue full, Entry with No Agent in queue, Exit for
-No Agent available)
+No Agent available
 
 If no callers have been selected, all calls will be shown
 calls, if no queue has been selected, the
