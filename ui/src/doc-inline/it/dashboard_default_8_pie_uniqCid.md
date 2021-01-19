@@ -6,7 +6,7 @@ Il grafico a torta mostra il totale dei chiamanti univoci delle chiamate entrate
 code selezionate e lo mette a confronto in modo proporzionale.
 
 Per chiamanti univoci si intendono tutti i numeri telefonici che hanno contattato la 
-coda contati singolarmente.
+coda, contati singolarmente.
 
 Se nessuna coda è stata selezionata, il grafico mostrerà i chiamanti univoci di tutte 
 le code disponibili.
