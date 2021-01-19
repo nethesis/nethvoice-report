@@ -1,4 +1,4 @@
-# Failed calls
+# Failed Calls
 
 *Failed* calls data for queues selected in
 set period, the data are grouped according to the choice made

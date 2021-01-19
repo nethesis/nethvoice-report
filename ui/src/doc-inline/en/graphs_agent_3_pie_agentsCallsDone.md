@@ -1,4 +1,4 @@
-# Calls made by agents
+# Calls Made by Agents
 
 Number of calls *Made* by each selected agent.
 

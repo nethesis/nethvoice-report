@@ -1,4 +1,4 @@
-# Calls Answered by Time
+# Answered Calls by Time
 
 Hourly distribution of *Answered* calls for selected queues.
 

@@ -1,4 +1,4 @@
-# Distribution of incoming calls by prefix
+# Distribution of Incoming Calls by Prefix
 
 Number of incoming calls divided by *Prefix* for the selected queues.
 

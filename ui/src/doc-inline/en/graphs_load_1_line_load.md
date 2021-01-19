@@ -1,4 +1,4 @@
-# Total load
+# Total Load
 
 Number of *Total* calls for selected queues over time.
 

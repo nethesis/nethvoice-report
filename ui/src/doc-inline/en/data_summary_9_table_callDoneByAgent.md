@@ -1,6 +1,6 @@
 # Calls Made by Agent
 
-*Made by Agent* call data for agents
+*Made by Agent* calls data for agents
 selected in the set period, the data is grouped according to
 the choice made in the filters.
 

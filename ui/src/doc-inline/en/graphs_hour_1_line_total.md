@@ -1,4 +1,4 @@
-# Total Hourly Call Distribution
+# Total Hourly Calls Distribution
 
 *Total Hourly Distribution* for the queues selected in the working 
 hours.

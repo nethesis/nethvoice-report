@@ -1,4 +1,4 @@
-# Call Answered by Agents
+# Calls Answered by Agents
 
 Number of calls *Answered* by each agent of the selected queues.
 

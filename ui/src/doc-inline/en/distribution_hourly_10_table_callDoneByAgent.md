@@ -1,4 +1,4 @@
-# Hourly distribution of calls made by agent
+# Hourly Distribution of Calls Made by Agent
 
 Data concerning the *Hourly Distribution Calls Made for
 Agent* for selected agents in the set period, the data

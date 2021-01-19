@@ -1,4 +1,4 @@
-# Hourly distribution of No agents Calls
+# Hourly distribution of No Agents Calls
 
 *Hourly Distribution No Agents Calls* for the selected queues
 in the set working hours.

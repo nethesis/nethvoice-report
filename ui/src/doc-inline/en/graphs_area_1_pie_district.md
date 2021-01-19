@@ -1,4 +1,4 @@
-# Distribution of incoming calls by Municipality
+# Distribution of Incoming Calls by Municipality
 
 Number of incoming calls divided by *Municipality* for the selected queues.
 

@@ -1,4 +1,4 @@
-# Talk time
+# Talk Time
   
 Data regarding the *Talk Time* for queues
 selected in the set period.

@@ -1,4 +1,4 @@
-# Hourly Distribution Exit No Agents Call
+# Hourly Distribution Exit No Agents Calls
 
 *Hourly Distribution Exit No Agents Calls* for the selected queues
 in the set working hours.

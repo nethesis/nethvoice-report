@@ -1,4 +1,4 @@
-# Distribution of incoming calls by province
+# Distribution of Incoming Calls by Province
 
 Number of incoming calls divided by *Province* for the selected queues.
 

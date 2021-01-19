@@ -1,4 +1,4 @@
-# Agents logged in
+# Agents Logged In
 
 Number of *Agents* logged in for selected queues.
 
