@@ -9,14 +9,14 @@ and pause for each selected agent.
 
 The items shown for the *by Session* data are:
 
-- Queue number
-- Queue name
-- Agent
-- Action (type of activity performed for example login or pause)
-- Start (date and time of the start of the activity)
-- End (date and time of the end of the activity)
-- Duration (duration of the activity)
-- Reason (if the reason for the activity is specified)
+- `Queue Number`
+- `Queue Name`
+- `Agent`
+- `Action`: type of activity performed for example login or pause
+- `Start`: date and time of the start of the activity
+- `End`: date and time of the end of the activity
+- `Duration`: duration of the activity
+- `Reason`: if the reason for the activity is specified
 
 If no agent has been selected, all data will be shown
 agents, if no queues have been selected, the
