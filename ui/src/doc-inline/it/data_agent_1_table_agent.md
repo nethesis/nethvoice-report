@@ -5,7 +5,7 @@ periodo impostato, i dati vengono raggruppati secondo la scelta fatta
 nei filtri.
 
 I dati *per Agente* mostrano l'attività lavorativa e il carico delle 
-telefonate con cui hanno interagito per ogni agente selezionato.
+telefonate di ogni agente selezionato.
 
 Le voci mostrate per i dati *per Agente* sono:
 

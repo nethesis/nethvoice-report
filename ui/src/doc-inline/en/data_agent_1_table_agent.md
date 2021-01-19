@@ -5,7 +5,7 @@ set period, the data are grouped according to the choice made
 in the filters.
 
 The data *by Agent* show the work activity and the burden of
-phone calls they interacted with for each selected agent.
+phone calls for each selected agent.
 
 The items shown for the *by Agent* data are:
 
