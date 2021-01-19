@@ -1,6 +1,6 @@
 # Total Calls
 
-Number of calls *Total* of all the switchboard queues.
+Number of *Total* callc of all switchboard queues.
 
 The graph shows the number of calls entered in all the queues of the
 switchboard in real time as the filter changes.
