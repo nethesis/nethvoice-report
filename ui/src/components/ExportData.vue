@@ -28,8 +28,8 @@
       >
         <sui-dropdown-menu>
           <sui-dropdown-item @click="exportToCSV()">{{ $t("command.export_csv") }}</sui-dropdown-item>
-          <sui-dropdown-item v-if="isPdf" @click="exportToPDF('canvas')">{{ $t("command.export_pdf") }}
-          </sui-dropdown-item>
+          <sui-dropdown-item v-if="isPdf" @click="exportToPDFPNG('canvas', {'file_type': 'pdf'})">{{ $t("command.export_pdf") }}</sui-dropdown-item>
+          <sui-dropdown-item v-if="isPng" @click="exportToPDFPNG('canvas', {'file_type': 'png'})">{{ $t("command.export_png") }}</sui-dropdown-item>
         </sui-dropdown-menu>
       </sui-dropdown>
     </sui-popup>
@@ -60,6 +60,7 @@ export default {
     return {
       isVisible: this.visible || true,
       isPdf: this.pdf || true,
+      isPng: this.png || true,
       parsedName: this.parseName(this.filename || "report")
     };
   },
@@ -95,7 +96,7 @@ export default {
       document.body.removeChild(link)
       data = null
     },
-    async exportToPDF (elementTag, options = {}) {
+    async exportToPDFPNG (elementTag, options = {}) {
       if (!this.pdfElementContainerId) return
       // get the element height/width
       let element = document.querySelector(`${this.pdfElementContainerId} ${elementTag}`),
@@ -105,6 +106,8 @@ export default {
           orizontalMargins = options.margin || 100,
           marginTop = options.top || 70,
           marginBottom = options.bottom || 20
+      // image caption canvas
+      let captionCanvas
       // create partial canvas
       let pdfCanvas = document.createElement("canvas")
       pdfCanvas.setAttribute("id", "canvaspdf")
@@ -121,16 +124,32 @@ export default {
         format: [(elementWidth + orizontalMargins * 2) * 0.75 , (elementHeight + marginTop + marginBottom) * 0.75],
         compress:true
       })
+      // retrieve caption canvas
+      await html2canvas(header, {backgroundColor: null} ).then(function(canvas) {
+        captionCanvas = canvas
+      })
       // add header html header to pdf
-      await html2canvas(header).then(function(canvas) {
-        pdf.addImage(canvas, 'PNG', (((elementWidth + orizontalMargins * 2) - header.offsetWidth) * 0.75) / 2, 20)
-      }),
+      pdf.addImage(captionCanvas, 'PNG', (((elementWidth + orizontalMargins * 2) - header.offsetWidth) * 0.75) / 2, 20)
       // draw imange into the new canvas
       pdfctx.drawImage(element, pdfctxX, pdfctxY, elementWidth, elementHeight)
-      // add canvas to pdf
-      pdf.addImage(pdfCanvas, 'PNG', 0, 0)
-      // download the pdf
-      pdf.save(`${this.parsedName}.pdf`);
+      // export data
+      if (options.file_type == "png") {
+        let link = document.createElement("a")
+        pdfctx.drawImage(captionCanvas, ((elementWidth + orizontalMargins * 2) - header.offsetWidth) / 2, 20)
+        let  url = pdfCanvas.toDataURL("image/png;base64")
+        link.setAttribute("href", url)
+        link.setAttribute("download", `${this.parsedName}.png`)
+        link.style.visibility = 'hidden'
+        document.body.appendChild(link)
+        // download png
+        link.click();
+        document.body.removeChild(link)
+      } else if (options.file_type == "pdf") {
+        // add canvas to pdf
+        pdf.addImage(pdfCanvas, 'PNG', 0, 0)
+        // download the pdf
+        pdf.save(`${this.parsedName}.pdf`);
+      }
     },
     parseName (filename) {
       return filename.toLowerCase().replace(/[\s.]+/g,'_')

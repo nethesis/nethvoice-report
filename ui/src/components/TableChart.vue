@@ -209,6 +209,11 @@
                   <span v-else>
                     <!-- phone number not found in phonebook -->
                     {{ isNumber(element) ? element : $t(`table.pbx`) }}
+                    <country-flag
+                      v-if="$route.meta.view == 'outbound' && columns[index].name == 'dst' && isNumber(element)"
+                      :country="getCountry(element,  columns[index]) || 'undefined'"
+                      size="small"
+                    />
                   </span>
                 </span>
               </span>
@@ -326,6 +331,8 @@
 import UtilService from "../services/utils";
 import StorageService from "../services/storage";
 import HorizontalScrollers from "../components/HorizontalScrollers.vue";
+import parsePhoneNumber from 'libphonenumber-js';
+import CountryFlag from 'vue-country-flag';
 
 export default {
   name: "TableChart",
@@ -356,7 +363,7 @@ export default {
     },
   },
   mixins: [UtilService, StorageService],
-  components: { HorizontalScrollers },
+  components: { HorizontalScrollers, CountryFlag },
   data() {
     return {
       ROWS_PER_PAGE_KEY: "tableChartRowsPerPage",
@@ -409,6 +416,21 @@ export default {
     },
   },
   methods: {
+    getCountry (number) {
+      if (!number) return null
+      // adapt number for libphonenumber
+      number = number.replace(/^00/g, "+")
+      // parse number
+      const parsedNumber = parsePhoneNumber(number)
+      // return country
+      return (
+        parsedNumber ? (
+          parsedNumber.country
+        ) : (
+          null
+        )
+      )
+    },
     isNumber (value) {
       return (
         !Number.isNaN(Number(value)) ? true : false
