@@ -1,6 +1,6 @@
 # Scelte IVR per Orario
 
-Distribuzione oraria delle *Scelte* effettuate negli IVR(Interactive Voice Response) selezionati
+Distribuzione oraria delle *Scelte* effettuate negli IVR (Interactive Voice Response) selezionati
  tra quelli presenti nel centralino.
 
 Il grafico mostra nell'orario lavorativo impostato il numero di volte in cui una scelta degli 
