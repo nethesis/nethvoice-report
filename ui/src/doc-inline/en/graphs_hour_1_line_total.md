@@ -1,6 +1,6 @@
 # Total Hourly Calls Distribution
 
-*Total Hourly Distribution* for the queues selected in the working 
+*Total Hourly Distribution* for selected queues during working 
 hours.
 
 The line graph shows the total number of calls entered the queues
