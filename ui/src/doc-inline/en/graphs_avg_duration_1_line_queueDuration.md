@@ -1,6 +1,6 @@
 # Call Duration
 
-*Call Duration* for selected queues within the set working hours.
+*Call Duration* for selected queues within configured working hours.
 
 The line graph shows the *Call Duration*, ie the duration of the
 conversation between agent and caller, in selected queues during 
