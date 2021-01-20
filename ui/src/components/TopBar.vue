@@ -57,7 +57,7 @@
             v-on:click="toggleFilters()"
             class="filter-button"
             :active="showFilters"
-            :disabled="!dataAvailable"
+            :disabled="!((dataAvailable && $route.meta.report == 'queue') || (cdrDataAvailable && $route.meta.report == 'cdr'))"
             :content="$t('menu.filters')"
             icon="filter"
           />
@@ -791,6 +791,7 @@ export default {
       openCostsConfigModal: false,
       isAdmin: false,
       dataAvailable: true,
+      cdrDataAvailable: true,
       newDestination: "",
       openDeleteDestinationModal: false,
       destinationToDelete: "",
@@ -999,8 +1000,11 @@ export default {
     // event "logout" is triggered by $http interceptor if token has expired
     this.$root.$on("logout", this.doLogout);
 
-    // event "dataNotAvailable" is triggered by $http interceptor if report tables don't exist yet
+    // event "dataNotAvailable" is triggered by $http interceptor if queue report tables don't exist yet
     this.$root.$on("dataNotAvailable", this.onDataNotAvailable);
+
+    // event "cdrDataNotAvailable" is triggered by $http interceptor if cdr report tables don't exist yet
+    this.$root.$on("cdrDataNotAvailable", this.onCdrDataNotAvailable);
 
     this.viewDoc = this.retrieveViewDoc();
     this.retrieveColorScheme();
@@ -1016,6 +1020,10 @@ export default {
             : "") + this.$i18n.t(this.$route.meta.name);
       }
       this.viewDoc = this.retrieveViewDoc();
+
+      if (!((this.dataAvailable && this.$route.meta.report == 'queue') || (this.cdrDataAvailable && this.$route.meta.report == 'cdr'))) {
+        this.showFilters = false;
+      }
     },
   },
   computed: {
@@ -1029,6 +1037,10 @@ export default {
       this.showFilters = false;
       this.dataAvailable = false;
     },
+    onCdrDataNotAvailable() {
+      this.showFilters = false;
+      this.cdrDataAvailable = false;
+    },
     retrieveShowFilter() {
       const showFilters = this.get("showFilters");
 
@@ -1040,7 +1052,7 @@ export default {
       this.$forceUpdate();
     },
     toggleFilters: function () {
-      if (this.dataAvailable) {
+      if ((this.dataAvailable && this.$route.meta.report == 'queue') || (this.cdrDataAvailable && this.$route.meta.report == 'cdr')) {
         this.showFilters = !this.showFilters;
         this.set("showFilters", this.showFilters);
         this.$root.$emit("toggleFilters");
