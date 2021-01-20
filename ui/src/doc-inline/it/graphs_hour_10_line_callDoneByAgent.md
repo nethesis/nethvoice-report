@@ -6,7 +6,7 @@ selezionate nell'orario lavorativo impostato.
 Il grafico a linea mostra il totale delle chiamate fatte dagli agenti 
 selezionati durante l'orario lavorativo.
 
-Se nessuna agente è stato selezionato, non verranno mostrati i dati.
+Se nessun agente è stato selezionato, non verranno mostrati i dati.
 
 Il grafico può contenere al massimo 8 sezioni. Gli agenti eccedenti questo
 numero verranno visualizzate in una sezione `Altri`.
