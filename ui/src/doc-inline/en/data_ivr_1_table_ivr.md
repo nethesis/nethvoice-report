@@ -10,11 +10,7 @@ The items shown for the *IVR* data are:
 
 - `Grouping Period`
 - `IVR Identifier`: the unique identifying code of each IR
-- `IVR Name`- `IVR Choice`: choices made within the IVR, in addition to those
-numerics provided, the choice i indicating who made it is possible
-an invalid choice, ie not foreseen by the IVR, and the choice t that
-indicates who has not made any choice, his call is diverted
-to the timeout destination
+- `IVR Name`- `IVR Choice`: numeric choices made within the IVR. There also two extra available choices: `i` which indicated an invalid choice; `t` which indicates the user didn't make a choice before timeout
 - `Total`: total of choices
 
 If no IVR has been selected, all IVRs will be shown,
