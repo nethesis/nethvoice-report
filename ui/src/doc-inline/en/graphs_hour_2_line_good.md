@@ -1,7 +1,6 @@
 # Hourly Distribution of Answered Calls
 
-*Hourly Distribution of Answered Calls* for the queues selected in 
-the working hours.
+*Hourly Distribution of Answered Calls* for the selected queues, during configured working hours.
 
 The line graph shows the total number of answered calls in queues
 selected during working hours.
