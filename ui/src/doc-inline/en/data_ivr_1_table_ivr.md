@@ -1,8 +1,7 @@
 # IVR
 
-Data broken down by *IVR* (Interactive Voice Response) over the period
-set, the data is grouped according to the choice
-made in the filters.
+Data broken down by *IVR* (Interactive Voice Response) over the configured period,
+ the data are grouped according to the chosen filter criteria.
 
 The *IVR* data shows every choice made by callers
 within each IVR.
