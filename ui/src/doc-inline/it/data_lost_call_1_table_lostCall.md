@@ -23,5 +23,6 @@ chiamata del giorno
 - `Motivo`: motivazione del fallimento
 
 Se nessun chiamante è stato selezionato, verranno mostrate tutte le 
-chiamate, se nessuna coda è stata selezionata, verranno mostrate le
+chiamate.
+Se nessuna coda è stata selezionata, verranno mostrate le
 chiamante di tutte le code disponibili. 
