@@ -2,9 +2,8 @@
 
 *Call Duration* for selected queues within configured working hours.
 
-The line graph shows the *Call Duration*, ie the duration of the
-conversation between agent and caller, in selected queues during 
-working hours set divided as selected in the filter.
+The line graph shows the *Call Duration*, which is the conversation time
+conversation between agent and caller.
 
 If no queues have been selected, the graph will show no data.
 
