@@ -13,7 +13,7 @@ Le voci mostrate per la *Distribuzione Oraria IVR* sono:
 - `Identificativo IVR`: il codice univoco identificativo di ogni IVR
 - `Nome IVR`
 - `Scelte IVR`: scelte effettuate all'interno dell'IVR, oltre a quelle
-numeriche previste sono possibili la scelta i che indica chi ha fatto
+numeriche previste sono possibili la scelta `i` che indica chi ha fatto
 una scelta invalida, cioè non prevista dall'IVR, e la scelta t che
 indica chi non ha fatto alcuna scelta, la sua chiamata viene dirotta
 alla destinazione di timeout
