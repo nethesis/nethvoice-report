@@ -21,7 +21,7 @@ at the end of each call answered before submitting another one
 - `Effective`: the actual working time which is the difference between the
 Login time and the sum of Pause time and After Closing time
 - `Total Calls`: total conversation time in answered calls
-- `Answers`: total number of calls answered
+- `Answered`: total number of calls answered
 - `Unanswered`: total number of unanswered calls
 - `Calls per hour`: the ratio between the number of answered calls and the
 actual time in hours
