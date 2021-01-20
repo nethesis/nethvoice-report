@@ -6,7 +6,7 @@ selezionati nell'orario lavorativo impostato.
 Il grafico a linea mostra il totale delle scelte effettuate negli IVR
 selezionati durante l'orario lavorativo.
 
-Se nessuna IVR è stato selezionato, non verranno mostrati i dati.
+Se nessun IVR è stato selezionato, non verranno mostrati i dati.
 
 Il grafico può contenere al massimo 8 sezioni. Gli IVR eccedenti questo
 numero verranno visualizzate in una sezione `Altri`.
