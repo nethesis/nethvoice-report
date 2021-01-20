@@ -1,7 +1,7 @@
 # IVR Hourly Distribution
 
 *IVR Hourly Distribution* for IVRs (Interactive Voice Response)
-selected in the set working hours.
+selected during configured working hours.
 
 The line graph shows the total of the choices made in the IVRs
 selected during working hours.
