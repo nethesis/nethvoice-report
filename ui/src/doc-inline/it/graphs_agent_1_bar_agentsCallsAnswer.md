@@ -6,5 +6,5 @@ Il grafico a barre mostra il totale delle chiamate risposte da ogni agente nelle
 selezionate e lo mette a confronto con gli altri agenti, i dati si riferiscono
 a tutte le code selezionate.
 
-Viene creata una barra per ogni coda selezionata che rappresenta il totale delle 
+Per ogni coda selezionata, viene creata una barra che rappresenta il totale delle 
 chiamate risposte.
