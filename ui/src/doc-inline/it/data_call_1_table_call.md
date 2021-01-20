@@ -25,6 +25,7 @@ Timeout, Coda piena, Entrata con Nessun Agente in coda, Uscita per
 Nessun Agente disponibile
 
 Se nessun chiamante è stato selezionato, verranno mostrate tutte le 
-chiamate, se nessuna coda è stata selezionata, verranno mostrate le 
-chiamante di tutte le code disponibili, se nessun agente è stato 
-selezionato verranno mostrate le chiamate gestite da tutti gli agenti.
+chiamate.
+Se nessuna coda è stata selezionata, verranno mostrate le 
+chiamate di tutte le code disponibili.
+Se nessun agente è stato selezionato verranno mostrate le chiamate gestite da tutti gli agenti.
