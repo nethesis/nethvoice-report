@@ -1,6 +1,6 @@
 # IVR  
 
-Dati suddivisi per *IVR*(Interactive Voice Response) nel periodo 
+Dati suddivisi per *IVR* (Interactive Voice Response) nel periodo 
 impostato, i dati vengono raggruppati secondo la scelta
 fatta nei filtri.
 
