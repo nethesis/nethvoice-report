@@ -1,13 +1,14 @@
 # Failed Calls No Agents
 
 *Leaving queue due to lack of agents* calls data 
-for the queues selected in the set period, the data is grouped
-according to the choice made in the filters.
+for the selected queues in the set period.
+Data are grouped according to the chosen filter criteria.
 
 *Leaving the queue for lack of agents* calls are calls
-that while they were waiting in the queue they saw the number of
-online / available / free agents (depending on the configuration of the
-queue) and consequently were dropped from the queue.
+that failed because while they were waiting in the queue the 
+number of agents online/available/free (depending on the 
+configuration of the queue) has cleared and consequently have 
+been pulled out of the queue.
 
 The entries shown for calls in *Leaving queue for lack of
 agents* are:
@@ -24,5 +25,5 @@ counted individually
 - `Maximum exit queue position`
 - `Medium queue exit positioni`
 
-If no queues have been selected, the data of all will be shown
-the queues available.
+If no queues have been selected, the data of all available queues will 
+be shown.

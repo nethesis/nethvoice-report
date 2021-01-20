@@ -1,12 +1,12 @@
 # Hourly Distribution of Calls Made by Agent
 
 Data concerning the *Hourly Distribution Calls Made for
-Agent* for selected agents in the set period, the data
-they are grouped according to the choice made in the filters.
+Agent* for selected agents during the given period.
+Data are grouped according to the chosen filter criteria.
 
-The *Hourly Distribution of Calls Made by Agent* shows the
-division of calls made by agents in working hours
-set to.
+The *Hourly Distribution of Calls Made by Agent* shows 
+the distribution of calls made by agents in the 
+configured working hours.
 
 The items shown for the *Hourly Dialed Call Distribution
 for Agent* are:

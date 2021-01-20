@@ -43,5 +43,5 @@ caller before the set minimum wait
 - `Maximum, minimum, average wait`: before the answer
 - `Maximum, minimum and average call duration`
 
-If no queues have been selected, the data of all will be shown
-the queues available.
+If no queues have been selected, the data of all available 
+queues will be shown.

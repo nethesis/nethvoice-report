@@ -1,10 +1,11 @@
 # Posizione in Coda
 
-*Posizione di Entrata* in coda per le code selezionate nell'orario lavorativo 
+*Posizione in Coda* per le code selezionate nell'orario lavorativo 
 impostato.
 
-Il grafico a linea mostra la *Posizione di Entrata* in coda nelle code selezionate
-nell'orario lavorativo impostato diviso come selezionato nel filtro.
+Il grafico a linea mostra la *Posizione in Coda* di entrata delle chiamate nelle 
+code selezionate nell'orario lavorativo impostato divisa come selezionato nel 
+filtro.
 
 Se nessuna coda è stata selezionata, il grafico non mostrerà dati.
 

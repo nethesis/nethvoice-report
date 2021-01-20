@@ -4,11 +4,11 @@ Dati suddivisi *per Chiamate non Gestite* nelle code selezionate
 nel periodo impostato, i dati vengono raggruppati secondo la scelta 
 fatta nei filtri.
 
-I dati *per Chiamate non Gestite* mostrano ogni chiamante con il quale 
-alla fine della giornata lavorativa l'ultima interazione è stata 
-negativa, cioè si è avuto un fallimento o in entrata non rispondendo 
-alla chiamata o in uscita non avendo risposta alla chiamata effettuata 
-da un agente.
+I dati *per Chiamate non Gestite* mostrano ogni chiamante con il 
+quale alla fine della giornata lavorativa l'ultima interazione 
+è stata negativa.
+Per interazione negativa si intende una chiamata ricevuta o 
+effettuata da un agente che è fallita.
 
 Le voci mostrate per i dati *per Chiamate non Gestite* sono:
 

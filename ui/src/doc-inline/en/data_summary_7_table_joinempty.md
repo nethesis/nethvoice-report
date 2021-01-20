@@ -1,8 +1,8 @@
 # Entry No Agents Calls
 
 Data regarding failed calls for *Entry No Agents* for queues
-selected in the set period, the data are grouped according to
-choice made in the filters.
+selected during the given period.
+Data are grouped according to the chosen filter criteria.
 
 Failed calls for *Entry No Agents* are calls that
 upon entering the queue they found the queue without agents
@@ -19,5 +19,5 @@ The items shown for incoming calls *Entry No Agents* are:
 counted individually
 - `Total Entry No Agents Calls`
 
-If no queues have been selected, the data of all will be shown
-the queues available.
+If no queues have been selected, the data of all available queues will 
+be shown.

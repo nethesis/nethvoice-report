@@ -12,5 +12,5 @@ The items shown for *Quality of Service (QoS)* are:
 - `Number of replies made`
 - `Percentage of total responses`
 
-If no queues have been selected, the data of all will be shown
-the queues available.
+If no queues have been selected, the data of all available 
+queues will be shown.

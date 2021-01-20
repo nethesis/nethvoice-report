@@ -3,7 +3,7 @@
 Number of calls *Made* by each selected agent.
 
 The pie chart shows the total number of calls made by each selected agent 
-and it compares it proportionally with the other selected agents.
+proportionally compared with other selected agents.
 
 If no agent has been selected, the graph will show no data.
 

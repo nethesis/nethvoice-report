@@ -4,9 +4,9 @@ Dati riguardanti le chiamate *Abbandonate* per le code selezionate nel
 periodo impostato, i dati vengono raggruppati secondo la scelta fatta 
 nei filtri.
 
-Le chiamate *Abbandonate* sono le chiamate entrate in coda che dopo una 
-attesa maggiore dell'attesa minima impostata sono state chiuse dal 
-chiamante.
+Le chiamate *Abbandonate* sono le chiamate entrate in coda e 
+successivamente chiuse dal chiamante dopo che l'attesa minima 
+impostata era trascorsa.
 
 Le voci mostrate per le chiamate *Abbandonate* sono:
 

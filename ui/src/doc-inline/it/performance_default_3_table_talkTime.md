@@ -3,8 +3,8 @@
 Dati riguardanti il *Tempo di Conversazione* per le code  
 selezionate nel periodo impostato.
 
-I dati di *Tempo di Conversazione* mostrano i tempi di durata delle 
-chiamate divisi in fasce di tempo predeterminate.
+*Tempo di Conversazione* mostra la durata delle 
+chiamate divisa in fasce di tempo graduali.
 
 Le voci mostrate per le *Tempo di Conversazione* sono:
 

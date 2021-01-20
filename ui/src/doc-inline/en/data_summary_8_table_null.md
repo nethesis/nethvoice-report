@@ -16,5 +16,5 @@ The items shown for *Null* calls are:
 counted individually
 - `Total Null Calls`
 
-If no queues have been selected, the data of all will be shown
-the queues available.
+If no queues have been selected, the data of all available queues will 
+be shown.

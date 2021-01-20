@@ -1,10 +1,9 @@
 # Queue Position
 
-*Entry Position* in queue for selected queues during working hours
-set to.
+*Queue Position* for selected queues during working hours.
 
-The line graph shows the *Entry Position* queued in the selected queues
-in the set working time divided as selected in the filter.
+The line graph shows the *Queue Position* of entry in the selected queues
+in the configured working time divided as selected in the filter.
 
 If no queues have been selected, the graph will show no data.
 

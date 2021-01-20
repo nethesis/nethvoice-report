@@ -1,12 +1,12 @@
 # Hourly Distribution of Failed Calls
 
 Data regarding the *Hourly Distribution of Failed Calls*
-for the queues selected in the set period, the data is
-grouped according to the choice made in the filters.
+for the queues selected during the given period.
+Data are grouped according to the chosen filter criteria.
 
-The *Hourly Distribution of Failed Calls* shows the division
-of calls closed by the caller after the minimum wait
-set in the working hours set.
+The *Hourly Distribution of Failed Calls* shows the 
+distribution of calls closed by the caller after the 
+minimum wait in the configured working hours.
 
 The items shown for the *Hourly Distribution of Failed Calls*
 are:

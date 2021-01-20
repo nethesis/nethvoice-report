@@ -1,12 +1,10 @@
 # Failed Calls
 
-*Failed* calls data for queues selected in
-set period, the data are grouped according to the choice made
-in the filters.
+*Failed* calls data for selected queue in a specific time range.
+Data are grouped according to the chosen filter criteria.
 
-*Failed* calls are calls that entered the queue after one
-wait greater than the minimum wait set have been closed since
-caller.
+*Failed* calls are calls that entered the queue and subsequently 
+closed by the caller after the set minimum wait had elapsed.
 
 The items shown for *Failed* calls are:
 
@@ -22,5 +20,5 @@ counted individually
 - `Maximum exit queue position`
 - `Medium queue exit position`
 
-If no queues have been selected, the data of all will be shown
-the queues available.
+If no queues have been selected, the data of all available queues will 
+be shown.

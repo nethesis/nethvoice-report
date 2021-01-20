@@ -5,8 +5,8 @@ le code selezionate nel periodo impostato, i dati vengono raggruppati
 secondo la scelta fatta nei filtri.
 
 La *Distribuzione Oraria Chiamate Coda Piena* mostra la divisione 
-delle chiamate non entrate in coda per numero massimo di chiamate in 
-attesa in coda raggiunto nell'orario lavorativo impostato.
+nell'orario lavorativo impostato delle chiamate non entrate in coda 
+per numero massimo di chiamate in attesa in coda raggiunto.
 
 Le voci mostrate per la *Distribuzione Oraria Chiamate Coda Piena* 
 sono:

@@ -1,14 +1,13 @@
 # By Unmanaged Calls
 
 Data split *by Unhandled Calls* in selected queues
-in the set period, the data is grouped according to the choice
-made in the filters.
+during the configured perido. Dare are grouped according to the 
+chosen filter criteria.
 
-Data *by Unhandled Calls* shows each caller with whom
-at the end of the working day the last interaction was
-negative, that is, there has been a failure or incoming not responding
-to the call or outgoing having no answer to the call made
-by an agent.
+Data *by Unhandled Calls* shows each caller with whom the last 
+interaction was negative at the end of the business day.
+A negative interaction is a call received or made by an agent 
+that has failed.
 
 The items shown for data *by Unhandled Calls* are:
 
@@ -22,6 +21,6 @@ The items shown for data *by Unhandled Calls* are:
 call of the day
 - `Reason`: reason for failure
 
-If no callers have been selected, all calls will be shown
-calls, if no queue has been selected, the
-caller of all available queues.
+If no callers have been selected, all calls will be shown.
+If no queue has been selected, the data of all available queues will be 
+shown.

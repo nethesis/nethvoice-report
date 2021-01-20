@@ -1,11 +1,10 @@
 # Geographical Areas Load
 
-Total number of calls for selected queues from source *Geographic*
-selected in the selected time interval.
+Total number of calls for selected queues grouped by *Geographical Area*.
 
-The line graph shows the total number of calls entered into the selected queues
-in the selected time frame only for calls that had a calling number
-coming from the selected source.
+The line graph shows the total number of calls entered the selected queues
+during the chosen time frame only for calls with a calling number
+coming from the selected geographical area.
 
 If no source has been selected, the chart will show no data.
 

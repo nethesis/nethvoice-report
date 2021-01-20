@@ -1,8 +1,8 @@
 # By Session
 
 Data broken down *by Session* of the agents selected in the queues
-selected in the set period, the data is grouped according to
-the choice made in the filters.
+during configured period. Data are grouped according to chosen 
+filter criteria.
 
 The data *by Session* shows the work activity of login, logout
 and pause for each selected agent.
@@ -18,6 +18,6 @@ The items shown for the *by Session* data are:
 - `Duration`: duration of the activity
 - `Reason`: if the reason for the activity is specified
 
-If no agent has been selected, all data will be shown
-agents, if no queues have been selected, the
-agents of all available queues
+If no agent has been selected, all data will be shown.
+If no queues have been selected, the agents of all available queues 
+will be shown.

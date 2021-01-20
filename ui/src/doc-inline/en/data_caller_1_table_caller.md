@@ -1,8 +1,8 @@
 # By Caller
 
-Data broken down *by Caller* of calls entered into queues
-selected in the set period, the data is grouped according to
-the choice made in the filters.
+Data broken down *by Caller* of calls entered selected queues 
+in a specific time range grouped according to the chosen 
+filter criteria.
 
 The data *by Caller* shows the callers of the calls received
 from the queues and how the queues handled these phone calls.
@@ -35,6 +35,5 @@ caller before the set minimum wait
 - `Maximum, minimum and average call duration`
 - `Minimum, average, maximum position`: when entering the queue
 
-If no caller has been selected, all data will be shown
-callers, if no queue has been selected, will be shown i
-callers from all available queues.
+If no caller has been selected, all caller will be shown.
+If no queue has been selected, all queues will be shown.

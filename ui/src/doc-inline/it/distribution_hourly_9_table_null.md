@@ -14,8 +14,8 @@ Le voci mostrate per la *Distribuzione Oraria Chiamate Nulle* sono:
 - `Numero Coda`
 - `Nome Coda`
 - `Totale Chiamate Nulle`
-- `Numero Chiamate Nulle`: durante l'orario lavorativo diviso nelle
-fasce di tempo impostate nel filtro
+- `Numero Chiamate Nulle`: totale delle chiamate per fascia di orario 
+lavorativo
 
 Se nessuna coda è stata selezionata, non verranno mostrati i dati.
 chiamante prima dell'attesa minima impostata).

@@ -1,8 +1,8 @@
 # By Agent
 
-Data broken down *by Agent* and the queues selected in
-set period, the data are grouped according to the choice made
-in the filters.
+Data broken down *by Agent* and the selected queues during 
+the given period.
+Data are grouped according to the chosen filter criteria.
 
 The data *by Agent* show the work activity and the load of
 phone calls for each selected agent.
@@ -20,7 +20,7 @@ The items shown for the *by Agent* data are:
 at the end of each call answered before submitting another one
 - `Effective`: the actual working time which is the difference between the
 Login time and the sum of Pause time and After Closing time
-- `Total Calls`: total conversation time in answered calls
+- `Calls Total`: total conversation time in answered calls
 - `Answered`: total number of calls answered
 - `Unanswered`: total number of unanswered calls
 - `Calls per hour`: the ratio between the number of answered calls and the
@@ -28,6 +28,6 @@ actual time in hours
 - `Occupation`: the percentage of actual time spent on the phone
 - `Minimum, Maximum and Average Duration`: duration of answered calls
 
-If no agent has been selected, all data will be shown
-agents, if no queues have been selected, the
-agents of all available queues.
+If no agent has been selected, all agent will be shown.
+If no queues have been selected, the agents of all available queues will be 
+shown.

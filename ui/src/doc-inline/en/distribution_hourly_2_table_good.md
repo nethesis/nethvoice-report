@@ -1,11 +1,11 @@
-# Hourly Distribution of Outgoing Calls
+# Hourly Distribution of Answered Calls
 
-Data regarding the *Hourly Distribution of Answered Calls* for queues
-selected in the set period, the data is grouped according to
-the choice made in the filters.
+Data regarding the *Hourly Distribution of Answered Calls* 
+for queues selected during the given period.
+Data are grouped according to the chosen filter criteria.
 
-The *Hourly Distribution of Answered Calls* shows the division of
-calls answered within the set working hours.
+The *Hourly Distribution of Answered Calls* shows the distribution
+of answered calls in the configured working hours.
 
 The items shown for the *Hourly Distribution of Answered Calls* are:
 

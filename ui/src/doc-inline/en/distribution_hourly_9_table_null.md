@@ -1,12 +1,12 @@
 # Hourly Distribution Null Calls
 
-Data concerning the *Hourly Null Call Distribution* for queues
-selected in the set period, the data is grouped according to
-the choice made in the filters.
+Data concerning the *Hourly Null Call Distribution* for selected 
+queues within configured period. 
+Data are grouped according to the chosen filter criteria.
 
-The *Hourly Distribution of Null Calls* shows the division of
+The *Hourly Distribution of Null Calls* shows the distribution of
 calls queued and closed by the caller before waiting
-minimum set in the set working hours.
+minimum time in the configured working hours.
 
 The items shown for the *Hourly Distribution of Null Calls* are:
 
@@ -14,8 +14,7 @@ The items shown for the *Hourly Distribution of Null Calls* are:
 - `Queue Number`
 - `Queue Name`
 - `Total Null Calls`
-- `Number of Null Calls`: during working hours divided into
-time bands set in the filter
+- `Number of Null Calls`: total call in the period of working 
+hours
 
 If no queue has been selected, no data will be shown.
-caller before the set minimum wait).

@@ -1,12 +1,12 @@
 # Hourly Distribution Timeout Calls
 
 Data regarding the *Hourly Distribution Calls in Timeout* for
-the queues selected in the set period, the data comes
-grouped according to the choice made in the filters.
+the queues selected during the given period.
+Data are grouped according to the chosen filter criteria.
 
-The *Timeout Call Distribution* shows the division
-of unanswered calls within the maximum waiting time
-configured in the set working hours.
+The *Timeout Call Distribution* shows the distribution 
+of unanswered calls within the configured maximum waiting time 
+in the configured working hours.
 
 The items shown for the *Hourly Distribution of Calls in Timeout*
 are:

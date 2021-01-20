@@ -4,12 +4,12 @@
 during configured working hours.
 
 The line graph shows the total number of calls that have not 
-entered the queue by maximum number of calls waiting in queue 
-reached in queues selected during working hours.
+entered the queue because maximum number of calls waiting in 
+queue was reached.
 
 If no queue has been selected, no data will be shown.
 
-The chart can contain a maximum of 8 sections. Tails exceeding 
+The chart can contain a maximum of 8 sections. Queues exceeding 
 this number will be displayed in `Others` section.
 
 If present, click the `View details` button to view

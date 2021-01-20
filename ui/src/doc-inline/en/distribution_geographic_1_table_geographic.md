@@ -1,8 +1,8 @@
 # Geographic Distribution
 
 Data regarding the *Geographic Distribution* for queues
-selected in the set period, the data is grouped
-according to the choice made in the filters.
+selected during the given period.
+Data are grouped according to the chosen filter criteria.
 
 The *Geographic Distribution* shows the division into the 
 various areas of calls arriving at queues.
@@ -18,4 +18,5 @@ The items shown for the *Geographic Distribution* are:
 - `Region`
 - `Total Calls`
 
-If no queue has been selected, the data of all queues.
+If no queue has been selected, the data of all queues will 
+be shown.

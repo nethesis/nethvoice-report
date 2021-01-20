@@ -1,15 +1,14 @@
 # Hourly Distribution Null Calls
 
 *Hourly Distribution Null Calls* for the selected queues
-in the set working hours.
+during configured working hours.
 
-The line graph shows the total number of queued calls e
-closed by the caller before the minimum wait set in the queues
-selected during working hours.
+The line graph shows the total number of queued calls 
+closed by the caller before the minimum wait time
 
 If no queue has been selected, no data will be shown.
 
-The chart can contain a maximum of 8 sections. Tails exceeding this
+The chart can contain a maximum of 8 sections. Queues exceeding this
 number will be displayed in `Others` section.
 
 If present, click the `View details` button to view

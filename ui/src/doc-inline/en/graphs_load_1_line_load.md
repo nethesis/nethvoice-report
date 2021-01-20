@@ -2,8 +2,8 @@
 
 Number of *Total* calls for selected queues over time.
 
-The line graph shows the total number of calls entered in the selected queues
-in the selected time frame.
+The line graph shows the total number of calls entered the selected queues
+during the chosen time frame.
 
 If no queues have been selected, the graph will show all available queues.
 

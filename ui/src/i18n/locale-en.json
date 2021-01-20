@@ -112,7 +112,7 @@
       "callDoneByAgentByHour": "Calls done by agents by hour",
       "IVRChoicesByHour": "IVR choices by hour",
       "uniqCid": "Unique caller ID",
-      "totalCalls": "Total calls",
+      "totalCalls": "Calls Total",
       "callsOnQueue": "Calls on queue",
       "good": "Good calls",
       "failed": "Failed calls",
@@ -146,7 +146,7 @@
       "region": "Region",
       "queuePosition": "Queue position",
       "queueDuration": "Queue duration",
-      "queueWait": "Queue wait",
+      "queueWait": "Queue waiting time",
       "lostCall": "Lost calls",
       "dataset": "Values"
     },

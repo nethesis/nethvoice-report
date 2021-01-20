@@ -5,9 +5,9 @@ per le code selezionate nel periodo impostato, i dati vengono raggruppati
 secondo la scelta fatta nei filtri.
 
 Le chiamate *Uscite dalla coda per mancanza di agenti* sono le chiamate 
-che mentre erano in attesa in coda hanno visto azzerarsi il numero di 
-agenti online/disponibili/liberi (a seconda della configurazione della 
-coda) e di conseguenza sono state fatte uscire dalla coda.
+fallite in quanto mentre erano in attesa in coda il numero di agenti 
+online/disponibili/liberi (a seconda della configurazione della 
+coda) si è azzerato e di conseguenza sono state fatte uscire dalla coda.
 
 Le voci mostrate per le chiamate in *Uscite dalla coda per mancanza di 
 agenti* sono:

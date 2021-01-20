@@ -1,12 +1,12 @@
 # Hourly distribution of Entry No Agents Calls
 
 Data regarding the *Hourly Distribution of Entry No Agents Calls* 
-for the queues selected in the set period, the data is
-grouped according to the choice made in the filters.
+for the selected queues during configured working hours.
+Data are grouped according to the chosen filter criteria.
 
 The *Hourly Distribution of Entry No Agents Calls* shows the
-division of calls not queued due to absence of agents
-online / available / free in the set working hours.
+distribution of calls not queued due to absence of agents
+online / available / free in the configured working hours.
 
 The items shown for *Hourly Distribution Entry No Agents 
 Calls* are:

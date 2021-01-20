@@ -1,11 +1,11 @@
 # Total Hourly Call Distribution
 
 Data regarding the *Total Hourly Distribution* for queues
-selected in the set period, the data is grouped according to
-the choice made in the filters.
+selected during the given period.
+Data are grouped according to the chosen filter criteria.
 
-The *Total Hourly Distribution* shows the division of the arrival of
-calls during the set working hours.
+The *Total Hourly Distribution* shows the distribution of 
+received calls in the configured working hours.
 
 The items shown for the *Total Hourly Distribution* are:
 

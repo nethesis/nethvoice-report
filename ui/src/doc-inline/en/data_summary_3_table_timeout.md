@@ -1,12 +1,11 @@
 # Calls in Timeout
 
 Data regarding calls that went into *Timeout* for the selected queues
-in the set period, the data are grouped according to the choice made
-in the filters.
+during the given period.
+Data are grouped according to the chosen filter criteria.
 
-Calls that went into *Timeout* are the calls that went into the queue
-they received no response within the configured maximum wait time
-in the queue.
+Calls went into *Timeout* when received no response within the 
+configured maximum wait time in the queue.
 
 The items shown for calls in *Timeout* are:
 
@@ -22,5 +21,5 @@ counted individually
 - `Maximum exit queue position`
 - `Medium queue exit position`
 
-If no queues have been selected, the data of all will be shown
-the queues available.
+If no queues have been selected, the data of all available queues will 
+be shown.

@@ -6,7 +6,7 @@ The pie chart shows the total number of unique callers of calls that have entere
 selected queues and compares it proportionally.
 
 Unique callers are all telephone numbers that have contacted the
-tail counted individually.
+queue counted individually.
 
 If no queues have been selected, the graph will show the unique callers of all
 the queues available.

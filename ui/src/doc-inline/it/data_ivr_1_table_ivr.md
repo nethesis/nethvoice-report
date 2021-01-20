@@ -12,11 +12,11 @@ Le voci mostrate per i dati *IVR* sono:
 - `Periodo di Raggruppamento`
 - `Identificativo IVR`: il codice univoco identificativo di ogni IVR
 - `Nome IVR`
-- `Scelta IVR`: scelte effettuate all'interno dell'IVR, oltre a quelle 
-numeriche previste sono possibili la scelta `i` che indica chi ha fatto 
-una scelta invalida, cioè non prevista dall'IVR, e la scelta `t` che 
-indica chi non ha fatto alcuna scelta, la sua chiamata viene dirotta 
-alla destinazione di timeout
+- `Scelte IVR`: scelte effettuate all'interno dell'IVR. Oltre a quelle 
+numeriche previste sono possibili altri valori: `i` indica chi ha fatto
+una scelta invalida, cioè non prevista dall'IVR; `t` indica chi non ha 
+fatto alcuna scelta, la sua chiamata viene dirottata alla destinazione 
+di timeout
 - `Totale`: totale delle scelte
 
 Se nessun IVR è stato selezionato, verranno mostrati tutti gli IVR, 

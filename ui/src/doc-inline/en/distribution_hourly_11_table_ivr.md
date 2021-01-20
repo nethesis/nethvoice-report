@@ -1,11 +1,12 @@
 # IVR Hourly Distribution
 
 Data regarding the *IVR Hourly Distribution* for IVR
-(Interactive Voice Response) selected in the set period,
-the data is grouped according to the choice made in the filters.
+(Interactive Voice Response) selected during
+the given period.
+Data are grouped according to the chosen filter criteria.
 
-The *IVR Hourly Distribution* shows the division of choices
-carried out in IVRs during the set working hours.
+The *IVR Hourly Distribution* shows the distribution of 
+choices carried out in IVRs in the configured working hours.
 
 The items shown for the *IVR Hourly Distribution* are:
 

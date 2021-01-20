@@ -24,7 +24,7 @@ ANSWER result
 Timeout, Queue full, Entry with No Agent in queue, Exit for
 No Agent available
 
-If no callers have been selected, all calls will be shown
-calls, if no queue has been selected, the
-caller of all available queues, if no agent has been
-selected, calls handled by all agents will be shown.
+If no caller has been selected, all calls will be shown.
+If no queues have been selected, data of all available queues will be 
+shown.
+If no agent has been selected, calls handled by all agents will be shown.

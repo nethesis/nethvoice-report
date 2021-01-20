@@ -1,8 +1,7 @@
 # Answered Calls
 
-*Answered* calls data for queues selected in
-set period, the data are grouped according to the choice made
-in the filters.
+*Answered* calls for selected queues in the given period. 
+Data are grouped according to the chosen filter criteria.
 
 *Answered* calls are calls answered by queue agents.
 
@@ -19,5 +18,5 @@ counted individually
 - `Maximum queue entry position`
 - `Average queue entry position`
 
-If no queues have been selected, the data of all will be shown
-the queues available.
+If no queues have been selected, the data of all available queues
+will be shown.

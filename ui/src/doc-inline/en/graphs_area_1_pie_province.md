@@ -2,9 +2,7 @@
 
 Number of incoming calls divided by *Province* for the selected queues.
 
-The pie chart shows the total incoming calls by dividing it by
-origin of the calling number by dividing it at the level of *Province*, 
-for the queues select and compare the data proportionally.
+The pie chart shows the total incoming calls grouped by caller *Province*.
 
 If no queues have been selected, the graph will show no data.
 

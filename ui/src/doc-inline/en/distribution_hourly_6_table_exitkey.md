@@ -1,12 +1,12 @@
 # Time Distribution Exit Menu Calls
 
 Data concerning the *Time Distribution Exit Menu Calls*
-for the queues selected in the set period, the data is
-grouped according to the choice made in the filters.
+for the queues selected during the given period.
+Data are grouped according to the chosen filter criteria.
 
-The *Time Distribution Exit Menu Calls* shows the division
+The *Time Distribution Exit Menu Calls* shows the distribution
 of calls in which the caller used the Exit Menu 
-to exit the queue during the set working hours.
+to exit the queue in the configured working hours.
 
 The items shown for the *Time Distribution Exit Menu 
 Calls* are:
