@@ -36,5 +36,6 @@ chiamante prima dell'attesa minima impostata
 - `Posizione minima, media, massima`: all'entrata in coda
 
 Se nessun chiamante è stato selezionato, verranno mostrati i dati di tutti
-i chiamanti, se nessuna coda è stata selezionata, verranno mostrati i 
+i chiamanti.
+Se nessuna coda è stata selezionata, verranno mostrati i 
 chiamanti di tutte le code disponibili.
