@@ -3,8 +3,7 @@
 Data regarding the selected queues useful to summarize the
 workload and evaluate pbx *Performance* over time.
 
-The *Performance* data of the queues is used to give an evaluation
-the functioning of the queues and to highlight the critical issues.
+The *Performance* data of the queues are used to evaluate current workload and highlight critical issues.
 
 The items shown for *Performace*  are:
 
