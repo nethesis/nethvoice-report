@@ -3,8 +3,7 @@
 Numero di chiamate entrate divise per *Regione* per le code selezionate.
 
 Il grafico a torta mostra il totale delle chiamate entrate suddividendolo per la 
-provenienza del numero chiamante dividendolo a livello di *Regione*, per le code 
-selezionate e mette i dati a confronto in modo proporzionale.
+provenienza del numero chiamante, raggruppate per *Regione*.
 
 Se nessuna coda è stata selezionata, il grafico non mostrerà dati.
 
