@@ -3,8 +3,8 @@
 *IVR Hourly Distribution* for IVRs (Interactive Voice Response)
 selected during configured working hours.
 
-The line graph shows the total of the choices made in the IVRs
-selected during working hours.
+The line graph shows the total of the choices made in the selected IVRs
+during working hours.
 
 If no IVR has been selected, no data will be shown.
 
