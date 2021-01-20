@@ -1,6 +1,6 @@
 # By Call
 
-Data divided *by Call* entered in the queues selected in
+*Calls* entered the queues selected in
 set period, the data is grouped according to the choice
 made in the filters.
 
