@@ -1,6 +1,5 @@
 # Durata Chiamata
 
-*Durata della Chiamata* per le code selezionate nell'orario lavorativo impostato.
 
 Il grafico a linea mostra la *Durata della Chiamata*, cioè la durata della 
 conversazione tra agente e chiamante, nelle code selezionate nell'orario lavorativo 
