@@ -1,7 +1,7 @@
 # Performace
 
 Data regarding the selected queues useful to summarize the
-operation and evaluate its *Performance* over time.
+workload and evaluate pbx *Performance* over time.
 
 The *Performance* data of the queues is used to give an evaluation
 the functioning of the queues and to highlight the critical issues.
