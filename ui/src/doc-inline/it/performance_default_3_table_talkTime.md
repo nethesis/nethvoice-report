@@ -4,7 +4,7 @@ Dati riguardanti il *Tempo di Conversazione* per le code
 selezionate nel periodo impostato.
 
 I dati di *Tempo di Conversazione* mostrano i tempi di durata delle 
-chiamate divisi in fasce di tempo pre determinate.
+chiamate divisi in fasce di tempo predeterminate.
 
 Le voci mostrate per le *Tempo di Conversazione* sono:
 
