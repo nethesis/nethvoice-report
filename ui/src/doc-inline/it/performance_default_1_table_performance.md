@@ -21,7 +21,7 @@ livello di servizio
 - `Totale Chiamate non Evase`: chiamate non risposte
 - `Percentuale sulle Chiamate Entrate delle Chiamate non Evase`
 - `Totale Chiamate non evase per Abbandono`: chiamate chiuse dal 
-chiamante dopo dell'attesa minima impostata
+chiamante dopo l'attesa minima impostata
 - `Percentuale sulle Chiamate Entrate delle Chiamate Abbandonate`
 - `Totale Chiamate non evase per Timeout`: chiamate senza risposta 
 entro il tempo di attesa massima configurato
