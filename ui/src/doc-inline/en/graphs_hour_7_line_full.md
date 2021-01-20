@@ -1,7 +1,7 @@
 # Hourly Distribution Full Queue Calls
 
-*Hourly Distribution Full Queue Calls* for selected queues
-in the set working hours.
+*Hourly Distribution Full Queue Calls*  for the selected queues
+during configured working hours.
 
 The line graph shows the total number of calls that have not 
 entered the queue by maximum number of calls waiting in queue 
