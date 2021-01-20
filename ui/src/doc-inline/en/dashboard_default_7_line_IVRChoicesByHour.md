@@ -1,7 +1,7 @@
 # IVR Choices by Time
 
-Hourly distribution of the *Choices* made in the selected IVR(Interactive Voice Response)
-  among those present in the switchboard.
+Hourly distribution of the *Choices* made in the selected IVR (Interactive Voice Response)
+among those present in the switchboard.
 
 The graph shows in the set working hours the number of times in which a choice of
 Selected IVR was made.
