@@ -9,7 +9,7 @@ selezionati durante l'orario lavorativo.
 Se nessun IVR è stato selezionato, non verranno mostrati i dati.
 
 Il grafico può contenere al massimo 8 sezioni. Gli IVR eccedenti questo
-numero verranno visualizzate in una sezione `Altri`.
+numero verranno visualizzati in una sezione `Altri`.
 
 Se presente, cliccare il bottone `Visualizza dettagli` per visualizzare
 tutti i dati in formato tabellare.
