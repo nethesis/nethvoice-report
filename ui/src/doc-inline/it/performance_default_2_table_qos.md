@@ -6,7 +6,7 @@ selezionate nel periodo impostato.
 I dati della *Qualità del Servizio (QoS)* mostrano i tempi di risposta 
 delle code divisi in fasce di tempo pre determinate.
 
-Le voci mostrate per le *Qualità del Servizio (QoS)* sono: 
+Le voci mostrate per la *Qualità del Servizio (QoS)* sono: 
  
 - `Tempo di Risposta`
 - `Numero Risposte effettuate`
