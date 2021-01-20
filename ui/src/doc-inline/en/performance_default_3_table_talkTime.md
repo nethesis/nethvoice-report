@@ -2,7 +2,7 @@
   
 Data regarding the *Talk Time* for selected queues in a specific time range.
   
-The *Talk Time* data shows the duration times of
+The *Talk Time* data shows the time duration of
 calls divided into pre-determined time bands.
 
 The items shown for the *Talk Time* are:
