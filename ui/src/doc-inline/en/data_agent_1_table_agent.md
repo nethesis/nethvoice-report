@@ -4,7 +4,7 @@ Data broken down *by Agent* and the queues selected in
 set period, the data are grouped according to the choice made
 in the filters.
 
-The data *by Agent* show the work activity and the burden of
+The data *by Agent* show the work activity and the load of
 phone calls for each selected agent.
 
 The items shown for the *by Agent* data are:
