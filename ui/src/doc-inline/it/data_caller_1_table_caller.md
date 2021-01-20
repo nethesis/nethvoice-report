@@ -18,7 +18,7 @@ Le voci mostrate per i dati *per Chiamante* sono:
 - `Totale`: numero totale delle chiamate del chiamante entrate in coda
 - `Risposte`: numero totale delle chiamate risposte
 - `Abbandono`: numero totale delle chiamate entrate in coda e chiuse 
-dal chiamante dopo dell'attesa minima impostata
+dal chiamante dopo l'attesa minima impostata
 - `Timeout`: numero totale delle chiamate entrate in coda senza aver 
 avuto risposta entro il tempo di attesa massima configurato
 - `Uscita No Agenti`: numero totale delle chiamate entrate in coda ma 
