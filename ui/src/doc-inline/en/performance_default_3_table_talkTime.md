@@ -1,7 +1,6 @@
 # Talk Time
   
-Data regarding the *Talk Time* for queues
-selected in the set period.
+Data regarding the *Talk Time* for selected queues in a specific time range.
   
 The *Talk Time* data shows the duration times of
 calls divided into pre-determined time bands.
