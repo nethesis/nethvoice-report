@@ -1,7 +1,6 @@
 # Hourly Distribution of Calls Made by Agents
 
-*Hourly Distribution of Calls Made by Agents* for queues
-selected in the working hours set.
+*Hourly Distribution of Calls Made by Agents* for selected queues, during working hours.
 
 The line graph shows the total number of calls made by agents
 selected during working hours.
