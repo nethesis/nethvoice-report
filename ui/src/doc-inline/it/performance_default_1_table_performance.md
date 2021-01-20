@@ -4,7 +4,7 @@ Dati riguardanti le code selezionate utili per riassumere il
 funzionamento e valutarne le *Performace* nel tempo.
 
 I dati di *Performance* delle code servono a dare una valutazione 
-del funzionamento delle code ed a evidenziarne le criticità.
+del funzionamento delle code e ad evidenziarne le criticità.
 
 Le voci mostrate per le *Performace* sono:
 
