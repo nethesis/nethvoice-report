@@ -3,8 +3,8 @@
 *Total Hourly Distribution* for selected queues during working 
 hours.
 
-The line graph shows the total number of calls entered the queues
-selected during working hours.
+The line graph shows the total number of calls entered the selected queues
+during working hours.
 
 If no queue has been selected, no data will be shown.
 
