@@ -4,7 +4,7 @@
 nell'orario lavorativo impostato.
 
 Il grafico a linea mostra il totale delle chiamate chiuse dal chiamante 
-dopo dell'attesa minima impostata nelle code selezionate durante l'orario 
+dopo l'attesa minima impostata nelle code selezionate durante l'orario 
 lavorativo.
 
 Se nessuna coda è stata selezionata, non verranno mostrati i dati.
