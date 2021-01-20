@@ -1,7 +1,7 @@
 # Quality of Service (QoS)
   
-*Quality of Service (QoS)* data for queues
-selected in the set period.
+*Quality of Service (QoS)* data for selected queues
+ in a specific time range.
   
 *Quality of Service (QoS)* data shows response times
 queues divided into pre-determined time bands.
