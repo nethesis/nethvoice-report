@@ -210,7 +210,9 @@
       "personalInbound": "Personal inbound calls",
       "personalOutbound": "Personal outbound calls",
       "personalLocal": "Personal local calls",
-      "summary": "Summary"
+      "summary": "Summary",
+      "answers": "Risposte",
+      "lost": "Non risposte"
     },
     "message": {
       "are_you_sure": "Sei sicuro?",
