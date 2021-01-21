@@ -1,5 +1,5 @@
 <template>
-  <div v-show="dataAvailable" class="fixedbar-container" :style="styleObject">
+  <div v-show="(dataAvailable && $route.meta.report == 'queue') || (cdrDataAvailable && $route.meta.report == 'cdr')" class="fixedbar-container" :style="styleObject">
     <div class="fixedbar" :class="{ fixed: isFixed }">
       <sui-container>
         <strong class="activeFilters">{{$t('menu.active_filters')}}: </strong>
@@ -46,15 +46,6 @@
           </span>
           <span class="value">
             {{activeFilters.queues}}
-          </span>
-        </div>
-        <!-- label: groups list -->
-        <div class="ui label" v-if="showFilterGroup && activeFilters.groups && (activeFilters.groups.length > 0)">
-          <span class="field">
-            {{$t('filter.groups_label')}}:
-          </span>
-          <span class="value">
-            {{activeFilters.groups}}
           </span>
         </div>
         <!-- label: agents list -->
@@ -111,15 +102,6 @@
             {{activeFilters.origins}}
           </span>
         </div>
-        <!-- label: destinations list -->
-        <div class="ui label" v-if="showFilterDestination && activeFilters.destinations && (activeFilters.destinations.length > 0)">
-          <span class="field">
-            {{$t('filter.destinations_label')}}:
-          </span>
-          <span class="value">
-            {{activeFilters.destinations}}
-          </span>
-        </div>
         <!-- label: time split value -->
         <div class="ui label" v-if="showFilterTimeSplit && activeFilters.time && activeFilters.time.division">
           <span class="field">
@@ -147,6 +129,98 @@
             {{activeFilters.contactName}}
           </span>
         </div>
+        <!-- start cdr -->
+        <!-- label: caller sources active filter -->
+        <div class="ui label" v-if="showFilterCdrCaller && activeFilters.sourcesUi && activeFilters.sourcesUi.title">
+          <span class="field">
+            {{$t('filter.caller_label')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.sourcesUi.title}}
+          </span>
+        </div>
+        <!-- label: caller destinations active filter -->
+        <div class="ui label" v-if="showFilterCdrCallee && activeFilters.destinationsUi && activeFilters.destinationsUi.title">
+          <span class="field">
+            {{$t('filter.callee')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.destinationsUi.title}}
+          </span>
+        </div>
+        <!-- label: call type active filter -->
+        <div class="ui label" v-if="showFilterCdrCallType && activeFilters.callType && (activeFilters.callType.length > 0)">
+          <span class="field">
+            {{$t('filter.call_type')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.callType}}
+          </span>
+        </div>
+        <!-- label: call duration active filter -->
+        <div class="ui label" v-if="showFilterCdrCallDuration &&  activeFilters.durationUi && activeFilters.durationUi.title">
+          <span class="field">
+            {{$t('filter.call_duration')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.durationUi.title}}
+          </span>
+        </div>
+        <!-- label: did active filter -->
+        <div class="ui label" v-if="showFilterCdrDid && activeFilters.dids && (activeFilters.dids.length > 0)">
+          <span class="field">
+            {{$t('filter.did')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.dids}}
+          </span>
+        </div>
+        <!-- label: trunk active filter -->
+        <div class="ui label" v-if="showFilterCdrTrunk && activeFilters.trunks && (activeFilters.trunks.length > 0)">
+          <span class="field">
+            {{$t('filter.trunk')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.trunks}}
+          </span>
+        </div>
+        <!-- label: cti groups active filter -->
+        <div class="ui label" v-if="showFilterCdrCtiGroups && activeFilters.groupsUi && (activeFilters.groupsUi.length > 0)">
+          <span class="field">
+            {{$t('filter.cti_group')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.groupsUi}}
+          </span>
+        </div>
+        <!-- label: users active filter -->
+        <div class="ui label" v-if="showFilterCdrUser && activeFilters.usersUi && (activeFilters.usersUi.length > 0)">
+          <span class="field">
+            {{$t('filter.user')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.usersUi}}
+          </span>
+        </div>
+        <!-- label: destination type active filter -->
+        <div class="ui label" v-if="showFilterCdrCallDestination && activeFilters.callDestinations && (activeFilters.callDestinations.length > 0)">
+          <span class="field">
+            {{$t('filter.call_destination')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.callDestinations}}
+          </span>
+        </div>
+        <!-- label: destination patterns type active filter -->
+        <div class="ui label" v-if="showFilterCdrDestination && activeFilters.patterns && (activeFilters.patterns.length > 0)">
+          <span class="field">
+            {{$t('filter.destination')}}:
+          </span>
+          <span class="value">
+            {{activeFilters.patterns}}
+          </span>
+        </div>
+        <!-- clear filters action -->
         <div class="clear-filters">
           <a @click="clearFilters()">{{$t('filter.clear_filters')}}</a>
         </div>
@@ -170,17 +244,31 @@ export default {
     "showFilterTimeGroup",
     "showFilterTime",
     "showFilterQueue",
-    "showFilterGroup",
     "showFilterAgent",
     "showFilterReason",
     "showFilterResult",
     "showFilterIvr",
     "showFilterChoice",
     "showFilterOrigin",
-    "showFilterDestination",
     "showFilterTimeSplit",
     "showFilterCaller",
     "showFilterContactName",
+    "showFilterCdrTimeRange",
+    "showFilterCdrCaller",
+    "showFilterCdrCallee",
+    "showFilterCdrCallType",
+    "showFilterCdrCallDuration",
+    "showFilterCdrDid",
+    "showFilterCdrTrunk",
+    "showFilterCdrCtiGroups",
+    "showFilterCdrUser",
+    "showFilterCdrCalleeType",
+    "showFilterCdrCallDestination",
+    "showFilterCdrDestination",
+    "showFilterTimeHour",
+    "cdrCallDurationMap",
+    "callDestinationsMap",
+    "filterValues"
   ],
   data() {
     return {
@@ -189,33 +277,41 @@ export default {
       isFixed: false,
       offsetTop: "",
       dataAvailable: true,
+      cdrDataAvailable: true,
       styleObject: {
         "min-height": "62px"
       }
     }
   },
   mounted() {
-    this.$root.$off("applyFilters", this.onApplyFilters); // avoid multiple event listeners
     this.$root.$on("applyFilters", this.onApplyFilters);
 
     this.$nextTick(() => {
       window.addEventListener('scroll', this.scrollHandler, true)
     })
 
-    // event "dataNotAvailable" is triggered by $http interceptor if report tables don't exist yet
-    this.$root.$off("dataNotAvailable", this.onDataNotAvailable); // avoid multiple event listeners
+    // event "dataNotAvailable" is triggered by $http interceptor if queue report tables don't exist yet
     this.$root.$on("dataNotAvailable", this.onDataNotAvailable);
+
+    // event "cdrDataNotAvailable" is triggered by $http interceptor if cdr report tables don't exist yet
+    this.$root.$on("cdrDataNotAvailable", this.onCdrDataNotAvailable);
   },
   destroyed() {
     window.removeEventListener('scroll', this.scrollHandler);
   },
   methods: {
+    moment(...args) {
+      return window.moment(...args);
+    },
     onApplyFilters() {
       this.activeFilters = this.lodash.cloneDeep(this.filter)
       this.activeSelectedSearch = this.lodash.cloneDeep(this.selectedSearch)
     },
     onDataNotAvailable() {
       this.dataAvailable = false;
+    },
+    onCdrDataNotAvailable() {
+      this.cdrDataAvailable = false;
     },
     scrollHandler(evt) {
       if (evt.target.attributes["views-wrapper"] && (window.innerWidth > this.$mobileBound)) {
@@ -235,13 +331,14 @@ export default {
     },
     clearFilters() {
       this.$root.$emit("clearFilters")
-    }
+    },
   },
   watch: {
     "activeFilters.time.interval": function () {
       if (this.activeFilters.time && this.activeFilters.time.interval) {
-        this.activeFilters.time.interval.start = this.$options.filters.formatDate(this.activeFilters.time.interval.start)
-        this.activeFilters.time.interval.end = this.$options.filters.formatDate(this.activeFilters.time.interval.end)
+        const dateFormat = this.getDateFormat();
+        this.activeFilters.time.interval.start = this.moment(this.activeFilters.time.interval.start).format(dateFormat);
+        this.activeFilters.time.interval.end = this.moment(this.activeFilters.time.interval.end).format(dateFormat);
       }
     },
     "activeFilters.queues": function () {
@@ -249,9 +346,13 @@ export default {
         this.activeFilters.queues = this.activeFilters.queues.join(", ")
       }
     },
-    "activeFilters.groups": function () {
-      if (this.activeFilters.groups && this.lodash.isArray(this.activeFilters.groups) && this.activeFilters.groups.length > 0) {
-        this.activeFilters.groups = this.activeFilters.groups.join(", ")
+    "activeFilters.groupsUi": function () {
+      if (this.activeFilters.groupsUi && this.lodash.isArray(this.activeFilters.groupsUi) && this.activeFilters.groupsUi.length > 0) {
+        this.activeFilters.groupsUi.forEach((element, key) => {
+         let groupsValuesText = this.filterValues.ctiGroups.find(obj => obj.value === element).text
+          this.activeFilters.groupsUi[key] = groupsValuesText
+        })
+        this.activeFilters.groupsUi = this.activeFilters.groupsUi.join(", ")
       }
     },
     "activeFilters.agents": function () {
@@ -284,9 +385,61 @@ export default {
         this.activeFilters.origins = this.activeFilters.origins.join(", ")
       }
     },
-    "activeFilters.destinations": function () {
-      if (this.activeFilters.destinations && this.lodash.isArray(this.activeFilters.destinations) && this.activeFilters.destinations.length > 0) {
-        this.activeFilters.destinations = this.activeFilters.destinations.join(", ")
+    "activeFilters.callType": function () {
+      if (this.activeFilters.callType && this.lodash.isArray(this.activeFilters.callType) && this.activeFilters.callType.length > 0) {
+        this.activeFilters.callType = this.activeFilters.callType.map((element) => {
+          return this.$t(`filter.${element}`)
+        })
+        this.activeFilters.callType = this.activeFilters.callType.join(", ")
+      }
+    },
+    "activeFilters.dids": function () {
+      if (this.activeFilters.dids && this.lodash.isArray(this.activeFilters.dids) && this.activeFilters.dids.length > 0) {
+        this.activeFilters.dids = this.activeFilters.dids.join(", ")
+      }
+    },
+    "activeFilters.trunks": function () {
+      if (this.activeFilters.trunks && this.lodash.isArray(this.activeFilters.trunks) && this.activeFilters.trunks.length > 0) {
+        this.activeFilters.trunks.forEach((trunk, key) => {
+          let splittedTrunk = trunk.split(",")
+          let text = `${splittedTrunk[0]} (${splittedTrunk[1]})`
+          this.activeFilters.trunks[key] = text
+        })
+        this.activeFilters.trunks = this.activeFilters.trunks.join(", ")
+      }
+    },
+    "activeFilters.usersUi": function () {
+      if (this.activeFilters.usersUi && this.lodash.isArray(this.activeFilters.usersUi) && this.activeFilters.usersUi.length > 0) {
+        this.activeFilters.usersUi.forEach((element, key) => {
+          let usersValuesText = this.filterValues.users.find(obj => obj.value === element).text
+          this.activeFilters.usersUi[key] = usersValuesText
+        })
+        this.activeFilters.usersUi = this.activeFilters.usersUi.join(", ")
+      }
+    },
+    "activeFilters.durationUi": function () {
+      if (this.activeFilters.durationUi && this.activeFilters.durationUi.title) {
+        if (!this.activeFilters.durationUi.value) {
+          this.activeFilters.durationUi.title += " " + this.$t("misc.seconds");
+        }
+      }
+    },
+    "activeFilters.callDestinations": function () {
+      if (this.activeFilters.callDestinations && this.lodash.isArray(this.activeFilters.callDestinations) && this.activeFilters.callDestinations.length > 0) {
+        this.activeFilters.callDestinations.forEach((element, key) => {
+          let callDestinationsText = this.callDestinationsMap.find(obj => obj.value === element).text
+          this.activeFilters.callDestinations[key] = callDestinationsText
+        })
+        this.activeFilters.callDestinations = this.activeFilters.callDestinations.join(", ")
+      }
+    },
+    "activeFilters.patterns": function () {
+      if (this.activeFilters.patterns && this.lodash.isArray(this.activeFilters.patterns) && this.activeFilters.patterns.length > 0) {
+        this.activeFilters.patterns.forEach((element, key) => {
+          let destinationValuesText = this.filterValues.cdrPatterns.find(obj => obj.value === element).text
+          this.activeFilters.patterns[key] = destinationValuesText
+        })
+        this.activeFilters.patterns = this.activeFilters.patterns.join(", ")
       }
     }
   }

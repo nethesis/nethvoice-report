@@ -43,7 +43,7 @@ export default {
     LeftSidebar: LeftSidebar,
     TopBar: TopBar,
     BackToTop: BackToTop,
-    MobileTopBar: MobileTopBar
+    MobileTopBar: MobileTopBar,
   },
   mixins: [LoginService, StorageService],
   mounted() {
@@ -66,8 +66,8 @@ export default {
 
     // handle viewport width
     this.$nextTick(() => {
-      window.addEventListener('resize', this.resizeHandler, true)
-    })
+      window.addEventListener("resize", this.resizeHandler, true);
+    });
   },
   data() {
     return {
@@ -80,25 +80,40 @@ export default {
     },
     didLogout() {
       this.isLogged = false;
+
+      // remove from localstorage
+      this.delete("loggedUser");
+
+      // remove all event listeners
+      this.$root.$off();
+
+      // reset state of $root
+      this.$root.filtersReady = false;
+      this.$root.phonebook = [];
+      this.$root.reversePhonebook = {};
+      this.$root.colorScheme = "";
     },
     hideSidebar() {
       if (window.innerWidth < this.$mobileBound) {
-        document.querySelector("#docs-menu").style.transform = "translateX(-270px)"
+        document.querySelector("#docs-menu").style.transform =
+          "translateX(-270px)";
         this.$root.$emit("sidebarHide");
       }
     },
     resizeHandler() {
-      let sidebar = document.querySelector("#docs-menu")
-      if ((window.innerWidth > this.$mobileBound) && (sidebar.style.transform == "translateX(-270px)")) {
-        sidebar.style.transform = "translateX(0px)"
+      let sidebar = document.querySelector("#docs-menu");
+      if (
+        window.innerWidth > this.$mobileBound &&
+        sidebar.style.transform == "translateX(-270px)"
+      ) {
+        sidebar.style.transform = "translateX(0px)";
       }
-    }
+    },
   },
 };
 </script>
 
 <style lang="scss">
-
 @import "./styles/theming.scss";
 
 body {
@@ -157,6 +172,10 @@ body {
   }
 }
 
+.mg-right-xs {
+  margin-right: 0.5rem !important;
+}
+
 .mg-right-sm {
   margin-right: 1rem !important;
 }
@@ -167,6 +186,26 @@ body {
 
 .ui.multiple.search.dropdown > input.search {
   width: 100% !important;
+}
+
+.no-mg {
+  margin: 0 !important;
+}
+
+.no-mg-top {
+  margin-top: 0 !important;
+}
+
+.no-mg-left {
+  margin-left: 0 !important;
+}
+
+.mg-left-sm {
+  margin-left: 1rem !important;
+}
+
+.mg-top-xs {
+  margin-top: 0.5rem !important;
 }
 
 .mg-top-md {
@@ -188,6 +227,17 @@ body {
 
 .table-chart {
   width: 95%;
+  margin: 2rem;
+}
+
+.recap-chart {
+  width: 100%;
+  margin: 2rem;
+}
+
+.rank-chart {
+  min-width: 25rem;
+  max-width: 35rem;
   margin: 2rem;
 }
 
@@ -222,19 +272,20 @@ body {
 
 .settings-description {
   color: gray;
+  margin-top: 1em;
   margin-bottom: 1.5rem;
 }
 
 .component-body {
-    position: relative;
-    margin-left: 3em !important;
-    margin-right: 3em !important;
-    padding: 2em 0em 7em;
-    width: auto;
+  position: relative;
+  margin-left: 3em !important;
+  margin-right: 3em !important;
+  padding: 2em 0em 7em;
+  width: auto;
 }
 
 .modals {
-  z-index: 100 !important;
+  z-index: 1001 !important;
 }
 
 .icon.cursor-default {
@@ -263,7 +314,7 @@ body {
   }
 
   @media only screen and (max-width: $mobile-bound) {
-     & {
+    & {
       border-bottom: 1px solid rgba(34, 36, 38, 0.15);
       box-shadow: -2px 1px 2px 0 rgba(34, 36, 38, 0.15) !important;
     }
@@ -309,11 +360,11 @@ body {
   padding-right: 0.8rem;
 }
 
-.ui.menu .item.select-rows-per-page>i.dropdown.icon {
+.ui.menu .item.select-rows-per-page > i.dropdown.icon {
   margin: 0;
 }
 
-.ui.menu .ui.dropdown .menu>.item .icon:not(.dropdown).check {
+.ui.menu .ui.dropdown .menu > .item .icon:not(.dropdown).check {
   float: right !important;
   margin-right: 0 !important;
 }
@@ -330,7 +381,7 @@ body {
   color: #9f3a38 !important;
 }
 
-.time-interval-error input {
+.field-error input {
   background-color: #fff6f6 !important;
   color: #9f3a38 !important;
   border-color: #e0b4b4 !important;
@@ -340,6 +391,10 @@ body {
   margin: 0 !important;
 }
 
+.full-width {
+  width: 100% !important;
+}
+
 .filters-form .mx-datepicker input {
   height: 38px !important;
   margin-top: -2px !important;
@@ -347,8 +402,187 @@ body {
 
 .mx-datepicker-main {
   margin-top: 5px;
-  border-radius: .28571429rem !important;
-  color: rgba(0,0,0,.87) !important;
+  border-radius: 0.28571429rem !important;
+  color: rgba(0, 0, 0, 0.87) !important;
   font-weight: 600;
+}
+
+.ui.dimmer .ui.fix.loader:before {
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.ui.dimmer .ui.fix.loader:after {
+  border-color: #767676 transparent transparent;
+}
+
+.color-transparent {
+  color: transparent !important;
+}
+
+.input-error input {
+  background: #fff6f6 !important;
+  border-color: #e0b4b4 !important;
+  color: #9f3a38 !important;
+}
+
+.blink-icon {
+  font-size: 1.1rem !important;
+}
+
+.blink-opacity {
+  animation: blinkOpacity 2s infinite;
+}
+
+@keyframes blinkOpacity {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.created-icon {
+  margin: 0.5rem 0 0 0 !important;
+}
+
+/* CSS for v-tooltip */
+.tooltip {
+  display: block !important;
+  z-index: 10000;
+  box-shadow: 0px 2px 4px 0px rgba(34, 36, 38, 0.12),
+    0px 2px 10px 0px rgba(34, 36, 38, 0.15);
+  border: 1px solid #d4d4d5;
+}
+.tooltip .tooltip-inner {
+  background: #ffffff;
+  color: rgba(0, 0, 0, 0.87);
+  border-radius: 0.28571429rem;
+  padding: 0.833em 1em;
+}
+.tooltip .tooltip-arrow {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  position: absolute;
+  margin: 5px;
+  border-color: #ffffff;
+  z-index: 1;
+}
+.tooltip[x-placement^="top"] {
+  margin-bottom: 5px;
+}
+.tooltip[x-placement^="top"] .tooltip-arrow {
+  border-width: 5px 5px 0 5px;
+  border-left-color: transparent !important;
+  border-right-color: transparent !important;
+  border-bottom-color: transparent !important;
+  bottom: -5px;
+  left: calc(50% - 5px);
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.tooltip[x-placement^="bottom"] {
+  margin-top: 5px;
+}
+.tooltip[x-placement^="bottom"] .tooltip-arrow {
+  border-width: 0 5px 5px 5px;
+  border-left-color: transparent !important;
+  border-right-color: transparent !important;
+  border-top-color: transparent !important;
+  top: -5px;
+  left: calc(50% - 5px);
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.tooltip[x-placement^="right"] {
+  margin-left: 5px;
+}
+.tooltip[x-placement^="right"] .tooltip-arrow {
+  border-width: 5px 5px 5px 0;
+  border-left-color: transparent !important;
+  border-top-color: transparent !important;
+  border-bottom-color: transparent !important;
+  left: -5px;
+  top: calc(50% - 5px);
+  margin-left: 0;
+  margin-right: 0;
+}
+.tooltip[x-placement^="left"] {
+  margin-right: 5px;
+}
+.tooltip[x-placement^="left"] .tooltip-arrow {
+  border-width: 5px 0 5px 5px;
+  border-top-color: transparent !important;
+  border-right-color: transparent !important;
+  border-bottom-color: transparent !important;
+  right: -5px;
+  top: calc(50% - 5px);
+  margin-left: 0;
+  margin-right: 0;
+}
+.tooltip.popover .popover-inner {
+  background: #f9f9f9;
+  color: black;
+  padding: 24px;
+  border-radius: 5px;
+  box-shadow: 0 5px 30px rgba(black, 0.1);
+}
+.tooltip.popover .popover-arrow {
+  border-color: #f9f9f9;
+}
+.tooltip[aria-hidden="true"] {
+  visibility: hidden;
+  opacity: 0;
+}
+.tooltip[aria-hidden="false"] {
+  visibility: visible;
+  opacity: 1;
+}
+/* end CSS for v-tooltip */
+
+.ui.inline.loader.loading-filters {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.doc-info-icon {
+  color: #2185d0;
+  margin-left: 0.3rem !important;
+  margin-right: 0 !important;
+}
+
+.doc-info {
+  text-align: left !important;
+  max-width: 35rem !important;
+  max-height: 14rem;
+  overflow-y: auto;
+}
+
+.doc-info h1 {
+  font-size: 1.28571429rem;
+}
+
+.doc-info h2 {
+  font-size: 1.07142857rem;
+}
+
+.doc-info h3 {
+  font-size: 1rem;
+}
+
+.doc-info h4 {
+  font-size: 0.67em;
+}
+
+.align-center {
+    text-align: center !important;
+}
+
+.align-left {
+    text-align: left !important;
 }
 </style>

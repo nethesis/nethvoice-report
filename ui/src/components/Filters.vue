@@ -1,7 +1,8 @@
 <template>
   <div>
-    <sui-container v-if="this.showFiltersForm">
+    <sui-container v-show="this.showFiltersForm">
       <sui-form class="filters-form" @submit.prevent="applyFilters">
+        <!-- saved searches -->
         <sui-form-fields v-if="savedSearches.length" class="mg-bottom-md">
           <sui-form-field width="four" class="mb-10">
             <sui-dropdown
@@ -19,16 +20,16 @@
               :disabled="!selectedSearch"
               @click.native="showDeleteSearchModal(true)"
               icon="trash"
-              >{{$t('command.delete_search')}}</sui-button
+              >{{ $t("command.delete_search") }}</sui-button
             >
           </sui-form-field>
         </sui-form-fields>
-
+        <!-- group by -->
         <sui-form-fields v-if="showFilterTimeGroup">
           <sui-form-field width="four">
-            <label>{{$t('filter.group_by')}}</label>
+            <label>{{ $t("filter.group_by") }}</label>
             <sui-dropdown
-              :options="groupByTimeValues"
+              :options="groupByTimeValuesMap"
               :placeholder="$t('filter.group_by')"
               search
               selection
@@ -36,105 +37,166 @@
             />
           </sui-form-field>
         </sui-form-fields>
+        <!-- time interval section -->
         <sui-form-fields class="interval-buttons">
-          <!-- if time group is day -->
-          <sui-form-field v-if="(showFilterTime && filter.time.group == 'day') || (showFilterTime && !showFilterTimeGroup)">
-            <label>{{$t('filter.time_range')}}</label>
+          <!-- CDR ONLY START -->
+          <!-- cdr time range -->
+          <sui-form-field v-if="showFilterCdrTimeRange" width="four">
+            <label class="ellipsis">{{ $t("filter.time_range") }}</label>
+            <sui-dropdown
+              :text="$t('filter.select_time_range')"
+              class="mg-top-xs"
+            >
+              <sui-dropdown-menu>
+                <sui-dropdown-item
+                  v-for="timeRange in cdrTimeRangeValues"
+                  :key="timeRange"
+                  @click="selectTime(timeRange)"
+                >
+                  {{ $t("filter." + timeRange) }}
+                </sui-dropdown-item>
+              </sui-dropdown-menu>
+            </sui-dropdown>
+          </sui-form-field>
+          <!-- cdr dashboard time range -->
+          <sui-form-field v-if="showFilterCdrDashboardTimeRange" width="four">
+            <label class="ellipsis">{{ $t("filter.time_range") }}</label>
+            <sui-dropdown
+              :options="cdrDashboardTimeRangeValuesMap()"
+              :placeholder="$t('filter.time_range_label')"
+              search
+              selection
+              v-model="filter.time.cdrDashboardRange"
+            />
+          </sui-form-field>
+          <!-- CDR ONLY END -->
+          <!-- fast time range | if time group is day -->
+          <sui-form-field
+            v-if="
+              (showFilterTime && filter.time.group == 'day') ||
+              (showFilterTime && !showFilterTimeGroup)
+            "
+          >
+            <label>{{ $t("filter.time_range") }}</label>
             <sui-button-group class="fluid">
               <sui-button
                 :active="filter.time.range == 'yesterday'"
                 @click="selectTime('yesterday')"
                 type="button"
-                >{{$t('filter.yesterday')}}</sui-button
+                >{{ $t("filter.yesterday") }}</sui-button
               >
               <sui-button
                 :active="filter.time.range == 'last_week'"
                 @click="selectTime('last_week')"
                 type="button"
-                >{{$t('filter.last_week')}}</sui-button
+                >{{ $t("filter.last_week") }}</sui-button
               >
               <sui-button
                 :active="filter.time.range == 'last_month'"
                 @click="selectTime('last_month')"
                 type="button"
-                >{{$t('filter.last_month')}}</sui-button
+                >{{ $t("filter.last_month") }}</sui-button
               >
             </sui-button-group>
           </sui-form-field>
-          <!-- if time group is week -->
-          <sui-form-field v-if="showFilterTime && filter.time.group == 'week' && showFilterTimeGroup">
-            <label>{{$t('filter.time_range')}}</label>
+          <!-- fast time range | if time group is week -->
+          <sui-form-field
+            v-if="
+              showFilterTime &&
+              filter.time.group == 'week' &&
+              showFilterTimeGroup
+            "
+          >
+            <label>{{ $t("filter.time_range") }}</label>
             <sui-button-group class="fluid">
               <sui-button
                 :active="filter.time.range == 'last_week'"
                 @click="selectTime('last_week')"
                 type="button"
-                >{{$t('filter.last_week')}}</sui-button
+                >{{ $t("filter.last_week") }}</sui-button
               >
               <sui-button
                 :active="filter.time.range == 'last_two_weeks'"
                 @click="selectTime('last_two_weeks')"
                 type="button"
-                >{{$t('filter.last_two_weeks')}}</sui-button
+                >{{ $t("filter.last_two_weeks") }}</sui-button
               >
               <sui-button
                 :active="filter.time.range == 'last_month'"
                 @click="selectTime('last_month')"
                 type="button"
-                >{{$t('filter.last_month')}}</sui-button
+                >{{ $t("filter.last_month") }}</sui-button
               >
             </sui-button-group>
           </sui-form-field>
-          <!-- if time group is month -->
-          <sui-form-field v-if="showFilterTime && filter.time.group == 'month' && showFilterTimeGroup">
-            <label>{{$t('filter.time_range')}}</label>
+          <!-- fast time range | if time group is month -->
+          <sui-form-field
+            v-if="
+              showFilterTime &&
+              filter.time.group == 'month' &&
+              showFilterTimeGroup
+            "
+          >
+            <label>{{ $t("filter.time_range") }}</label>
             <sui-button-group class="fluid">
               <sui-button
                 :active="filter.time.range == 'last_month'"
                 @click="selectTime('last_month')"
                 type="button"
-                >{{$t('filter.last_month')}}</sui-button
+                >{{ $t("filter.last_month") }}</sui-button
               >
               <sui-button
                 :active="filter.time.range == 'last_two_months'"
                 @click="selectTime('last_two_months')"
                 type="button"
-                >{{$t('filter.last_two_months')}}</sui-button
+                >{{ $t("filter.last_two_months") }}</sui-button
               >
               <sui-button
                 :active="filter.time.range == 'last_six_months'"
                 @click="selectTime('last_six_months')"
                 type="button"
-                >{{$t('filter.last_six_months')}}</sui-button
+                >{{ $t("filter.last_six_months") }}</sui-button
               >
             </sui-button-group>
           </sui-form-field>
-          <!-- if time group is year -->
-          <sui-form-field v-if="showFilterTime && filter.time.group == 'year' && showFilterTimeGroup">
-            <label>{{$t('filter.time_range')}}</label>
+          <!-- fast time range | if time group is year -->
+          <sui-form-field
+            v-if="
+              showFilterTime &&
+              filter.time.group == 'year' &&
+              showFilterTimeGroup
+            "
+          >
+            <label>{{ $t("filter.time_range") }}</label>
             <sui-button-group class="fluid">
               <sui-button
                 :active="filter.time.range == 'last_year'"
                 @click="selectTime('last_year')"
                 type="button"
-                >{{$t('filter.last_year')}}</sui-button
+                >{{ $t("filter.last_year") }}</sui-button
               >
               <sui-button
                 :active="filter.time.range == 'last_two_years'"
                 @click="selectTime('last_two_years')"
                 type="button"
-                >{{$t('filter.last_two_years')}}</sui-button
+                >{{ $t("filter.last_two_years") }}</sui-button
               >
               <sui-button
                 :active="filter.time.range == 'last_three_years'"
                 @click="selectTime('last_three_years')"
                 type="button"
-                >{{$t('filter.last_three_years')}}</sui-button
+                >{{ $t("filter.last_three_years") }}</sui-button
               >
             </sui-button-group>
           </sui-form-field>
-          <sui-form-field class="datepicker-field">
-            <label :class="{ 'error-color': errorTimeInterval }">{{$t('filter.time_interval')}}</label>
+          <!-- datapickers section queues -->
+          <sui-form-field
+            v-show="$route.meta.report == 'queue'"
+            class="datepicker-field"
+          >
+            <label :class="{ 'error-color': errorTimeInterval }">{{
+              $t("filter.time_interval")
+            }}</label>
             <!-- time interval start -->
             <!-- datetime -->
             <date-picker
@@ -145,20 +207,30 @@
               :clearable="false"
               :show-second="false"
               :disabled-date="fromToday"
-              :class="{ 'time-interval-error': errorTimeInterval }"
+              :class="{ 'field-error': errorTimeInterval }"
               :formatter="momentFormatter"
+              :lang="$i18n.vm.locale"
             ></date-picker>
             <!-- date / week / month / year -->
             <date-picker
               v-show="!showFilterTimeHour"
               v-model="filter.time.interval.start"
-              :type="!showFilterTimeGroup || filter.time.group == 'day' ? 'date' : filter.time.group == 'week' ? 'week' : filter.time.group == 'month' ? 'month' : 'year'"
+              :type="
+                !showFilterTimeGroup || filter.time.group == 'day'
+                  ? 'date'
+                  : filter.time.group == 'week'
+                  ? 'week'
+                  : filter.time.group == 'month'
+                  ? 'month'
+                  : 'year'
+              "
               :placeholder="$t('filter.time_interval_start_placeholder')"
               :clearable="false"
               :show-second="false"
               :disabled-date="fromToday"
-              :class="{ 'time-interval-error': errorTimeInterval }"
+              :class="{ 'field-error': errorTimeInterval }"
               :formatter="momentFormatter"
+              :lang="$i18n.vm.locale"
             ></date-picker>
             <sui-icon name="right arrow time-filter" />
             <!-- time interval end -->
@@ -171,26 +243,77 @@
               :clearable="false"
               :show-second="false"
               :disabled-date="fromToday"
-              :class="{ 'time-interval-error': errorTimeInterval }"
+              :class="{ 'field-error': errorTimeInterval }"
               :formatter="momentFormatter"
+              :lang="$i18n.vm.locale"
             ></date-picker>
             <!-- date / week / month / year -->
             <date-picker
               v-show="!showFilterTimeHour"
               v-model="filter.time.interval.end"
-              :type="!showFilterTimeGroup || filter.time.group == 'day' ? 'date' : filter.time.group == 'week' ? 'week' : filter.time.group == 'month' ? 'month' : 'year'"
+              :type="
+                !showFilterTimeGroup || filter.time.group == 'day'
+                  ? 'date'
+                  : filter.time.group == 'week'
+                  ? 'week'
+                  : filter.time.group == 'month'
+                  ? 'month'
+                  : 'year'
+              "
               :placeholder="$t('filter.time_interval_end_placeholder')"
               :clearable="false"
               :show-second="false"
               :disabled-date="fromToday"
-              :class="{ 'time-interval-error': errorTimeInterval }"
+              :class="{ 'field-error': errorTimeInterval }"
               :formatter="momentFormatter"
+              :lang="$i18n.vm.locale"
             ></date-picker>
           </sui-form-field>
+          <!-- CDR ONLY START -->
+          <!-- datapickers section cdr -->
+          <sui-form-field
+            v-show="$route.meta.report == 'cdr'"
+            class="datepicker-field"
+          >
+            <label :class="{ 'error-color': errorTimeInterval }">{{
+              $t("filter.time_interval")
+            }}</label>
+            <!-- time interval start -->
+            <!-- datetime -->
+            <date-picker
+              v-model="filter.time.interval.start"
+              type="datetime"
+              :placeholder="$t('filter.time_interval_start_placeholder')"
+              :clearable="false"
+              :show-second="false"
+              :disabled-date="fromToday"
+              :class="{ 'field-error': errorTimeInterval }"
+              :formatter="momentFormatter"
+              :lang="$i18n.vm.locale"
+              :disabled="$route.meta.section == 'dashboard'"
+            ></date-picker>
+            <sui-icon name="right arrow time-filter" />
+            <!-- time interval end -->
+            <!-- datetime -->
+            <date-picker
+              v-model="filter.time.interval.end"
+              type="datetime"
+              :placeholder="$t('filter.time_interval_end_placeholder')"
+              :clearable="false"
+              :show-second="false"
+              :disabled-date="fromToday"
+              :class="{ 'field-error': errorTimeInterval }"
+              :formatter="momentFormatter"
+              :lang="$i18n.vm.locale"
+              :disabled="$route.meta.section == 'dashboard'"
+            ></date-picker>
+          </sui-form-field>
+          <!-- CDR ONLY END -->
         </sui-form-fields>
         <sui-grid class="fields">
+          <!-- queues -->
           <sui-form-field v-if="showFilterQueue" width="four">
-            <label>{{$t('filter.queues_label')}}</label>
+            <label>{{ $t("filter.queues_label") }}</label>
             <sui-dropdown
               multiple
               :options="filterValues.queues"
@@ -200,19 +323,8 @@
               v-model="filter.queues"
             />
           </sui-form-field>
-          <sui-form-field v-if="showFilterGroup" width="four">
-            <label>{{$t('filter.groups_label')}}</label>
-            <sui-dropdown
-              multiple
-              :options="filterValues.groups"
-              :placeholder="$t('filter.groups_label')"
-              search
-              selection
-              v-model="filter.groups"
-            />
-          </sui-form-field>
           <sui-form-field v-if="showFilterAgent" width="four">
-            <label>{{$t('filter.agents_label')}}</label>
+            <label>{{ $t("filter.agents_label") }}</label>
             <sui-dropdown
               multiple
               :options="filterValues.agents"
@@ -222,8 +334,9 @@
               v-model="filter.agents"
             />
           </sui-form-field>
+          <!-- reason -->
           <sui-form-field v-if="showFilterReason" width="four">
-            <label>{{$t('filter.reasons_label')}}</label>
+            <label>{{ $t("filter.reasons_label") }}</label>
             <sui-dropdown
               multiple
               :options="filterValues.reasons"
@@ -233,8 +346,9 @@
               v-model="filter.reasons"
             />
           </sui-form-field>
+          <!-- result -->
           <sui-form-field v-if="showFilterResult" width="four">
-            <label>{{$t('filter.results_label')}}</label>
+            <label>{{ $t("filter.results_label") }}</label>
             <sui-dropdown
               multiple
               :options="filterValues.results"
@@ -244,8 +358,9 @@
               v-model="filter.results"
             />
           </sui-form-field>
+          <!-- ivr -->
           <sui-form-field v-if="showFilterIvr" width="four">
-            <label>{{$t('filter.ivrs_label')}}</label>
+            <label>{{ $t("filter.ivrs_label") }}</label>
             <sui-dropdown
               multiple
               :options="filterValues.ivrs"
@@ -255,8 +370,9 @@
               v-model="filter.ivrs"
             />
           </sui-form-field>
+          <!-- ivr's defined choices based on selected ivr -->
           <sui-form-field v-if="showFilterChoice" width="four">
-            <label>{{$t('filter.choices_label')}}</label>
+            <label>{{ $t("filter.choices_label") }}</label>
             <sui-dropdown
               multiple
               :options="filterValues.choices"
@@ -266,8 +382,9 @@
               v-model="filter.choices"
             />
           </sui-form-field>
+          <!-- origin -->
           <sui-form-field v-if="showFilterOrigin" width="four">
-            <label>{{$t('filter.origins_label')}}</label>
+            <label>{{ $t("filter.origins_label") }}</label>
             <sui-dropdown
               multiple
               :options="filterValues.origins"
@@ -277,36 +394,38 @@
               v-model="filter.origins"
             />
           </sui-form-field>
-          <sui-form-field v-if="showFilterDestination" width="four">
-            <label>{{$t('filter.destinations_label')}}</label>
+          <!-- geo group -->
+          <sui-form-field v-if="showFilterGeoGroup" width="four">
+            <label>{{$t('filter.geo_group')}}</label>
             <sui-dropdown
-              multiple
-              :options="filterValues.destinations"
-              :placeholder="$t('filter.destinations_label')"
+              :options="geoGroupValuesMap"
               search
               selection
-              v-model="filter.destinations"
+              v-model="filter.geoGroup"
             />
           </sui-form-field>
+          <!-- time split -->
           <sui-form-field v-if="showFilterTimeSplit" width="four">
-            <label>{{$t('filter.time_split_label')}}</label>
+            <label>{{ $t("filter.time_split_label") }}</label>
             <sui-dropdown
-              :options="splitByTimeValues"
+              :options="splitByTimeValuesMap"
               :placeholder="$t('filter.time_split_label')"
               search
               selection
               v-model="filter.time.division"
             />
           </sui-form-field>
+          <!-- caller -->
           <sui-form-field v-if="showFilterCaller" width="four">
-            <label>{{$t('filter.caller_label')}}</label>
+            <label>{{ $t("filter.caller_label") }}</label>
             <sui-input
               :placeholder="$t('filter.caller_label')"
               v-model="filter.caller"
             />
           </sui-form-field>
+          <!-- contact  -->
           <sui-form-field v-if="showFilterContactName" width="four">
-            <label>{{$t('filter.contact_name_label')}}</label>
+            <label>{{ $t("filter.contact_name_label") }}</label>
             <div class="ui search searchContactName">
               <sui-input
                 :placeholder="$t('filter.contact_name_label')"
@@ -317,7 +436,11 @@
               />
               <div
                 v-show="searchContactResults.length && showSearchResults"
-                :class="['results', 'transition', showSearchResults ? 'visible' : 'hidden']"
+                :class="[
+                  'results',
+                  'transition',
+                  showSearchResults ? 'visible' : 'hidden',
+                ]"
               >
                 <div
                   v-for="(contact, index) in searchContactResults"
@@ -332,7 +455,176 @@
               </div>
             </div>
           </sui-form-field>
+          <!-- CDR ONLY START -->
+          <!-- EVERYWHERE -->
+          <!-- cdr: sources / caller -->
+          <sui-form-field v-show="showFilterCdrCaller" width="four">
+            <label key="caller_label">
+              <span>{{ $t("filter.caller") }}</span>
+              <sui-popup flowing hoverable position="top center">
+                <div class="doc-info">
+                  {{ $t('message.caller_callee_info') }}
+                </div>
+                <sui-icon
+                  name="info circle"
+                  class="doc-info-icon"
+                  slot="trigger"
+                />
+              </sui-popup>
+            </label>
+            <SearchInput
+              :options="filterValues.cdrCaller"
+              :placeholder="$t('filter.caller_callee_placeholder')"
+              :minCharacters="3"
+              :searchFields="['title', 'description', 'phoneNumber']"
+              @input="onSourcesInput"
+              @select="onSourcesSelect"
+              ref="sourcesUi"
+              key="sourcesUi"
+            />
+          </sui-form-field>
+          <!-- cdr: call destinations / callee -->
+          <sui-form-field v-show="showFilterCdrCallee" width="four">
+            <label key="callee_label">
+              <span>{{ $t("filter.callee") }}</span>
+              <sui-popup flowing hoverable position="top center">
+                <div class="doc-info">
+                  {{ $t('message.caller_callee_info') }}
+                </div>
+                <sui-icon
+                  name="info circle"
+                  class="doc-info-icon"
+                  slot="trigger"
+                />
+              </sui-popup>
+            </label>
+            <SearchInput
+              :options="filterValues.cdrCallee"
+              :placeholder="$t('filter.caller_callee_placeholder')"
+              :minCharacters="3"
+              :searchFields="['title', 'description', 'phoneNumber']"
+              @input="onDestinationsInput"
+              @select="onDestinationsSelect"
+              ref="destinationsUi"
+              key="destinationsUi"
+            />
+          </sui-form-field>
+          <!-- cdr: call type -->
+          <sui-form-field v-if="showFilterCdrCallType" width="four">
+            <label>{{ $t("filter.call_type") }}</label>
+            <sui-dropdown
+              multiple
+              :options="cdrCallTypeMap"
+              :placeholder="$t('filter.call_type')"
+              search
+              selection
+              v-model="filter.callType"
+            />
+          </sui-form-field>
+          <!-- cdr: call duration -->
+          <sui-form-field v-show="showFilterCdrCallDuration" width="four">
+            <label :class="{ 'error-color': errorCallDuration }" key="duration_label">
+              <span>{{ $t("filter.call_duration") }}</span>
+              <sui-popup flowing hoverable position="top center">
+                <div class="doc-info">
+                  {{ $t('message.call_duration_info') }}
+                </div>
+                <sui-icon
+                  name="info circle"
+                  class="doc-info-icon"
+                  slot="trigger"
+                />
+              </sui-popup>
+            </label>
+            <SearchInput
+              :options="cdrCallDurationMap"
+              :placeholder="$t('filter.call_duration')"
+              :minCharacters="0"
+              @input="onDurationInput"
+              @select="onDurationSelect"
+              @blur="callDurationBlur"
+              ref="duration"
+              key="duration"
+              :showOptionType="false"
+              :class="{ 'field-error': errorCallDuration }"
+            />
+          </sui-form-field>
+          <!-- cdr: dids -->
+          <sui-form-field v-if="showFilterCdrDid" width="four">
+            <label>{{ $t("filter.did") }}</label>
+            <sui-dropdown
+              multiple
+              :options="filterValues.dids"
+              :placeholder="$t('filter.did')"
+              search
+              selection
+              v-model="filter.dids"
+            />
+          </sui-form-field>
+          <!-- cdr: trunk -->
+          <sui-form-field v-if="showFilterCdrTrunk" width="four">
+            <label>{{ $t("filter.trunk") }}</label>
+            <sui-dropdown
+              multiple
+              :options="filterValues.cdrTrunk"
+              :placeholder="$t('filter.trunk')"
+              search
+              selection
+              v-model="filter.trunks"
+            />
+          </sui-form-field>
+          <!-- EVERYWHERE END -->
+          <!-- cdr: cti groups -->
+          <sui-form-field v-if="showFilterCdrCtiGroups" width="four">
+            <label>{{ $t("filter.cti_group") }}</label>
+            <sui-dropdown
+              multiple
+              :options="filterValues.ctiGroups"
+              :placeholder="$t('filter.cti_group')"
+              search
+              selection
+              v-model="filter.groupsUi"
+            />
+          </sui-form-field>
+          <!-- cdr: user -->
+          <sui-form-field v-if="showFilterCdrUser" width="four">
+            <label>{{ $t("filter.user") }}</label>
+            <sui-dropdown
+              multiple
+              :options="filterValues.users"
+              :placeholder="$t('filter.user')"
+              search
+              selection
+              v-model="filter.usersUi"
+            />
+          </sui-form-field>
+          <!-- cdr: call destinations -->
+          <sui-form-field v-if="showFilterCdrCallDestination" width="four">
+            <label>{{ $t("filter.call_destination") }}</label>
+            <sui-dropdown
+              multiple
+              :options="callDestinationsMap"
+              :placeholder="$t('filter.call_destination')"
+              search
+              selection
+              v-model="filter.callDestinations"
+            />
+          </sui-form-field>
+          <!-- cdr: destination -->
+          <sui-form-field v-if="showFilterCdrDestination" width="four">
+            <label>{{ $t("filter.destination") }}</label>
+            <sui-dropdown
+              multiple
+              :options="filterValues.cdrPatterns"
+              :placeholder="$t('filter.destination')"
+              search
+              selection
+              v-model="filter.patterns"
+            />
+          </sui-form-field>
+          <!-- CDR ONLY END -->
         </sui-grid>
+        <!-- filters actions -->
         <sui-form-fields class="mg-top-md filter-actions">
           <sui-button
             primary
@@ -340,33 +632,36 @@
             icon="search"
             :disabled="loader.filter"
             class="mr-15"
-            >{{ $t('command.search') }}</sui-button
+            >{{ $t("command.search") }}</sui-button
           >
           <sui-button-group>
             <sui-button
               type="button"
               @click.native="showSaveSearchModal(true)"
               icon="save"
-              >{{ $t('command.save_search') }}</sui-button
+              >{{ $t("command.save_search") }}</sui-button
             >
             <sui-button
               type="button"
               :disabled="!selectedSearch"
               @click.native="showOverwriteSearchModal(true)"
               icon="edit"
-              >{{ $t('command.overwrite_search') }}</sui-button
+              >{{ $t("command.overwrite_search") }}</sui-button
             >
           </sui-button-group>
         </sui-form-fields>
       </sui-form>
 
       <!-- save search modal -->
-      <sui-form @submit.prevent="validateSaveNewSearch()" :error="errorNewSearch">
+      <sui-form
+        @submit.prevent="validateSaveNewSearch()"
+        :error="errorNewSearch"
+      >
         <sui-modal v-model="openSaveSearchModal" size="tiny">
-          <sui-modal-header>{{ $t('command.save_search') }}</sui-modal-header>
+          <sui-modal-header>{{ $t("command.save_search") }}</sui-modal-header>
           <sui-modal-content>
             <sui-modal-description>
-              <p>{{ $t('message.enter_name_for_saved_search') }}</p>
+              <p>{{ $t("message.enter_name_for_saved_search") }}</p>
               <sui-form-field>
                 <input placeholder="Search name" v-model="newSearchName" />
               </sui-form-field>
@@ -376,8 +671,10 @@
             </sui-modal-description>
           </sui-modal-content>
           <sui-modal-actions>
-            <sui-button type="button" @click.native="showSaveSearchModal(false)"
-              >{{ $t('command.cancel') }}</sui-button
+            <sui-button
+              type="button"
+              @click.native="showSaveSearchModal(false)"
+              >{{ $t("command.cancel") }}</sui-button
             >
             <sui-button
               type="submit"
@@ -392,11 +689,15 @@
       <!-- overwrite search modal -->
       <sui-form @submit.prevent="saveSearch(selectedSearch)" warning>
         <sui-modal v-model="openOverwriteSearchModal" size="tiny">
-          <sui-modal-header>{{ $t('command.overwrite_search') }}</sui-modal-header>
+          <sui-modal-header>{{
+            $t("command.overwrite_search")
+          }}</sui-modal-header>
           <sui-modal-content>
             <sui-modal-description>
               <sui-message warning>
-                <i class="exclamation triangle icon"></i> {{ $t("message.you_are_about_to_overwrite") }} <b>{{ selectedSearch }}</b>
+                <i class="exclamation triangle icon"></i>
+                {{ $t("message.you_are_about_to_overwrite") }}
+                <b>{{ selectedSearch }}</b>
               </sui-message>
               <p>{{ $t("message.are_you_sure") }}</p>
             </sui-modal-description>
@@ -407,7 +708,9 @@
               @click.native="showOverwriteSearchModal(false)"
               >{{ $t("command.cancel") }}</sui-button
             >
-            <sui-button type="submit" negative>{{ $t('command.overwrite') }}</sui-button>
+            <sui-button type="submit" negative>{{
+              $t("command.overwrite")
+            }}</sui-button>
           </sui-modal-actions>
         </sui-modal>
       </sui-form>
@@ -415,17 +718,21 @@
       <!-- delete search modal -->
       <sui-form @submit.prevent="deleteSelectedSearch()" warning>
         <sui-modal v-model="openDeleteSearchModal" size="tiny">
-          <sui-modal-header>{{ $t('command.delete_search') }}</sui-modal-header>
+          <sui-modal-header>{{ $t("command.delete_search") }}</sui-modal-header>
           <sui-modal-content>
             <sui-modal-description>
               <sui-message warning>
-                <i class="exclamation triangle icon"></i> {{ $t("message.you_are_about_to_delete") }} <b>{{ selectedSearch }}</b>
+                <i class="exclamation triangle icon"></i>
+                {{ $t("message.you_are_about_to_delete") }}
+                <b>{{ selectedSearch }}</b>
               </sui-message>
               <p>{{ $t("message.are_you_sure") }}</p>
             </sui-modal-description>
           </sui-modal-content>
           <sui-modal-actions>
-            <sui-button type="button" @click.native="showDeleteSearchModal(false)"
+            <sui-button
+              type="button"
+              @click.native="showDeleteSearchModal(false)"
               >{{ $t("command.cancel") }}</sui-button
             >
             <sui-button
@@ -444,17 +751,30 @@
       :showFilterTimeGroup="showFilterTimeGroup"
       :showFilterTime="showFilterTime"
       :showFilterQueue="showFilterQueue"
-      :showFilterGroup="showFilterGroup"
       :showFilterAgent="showFilterAgent"
       :showFilterReason="showFilterReason"
       :showFilterResult="showFilterResult"
       :showFilterIvr="showFilterIvr"
       :showFilterChoice="showFilterChoice"
       :showFilterOrigin="showFilterOrigin"
-      :showFilterDestination="showFilterDestination"
       :showFilterTimeSplit="showFilterTimeSplit"
       :showFilterCaller="showFilterCaller"
       :showFilterContactName="showFilterContactName"
+      :showFilterCdrTimeRange="showFilterCdrTimeRange"
+      :showFilterCdrCaller="showFilterCdrCaller"
+      :showFilterCdrCallee="showFilterCdrCallee"
+      :showFilterCdrCallType="showFilterCdrCallType"
+      :showFilterCdrCallDuration="showFilterCdrCallDuration"
+      :showFilterCdrTrunk="showFilterCdrTrunk"
+      :showFilterCdrDid="showFilterCdrDid"
+      :showFilterCdrCtiGroups="showFilterCdrCtiGroups"
+      :showFilterCdrUser="showFilterCdrUser"
+      :showFilterCdrCallDestination="showFilterCdrCallDestination"
+      :showFilterCdrDestination="showFilterCdrDestination"
+      :showFilterTimeHour="showFilterTimeHour"
+      :cdrCallDurationMap="cdrCallDurationMap"
+      :callDestinationsMap="callDestinationsMap"
+      :filterValues="filterValues"
     />
   </div>
 </template>
@@ -465,16 +785,19 @@ import StorageService from "../services/storage";
 import IndexedDbService from "../services/indexedDb";
 import SearchesService from "../services/searches";
 import UtilService from "../services/utils";
+import UiMaps from "../services/uimaps";
 import SearchService from "../services/searches";
 import PhonebookService from "../services/phonebook";
 import FixedBar from "../components/FixedBar.vue";
-
-import moment from "moment";
+import FilterService from "../services/filter";
+import SettingsService from "../services/settings";
+import SearchInput from "../components/SearchInput";
 
 export default {
   name: "Filters",
   components: {
-    FixedBar: FixedBar
+    FixedBar: FixedBar,
+    SearchInput: SearchInput,
   },
   mixins: [
     LoginService,
@@ -484,6 +807,9 @@ export default {
     SearchService,
     PhonebookService,
     IndexedDbService,
+    FilterService,
+    UiMaps,
+    SettingsService,
   ],
   props: ["showFiltersForm"],
   data() {
@@ -495,18 +821,19 @@ export default {
       selectedSearch: null,
       filter: {
         queues: [],
-        groups: [],
         agents: [],
         ivrs: [],
         reasons: [],
         results: [],
         choices: [],
+        destinationsUi: {},
         destinations: [],
         origins: [],
         time: {
           group: "",
           division: "",
           range: null,
+          cdrDashboardRange: "",
           interval: {
             start: null,
             end: null,
@@ -514,20 +841,41 @@ export default {
         },
         caller: "",
         contactName: "",
+        sourcesUi: {},
+        sources: [],
+        groupsUi: [],
+        groups: [],
+        callType: [],
+        durationUi: {},
+        duration: "",
+        trunks: [],
+        usersUi: [],
+        users: [],
+        callDestinations: [],
+        patterns: [],
+        dids: [],
+        geoGroup: "",
       },
       filterValues: {
         queues: [],
-        groups: [],
         agents: [],
         ivrs: [],
         reasons: [],
         results: [],
         choices: [],
         allChoices: [],
-        destinations: [],
         origins: [],
         callers: [],
         contactNames: [],
+        cdrCaller: [],
+        cdrCallee: [],
+        cdrTrunk: [],
+        ctiGroups: [],
+        users: [],
+        cdrDestinations: [],
+        devices: {},
+        cdrPatterns: [],
+        dids: [],
       },
       savedSearches: [],
       openSaveSearchModal: false,
@@ -536,62 +884,75 @@ export default {
       newSearchName: "",
       errorNewSearch: false,
       errorTimeInterval: false,
+      errorCallDuration: false,
       errorMessage: "",
       loader: {
         filter: true,
         saveSearch: false,
         deleteSearch: false,
       },
-      groupByTimeValues: [
-        { value: "day", text: this.$i18n.t('filter.day') },
-        { value: "week", text: this.$i18n.t('filter.week') },
-        { value: "month", text: this.$i18n.t('filter.month') },
-        { value: "year", text: this.$i18n.t('filter.year') },
-      ],
-      splitByTimeValues: [
-        { value: "60", text: "1 hour" },
-        { value: "30", text: "30 minutes" },
-        { value: "15", text: "15 minutes" },
-        { value: "10", text: "10 minutes" },
-      ],
       queueReportViewFilterMap: null,
       momentFormatter: {
         stringify: (date) => {
           const dateFormat = this.getDateFormat();
-          return date ? moment(date).format(dateFormat) : ''
+          return date ? window.moment(date).format(dateFormat) : "";
         },
         parse: (value) => {
           const dateFormat = this.getDateFormat();
-          return value ? moment(value, dateFormat).toDate() : null
+          return value ? window.moment(value, dateFormat).toDate() : null;
         },
         getWeek(date) {
-          return moment(date).isoWeek();
+          return window.moment(date).isoWeek();
         },
       },
       phonebookDb: null,
       phonebookReady: false,
       showSearchResults: false,
       searchContactResults: [],
+      currentReport: "",
     };
   },
   watch: {
     $route: function () {
+      if (this.currentReport !== this.$route.meta.report) {
+        this.currentReport = this.$route.meta.report;
+        this.getSavedSearches();
+        this.setSearchInputs(this.filter);
+      }
+
       // sort saved searches
       if (this.savedSearches) {
         this.mapSavedSearches(this.savedSearches);
       }
+
+      if (
+        this.currentReport == "cdr" &&
+        this.$route.meta.section == "dashboard"
+      ) {
+        this.selectTime(this.filter.time.cdrDashboardRange);
+      }
     },
     selectedSearch: function () {
-      this.setFilterValuesFromSearch();
+      if (this.selectedSearch) {
+        this.setFilterValuesFromSearch();
+      }
     },
     filtersReady: function () {
       if (this.filtersReady) {
-        // notify QueueView that queries can now be executed
+        // notify ContentView that queries can now be executed
         this.$root.filtersReady = true;
       }
     },
     "filter.ivrs": function () {
       this.updateIvrChoices();
+    },
+    "filter.time.cdrDashboardRange": function () {
+      if (
+        this.currentReport == "cdr" &&
+        this.$route.meta.section == "dashboard"
+      ) {
+        this.selectTime(this.filter.time.cdrDashboardRange);
+      }
     },
     "filter.time.interval": function () {
       if (
@@ -604,19 +965,28 @@ export default {
         // convert to date object if needed
         if (typeof this.filter.time.interval.start == "string") {
           const dateFormat = this.getDateFormat();
-          this.filter.time.interval.start = moment(this.filter.time.interval.start, dateFormat).toDate();
+          this.filter.time.interval.start = this.moment(
+            this.filter.time.interval.start,
+            dateFormat
+          ).toDate();
         }
 
         if (typeof this.filter.time.interval.end == "string") {
           const dateFormat = this.getDateFormat();
-          this.filter.time.interval.end = moment(this.filter.time.interval.end, dateFormat).toDate();
+          this.filter.time.interval.end = this.moment(
+            this.filter.time.interval.end,
+            dateFormat
+          ).toDate();
         }
 
         if (!this.validateTimeInterval()) {
           return;
         }
 
-        if (this.filter.time.interval.end.getTime() == this.getToday().getTime()) {
+        if (
+          this.filter.time.interval.end.getTime() ==
+          this.getYesterday("end").getTime()
+        ) {
           // check time range starting from dates
           switch (this.filter.time.interval.start.getTime()) {
             case this.getYesterday().getTime():
@@ -655,18 +1025,24 @@ export default {
   },
   mounted() {
     this.retrieveFilter();
+    this.currentReport = this.$route.meta.report;
     this.getSavedSearches();
 
     // views request to apply filter on loading
-    this.$root.$off("requestApplyFilter", this.onRequestApplyFilter); // avoid multiple event listeners
     this.$root.$on("requestApplyFilter", this.onRequestApplyFilter);
-
-    this.$root.$off("clearFilters", this.clearFilters); // avoid multiple event listeners
     this.$root.$on("clearFilters", this.clearFilters);
 
-    this.retrievePhonebook();
+    if (
+      this.currentReport == "cdr" &&
+      this.$route.meta.section == "dashboard"
+    ) {
+      this.selectTime(this.filter.time.cdrDashboardRange);
+    }
   },
   methods: {
+    moment(...args) {
+      return window.moment(...args);
+    },
     onRequestApplyFilter() {
       if (this.loader.filter == false) {
         this.applyFilters();
@@ -676,7 +1052,7 @@ export default {
       this.loader.filter = true;
       let filter = this.get(this.reportFilterStorageName);
       let filterValues = this.get(this.reportFilterValuesStorageName);
-
+      // check filters validity
       if (
         filter &&
         filterValues &&
@@ -684,21 +1060,127 @@ export default {
       ) {
         // get object from local storage item
         filterValues = filterValues.item;
-
         this.filterValues = filterValues;
+        this.$root.devices = this.filterValues.devices;
+        this.$root.users = this.filterValues.users;
+
+        // set queue into root object
+        this.$root.queues = {};
+        this.filterValues.queues.forEach(q => {
+          this.$root.queues[q.value] = q.text;
+        });
 
         // set selected values in filter
         this.setFilterSelection(filter, true);
+        // retrieve phonebook when
+        this.retrievePhonebook();
       } else {
         this.retrieveDefaultFilter();
       }
     },
+    callDurationBlur() {
+      if (Number(this.$refs.duration.$data.query)) {
+        this.$refs.duration.$data.query += " " + this.$t("misc.seconds");
+      }
+    },
+    // add phonebook contacts to filterValues
+    addContactsToValues() {
+      let contacts = this.$root.phonebook.map((contact) => {
+        let contactNumbers = [];
+        if (
+          !this._.isEmpty(contact.phones.cellphones) &&
+          contact.phones.cellphones[0] != ""
+        )
+          contactNumbers.push(contact.phones.cellphones[0]);
+        if (
+          !this._.isEmpty(contact.phones.homephones) &&
+          contact.phones.homephones[0] != ""
+        )
+          contactNumbers.push(contact.phones.homephones[0]);
+        if (
+          !this._.isEmpty(contact.phones.workphones) &&
+          contact.phones.workphones[0] != ""
+        )
+          contactNumbers.push(contact.phones.workphones[0]);
+        return {
+          title: contact.title,
+          description: `${contact.cleanName} ${contact.company}`,
+          phoneNumber: contactNumbers.join(","),
+          value: contactNumbers.join(","),
+        };
+      });
+      // add contacts to caller values
+      this.filterValues.cdrCaller.push(...contacts);
+      // add contacts to callee values
+      this.filterValues.cdrCallee.push(...contacts);
+    },
+
     retrieveDefaultFilter() {
       this.getDefaultFilter(
-        this.$route.meta.section,
-        this.$route.meta.view,
-        (success) => {
+        async (success) => {
           this.defaultFilter = success.body.filter;
+          // get cdr destinations values
+          await this.getSettingsPromise().then((res) => {
+            let destinations = res.settings.destinations.map((element) => {
+              return {
+                value: element,
+                text: !this.$t(`filter.${element.toLowerCase()}`).includes(
+                  "filter."
+                )
+                  ? this.$t(`filter.${element.toLowerCase()}`)
+                  : element,
+              };
+            });
+            this.filterValues.cdrPatterns = destinations;
+          });
+
+          // cdr dids
+          if (this.defaultFilter.dids) {
+            this.filterValues.dids = this.defaultFilter.dids.map((did) => {
+              return {
+                text: did,
+                value: did,
+              };
+            });
+          }
+
+          // cdr trunks
+          if (this.defaultFilter.trunks) {
+            this.filterValues.cdrTrunk = this.defaultFilter.trunks.map(
+              (trunk) => {
+                let text = `${trunk.split(",")[0]} (${trunk.split(",")[1]})`;
+                return {
+                  text: text,
+                  value: trunk,
+                };
+              }
+            );
+          }
+
+          // cdr cti groups
+          if (this.defaultFilter.groups) {
+            this.filterValues.ctiGroups = this.defaultFilter.groups.map(
+              (group) => {
+                let parsedGroup = group.split("|");
+                return {
+                  text: parsedGroup[0],
+                  value: parsedGroup[1],
+                };
+              }
+            );
+          }
+
+          // cdr users
+          if (this.defaultFilter.users) {
+            this.filterValues.users = this.defaultFilter.users.map((user) => {
+              let parsedUser = user.split("|");
+              return {
+                text: parsedUser[1],
+                value: parsedUser[2],
+              };
+            });
+            this.$root.users = this.filterValues.users;
+          }
 
           // queues
           if (this.defaultFilter.queues) {
@@ -708,6 +1190,17 @@ export default {
               return { value: queueNumber, text: queueName };
             });
             this.filterValues.queues = queues.sort(this.sortByProperty("text"));
+            this.$root.queues = {};
+
+            for (const queue of this.filterValues.queues) {
+              // set queues into root object
+              this.$root.queues[queue.value] = queue.text;
+
+              // add queues to devices list
+              this.filterValues.devices[queue.value] = {
+                type: 'queue',
+              };
+            }
           }
 
           // agents
@@ -716,14 +1209,6 @@ export default {
               return { value: agent, text: agent };
             });
             this.filterValues.agents = agents.sort(this.sortByProperty("text"));
-          }
-
-          // groups
-          if (this.defaultFilter.groups) {
-            let groups = this.defaultFilter.groups.map((group) => {
-              return { value: group, text: group };
-            });
-            this.filterValues.groups = groups.sort(this.sortByProperty("text"));
           }
 
           // ivr
@@ -752,12 +1237,10 @@ export default {
               });
               choiceSet.add(choiceName);
             });
-
             let choices = [];
             choiceSet.forEach((choice) => {
               choices.push({ value: choice, text: choice });
             });
-
             this.filterValues.choices = choices.sort(
               this.sortByProperty("text")
             );
@@ -791,42 +1274,51 @@ export default {
             let provinces = [];
             let regions = [];
             this.defaultFilter.origins.forEach((origin) => {
-              const tokens = origin.split(",")
+              const tokens = origin.split(",");
               areaCodes.push({
                 value: "areaCode_" + tokens[0],
-                text: `${tokens[0]} (${this.$t("filter.area_code")} ${tokens[1]})`
-              })
+                text: `${tokens[0]} (${this.$t("filter.area_code")} ${
+                  tokens[1]
+                })`,
+              });
               districts.push({
                 value: "district_" + tokens[1],
-                text: `${tokens[1]} (${this.$t("filter.district")})`
-              })
+                text: `${tokens[1]} (${this.$t("filter.district")})`,
+              });
               provinces.push({
                 value: "province_" + tokens[2],
-                text: `${tokens[2]} (${this.$t("filter.province")})`
-              })
+                text: `${tokens[2]} (${this.$t("filter.province")})`,
+              });
               regions.push({
                 value: "region_" + tokens[3],
-                text: `${tokens[3]} (${this.$t("filter.region")})`
-              })
-            })
+                text: `${tokens[3]} (${this.$t("filter.region")})`,
+              });
+            });
             let arr = areaCodes
               .concat(districts)
               .concat(provinces)
               .concat(regions)
               .sort(this.sortByProperty("text"));
-            this.filterValues.origins = Array.from(new Map(arr.map(item => [item.value, item])).values())
+            this.filterValues.origins = Array.from(
+              new Map(arr.map((item) => [item.value, item])).values()
+            );
           }
 
-          // destinations
-          if (this.defaultFilter.destinations) {
-            let destinations = this.defaultFilter.destinations.map(
-              (destination) => {
-                return { value: destination, text: destination };
-              }
-            );
-            this.filterValues.destinations = destinations.sort(
-              this.sortByProperty("text")
-            );
+          // devices
+          if (this.defaultFilter.devices) {
+            for (const deviceString of this.defaultFilter.devices) {
+              const split = deviceString.split(",");
+              const vendor = split[0];
+              const model = split[1];
+              const extension = split[2];
+              const type = split[3];
+              this.filterValues.devices[extension] = {
+                vendor: vendor,
+                model: model,
+                type: type,
+              };
+            }
+            this.$root.devices = this.filterValues.devices;
           }
 
           // save filter values to local storage (with expiry)
@@ -838,6 +1330,8 @@ export default {
 
           // set selected values in filter
           this.setFilterSelection(this.defaultFilter, false);
+          // retrieve phonebook after default filters
+          this.retrievePhonebook();
         },
         (error) => {
           console.error(error.body);
@@ -849,30 +1343,82 @@ export default {
         }
       );
     },
+    setSearchInputs(filter) {
+      // sources
+      if (filter.sourcesUi.title) {
+        this.$nextTick(() => {
+          this.$refs.sourcesUi.$data.query = filter.sourcesUi.title;
+        });
+      }
+
+      // destinations
+      if (filter.destinationsUi.title) {
+        this.$nextTick(() => {
+          this.$refs.destinationsUi.$data.query = filter.destinationsUi.title;
+        });
+      }
+
+      // duration
+      if (filter.durationUi && filter.durationUi.title) {
+        if (filter.durationUi.value) {
+          // duration from options
+          this.$nextTick(() => {
+            this.$refs.duration.$data.query = filter.durationUi.title;
+          });
+        } else {
+          this.$nextTick(() => {
+            this.$refs.duration.$data.query =
+              filter.durationUi.title + " " + this.$t("misc.seconds");
+          });
+        }
+      }
+    },
     setFilterSelection(filter, fromLocalStorage) {
       if (fromLocalStorage) {
         this.filter.queues = filter.queues;
-        this.filter.groups = filter.groups;
+        this.filter.groupsUi = filter.groupsUi;
         this.filter.agents = filter.agents;
         this.filter.reasons = filter.reasons;
         this.filter.results = filter.results;
         this.filter.ivrs = filter.ivrs;
         this.filter.choices = filter.choices;
         this.filter.origins = filter.origins;
-        this.filter.destinations = filter.destinations;
         this.filter.caller = filter.caller;
         this.filter.contactName = filter.contactName;
+
+        // cdr filters
+
+        // sources, destinations, duration
+        this.filter.sourcesUi = filter.sourcesUi;
+        this.filter.destinationsUi = filter.destinationsUi;
+        this.filter.durationUi = filter.durationUi;
+        this.setSearchInputs(filter);
+
+        this.filter.callType = filter.callType;
+        this.filter.trunks = filter.trunks;
+        this.filter.usersUi = filter.usersUi;
+        this.filter.callDestinations = filter.callDestinations;
+        this.filter.patterns = filter.patterns;
+        this.filter.dids = filter.dids;
       }
 
       // time
       this.filter.time.range = filter.time.range;
+      this.filter.time.cdrDashboardRange = filter.time.cdrDashboardRange;
 
-      if (this.filter.time.range) {
-        this.filter.time.range = filter.time.range;
-        this.filter.time.interval = this.selectTime(this.filter.time.range);
+      if (
+        this.filter.time.range &&
+        (!filter.time.interval.start || !filter.time.interval.end)
+      ) {
+        // set time interval from time range
+        this.selectTime(this.filter.time.range);
       } else {
-        this.filter.time.interval.start = moment(filter.time.interval.start).toDate();
-        this.filter.time.interval.end = moment(filter.time.interval.end).toDate();
+        this.filter.time.interval.start = this.moment(
+          filter.time.interval.start
+        ).toDate();
+        this.filter.time.interval.end = this.moment(
+          filter.time.interval.end
+        ).toDate();
       }
 
       this.filter.time.group = filter.time.group;
@@ -885,7 +1431,7 @@ export default {
         this.filter.time.division = "60";
       }
 
-      this.selectTime(filter.time.range);
+      this.filter.geoGroup = filter.geoGroup;
 
       if (!fromLocalStorage) {
         // save filter to local storage
@@ -896,12 +1442,14 @@ export default {
     },
     getSavedSearches(searchToSelect) {
       this.getSearches(
+        this.currentReport,
         (success) => {
           const savedSearches = success.body.searches;
           this.mapSavedSearches(savedSearches);
 
           if (searchToSelect) {
             this.selectedSearch = searchToSelect;
+            this.setFilterValuesFromSearch();
           }
         },
         (error) => {
@@ -933,95 +1481,7 @@ export default {
       let search = this.savedSearches.find(
         (s) => s.name === this.selectedSearch
       );
-
-      // set filter values
-      this.filter = JSON.parse(JSON.stringify(search.filter));
-    },
-    getToday() {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      return today;
-    },
-    getYesterday(startOrEnd="start") {
-      const yesterday = moment().subtract(1, 'day');
-
-      if (startOrEnd == "start") {
-        return yesterday.startOf('day').toDate();
-      } else {
-        return yesterday.endOf('day').toDate();
-      }
-    },
-    getLastWeek(startOrEnd) {
-      const aWeekAgo = moment().subtract(1, 'week');
-
-      if (startOrEnd == "start") {
-        return aWeekAgo.startOf('day').toDate();
-      } else {
-        return aWeekAgo.endOf('day').toDate();
-      }
-    },
-    getLastTwoWeeks(startOrEnd) {
-      const twoWeeksAgo = moment().subtract(2, 'weeks');
-
-      if (startOrEnd == "start") {
-        return twoWeeksAgo.startOf('day').toDate();
-      } else {
-        return twoWeeksAgo.endOf('day').toDate();
-      }
-    },
-    getLastMonth(startOrEnd) {
-      const aMonthAgo = moment().subtract(1, 'month');
-
-      if (startOrEnd == "start") {
-        return aMonthAgo.startOf('day').toDate();
-      } else {
-        return aMonthAgo.endOf('day').toDate();
-      }
-    },
-    getLastTwoMonths(startOrEnd) {
-      const twoMonthsAgo = moment().subtract(2, 'months');
-
-      if (startOrEnd == "start") {
-        return twoMonthsAgo.startOf('day').toDate();
-      } else {
-        return twoMonthsAgo.endOf('day').toDate();
-      }
-    },
-    getLastSixMonths(startOrEnd) {
-      const sixMonthsAgo = moment().subtract(6, 'months');
-
-      if (startOrEnd == "start") {
-        return sixMonthsAgo.startOf('day').toDate();
-      } else {
-        return sixMonthsAgo.endOf('day').toDate();
-      }
-    },
-    getLastYear(startOrEnd) {
-      const aYearAgo = moment().subtract(1, 'year');
-
-      if (startOrEnd == "start") {
-        return aYearAgo.startOf('day').toDate();
-      } else {
-        return aYearAgo.endOf('day').toDate();
-      }
-    },
-    getLastTwoYears(startOrEnd) {
-      const twoYearsAgo = moment().subtract(2, 'years');
-
-      if (startOrEnd == "start") {
-        return twoYearsAgo.startOf('day').toDate();
-      } else {
-        return twoYearsAgo.endOf('day').toDate();
-      }
-    },
-    getLastThreeYears(startOrEnd) {
-      const threeYearsAgo = moment().subtract(3, 'years');
-
-      if (startOrEnd == "start") {
-        return threeYearsAgo.startOf('day').toDate();
-      } else {
-        return threeYearsAgo.endOf('day').toDate();
-      }
+      this.filter = this.prepareFilterForFrontend(search.filter);
     },
     selectTime(range) {
       this.errorTimeInterval = false;
@@ -1032,9 +1492,39 @@ export default {
           start: this.getYesterday("start"),
           end: this.getYesterday("end"),
         };
+      } else if (range == "last_two_days") {
+        this.filter.time.interval = {
+          start: this.getLastTwoDays("start"),
+          end: this.getYesterday("end"),
+        };
+      } else if (range == "current_week") {
+        this.filter.time.interval = {
+          start: this.getCurrentWeek("start"),
+          end: this.getYesterday("end"),
+        };
+      } else if (range == "last_seven_days") {
+        this.filter.time.interval = {
+          start: this.getLastSevenDays(),
+          end: this.getYesterday("end"),
+        };
       } else if (range == "last_week") {
         this.filter.time.interval = {
           start: this.getLastWeek("start"),
+          end: this.getYesterday("end"),
+        };
+      } else if (range == "current_month") {
+        this.filter.time.interval = {
+          start: this.getCurrentMonth("start"),
+          end: this.getYesterday("end"),
+        };
+      } else if (range == "last_three_months") {
+        this.filter.time.interval = {
+          start: this.getLastThreeMonths("start"),
+          end: this.getYesterday("end"),
+        };
+      } else if (range == "current_year") {
+        this.filter.time.interval = {
+          start: this.getCurrentYear("start"),
           end: this.getYesterday("end"),
         };
       } else if (range == "last_two_weeks") {
@@ -1072,7 +1562,60 @@ export default {
           start: this.getLastThreeYears("start"),
           end: this.getYesterday("end"),
         };
+      } else if (range == "past_week") {
+        this.filter.time.interval = {
+          start: this.getPastPeriod("start", "isoWeek"),
+          end: this.getPastPeriod("end", "isoWeek"),
+        };
+      } else if (range == "past_month") {
+        this.filter.time.interval = {
+          start: this.getPastPeriod("start", "month"),
+          end: this.getPastPeriod("end", "month"),
+        };
+      } else if (range == "past_quarter") {
+        this.filter.time.interval = {
+          start: this.getPastPeriod("start", "quarter"),
+          end: this.getPastPeriod("end", "month"),
+        };
+      } else if (range == "past_semester") {
+        this.filter.time.interval = {
+          start: this.getPastPeriod("start", "quarter", 2),
+          end: this.getPastPeriod("end", "month"),
+        };
+      } else if (range == "past_year") {
+        this.filter.time.interval = {
+          start: this.getPastPeriod("start", "year"),
+          end: this.getPastPeriod("end", "year"),
+        };
       }
+    },
+    validateFilters() {
+      const timeIntervalValid = this.validateTimeInterval();
+      const callDurationValid = this.validateCallDuration();
+      return timeIntervalValid && callDurationValid;
+    },
+    validateCallDuration() {
+      if (!this.showFilterCdrCallDuration) {
+        return true;
+      }
+      this.errorCallDuration = false;
+
+      if (this.filter.durationUi.title && !this.filter.durationUi.value) {
+        // validate custom call duration (free input)
+        const syntaxValid = new RegExp("^[0-9]+$", "i").test(
+          this.filter.durationUi.title
+        );
+        const syntaxValidWithUnit = new RegExp(
+          "^[0-9]+ " + this.$t("misc.seconds") + "$",
+          "i"
+        ).test(this.filter.durationUi.title);
+
+        if (!syntaxValid && !syntaxValidWithUnit) {
+          this.errorCallDuration = true;
+          return false;
+        }
+      }
+      return true;
     },
     validateTimeInterval() {
       this.errorTimeInterval = false;
@@ -1088,8 +1631,16 @@ export default {
 
       const dateFormat = this.getDateFormat();
 
-      let formatStartValid = moment(this.filter.time.interval.start, dateFormat, true).isValid();
-      let formatEndValid = moment(this.filter.time.interval.end, dateFormat, true).isValid();
+      let formatStartValid = this.moment(
+        this.filter.time.interval.start,
+        dateFormat,
+        true
+      ).isValid();
+      let formatEndValid = this.moment(
+        this.filter.time.interval.end,
+        dateFormat,
+        true
+      ).isValid();
 
       if (!formatStartValid || !formatEndValid) {
         this.errorTimeInterval = true;
@@ -1098,39 +1649,106 @@ export default {
 
       // check time interval start is not after time interval end
 
-      const start = moment(this.filter.time.interval.start).format(dateFormat);
-      const end = moment(this.filter.time.interval.end).format(dateFormat);
+      const start = this.moment(this.filter.time.interval.start).format(
+        dateFormat
+      );
+      const end = this.moment(this.filter.time.interval.end).format(dateFormat);
 
-      if (moment(start).isAfter(moment(end))) {
+      if (this.moment(start).isAfter(this.moment(end))) {
         this.errorTimeInterval = true;
         return false;
       }
       return true;
     },
-    applyFilters() {
-      if (!this.validateTimeInterval()) {
-        return;
+    clearHiddenFilters(filter) {
+      if (!this.showFilterQueue) {
+        filter.queues = [];
       }
 
-      // time group
-
-      if (!this.showFilterTimeGroup || !this.filter.time.group) {
-        this.filter.time.group = "day";
+      if (!this.showFilterAgent) {
+        filter.agents = [];
       }
 
-      // time split
-
-      if (!this.showFilterTimeSplit || !this.filter.time.division) {
-        this.filter.time.division = "60";
+      if (!this.showFilterIvr) {
+        filter.ivrs = [];
       }
 
-      // save filter to local storage
-      this.set(this.reportFilterStorageName, this.filter);
+      if (!this.showFilterReason) {
+        filter.reasons = [];
+      }
 
-      let filterToApply = JSON.parse(JSON.stringify(this.filter));
-      filterToApply.phones = [];
+      if (!this.showFilterResult) {
+        filter.results = [];
+      }
+
+      if (!this.showFilterChoice) {
+        filter.choices = [];
+      }
+
+      if (!this.showFilterOrigin) {
+        filter.origins = [];
+      }
+
+      if (!this.showFilterTimeGroup) {
+        filter.time.group = "day";
+      }
+
+      if (!this.showFilterTimeSplit) {
+        filter.time.division = "60";
+      }
+
+      if (!this.showFilterCaller) {
+        filter.caller = "";
+      }
+
+      if (!this.showFilterCdrCaller) {
+        filter.sources = [];
+      }
+
+      if (!this.showFilterCdrCallee) {
+        filter.destinations = [];
+      }
+
+      if (!this.showFilterCdrCallType) {
+        filter.callType = [];
+      }
+
+      if (!this.showFilterCdrCallDuration) {
+        filter.duration = "";
+      }
+
+      if (!this.showFilterCdrTrunk) {
+        filter.trunks = [];
+      }
+
+      if (!this.showFilterCdrDid) {
+        filter.dids = [];
+      }
+
+      if (!this.showFilterCdrCtiGroups) {
+        filter.groups = [];
+      }
+
+      if (!this.showFilterCdrUser) {
+        filter.users = [];
+      }
+
+      if (!this.showFilterCdrCallDestination) {
+        filter.callDestinations = [];
+      }
+
+      if (!this.showFilterCdrDestination) {
+        filter.patterns = [];
+      }
+      return filter;
+    },
+    prepareFilterForBackend() {
+      let backendFilter = JSON.parse(JSON.stringify(this.filter));
 
       // retrieve contact name phones
+
+      backendFilter.phones = [];
+
       if (this.filter.contactName) {
         const contact = this.$root.phonebook.find((c) => {
           return c.title == this.filter.contactName;
@@ -1148,7 +1766,7 @@ export default {
           }
 
           if (phoneNumbers.length) {
-            filterToApply.phones = phoneNumbers;
+            backendFilter.phones = phoneNumbers;
           }
         } else {
           // no contact found, clear searched contact name from filters
@@ -1158,15 +1776,152 @@ export default {
 
       // format time interval
 
-      if (filterToApply.time.interval) {
+      if (backendFilter.time.interval) {
         const dateFormat = this.getDateFormat();
-        filterToApply.time.interval.start = moment(
-          filterToApply.time.interval.start
+        backendFilter.time.interval.start = this.moment(
+          backendFilter.time.interval.start
         ).format(dateFormat);
-        filterToApply.time.interval.end = moment(
-          filterToApply.time.interval.end
+        backendFilter.time.interval.end = this.moment(
+          backendFilter.time.interval.end
         ).format(dateFormat);
       }
+
+      // call duration
+
+      if (this.filter.durationUi.title) {
+        if (this.filter.durationUi.value) {
+          // chosen from options
+          backendFilter.duration = this.filter.durationUi.value;
+        } else {
+          // custom call duration (free input)
+          backendFilter.duration = this.filter.durationUi.title.replace(
+            " " + this.$t("misc.seconds"),
+            ""
+          );
+        }
+      } else {
+        // empty call duration
+        backendFilter.duration = "";
+      }
+
+      // sources
+
+      if (backendFilter.sourcesUi && backendFilter.sourcesUi.title) {
+        backendFilter.sources = backendFilter.sourcesUi.value
+          ? backendFilter.sourcesUi.value.split(",")
+          : [backendFilter.sourcesUi.title];
+      } else {
+        backendFilter.sources = [];
+      }
+
+      // destinations
+
+      if (backendFilter.destinationsUi && backendFilter.destinationsUi.title) {
+        backendFilter.destinations = backendFilter.destinationsUi.value
+          ? backendFilter.destinationsUi.value.split(",")
+          : [backendFilter.destinationsUi.title];
+      } else {
+        backendFilter.destinations = [];
+      }
+
+      // groups
+
+      if (backendFilter.groupsUi && backendFilter.groupsUi.length) {
+        let parsedGroups = [];
+        backendFilter.groupsUi.forEach((groups) => {
+          let groupExt = groups.split(",");
+          parsedGroups = parsedGroups.concat(groupExt);
+        });
+        backendFilter.groups = parsedGroups;
+      }
+
+      // users
+
+      if (backendFilter.usersUi && backendFilter.usersUi.length) {
+        let parsedUsers = [];
+        backendFilter.usersUi.forEach((users) => {
+          let userExt = users.split(",");
+          parsedUsers = parsedUsers.concat(userExt);
+        });
+        backendFilter.users = parsedUsers;
+      }
+
+      backendFilter = this.clearHiddenFilters(backendFilter);
+      return backendFilter;
+    },
+    prepareFilterForFrontend(backendFilter) {
+      let frontendFilter = JSON.parse(JSON.stringify(backendFilter));
+
+      // convert time interval from string
+
+      const dateFormat = this.getDateFormat();
+      frontendFilter.time.interval.start = this.moment(
+        backendFilter.time.interval.start,
+        dateFormat
+      ).toDate();
+
+      frontendFilter.time.interval.end = this.moment(
+        backendFilter.time.interval.end,
+        dateFormat
+      ).toDate();
+
+      // call duration
+
+      if (backendFilter.durationUi.title) {
+        if (backendFilter.durationUi.value) {
+          // duration from options
+          const optionFound = this.cdrCallDurationMap.find((d) => {
+            return d.value == backendFilter.durationUi.value;
+          });
+
+          this.$refs.duration.$data.query = optionFound.title;
+        } else {
+          // custom call duration (free input)
+          this.$refs.duration.$data.query =
+            backendFilter.durationUi.title + " " + this.$t("misc.seconds");
+        }
+      } else {
+        this.$refs.duration.$data.query = "";
+      }
+
+      // sources
+
+      if (backendFilter.sourcesUi.title) {
+        this.$refs.sourcesUi.$data.query = backendFilter.sourcesUi.title;
+      } else {
+        this.$refs.sourcesUi.$data.query = "";
+      }
+
+      // destinations
+
+      if (backendFilter.destinationsUi.title) {
+        this.$refs.destinationsUi.$data.query =
+          backendFilter.destinationsUi.title;
+      } else {
+        this.$refs.destinationsUi.$data.query = "";
+      }
+
+      return frontendFilter;
+    },
+    applyFilters() {
+      if (!this.validateFilters()) {
+        return;
+      }
+
+      // time group
+      if (!this.showFilterTimeGroup || !this.filter.time.group) {
+        this.filter.time.group = "day";
+      }
+
+      // time split
+      if (!this.showFilterTimeSplit || !this.filter.time.division) {
+        this.filter.time.division = "60";
+      }
+
+      // save filter to local storage
+      this.set(this.reportFilterStorageName, this.filter);
+
+      let filterToApply = this.prepareFilterForBackend();
 
       // apply filters
       this.$root.$emit("applyFilters", filterToApply);
@@ -1186,7 +1941,7 @@ export default {
 
       if (!this.newSearchName) {
         this.errorNewSearch = true;
-        this.errorMessage = this.$i18n.t('message.search_name_required');
+        this.errorMessage = this.$i18n.t("message.search_name_required");
         return;
       }
 
@@ -1196,88 +1951,29 @@ export default {
 
       if (exists) {
         this.errorNewSearch = true;
-        this.errorMessage = this.$i18n.t('message.search_name_already_exist');
+        this.errorMessage = this.$i18n.t("message.search_name_already_exist");
         return;
       }
 
-      if (!/^[a-zA-Z][a-zA-Z0-9 -,/]+$/.test(this.newSearchName)) {
+      if (!/^[a-zA-Z][a-zA-Z0-9 \-,]+$/.test(this.newSearchName)) {
         this.errorNewSearch = true;
-        this.errorMessage = this.$i18n.t('message.search_name_validation');
+        this.errorMessage = this.$i18n.t("message.search_name_validation");
         return;
       }
       this.saveSearch(this.newSearchName);
     },
-    computeFilterToSave() {
-      let filterToSave = JSON.parse(JSON.stringify(this.filter));
-
-      // remove hidden filters
-
-      if (!this.showFilterQueue) {
-        filterToSave.queues = [];
-      }
-
-      if (!this.showFilterGroup) {
-        filterToSave.groups = [];
-      }
-
-      if (!this.showFilterAgent) {
-        filterToSave.agents = [];
-      }
-
-      if (!this.showFilterIvr) {
-        filterToSave.ivrs = [];
-      }
-
-      if (!this.showFilterReason) {
-        filterToSave.reasons = [];
-      }
-
-      if (!this.showFilterResult) {
-        filterToSave.results = [];
-      }
-
-      if (!this.showFilterChoice) {
-        filterToSave.choices = [];
-      }
-
-      if (!this.showFilterDestination) {
-        filterToSave.destinations = [];
-      }
-
-      if (!this.showFilterOrigin) {
-        filterToSave.origins = [];
-      }
-
-      if (!this.showFilterTimeGroup) {
-        filterToSave.time.group = "day";
-      }
-
-      if (!this.showFilterTimeSplit) {
-        filterToSave.time.division = "60";
-      }
-
-      if (!this.showFilterCaller) {
-        filterToSave.caller = "";
-      }
-
-      // convert time interval to string
-      if (this.filter.time.interval) {
-        const dateFormat = this.getDateFormat();
-        filterToSave.time.interval.start = moment(this.filter.time.interval.start).format(dateFormat);
-        filterToSave.time.interval.end = moment(this.filter.time.interval.end).format(dateFormat);
-      }
-
-      return filterToSave;
-    },
     saveSearch(searchName) {
       this.loader.saveSearch = true;
-      let filterToSave = this.computeFilterToSave();
+      let filterToSave = this.prepareFilterForBackend();
+
+      const search = this.savedSearches.find((s) => s.name === searchName);
 
       this.createSearch(
+        this.currentReport,
         {
           name: searchName,
-          section: this.$route.meta.section,
-          view: this.$route.meta.view,
+          section: search ? search.section : this.$route.meta.section,
+          view: search ? search.view : this.$route.meta.view,
           filter: filterToSave,
         },
         () => {
@@ -1299,16 +1995,27 @@ export default {
       this.loader.deleteSearch = true;
 
       const search = this.savedSearches.find(
-        (s) => (s.name === this.selectedSearch)
+        (s) => s.name === this.selectedSearch
       );
 
-      const searchId = search.name + "_" + search.section + "_" + search.view;
+      // search key is: search_REPORT_SECTION_VIEW_NAME
+      const searchId =
+        "search_" +
+        this.currentReport +
+        "_" +
+        search.section +
+        "_" +
+        search.view +
+        "_" +
+        search.name;
 
       this.deleteSearch(
+        this.currentReport,
         searchId,
         () => {
           this.loader.deleteSearch = false;
           this.showDeleteSearchModal(false);
+          this.selectedSearch = null;
           this.getSavedSearches();
         },
         (error) => {
@@ -1357,14 +2064,22 @@ export default {
       this.filterValues.choices = choices.sort(this.sortByProperty("text"));
     },
     async retrievePhonebook() {
-      this.phonebookDb = await this.getDb(this.PHONEBOOK_DB_NAME, this.PHONEBOOK_DB_VERSION);
+      this.phonebookDb = await this.getDb(
+        this.PHONEBOOK_DB_NAME,
+        this.PHONEBOOK_DB_VERSION
+      );
       let phonebookExpiry = this.get("reportPhonebookExpiry");
 
       if (phonebookExpiry && new Date().getTime() < phonebookExpiry) {
         // get phonebook from indexed db
-        const phonebook = await this.readFromDb(this.phonebookDb, this.PHONEBOOK_DB_NAME);
+        const phonebook = await this.readFromDb(
+          this.phonebookDb,
+          this.PHONEBOOK_DB_NAME
+        );
         this.$root.phonebook = phonebook[0].phonebook;
         this.phonebookReady = true;
+        // function to add phonebook contacts to filters
+        this.addContactsToValues();
       } else {
         await this.clearDb(this.phonebookDb, this.PHONEBOOK_DB_NAME);
 
@@ -1394,13 +2109,20 @@ export default {
                 company: company,
               });
             }
-            await this.addToDb({phonebook: phonebook}, this.phonebookDb, this.PHONEBOOK_DB_NAME);
+            await this.addToDb(
+              { phonebook: phonebook },
+              this.phonebookDb,
+              this.PHONEBOOK_DB_NAME
+            );
             this.$root.phonebook = phonebook;
             this.phonebookReady = true;
 
             // save phonebook expiry to local storage
-            const expiry = new Date().getTime() + this.PHONEBOOK_TTL_MINUTES * 60 * 1000;
+            const expiry =
+              new Date().getTime() + this.PHONEBOOK_TTL_MINUTES * 60 * 1000;
             this.set("reportPhonebookExpiry", expiry);
+            // function to add phonebook contacts to filters
+            this.addContactsToValues();
           },
           (error) => {
             console.error(error.body);
@@ -1419,7 +2141,7 @@ export default {
       }
 
       // search contact name in phonebook
-      this.searchContactResults = this.$root.phonebook.filter( (contact) => {
+      this.searchContactResults = this.$root.phonebook.filter((contact) => {
         // compare query text with contact clean name
         return new RegExp(queryText, "i").test(contact.cleanName);
       });
@@ -1436,7 +2158,7 @@ export default {
       }
     },
     contactNameBlur() {
-      setTimeout( () => {
+      setTimeout(() => {
         this.showSearchResults = false;
       }, 300);
     },
@@ -1446,91 +2168,137 @@ export default {
     },
     clearFilters() {
       this.filter.queues = [];
-      this.filter.groups = [];
+      this.filter.groupsUi = [];
       this.filter.agents = [];
       this.filter.ivrs = [];
       this.filter.reasons = [];
       this.filter.results = [];
       this.filter.choices = [];
-      this.filter.destinations = [];
+      this.filter.destinationsUi = {};
+      this.$refs.destinationsUi.$data.query = "";
       this.filter.origins = [];
       this.filter.caller = "";
       this.filter.contactName = "";
-      this.applyFilters()
+      this.filter.callType = [];
+      this.filter.durationUi = {};
+      this.$refs.duration.$data.query = "";
+      this.filter.sourcesUi = {};
+      this.$refs.sourcesUi.$data.query = "";
+      this.filter.trunks = [];
+      this.filter.usersUi = [];
+      this.filter.callDestinations = [];
+      this.filter.patterns = [];
+      this.filter.dids = [];
+      this.applyFilters();
     },
-    fromToday(date) {
-      return date > this.getYesterday('end');
+    onSourcesInput(value) {
+      this.filter.sourcesUi = { title: value };
     },
-    getDateFormat() {
-      let dateFormat = "";
-      const timeGroup = this.showFilterTimeGroup ? this.filter.time.group : "day";
-
-      switch (timeGroup) {
-        case "year":
-          dateFormat = "YYYY";
-          break;
-        case "month":
-          dateFormat = "YYYY-MM";
-          break;
-        case "week":
-          dateFormat = "GGGG-[W]WW";
-          break;
-        case "day":
-          if (this.showFilterTimeHour) {
-            dateFormat = "YYYY-MM-DD HH:mm";
-          } else {
-            dateFormat = "YYYY-MM-DD";
-          }
-          break;
-      }
-      return dateFormat;
+    onSourcesSelect(searchResult) {
+      this.filter.sourcesUi = searchResult;
+    },
+    onDestinationsInput(value) {
+      this.filter.destinationsUi = { title: value };
+    },
+    onDestinationsSelect(searchResult) {
+      this.filter.destinationsUi = searchResult;
+    },
+    onDurationInput(value) {
+      this.filter.durationUi = { title: value };
+    },
+    onDurationSelect(searchResult) {
+      this.filter.durationUi = searchResult;
     },
   },
   computed: {
     showFilterTime: function () {
-      return this.isFilterInView("time");
+      return this.isFilterInView("time", this.filtersMap);
     },
     showFilterTimeGroup: function () {
-      return this.isFilterInView("timeGroup");
+      return this.isFilterInView("timeGroup", this.filtersMap);
     },
     showFilterTimeSplit: function () {
-      return this.isFilterInView("timeSplit");
+      return this.isFilterInView("timeSplit", this.filtersMap);
     },
     showFilterTimeHour: function () {
-      return this.isFilterInView("hour");
+      return this.isFilterInView("hour", this.filtersMap);
     },
     showFilterAgent: function () {
-      return this.isFilterInView("agent");
-    },
-    showFilterGroup: function () {
-      return this.isFilterInView("group");
+      return this.isFilterInView("agent", this.filtersMap);
     },
     showFilterQueue: function () {
-      return this.isFilterInView("queue");
+      return this.isFilterInView("queue", this.filtersMap);
     },
     showFilterReason: function () {
-      return this.isFilterInView("reason");
+      return this.isFilterInView("reason", this.filtersMap);
     },
     showFilterResult: function () {
-      return this.isFilterInView("result");
+      return this.isFilterInView("result", this.filtersMap);
     },
     showFilterIvr: function () {
-      return this.isFilterInView("ivr");
+      return this.isFilterInView("ivr", this.filtersMap);
     },
     showFilterChoice: function () {
-      return this.isFilterInView("choice");
+      return this.isFilterInView("choice", this.filtersMap);
     },
     showFilterOrigin: function () {
-      return this.isFilterInView("origin");
-    },
-    showFilterDestination: function () {
-      return this.isFilterInView("destination");
+      return this.isFilterInView("origin", this.filtersMap);
     },
     showFilterCaller: function () {
-      return this.isFilterInView("caller");
+      return this.isFilterInView("caller", this.filtersMap);
     },
     showFilterContactName: function () {
-      return this.isFilterInView("contactName");
+      return this.isFilterInView("contactName", this.filtersMap);
+    },
+    // cdr filters check
+    showFilterCdrTimeRange: function () {
+      return this.isFilterInView("cdr_timeRange", this.filtersMap);
+    },
+    showFilterCdrDashboardTimeRange: function () {
+      return this.isFilterInView("cdr_dashboardTimeRange", this.filtersMap);
+    },
+    // cdr caller check
+    showFilterCdrCaller: function () {
+      return this.isFilterInView("cdr_caller", this.filtersMap);
+    },
+    // cdr callee check
+    showFilterCdrCallee: function () {
+      return this.isFilterInView("cdr_callee", this.filtersMap);
+    },
+    // cdr callee check
+    showFilterCdrCallType: function () {
+      return this.isFilterInView("cdr_callType", this.filtersMap);
+    },
+    // cdr callee check
+    showFilterCdrCallDuration: function () {
+      return this.isFilterInView("cdr_callDuration", this.filtersMap);
+    },
+    // cdr trunk check
+    showFilterCdrTrunk: function () {
+      return this.isFilterInView("cdr_trunk", this.filtersMap);
+    },
+    // cdr did check
+    showFilterCdrDid: function () {
+      return this.isFilterInView("cdr_did", this.filtersMap);
+    },
+    // cdr cti groups check
+    showFilterCdrCtiGroups: function () {
+      return this.isFilterInView("cdr_ctiGroups", this.filtersMap);
+    },
+    // cdr user check
+    showFilterCdrUser: function () {
+      return this.isFilterInView("cdr_user", this.filtersMap);
+    },
+    // cdr destination type
+    showFilterCdrCallDestination: function () {
+      return this.isFilterInView("cdr_callDestination", this.filtersMap);
+    },
+    // cdr destination
+    showFilterCdrDestination: function () {
+      return this.isFilterInView("cdr_destination", this.filtersMap);
+    },
+    showFilterGeoGroup: function () {
+      return this.isFilterInView("geoGroup", this.filtersMap);
     },
     reportFilterStorageName: function () {
       return "reportFilter-" + this.get("loggedUser").username;
@@ -1546,75 +2314,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
-.filters-form {
-  text-align: left;
-  margin-top: 30px;
-  .fluid.ui.buttons {
-    min-height: 38px;
-  }
-  .ui.negative.button {
-    min-height: 38px;
-  }
-  .fields {
-    margin: 0 -.5em 1.9em !important;
-    .field {
-      @media only screen and (max-width: 767px) {
-        & {
-          margin-top: 15px !important;
-        }
-      }
-    }
-    .field:first-child {
-      margin-top: 0px !important;
-    }
-    .field:nth-child(n+5) {
-      margin-top: 1.6em;
-    }
-  }
-}
-
-.filters-form .filter-actions {
-  margin-bottom: 35px !important;
-  margin-top: 30px !important;
-}
-
-.datepicker-field .mx-datepicker:last-child {
-  @media only screen and (max-width: 767px) {
-    margin-top: 8px;
-  }
-}
-
-.interval-buttons .fluid.ui.buttons {
-  overflow-x: auto;
-}
-
-.view-title {
-  text-align: left;
-}
-
-.component-head-menu {
-  margin: 3rem 0rem 0rem !important;
-}
-
-.searchContactName > .results {
-  overflow: auto;
-  max-height: 300px;
-}
-
-.filters-form .ui.grid {
-  margin-top: 1rem;
-  margin-bottom: 0;
-}
-
-.ui.input.time-filter {
-  width: auto !important;
-}
-
-i.icon.time-filter {
-  margin: 0 .25rem;
-  position: relative;
-  top: 0.5rem;
-}
-
+@import "../styles/filters.scss";
 </style>

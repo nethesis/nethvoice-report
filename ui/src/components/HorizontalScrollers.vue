@@ -31,7 +31,7 @@ export default {
       mustShow: true,
       showLeftScroller: true,
       showRightScroller: true,
-      scrollValue: this.scroll || 50,
+      scrollValue: this.scroll || 100,
       container: "",
       rightScroller: "",
       leftScroller: "",
@@ -51,7 +51,6 @@ export default {
       // init scrollers
       this.updateVisibility()
     }),
-    this.$root.$off("expandTable", this.onExpandTable); // avoid multiple event listeners
     this.$root.$on("expandTable", this.onExpandTable);
 
     this.leftObserver = new IntersectionObserver(entries => {

@@ -33,7 +33,6 @@ export default {
   },
   data() {
     return {
-      MAX_ENTRIES: 8,
       labels: [],
       datasets: [],
       chartData: {},
@@ -49,32 +48,37 @@ export default {
           },
         },
         scales: {
-          yAxes: [{
-            ticks: {
-              callback: (value) => {
-                return this.formatter(value)
-              }
-            }
-          }]
+          yAxes: [
+            {
+              ticks: {
+                callback: (value) => {
+                  return this.formatter(value);
+                },
+              },
+            },
+          ],
         },
         tooltips: {
           callbacks: {
             label: (tooltipItem, data) => {
-              return data.datasets[tooltipItem.datasetIndex].label + ': ' + this.formatter(tooltipItem.value)
-            }
-          }
-        }
+              return (
+                data.datasets[tooltipItem.datasetIndex].label +
+                ": " +
+                this.formatter(tooltipItem.value)
+              );
+            },
+          },
+        },
       },
     };
   },
   methods: {
     formatter(value) {
-      let valuesInfo = this.data[0] && this.data[0][2] ? this.data[0][2].split("£") : ""
-      let format = valuesInfo[1] ? valuesInfo[1] : ""
-      return (
-        format && format == "seconds" ? this.formatValue(value, format) : value
-      )
-    }
+      let valuesInfo =
+        this.data[0] && this.data[0][2] ? this.data[0][2].split("£") : "";
+      let format = valuesInfo[1] ? valuesInfo[1] : "";
+      return this.formatValue(value, format, this.$parent.$data.adminSettings.currency);
+    },
   },
   watch: {
     data: function () {

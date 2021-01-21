@@ -1,9 +1,9 @@
 var SearchesService = {
   methods: {
-    getSearches(success, error) {
+    getSearches(report, success, error) {
       this.$http
         .get(
-          this.$root.apiScheme + this.$root.apiEndpoint + "/searches",
+          this.$root.apiScheme + this.$root.apiEndpoint + "/searches/" + report,
           {
             headers: {
               Authorization:
@@ -15,9 +15,9 @@ var SearchesService = {
         )
         .then(success, error);
     },
-    createSearch(body, success, error) {
+    createSearch(report, body, success, error) {
       this.$http
-        .post(this.$root.apiScheme + this.$root.apiEndpoint + "/searches", body,
+        .post(this.$root.apiScheme + this.$root.apiEndpoint + "/searches/" + report, body,
           {
             headers: {
               Authorization:
@@ -29,24 +29,9 @@ var SearchesService = {
         )
         .then(success, error);
     },
-    deleteSearch(searchId, success, error) {
+    deleteSearch(report, searchId, success, error) {
       this.$http
-        .delete(this.$root.apiScheme + this.$root.apiEndpoint + "/searches/" + searchId,
-          {
-            headers: {
-              Authorization:
-                "Bearer " +
-                (this.get("loggedUser") && this.get("loggedUser").token) ||
-                "",
-            },
-          }
-        )
-        .then(success, error);
-    },
-    getDefaultFilter(section, view, success, error) {
-      this.$http
-        .get(
-          this.$root.apiScheme + this.$root.apiEndpoint + "/filters/" + section + "/" + view,
+        .delete(this.$root.apiScheme + this.$root.apiEndpoint + "/searches/" + report + "/" + searchId,
           {
             headers: {
               Authorization:

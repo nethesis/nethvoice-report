@@ -38,6 +38,9 @@ func GetSearches(c *gin.Context) {
 	// get current user
 	user := GetClaims(c)["id"].(string)
 
+	// get report param
+	report := c.Param("report")
+
 	// init cache connection
 	cacheConnection := cache.Instance()
 
@@ -57,11 +60,17 @@ func GetSearches(c *gin.Context) {
 		var search models.Search
 		var filter models.Filter
 
-		// extract name, section, view
+		// search key is: search_REPORT_SECTION_VIEW_NAME
 		s := strings.Split(k, "_")
-		search.Name = s[0]
-		search.Section = s[1]
-		search.View = s[2]
+		search.Report = s[1]
+		search.Section = s[2]
+		search.View = s[3]
+		search.Name = s[4]
+
+		// consider only searches matching request report
+		if report != search.Report {
+			continue
+		}
 
 		// convert filter string to struct
 		errJson := json.Unmarshal([]byte(v), &filter)
@@ -85,6 +94,9 @@ func SetSearches(c *gin.Context) {
 	// get current user
 	user := GetClaims(c)["id"].(string)
 
+	// get report param
+	report := c.Param("report")
+
 	// bind json body
 	var jsonSearch models.Search
 	if err := c.BindJSON(&jsonSearch); err != nil {
@@ -100,7 +112,7 @@ func SetSearches(c *gin.Context) {
 		name = guuid.New().String()
 	}
 
-	// extract section, view, filter
+	// extract report, section, view, filter
 	section := jsonSearch.Section
 	view := jsonSearch.View
 	filter := jsonSearch.Filter
@@ -115,12 +127,12 @@ func SetSearches(c *gin.Context) {
 	// init cache connection
 	cacheConnection := cache.Instance()
 
-	// set custom search to cache
-	errCache := cacheConnection.HSet(user, name+"_"+section+"_"+view, filterString).Err()
+	// set custom search to cache, search key is: search_REPORT_SECTION_VIEW_NAME
+	errCache := cacheConnection.HSet(user, "search_"+report+"_"+section+"_"+view+"_"+name, filterString).Err()
 
 	// handle cache error
 	if errCache != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "error on saving to cache", "status": errCache.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "error saving to cache", "status": errCache.Error()})
 		return
 	}
 

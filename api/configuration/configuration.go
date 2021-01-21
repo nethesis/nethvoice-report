@@ -32,13 +32,13 @@ import (
 )
 
 type Configuration struct {
-	QueueDatabase struct {
+	CDRDatabase struct {
 		Host     string `json:"host"`
 		Port     string `json:"port"`
 		User     string `json:"user"`
 		Name     string `json:"name"`
 		Password string `json:"password"`
-	} `json:"queue_database"`
+	} `json:"cdr_database"`
 	PhonebookDatabase struct {
 		Host     string `json:"host"`
 		Port     string `json:"port"`
@@ -47,17 +47,18 @@ type Configuration struct {
 		Password string `json:"password"`
 	} `json:"phonebook_database"`
 	FreePBXDatabase struct {
-                Host     string `json:"host"`
-                Port     string `json:"port"`
-                User     string `json:"user"`
-                Name     string `json:"name"`
-                Password string `json:"password"`
+		Host     string `json:"host"`
+		Port     string `json:"port"`
+		User     string `json:"user"`
+		Name     string `json:"name"`
+		Password string `json:"password"`
 	} `json:"freepbx_database"`
 	ListenAddress          string          `json:"listen_address"`
 	RedisAddress           string          `json:"redis_address"`
 	TTLCache               int             `json:"ttl_cache"`
 	Secret                 string          `json:"secret"`
 	QueryPath              string          `json:"query_path"`
+	TemplatePath           string          `json:"template_path"`
 	ValuesPath             string          `json:"values_path"`
 	ViewsPath              string          `json:"views_path"`
 	PhonebookPath          string          `json:"phonebook_path"`

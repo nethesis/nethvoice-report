@@ -1,6 +1,6 @@
 <template lang="html">
 <div>
-  <div v-show="!dataAvailable" class="ui placeholder segment report-data-not-available">
+  <div v-show="!((dataAvailable && $route.meta.report == 'queue') || (cdrDataAvailable && $route.meta.report == 'cdr'))" class="ui placeholder segment report-data-not-available">
     <div class="ui icon header">
       <i class="frown outline icon mg-bottom-sm"></i>
       {{ $t("message.come_back_tomorrow") }}
@@ -9,16 +9,16 @@
       {{ $t("message.come_back_tomorrow_desc") }}
     </div>
   </div>
-  <div v-show="dataAvailable">
+  <div v-show="(dataAvailable && $route.meta.report == 'queue') || (cdrDataAvailable && $route.meta.report == 'cdr')">
     <div v-if="!$root.filtersReady">
-      <sui-loader active centered inline class="mg-bottom-sm" />
+      <sui-loader active centered inline class="loading-filters" />
       <div>{{ $t("message.loading_filters") }}...</div>
     </div>
     <div class="chart-container">
       <div
         v-for="(chart, index) in charts" v-bind:key="index"
         :id="`export_${index}`"
-        :class="{'table-chart': chart.type == 'table', 'line-chart': chart.type == 'line', 'pie-chart': chart.type == 'pie', 'bar-chart': chart.type == 'bar'}"
+        :class="{'table-chart': chart.type == 'table', 'line-chart': chart.type == 'line', 'pie-chart': chart.type == 'pie', 'bar-chart': chart.type == 'bar', 'recap-chart': chart.type == 'recap', 'rank-chart': chart.type == 'rank'}"
       >
         <div class="align-center h-20">
           <h4 is="sui-header" class="chart-caption">
@@ -26,10 +26,10 @@
           </h4>
           <span v-if="chart.doc">
             <sui-popup flowing hoverable position="top center">
-              <div class="chart-doc">
+              <div class="doc-info">
                 <VueShowdown :markdown="chart.doc"></VueShowdown>
               </div>
-              <sui-icon name="info circle" class="chart-doc-icon" slot="trigger" />
+              <sui-icon name="info circle" class="doc-info-icon" slot="trigger" />
             </sui-popup>
           </span>
           <span v-if="chart.queryLimitHit">
@@ -61,7 +61,12 @@
                 <i class="exclamation triangle icon"></i>{{ $t("message." + chart.message) }}
               </sui-message>
             </div>
-            <sui-loader v-else active centered inline class="loader-height" />
+            <div v-else class="loader-height">
+              <sui-loader active centered inline class="mg-bottom-sm" />
+              <sui-message v-if="chart.slowQuery" warning>
+                <i class="exclamation triangle icon"></i>{{ $t("message.slow_query") }}
+              </sui-message>
+            </div>
         </div>
         <div v-show="chart.data">
           <div v-show="chart.data && chart.data.length < 2">
@@ -73,19 +78,27 @@
           <div v-show="chart.data && chart.data.length > 1">
             <!-- table chart -->
             <div v-if="chart.type == 'table'">
-              <TableChart :caption="chart.caption" :data="chart.data" :chartKey="`${index}`" :officeHours="officeHours" :filterTimeSplit="filterTimeSplit" />
+              <TableChart :caption="chart.caption" :data="chart.data" :chartKey="`${index}`" :officeHours="adminSettings.officeHours" :filterTimeSplit="filterTimeSplit" :report="$route.meta.report"/>
             </div>
             <!-- line chart -->
             <div v-if="chart.type == 'line'">
-              <line-chart :data="chart.data" :caption="chart.caption" :officeHours="officeHours" :filterTimeSplit="filterTimeSplit"></line-chart>
+              <line-chart :data="chart.data" :caption="chart.caption" :officeHours="adminSettings.officeHours" :filterTimeSplit="filterTimeSplit"></line-chart>
             </div>
             <!-- bar chart -->
             <div v-if="chart.type == 'bar'">
-              <bar-chart :data="chart.data" :caption="chart.caption" :type="chart.type" :officeHours="officeHours" :filterTimeSplit="filterTimeSplit"></bar-chart>
+              <bar-chart :data="chart.data" :caption="chart.caption" :type="chart.type" :officeHours="adminSettings.officeHours" :filterTimeSplit="filterTimeSplit"></bar-chart>
             </div>
             <!-- pie chart -->
             <div v-if="chart.type == 'pie'">
               <pie-chart :data="chart.data" :caption="chart.caption"></pie-chart>
+            </div>
+            <!-- recap chart -->
+            <div v-if="chart.type == 'recap'">
+              <RecapChart :data="chart.data" :caption="chart.caption" :currency="adminSettings.currency"></RecapChart>
+            </div>
+            <!-- rank chart -->
+            <div v-if="chart.type == 'rank'">
+              <RankChart :data="chart.data" :caption="chart.caption"/>
             </div>
           </div>
         </div>
@@ -110,6 +123,67 @@
         </sui-modal-actions>
       </sui-modal>
     </sui-form>
+    <!-- CDR call details modal -->
+    <sui-form @submit.prevent="hideCdrDetailsModal()" warning>
+      <sui-modal v-model="cdr.openDetailsModal" class="cdr-details">
+        <sui-modal-header>{{ $t("misc.call_details") }}</sui-modal-header>
+        <sui-modal-content scrolling>
+          <sui-statistics-group class="mg-bottom-sm">
+            <sui-statistic in-group>
+              <sui-statistic-value>
+                {{ $t('table.' + cdr.details.callType) }}
+              </sui-statistic-value>
+              <sui-statistic-label>{{
+                $t("table.call_type")
+              }}</sui-statistic-label>
+            </sui-statistic>
+            <sui-statistic in-group :color="cdr.details.result == 'ANSWERED' ? 'green' : cdr.details.result == 'BUSY' ? 'yellow' : cdr.details.result == 'NO ANSWER' ? 'orange' : cdr.details.result == 'FAILED' ? 'red' : 'black'">
+              <sui-statistic-value>
+                {{ $t('table.' + cdr.details.result) }}
+              </sui-statistic-value>
+              <sui-statistic-label>{{
+                $t("table.result")
+              }}</sui-statistic-label>
+            </sui-statistic>
+            <sui-statistic in-group>
+              <sui-statistic-value>{{
+                cdr.details.totalDuration | formatTime
+              }}</sui-statistic-value>
+              <sui-statistic-label>{{
+                $t("table.totalDuration")
+              }}</sui-statistic-label>
+            </sui-statistic>
+            <sui-statistic in-group>
+              <sui-statistic-value>{{
+                cdr.details.actualDuration | formatTime
+              }}</sui-statistic-value>
+              <sui-statistic-label>{{
+                $t("table.billsec")
+              }}</sui-statistic-label>
+            </sui-statistic>
+            <sui-statistic v-if="cdr.details.callType == 'OUT'" in-group :color="'blue'">
+              <sui-statistic-value>{{
+                cdr.details.cost | formatCurrency(adminSettings.currency) }}</sui-statistic-value>
+              <sui-statistic-label>{{
+                $t("table.cost")
+              }}</sui-statistic-label>
+            </sui-statistic>
+          </sui-statistics-group>
+          <TableChart v-if="cdr.details.data.length" :minimal="true" :caption="$t('misc.details')" :data="cdr.details.data" class="cdr-details"/>
+          <div v-else>
+            <sui-loader active centered inline class="mg-bottom-sm fix" />
+            <sui-message warning class="align-center">
+              <i class="exclamation triangle icon"></i>{{ $t("message.cdr_details_wait") }}
+            </sui-message>
+          </div>
+        </sui-modal-content>
+        <sui-modal-actions>
+          <sui-button type="submit" primary>
+            {{ $t("command.close") }}
+          </sui-button>
+        </sui-modal-actions>
+      </sui-modal>
+    </sui-form>
   </div>
 </div>
 </template>
@@ -120,18 +194,36 @@ import LineChart from "../components/LineChart.vue";
 import BarChart from "../components/BarChart.vue";
 import PieChart from "../components/PieChart.vue";
 import ExportData from "../components/ExportData.vue";
+import RecapChart from "../components/RecapChart.vue";
+import RankChart from "../components/RankChart.vue";
 
 import QueriesService from "../services/queries";
 import StorageService from "../services/storage";
 import UtilService from "../services/utils";
 import SettingsService from "../services/settings";
+import CdrDetailsService from "../services/cdr_details";
 
 export default {
-  name: "QueueDashboard",
-  components: { TableChart, LineChart, BarChart, ExportData, PieChart },
-  mixins: [StorageService, QueriesService, UtilService, SettingsService],
+  name: "ContentView",
+  components: {
+    TableChart,
+    LineChart,
+    BarChart,
+    ExportData,
+    PieChart,
+    RecapChart,
+    RankChart,
+  },
+  mixins: [
+    StorageService,
+    QueriesService,
+    UtilService,
+    SettingsService,
+    CdrDetailsService,
+  ],
   data() {
     return {
+      SLOW_QUERY_TIMEOUT: 5000,
       queryTree: null,
       queryNames: [],
       charts: [],
@@ -139,22 +231,45 @@ export default {
       openDetailsModal: false,
       chartDetails: null,
       dataAvailable: true,
-      officeHours: {
-        start_hour: null,
-        end_hour: null,
+      cdrDataAvailable: true,
+      adminSettings: {
+        officeHours: {
+          start_hour: null,
+          end_hour: null,
+        },
+        queryLimit: 0,
+        currency: "",
+        costs: [],
       },
-      queryLimit: 0,
+      costsConfigured: false,
       filterTimeSplit: 0,
-      isAdmin: 0,
+      isAdmin: false,
       queryLimitMessage: "",
+      currentReport: "",
+      cdr: {
+        openDetailsModal: false,
+        details: {
+          linkedId: "",
+          callType: "",
+          result: "",
+          totalDuration: "",
+          actualDuration: "",
+          cost: "",
+          data: [],
+        },
+      },
     };
   },
   mounted() {
-    // event "dataNotAvailable" is triggered by $http interceptor if report tables don't exist yet
-    this.$root.$off("dataNotAvailable", this.onDataNotAvailable); // avoid multiple event listeners
+    // event "dataNotAvailable" is triggered by $http interceptor if queue report tables don't exist yet
     this.$root.$on("dataNotAvailable", this.onDataNotAvailable);
 
-    this.$root.$off("applyFilters", this.applyFilters); // avoid multiple event listeners
+    // event "cdrDataNotAvailable" is triggered by $http interceptor if cdr report tables don't exist yet
+    this.$root.$on("cdrDataNotAvailable", this.onCdrDataNotAvailable);
+
+    // event "reloadAdminSettings" is triggered by TopBar when configuring costs
+    this.$root.$on("reloadAdminSettings", this.getAdminSettings);
+
     this.$root.$on("applyFilters", this.applyFilters);
 
     // get office hours
@@ -172,12 +287,23 @@ export default {
       this.isAdmin = false;
     }
 
+    this.currentReport = this.$route.meta.report;
+
     // load message for query limit hit
     this.retrieveQueryLimitMessage();
   },
   watch: {
     $route: function () {
-      this.initCharts();
+      if (this.currentReport == this.$route.meta.report) {
+        this.initCharts();
+      } else {
+        this.currentReport = this.$route.meta.report;
+        this.retrieveQueryTree();
+      }
+
+      if (this.isAdmin && this.$route.meta.report == "cdr") {
+        this.checkCostsConfiguration();
+      }
     },
     "$root.filtersReady": function () {
       // $root.filtersReady is set to true when filters have been loaded
@@ -186,12 +312,23 @@ export default {
       }
     },
   },
+  beforeRouteLeave(to, from, next) {
+    // clear all slow query timeouts
+    for (let chart of this.charts) {
+      clearTimeout(chart.slowQueryTimeout);
+    }
+    next();
+  },
   methods: {
     onDataNotAvailable() {
       this.dataAvailable = false;
     },
+    onCdrDataNotAvailable() {
+      this.cdrDataAvailable = false;
+    },
     retrieveQueryTree() {
       this.getQueryTree(
+        this.$route.meta.report,
         (success) => {
           let queryTree = success.body.query_tree;
 
@@ -214,7 +351,7 @@ export default {
       );
     },
     initCharts() {
-      if (this.dataAvailable) {
+      if ((this.dataAvailable && this.$route.meta.report == 'queue') || (this.cdrDataAvailable && this.$route.meta.report == 'cdr')) {
         let charts = [];
 
         this.queries = this.queryTree[this.$route.meta.section][
@@ -242,6 +379,8 @@ export default {
               error: false,
               doc: doc,
               queryLimitHit: false,
+              slowQuery: false,
+              slowQueryTimeout: 0,
             });
           });
           this.charts = charts.sort(this.sortByProperty("position"));
@@ -261,8 +400,14 @@ export default {
         chart.error = false;
         chart.queryLimitHit = false;
 
+        chart.slowQuery = false;
+        chart.slowQueryTimeout = setTimeout(() => {
+          chart.slowQuery = true;
+        }, this.SLOW_QUERY_TIMEOUT);
+
         this.execQuery(
           filter,
+          this.$route.meta.report,
           this.$route.meta.section,
           this.$route.meta.view,
           chart.name,
@@ -286,13 +431,18 @@ export default {
               }
 
               // check if query limit has been hit
-              if (chart.data.length && chart.data.length -1 == this.queryLimit) {
+              if (
+                chart.data.length &&
+                chart.data.length - 1 == this.adminSettings.queryLimit
+              ) {
                 chart.queryLimitHit = true;
               }
+
+              clearTimeout(chart.slowQueryTimeout);
             }
           },
           (error) => {
-            console.error(error.body);
+            console.error(error);
             chart.error = true;
           }
         );
@@ -333,11 +483,21 @@ export default {
       this.getSettings(
         (success) => {
           const settings = success.body.settings;
-          this.officeHours = {
+          this.adminSettings.officeHours = {
             startHour: settings.start_hour,
             endHour: settings.end_hour,
           };
-          this.queryLimit = Number(settings.query_limit);
+          this.adminSettings.queryLimit = Number(settings.query_limit);
+          this.adminSettings.currency = settings.currency;
+
+          // costs
+          this.adminSettings.costs = settings.costs;
+
+          // check if costs configuration modal has already been shown
+          this.costsConfigured = this.get("costsConfigured");
+          if (this.isAdmin && this.$route.meta.report == "cdr") {
+            this.checkCostsConfiguration();
+          }
         },
         (error) => {
           console.error(error.body);
@@ -346,8 +506,17 @@ export default {
     },
     retrieveDoc(queryName) {
       try {
-        let mdDoc = require("../doc-inline/" + this.$root.currentLocale + "/" +
-            this.$route.meta.section + "_" + this.$route.meta.view + "_" + queryName + ".md");
+        let mdDoc = require("../doc-inline/" +
+          this.$root.currentLocale +
+          "/" +
+          this.$route.meta.report +
+          "/" +
+          this.$route.meta.section +
+          "_" +
+          this.$route.meta.view +
+          "_" +
+          queryName +
+          ".md");
         return mdDoc.default;
       } catch (error) {
         return null;
@@ -356,12 +525,52 @@ export default {
     retrieveQueryLimitMessage() {
       try {
         const userType = this.isAdmin ? "admin" : "user";
-        let message = require("../doc-inline/" + this.$root.currentLocale + "/query_limit_hit_" + userType + ".md");
+        let message = require("../doc-inline/" +
+          this.$root.currentLocale +
+          "/query_limit_hit_" +
+          userType +
+          ".md");
         this.queryLimitMessage = message.default;
       } catch (error) {
         this.queryLimitMessage = "";
       }
-    }
+    },
+    showCdrDetailsModal(row) {
+      this.cdr.details.linkedId = row[0];
+      this.cdr.details.callType = row[4];
+      this.cdr.details.result = row[5];
+      this.cdr.details.totalDuration = row[6];
+      this.cdr.details.actualDuration = row[7];
+      this.cdr.details.cost = row[8];
+      this.cdr.details.data = [];
+      this.cdr.openDetailsModal = true;
+      const linkedId = this.cdr.details.linkedId;
+
+      this.getCdrDetails(
+        linkedId,
+        (success) => {
+          // ensure user hansn't opened details for another call while processing
+          if (linkedId == this.cdr.details.linkedId) {
+            this.cdr.details.data = success.body;
+          }
+        },
+        (error) => {
+          console.error(error.body);
+        }
+      );
+    },
+    hideCdrDetailsModal() {
+      this.cdr.openDetailsModal = false;
+    },
+    checkCostsConfiguration() {
+      // need to show costs configuration modal?
+      if (
+        !this.costsConfigured &&
+        (!this.adminSettings.costs || !this.adminSettings.costs.length)
+      ) {
+        this.$root.$emit("showCostsConfigModal");
+      }
+    },
   },
 };
 </script>
@@ -382,14 +591,9 @@ export default {
   margin-bottom: 1rem !important;
 }
 
-.ui.table.chart-details {
+.ui.table.chart-details,
+.ui.table.cdr-details {
   margin: 0 auto;
-}
-
-.chart-doc-icon {
-  color: #2185d0;
-  margin-left: 0.3rem;
-  margin-right: 0;
 }
 
 .chart-query-limit-icon {
@@ -397,10 +601,15 @@ export default {
   margin-left: 0.3rem;
 }
 
-.chart-doc, .chart-query-limit {
+.chart-query-limit {
   text-align: left !important;
   max-width: 35rem !important;
   max-height: 14rem;
   overflow-y: auto;
+}
+
+.ui.statistic > .value,
+.ui.statistics .statistic > .value {
+  font-size: 1.7rem !important;
 }
 </style>

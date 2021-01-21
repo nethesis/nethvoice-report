@@ -29,6 +29,7 @@ import (
 	"os"
 	"reflect"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -42,7 +43,7 @@ import (
 	"github.com/nethesis/nethvoice-report/api/configuration"
 )
 
-var excludedRoutes = [...]string{"/api/searches", "/api/filters/:section/:view"}
+var excludedRoutes = [...]string{"/api/searches", "/api/filters"}
 
 func ParseSqlResults(rows *sql.Rows) string {
 	// define data to return
@@ -78,6 +79,15 @@ func ParseSqlResults(rows *sql.Rows) string {
 			if value == nil {
 				value = []uint8{}
 			}
+			if fmt.Sprintf("%T", value) == "time.Time" {
+				t := value.(time.Time)
+				value, _ = t.MarshalText()
+			}
+			if fmt.Sprintf("%T", value) == "int64" {
+				s := fmt.Sprint(value)
+				value = []byte(s)
+			}
+
 			value := string(value.([]byte))
 			record = append(record, value)
 		}
@@ -125,6 +135,7 @@ func Intersect(a []string, b []string, objType string) []string {
 	// clean values before intersect
 	switch objType {
 	case "queues":
+		// create regexp to extract queue number
 		var rgx = regexp.MustCompile(`\((.*?)\)`)
 		for i, q := range a {
 			rs := rgx.FindStringSubmatch(q)
@@ -137,13 +148,14 @@ func Intersect(a []string, b []string, objType string) []string {
 		return result
 
 	case "groups":
-		// intersect arrays and return []interface{}
-		r := intersect.Simple(a, b).([]interface{})
+		// loop a array and check groups name
+		for i, g := range a {
+			parts := strings.Split(g, "|")
+			var group = parts[0]
 
-		// iterate over []interface{}
-		result := make([]string, len(r))
-		for i, v := range r {
-			result[i] = fmt.Sprint(v)
+			if Contains(group, b) {
+				result = append(result, a[i])
+			}
 		}
 
 		return result
@@ -160,6 +172,18 @@ func Intersect(a []string, b []string, objType string) []string {
 
 		return result
 
+	case "users":
+		// loop a array and check users name
+		for i, u := range a {
+			parts := strings.Split(u, "|")
+			var user = parts[0]
+
+			if Contains(user, b) {
+				result = append(result, a[i])
+			}
+		}
+
+		return result
 	}
 
 	// return empty array
@@ -170,6 +194,69 @@ func ExtractStrings(v []string) string {
 	result := strings.Join(v, `","`)
 
 	return "\"" + result + "\""
+}
+
+func ExtractCallDestinations(v []string) string {
+	// init result var
+	result := ""
+
+	// loop destinations
+	for _, d := range v {
+		parts := strings.Split(d, ",")
+
+		// switch type of destination
+		switch parts[0] {
+		case "dcontext":
+			result = "AND dcontext = " + parts[1]
+
+		case "lastapp":
+			result = "AND lastapps REGEXP '" + parts[1] + "$'"
+		}
+	}
+
+	return result
+}
+
+func ExtractPatterns() string {
+	// init vars
+	var settings models.Settings
+	var patterns string
+
+	// init cache connection
+	cacheConnection := cache.Instance()
+
+	// check if settings is locally cached
+	settingsString, errCache := cacheConnection.Get("admin_settings").Result()
+
+	// get settings struct from configuration
+	settings = configuration.Config.Settings
+
+	if errCache == nil {
+		// settings is cached
+
+		// convert to struct
+		var settingsCache map[string]models.Settings
+
+		errJson := json.Unmarshal([]byte(settingsString), &settingsCache)
+		if errJson != nil {
+			return ""
+		}
+		settings = settingsCache["settings"]
+	}
+
+	// sort patterns by long
+	sort.Slice(settings.CallPatterns, func(i, j int) bool {
+		return len(settings.CallPatterns[i].Prefix) > len(settings.CallPatterns[j].Prefix)
+	})
+
+	// loop patterns
+	for _, p := range settings.CallPatterns {
+		patterns += "IF (dst LIKE \"" + p.Prefix + "%\", \"" + p.Destination + "\", "
+	}
+	patterns += "\"\"" + strings.Repeat(")", len(settings.CallPatterns))
+
+	// return value
+	return patterns
 }
 
 func PivotGroup(timeDivisionString string) string {
@@ -274,8 +361,15 @@ func ExtractSettings(settingName string) string {
 			f := v.Field(i)
 
 			// override default admin setting value if value from cache is nonempty
-			if f.Interface().(string) != "" {
+
+			if typeOfV.Field(i).Type.String() == "string" && f.Interface().(string) != "" {
 				reflect.ValueOf(&settings).Elem().FieldByName(typeOfV.Field(i).Name).SetString(f.Interface().(string))
+			} else if typeOfV.Field(i).Type.String() == "[]string" && len(f.Interface().([]string)) != 0 {
+				reflect.ValueOf(&settings).Elem().FieldByName(typeOfV.Field(i).Name).Set(reflect.ValueOf(f.Interface()))
+			} else if typeOfV.Field(i).Type.String() == "[]models.CallPattern" && len(f.Interface().([]models.CallPattern)) != 0 {
+				reflect.ValueOf(&settings).Elem().FieldByName(typeOfV.Field(i).Name).Set(reflect.ValueOf(f.Interface()))
+			} else if typeOfV.Field(i).Type.String() == "[]models.Cost" && len(f.Interface().([]models.Cost)) != 0 {
+				reflect.ValueOf(&settings).Elem().FieldByName(typeOfV.Field(i).Name).Set(reflect.ValueOf(f.Interface()))
 			}
 		}
 	}
@@ -286,6 +380,42 @@ func ExtractSettings(settingName string) string {
 
 	// return value
 	return string(f.String())
+}
+
+func ExtractUserExtensions(user string) string {
+	// init extensions var
+	var extensions string
+
+	// init cache connection
+	cacheConnection := cache.Instance()
+
+	// read default filter from cache
+	valuesFilterString, errCache := cacheConnection.Get("values_filter").Result()
+
+	// check error for filter
+	if errCache != nil {
+		LogError(errors.Wrap(errCache, "error reading filter from cache"))
+		return ""
+	}
+
+	// convert to struct
+	var valuesFilter models.Filter
+	errJson := json.Unmarshal([]byte(valuesFilterString), &valuesFilter)
+	if errJson != nil {
+		LogError(errors.Wrap(errJson, "error converting filter"))
+		return ""
+	}
+
+	users := valuesFilter.Users
+	for _, u := range users {
+		parts := strings.Split(u, "|")
+		if parts[0] == user {
+			extensions = parts[2]
+			return extensions
+		}
+	}
+
+	return ""
 }
 
 func EpochToHumanDate(epochTime int) string {

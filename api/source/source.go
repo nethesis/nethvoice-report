@@ -36,9 +36,9 @@ var dbQ *sql.DB
 var dbP *sql.DB
 var dbF *sql.DB
 
-func QueueInstance() *sql.DB {
+func CDRInstance() *sql.DB {
 	if dbQ == nil {
-		dbQ = QueueInit()
+		dbQ = CDRInit()
 	}
 	return dbQ
 }
@@ -57,9 +57,9 @@ func FreePBXInstance() *sql.DB {
         return dbF
 }
 
-func QueueInit() *sql.DB {
+func CDRInit() *sql.DB {
 	// define uri connection string
-	uri := configuration.Config.QueueDatabase.User + ":" + configuration.Config.QueueDatabase.Password + "@tcp(" + configuration.Config.QueueDatabase.Host + ":" + configuration.Config.QueueDatabase.Port + ")/" + configuration.Config.QueueDatabase.Name
+	uri := configuration.Config.CDRDatabase.User + ":" + configuration.Config.CDRDatabase.Password + "@tcp(" + configuration.Config.CDRDatabase.Host + ":" + configuration.Config.CDRDatabase.Port + ")/" + configuration.Config.CDRDatabase.Name
 
 	// connect to database
 	db, err := sql.Open("mysql", uri+"?charset=utf8&parseTime=True&multiStatements=true")

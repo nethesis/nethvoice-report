@@ -30,7 +30,8 @@ WHERE
 ORDER BY
    name;
 
-CREATE TABLE IF NOT EXISTS data_call AS
+CREATE TABLE IF NOT EXISTS data_call
+(UNIQUE KEY `period` (`period`,`cid`,`qname`))
 SELECT
     DATE_FORMAT(
         FROM_UNIXTIME(`timestamp_in`),
@@ -49,8 +50,6 @@ FROM
 GROUP BY period, cid, qname
 ORDER BY
     period;
-
-ALTER TABLE data_call ADD UNIQUE (period,cid,qname);
 
 INSERT IGNORE INTO data_call
 SELECT

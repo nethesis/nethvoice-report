@@ -1,30 +1,38 @@
 <template>
   <div v-if="isVisible && data && data.length > 1" class="right-floated mt-30m">
-    <!-- button only csv if is table -->
-    <sui-button
-      v-if="type === 'table'"
-      @click="exportToCSV()"
-      class="custom-btn"
-      basic
+    <!-- button only csv if is table or recap -->
+    <sui-popup
+      v-if="type === 'table' || type === 'recap' || type === 'rank'"
       :content="$t('command.export_csv')"
-      icon="download"
-    />
-    <!-- dropdown for csv and pdf export -->
-    <sui-dropdown
-      v-if="type !== 'table'"
-      class="icon basic"
-      :class="{ transparent: transparent }"
-      icon="download"
-      button
-      pointing="top right"
     >
-      {{ $t("command.export") }}
-      <sui-dropdown-menu>
-        <sui-dropdown-item @click="exportToCSV()">{{ $t("command.export_csv") }}</sui-dropdown-item>
-        <sui-dropdown-item v-if="isPdf" @click="exportToPDF('canvas')">{{ $t("command.export_pdf") }}
-        </sui-dropdown-item>
-      </sui-dropdown-menu>
-    </sui-dropdown>
+      <sui-button
+        @click="exportToCSV()"
+        class="custom-btn"
+        basic
+        icon="download"
+        slot="trigger"
+      />
+    </sui-popup>
+    <!-- dropdown for csv and pdf export -->
+    <sui-popup
+      v-else
+      :content="$t('command.export')"
+    >
+      <sui-dropdown
+        class="icon basic"
+        :class="{ transparent: transparent }"
+        icon="download"
+        button
+        pointing="top right"
+        slot="trigger"
+      >
+        <sui-dropdown-menu>
+          <sui-dropdown-item @click="exportToCSV()">{{ $t("command.export_csv") }}</sui-dropdown-item>
+          <sui-dropdown-item v-if="isPdf" @click="exportToPDFPNG('canvas', {'file_type': 'pdf'})">{{ $t("command.export_pdf") }}</sui-dropdown-item>
+          <sui-dropdown-item v-if="isPng" @click="exportToPDFPNG('canvas', {'file_type': 'png'})">{{ $t("command.export_png") }}</sui-dropdown-item>
+        </sui-dropdown-menu>
+      </sui-dropdown>
+    </sui-popup>
   </div>
 </template>
 
@@ -52,14 +60,29 @@ export default {
     return {
       isVisible: this.visible || true,
       isPdf: this.pdf || true,
+      isPng: this.png || true,
       parsedName: this.parseName(this.filename || "report")
     };
   },
   methods: {
     exportToCSV () {
       let data = this._.cloneDeep(this.data)
+      // if 'src£phoneNumber' / 'dst£phoneNumber' columns are present, generate 'srcDevice' / 'dstDevice' columns
+      data = this.checkDeviceColumns(data);
       // translate col labels
       for (let key in data[0]) data[0][key] = this.$t(this.parseColHeader(data[0][key]))
+
+      // rrd charts may contain queue labels such as "7000£queue", remove the format part ("£queue")
+      if (this.type == "line") {
+        for (let row of data.slice(1)) {
+          const format = row[0].split("£")[1];
+
+          if (format) {
+            row[0] = row[0].split("£")[0];
+          }
+        }
+      }
+
       // convert data obj to csv
       let blob = new Blob([Papa.unparse(data)], { type: 'text/csv;charset=utf-8;' }),
           link = document.createElement("a"),
@@ -73,7 +96,7 @@ export default {
       document.body.removeChild(link)
       data = null
     },
-    async exportToPDF (elementTag, options = {}) {
+    async exportToPDFPNG (elementTag, options = {}) {
       if (!this.pdfElementContainerId) return
       // get the element height/width
       let element = document.querySelector(`${this.pdfElementContainerId} ${elementTag}`),
@@ -83,6 +106,8 @@ export default {
           orizontalMargins = options.margin || 100,
           marginTop = options.top || 70,
           marginBottom = options.bottom || 20
+      // image caption canvas
+      let captionCanvas
       // create partial canvas
       let pdfCanvas = document.createElement("canvas")
       pdfCanvas.setAttribute("id", "canvaspdf")
@@ -99,16 +124,32 @@ export default {
         format: [(elementWidth + orizontalMargins * 2) * 0.75 , (elementHeight + marginTop + marginBottom) * 0.75],
         compress:true
       })
+      // retrieve caption canvas
+      await html2canvas(header, {backgroundColor: null} ).then(function(canvas) {
+        captionCanvas = canvas
+      })
       // add header html header to pdf
-      await html2canvas(header).then(function(canvas) {
-        pdf.addImage(canvas, 'PNG', (((elementWidth + orizontalMargins * 2) - header.offsetWidth) * 0.75) / 2, 20)
-      }),
+      pdf.addImage(captionCanvas, 'PNG', (((elementWidth + orizontalMargins * 2) - header.offsetWidth) * 0.75) / 2, 20)
       // draw imange into the new canvas
       pdfctx.drawImage(element, pdfctxX, pdfctxY, elementWidth, elementHeight)
-      // add canvas to pdf
-      pdf.addImage(pdfCanvas, 'PNG', 0, 0)
-      // download the pdf
-      pdf.save(`${this.parsedName}.pdf`);
+      // export data
+      if (options.file_type == "png") {
+        let link = document.createElement("a")
+        pdfctx.drawImage(captionCanvas, ((elementWidth + orizontalMargins * 2) - header.offsetWidth) / 2, 20)
+        let  url = pdfCanvas.toDataURL("image/png;base64")
+        link.setAttribute("href", url)
+        link.setAttribute("download", `${this.parsedName}.png`)
+        link.style.visibility = 'hidden'
+        document.body.appendChild(link)
+        // download png
+        link.click();
+        document.body.removeChild(link)
+      } else if (options.file_type == "pdf") {
+        // add canvas to pdf
+        pdf.addImage(pdfCanvas, 'PNG', 0, 0)
+        // download the pdf
+        pdf.save(`${this.parsedName}.pdf`);
+      }
     },
     parseName (filename) {
       return filename.toLowerCase().replace(/[\s.]+/g,'_')
@@ -117,7 +158,50 @@ export default {
       let parsedHeader = this.parseTableChartHeader(header)
       let resHeader = parsedHeader.bottomHeaderName || parsedHeader.middleHeaderName || parsedHeader.topHeaderName
       return resHeader
-    }
+    },
+    checkDeviceColumns (data) {
+      const columns = data[0];
+      const srcPos = columns.indexOf("src£phoneNumber");
+      const dstPos = columns.indexOf("dst£phoneNumber");
+
+      if (srcPos > -1 && dstPos > -1) {
+        // generate 'srcDevice' and 'dstDevice' columns
+        // add new columns near src/dst (add right-most column first)
+
+        if (srcPos < dstPos) {
+          columns.splice(dstPos + 1, 0, "dstDevice");
+          columns.splice(srcPos + 1, 0, "srcDevice");
+        } else {
+          columns.splice(srcPos + 1, 0, "srcDevice");
+          columns.splice(dstPos + 1, 0, "dstDevice");
+        }
+        const rows = data.slice(1);
+
+        for (const row of rows) {
+          const srcElem = row[srcPos];
+          const dstElem = row[dstPos];
+          let srcDevice = "";
+          let dstDevice = "";
+
+          if (this.$root.devices[srcElem]) {
+            srcDevice = this.$root.devices[srcElem].type;
+          }
+
+          if (this.$root.devices[dstElem]) {
+            dstDevice = this.$root.devices[dstElem].type;
+          }
+
+          if (srcPos < dstPos) {
+            row.splice(dstPos + 1, 0, dstDevice);
+            row.splice(srcPos + 1, 0, srcDevice);
+          } else {
+            row.splice(srcPos + 1, 0, srcDevice);
+            row.splice(dstPos + 1, 0, dstDevice);
+          }
+        }
+      }
+      return data;
+    },
   },
   watch: {
     "filename": function () {

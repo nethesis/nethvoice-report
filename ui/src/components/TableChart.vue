@@ -1,167 +1,259 @@
 <template>
   <div :id="`container_${chartKey}`" class="table-container">
     <sui-table
-    celled
-    selectable
-    striped
-    :compact="minimal"
-    :collapsing="minimal"
-    class="structured sortable"
-  >
-    <sui-table-header>
-      <!-- top header -->
-      <sui-table-row>
-        <sui-table-header-cell
-          v-for="(header, index) in topHeaders"
-          v-bind:key="index"
-          ref="tableHeader"
-          :class= "[
-            header.subHeaders.length ? 'not-sortable' : 'sortable',
-            header.name == sortedBy ? 'sorted ' + sortedDirection : ''
-          ]"
-          @click="sortTable(header, $event)"
-          :rowspan="
-            singleHeader ||
-            (doubleHeader && header.subHeaders.length) ||
-            (tripleHeader && header.subHeaders.length)
-              ? '1'
-              : doubleHeader && !header.subHeaders.length
-              ? '2'
-              : '3'
-          "
-          :colspan="header.subHeaders ? header.colSpan : '1'"
-        >
-          {{
-            $te("table." + header.name)
-              ? $t("table." + header.name)
-              : header.name
-          }}
-          <a
-            href="#"
-            v-show="header.subHeaders && header.expandible"
-            @click="toggleExpandHeader(header)"
+      celled
+      selectable
+      striped
+      :compact="minimal"
+      :collapsing="minimal"
+      class="structured sortable"
+    >
+      <sui-table-header>
+        <!-- top header -->
+        <sui-table-row>
+          <template v-for="(header, index) in topHeaders">
+            <sui-table-header-cell
+              v-if="!(report == 'cdr' && (header.name == 'linkedid' || header.name == 'call_type'))"
+              v-bind:key="index"
+              ref="tableHeader"
+              :class="[
+                header.subHeaders.length ? 'not-sortable' : 'sortable',
+                header.name == sortedBy ? 'sorted ' + sortedDirection : '',
+              ]"
+              @click="sortTable(header, $event)"
+              :rowspan="
+                singleHeader ||
+                (doubleHeader && header.subHeaders.length) ||
+                (tripleHeader && header.subHeaders.length)
+                  ? '1'
+                  : doubleHeader && !header.subHeaders.length
+                  ? '2'
+                  : '3'
+              "
+              :colspan="header.subHeaders ? header.colSpan : '1'"
+            >
+              {{
+                $te("table." + header.name)
+                  ? $t("table." + header.name)
+                  : header.name
+              }}
+              <a
+                href="#"
+                v-show="header.subHeaders && header.expandible"
+                @click="toggleExpandHeader(header)"
+              >
+                {{
+                  header.expanded
+                    ? "[" + $t("table.collapse") + "]"
+                    : "[" + $t("table.expand") + "]"
+                }}
+              </a>
+            </sui-table-header-cell>
+          </template>
+          <!-- details header for CDR -->
+          <sui-table-header-cell v-if="report == 'cdr'" class="not-sortable">
+            {{ $t("table.actions") }}
+          </sui-table-header-cell>
+        </sui-table-row>
+        <!-- middle header -->
+        <sui-table-row v-if="middleHeaders.length">
+          <sui-table-header-cell
+            v-for="(header, index) in middleHeaders"
+            v-show="header.visible"
+            ref="tableHeader"
+            :class="[
+              header.subHeaders.length ? 'not-sortable' : 'sortable',
+              header.name == sortedBy ? 'sorted ' + sortedDirection : '',
+            ]"
+            @click="sortTable(header, $event)"
+            v-bind:key="index"
+            :rowspan="tripleHeader && !header.subHeaders.length ? '2' : '1'"
+            :colspan="header.colSpan"
           >
             {{
-              header.expanded
-                ? "[" + $t("table.collapse") + "]"
-                : "[" + $t("table.expand") + "]"
+              $te("table." + header.name)
+                ? $t("table." + header.name)
+                : header.name
             }}
-          </a>
-        </sui-table-header-cell>
-      </sui-table-row>
-      <!-- middle header -->
-      <sui-table-row v-if="middleHeaders.length">
-        <sui-table-header-cell
-          v-for="(header, index) in middleHeaders"
-          v-show="header.visible"
-          ref="tableHeader"
-          :class= "[
-            header.subHeaders.length ? 'not-sortable' : 'sortable',
-            header.name == sortedBy ? 'sorted ' + sortedDirection : ''
-          ]"
-          @click="sortTable(header, $event)"
-          v-bind:key="index"
-          :rowspan="tripleHeader && !header.subHeaders.length ? '2' : '1'"
-          :colspan="header.colSpan"
-        >
-          {{
-            $te("table." + header.name)
-              ? $t("table." + header.name)
-              : header.name
-          }}
-          <a
-            href="#"
-            v-show="header.subHeaders && header.expandible"
-            @click="toggleExpandHeader(header)"
+            <a
+              href="#"
+              v-show="header.subHeaders && header.expandible"
+              @click="toggleExpandHeader(header)"
+            >
+              {{
+                header.expanded
+                  ? "[" + $t("table.collapse") + "]"
+                  : "[" + $t("table.expand") + "]"
+              }}
+            </a></sui-table-header-cell
           >
-            {{
-              header.expanded
-                ? "[" + $t("table.collapse") + "]"
-                : "[" + $t("table.expand") + "]"
-            }}
-          </a></sui-table-header-cell
-        >
-      </sui-table-row>
+        </sui-table-row>
 
-      <!-- bottom header -->
-      <sui-table-row v-if="bottomHeaders.length">
-        <sui-table-header-cell
-          v-for="(header, index) in bottomHeaders"
-          v-show="header.visible"
-          ref="tableHeader"
-          :class= "[
-            header.subHeaders.length ? 'not-sortable' : 'sortable',
-            header.name == sortedBy ? 'sorted ' + sortedDirection : ''
-          ]"
-          @click="sortTable(header, $event)"
-          v-bind:key="index"
-        >
-          {{
-            $te("table." + header.name)
-              ? $t("table." + header.name)
-              : header.name
-          }}
-        </sui-table-header-cell>
-      </sui-table-row>
-    </sui-table-header>
-
-    <sui-table-body>
-      <sui-table-row
-        v-for="(row, index) in pagination.pageRows"
-        v-bind:key="index"
-      >
-          <sui-table-cell
-            v-for="(element, index) in row"
-            v-show="columns[index] && columns[index].visible"
+        <!-- bottom header -->
+        <sui-table-row v-if="bottomHeaders.length">
+          <sui-table-header-cell
+            v-for="(header, index) in bottomHeaders"
+            v-show="header.visible"
+            ref="tableHeader"
+            :class="[
+              header.subHeaders.length ? 'not-sortable' : 'sortable',
+              header.name == sortedBy ? 'sorted ' + sortedDirection : '',
+            ]"
+            @click="sortTable(header, $event)"
             v-bind:key="index"
           >
-            <span v-if="columns[index] && columns[index].format == 'num'">
-              {{ element | formatNumber }}
-            </span>
-            <span
-              v-else-if="columns[index] && columns[index].format == 'seconds'"
+            {{
+              $te("table." + header.name)
+                ? $t("table." + header.name)
+                : header.name
+            }}
+          </sui-table-header-cell>
+        </sui-table-row>
+      </sui-table-header>
+
+      <sui-table-body>
+        <sui-table-row
+          v-for="(row, index) in pagination.pageRows"
+          v-bind:key="index"
+        >
+          <template v-for="(element, index) in row">
+            <sui-table-cell
+              v-if="
+                !(
+                  report == 'cdr' &&
+                  columns[index] &&
+                  (columns[index].name == 'linkedid' ||
+                  columns[index].name == 'call_type')
+                )
+              "
+              v-show="columns[index] && columns[index].visible"
+              :key="index"
             >
-              {{ element | formatTime }}
-            </span>
-            <span
-              v-else-if="columns[index] && columns[index].format == 'percent'"
+              <span v-if="columns[index] && columns[index].format == 'num'">
+                {{ element | formatNumber }}
+              </span>
+              <span
+                v-else-if="columns[index] && columns[index].format == 'seconds'"
+              >
+                {{ element | formatTime }}
+              </span>
+              <span
+                v-else-if="columns[index] && columns[index].format == 'percent'"
+              >
+                {{ element | formatPercentage }}
+              </span>
+              <span
+                v-else-if="columns[index] && columns[index].format == 'label'"
+              >
+                {{ $t("table." + element) }}
+              </span>
+              <span
+                v-else-if="
+                  columns[index] && columns[index].format == 'monthDate'
+                "
+              >
+                {{ element | formatMonthDate }}
+              </span>
+              <span
+                v-else-if="
+                  columns[index] && columns[index].format == 'weekDate'
+                "
+              >
+                {{ element | formatWeekDate($i18n) }}
+              </span>
+              <span
+                v-else-if="
+                  columns[index] && columns[index].format == 'phonebookName'
+                "
+              >
+                {{ element | reversePhonebookLookup("name", $root) }}
+              </span>
+              <span
+                v-else-if="
+                  columns[index] && columns[index].format == 'phonebookCompany'
+                "
+              >
+                {{ element | reversePhonebookLookup("company", $root) }}
+              </span>
+              <span
+                v-else-if="
+                  columns[index] &&
+                  columns[index].format == 'phoneNumber'"
+              >
+                <span v-if="$root.devices[element]"
+                  v-tooltip="getDeviceTooltip(element)"
+                >
+                  {{ element }}
+                  <sui-icon
+                    :name="
+                      $root.devices[element].type == 'physical'
+                        ? 'phone'
+                        : $root.devices[element].type == 'mobile'
+                        ? 'mobile alternate'
+                        : $root.devices[element].type == 'webrtc'
+                        ? 'headphones'
+                        : $root.devices[element].type == 'ringgroups'
+                        ? 'users'
+                        : $root.devices[element].type == 'meetme'
+                        ? 'comment alternate outline'
+                        : 'hourglass half'
+                    "
+                  />
+                </span>
+                <span v-else>
+                  <!-- search phone number in phonebook -->
+                  <span v-if="reversePhonebookSearch(element)" v-tooltip="'<div><b class=\'mg-right-xs\'>' + $t('misc.contact') + '</b>' + $options.filters.reversePhonebookLookup(element, 'name|company', $root) + '</div>'">
+                    {{ element }}
+                    <sui-icon name='user' />
+                  </span>
+                  <span v-else>
+                    <!-- phone number not found in phonebook -->
+                    {{ isNumber(element) ? element : $t(`table.pbx`) }}
+                    <country-flag
+                      v-if="$route.meta.view == 'outbound' && columns[index].name == 'dst' && isNumber(element) && getCountryCode(element)"
+                      :country="getCountryCode(element)"
+                      size="small"
+                      v-tooltip="getCountryName(element)"
+                    />
+                  </span>
+                </span>
+              </span>
+              <span
+                v-else-if="
+                  columns[index] && columns[index].format == 'currency'
+                "
+              >
+                {{ element | formatCurrency($parent.$data.adminSettings.currency) }}
+              </span>
+              <span
+                v-else-if="
+                  columns[index] && columns[index].format == 'twoDecimals'
+                "
+              >
+                {{ element | formatTwoDecimals }}
+              </span>
+              <span v-else>
+                {{ element }}
+              </span>
+            </sui-table-cell>
+          </template>
+          <!-- details button for CDR -->
+          <sui-table-cell v-if="report == 'cdr'">
+            <sui-button
+              type="button"
+              @click.native="$parent.showCdrDetailsModal(row)"
+              size="tiny"
+              icon="zoom"
+              >{{ $t("command.show_details") }}</sui-button
             >
-              {{ element | formatPercentage }}
-            </span>
-            <span
-              v-else-if="columns[index] && columns[index].format == 'label'"
-            >
-              {{ $t("table." + element) }}
-            </span>
-            <span
-              v-else-if="columns[index] && columns[index].format == 'monthDate'"
-            >
-              {{ element | formatMonthDate($i18n) }}
-            </span>
-            <span
-              v-else-if="columns[index] && columns[index].format == 'weekDate'"
-            >
-              {{ element | formatWeekDate($i18n) }}
-            </span>
-            <span
-              v-else-if="columns[index] && columns[index].format == 'phonebookName'"
-            >
-              {{ element | reversePhonebookLookup('name', $root) }}
-            </span>
-            <span
-              v-else-if="columns[index] && columns[index].format == 'phonebookCompany'"
-            >
-              {{ element | reversePhonebookLookup('company', $root) }}
-            </span>
-            <span v-else>
-              {{ element }}
-            </span>
           </sui-table-cell>
         </sui-table-row>
       </sui-table-body>
       <sui-table-footer>
         <sui-table-row>
-          <sui-table-header-cell :colspan="columns.length">
+          <sui-table-header-cell
+            :colspan="report == 'cdr' ? columns.length + 1 : columns.length"
+          >
             <sui-menu pagination class="no-border">
               <span is="sui-menu-item" class="small-pad"
                 >{{ pagination.firstRowIndex + 1 }} -
@@ -240,6 +332,12 @@
 import UtilService from "../services/utils";
 import StorageService from "../services/storage";
 import HorizontalScrollers from "../components/HorizontalScrollers.vue";
+import parsePhoneNumber from 'libphonenumber-js';
+import CountryFlag from 'vue-country-flag';
+
+let countries = require("i18n-iso-countries");
+countries.registerLocale(require("i18n-iso-countries/langs/en.json"));
+countries.registerLocale(require("i18n-iso-countries/langs/it.json"));
 
 export default {
   name: "TableChart",
@@ -257,7 +355,7 @@ export default {
       },
     },
     chartKey: {
-     type: String,
+      type: String,
     },
     officeHours: {
       type: Object,
@@ -265,9 +363,12 @@ export default {
     filterTimeSplit: {
       type: Number,
     },
+    report: {
+      type: String,
+    },
   },
   mixins: [UtilService, StorageService],
-  components: { HorizontalScrollers },
+  components: { HorizontalScrollers, CountryFlag },
   data() {
     return {
       ROWS_PER_PAGE_KEY: "tableChartRowsPerPage",
@@ -286,7 +387,7 @@ export default {
         lastRowIndex: 0,
       },
       sortedBy: "period",
-      sortedDirection: "ascending"
+      sortedDirection: "ascending",
     };
   },
   mounted() {
@@ -301,10 +402,7 @@ export default {
       this.dataUpdated();
     }
     // reset table's sorted by variables
-    this.$root.$on("applyFilters", () => {
-      this.sortedBy = "period"
-      this.sortedDirection = "ascending"
-    })
+    this.$root.$on("applyFilters", this.onApplyFilters);
   },
   watch: {
     data: function () {
@@ -323,6 +421,47 @@ export default {
     },
   },
   methods: {
+    getCountryCode (number) {
+      if (!number) return null
+      // adapt number for libphonenumber
+      number = number.replace(/^00/g, "+")
+      // parse number
+      const parsedNumber = parsePhoneNumber(number)
+
+      // return country
+      return (
+        parsedNumber ? (
+          parsedNumber.country
+        ) : (
+          null
+        )
+      )
+    },
+    getCountryName (number) {
+      if (!number) return null
+      // adapt number for libphonenumber
+      number = number.replace(/^00/g, "+")
+      // parse number
+      const parsedNumber = parsePhoneNumber(number)
+
+      // return country
+      return (
+        parsedNumber ? (
+          countries.getName(parsedNumber.country, this.$root.currentLocale, {select: "official"})
+        ) : (
+          null
+        )
+      )
+    },
+    isNumber (value) {
+      return (
+        !Number.isNaN(Number(value)) ? true : false
+      )
+    },
+    onApplyFilters() {
+      this.sortedBy = "period";
+      this.sortedDirection = "ascending";
+    },
     dataUpdated() {
       let tableData = this.data;
 
@@ -507,7 +646,7 @@ export default {
     },
     toggleExpandHeader(header) {
       header.expanded = !header.expanded;
-      this.$root.$emit("expandTable", `#container_${this.chartKey}`)
+      this.$root.$emit("expandTable", `#container_${this.chartKey}`);
       if (header.expanded) {
         this.expandHeader(header);
       } else {
@@ -626,7 +765,11 @@ export default {
         }
         totalsMap[pivotGroup] += pivotValue;
       }
-      const pivotColumnsList = this.generateTimeLabelsLineOrBarChart(this.officeHours, this.filterTimeSplit, this);
+      const pivotColumnsList = this.generateTimeLabelsLineOrBarChart(
+        this.officeHours,
+        this.filterTimeSplit,
+        this
+      );
 
       // process column headers
 
@@ -677,7 +820,6 @@ export default {
       superHeader,
       totalSubHeader
     ) {
-
       // e.g: [ 09:00, 10:00, 11:00, ... ]
       let hoursList;
 
@@ -688,7 +830,11 @@ export default {
       //   "11:00": [ "11:00", "11:15", "11:30", "11:45" ],
       //   ...
       // }
-      let hoursMap = this.generateHoursMap(this.officeHours, this.filterTimeSplit, this);
+      let hoursMap = this.generateHoursMap(
+        this.officeHours,
+        this.filterTimeSplit,
+        this
+      );
 
       // contains pivotGroup -> hour -> pivotColumn -> number (e.g. 2019QueueNameQueueDescription -> 09:00 -> 09:45 -> 2345)
       let pivotMap = {};
@@ -879,39 +1025,91 @@ export default {
     },
     sortTable(header, event) {
       // check if the header is sortable
-      if (event.target.classList.contains("not-sortable")) return
+      if (event.target.classList.contains("not-sortable")) return;
       // switch the ordering direction in the header currently sorted by
-      this.sortedDirection == "ascending" && this.sortedBy == header.name ? (
-        this.sortedDirection = "descending"
-      ) : (
-        this.sortedDirection = "ascending"
-      )
+      this.sortedDirection == "ascending" && this.sortedBy == header.name
+        ? (this.sortedDirection = "descending")
+        : (this.sortedDirection = "ascending");
       // set the header currently sorted by
-      this.sortedBy = header.name
+      this.sortedBy = header.name;
       // get the header's column position in the rows array
-      let columnKey = this.columns.indexOf(this.columns.find(obj => obj.name === header.name))
+      let columnKey = this.columns.indexOf(
+        this.columns.find((obj) => obj.name === header.name)
+      );
       // sort table considering direction and column data type
       this.rows.sort((a, b) => {
-        let rule
+        let rule;
         // check if is date
         if (header.format && header.format.toLowerCase().includes("date")) {
-          rule = this.sortedDirection == "ascending" ? Date.parse(a[columnKey]) - Date.parse(b[columnKey]) : Date.parse(b[columnKey]) - Date.parse(a[columnKey])
+          rule =
+            this.sortedDirection == "ascending"
+              ? Date.parse(a[columnKey]) - Date.parse(b[columnKey])
+              : Date.parse(b[columnKey]) - Date.parse(a[columnKey]);
         } else {
           // check if is a number
           if (!Number.isNaN(Number(a[columnKey]))) {
-            rule = this.sortedDirection == "ascending" ? a[columnKey] - b[columnKey] : b[columnKey] - a[columnKey]
-           } else {
+            rule =
+              this.sortedDirection == "ascending"
+                ? a[columnKey] - b[columnKey]
+                : b[columnKey] - a[columnKey];
+          } else {
             // if is a string
-            this.sortedDirection == "ascending" ? (
-              rule = a[columnKey] < b[columnKey] ? -1 : a[columnKey] > b[columnKey] ? 1 : 0
-            ) : (
-              rule = b[columnKey] < a[columnKey] ? -1 : b[columnKey] > a[columnKey] ? 1 : 0
-            )
+            this.sortedDirection == "ascending"
+              ? (rule =
+                  a[columnKey] < b[columnKey]
+                    ? -1
+                    : a[columnKey] > b[columnKey]
+                    ? 1
+                    : 0)
+              : (rule =
+                  b[columnKey] < a[columnKey]
+                    ? -1
+                    : b[columnKey] > a[columnKey]
+                    ? 1
+                    : 0);
           }
         }
-        return rule
-      })
-      this.updatePagination()
+        return rule;
+      });
+      this.updatePagination();
+    },
+    getDeviceTooltip(extension) {
+      let tooltipContent = '';
+
+      const userFound = this.$root.users.find((u) => {
+        return u.value && u.value.split(",").includes(extension);
+      });
+
+      if (userFound) {
+        tooltipContent += '<div><b class="mg-right-xs">' +
+        this.$t("misc.user") +
+        "</b>" +
+        userFound.text +
+        "</div>";
+      }
+
+      tooltipContent +=
+        '<div><b class="mg-right-xs">' +
+        this.$t("device.type") +
+        "</b>" +
+        this.$t("device." + this.$root.devices[extension].type) +
+        "</div>";
+
+      if (this.$root.devices[extension].model) {
+        tooltipContent +=
+          '<div><b class="mg-right-xs">' +
+          this.$t("device.model") +
+          "</b>" +
+          this.$root.devices[extension].vendor +
+          " " +
+          this.$root.devices[extension].model +
+          "</div>";
+      }
+      return tooltipContent;
+    },
+    reversePhonebookSearch(element) {
+      const found = this.$options.filters.reversePhonebookLookup(element, "name", this.$root);
+      return found !== "-";
     }
   },
 };

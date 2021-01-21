@@ -23,34 +23,66 @@
 package models
 
 type Filter struct {
-	Queues []string `json:"queues"`
-	Groups []string `json:"groups"`
-	Agents []string `json:"agents"`
-	IVRs   []string `json:"ivrs"`
-	Phones []string `json:"phones"`
-
-	Reasons      []string `json:"reasons"`
-	Results      []string `json:"results"`
-	Choices      []string `json:"choices"`
+	Queues       []string `json:"queues"`
+	GroupsUi     []string `json:"groupsUi"`
+	Groups       []string `json:"groups"`
+	Agents       []string `json:"agents"`
+	UsersUi      []string `json:"usersUi"`
+	Users        []string `json:"users"`
+	IVRs         []string `json:"ivrs"`
+	Phones       []string `json:"phones"`
+	Trunks       []string `json:"trunks"`
+	DIDs         []string `json:"dids"`
+	Sources      []string `json:"sources"`
 	Destinations []string `json:"destinations"`
-	Origins      []string `json:"origins"`
+	SourcesUi    struct {
+		Title       string `json:"title"`
+		Description string `json:"description"`
+		PhoneNumber string `json:"phoneNumber"`
+		Value       string `json:"value"`
+	} `json:"sourcesUi"`
+	DestinationsUi struct {
+		Title       string `json:"title"`
+		Description string `json:"description"`
+		PhoneNumber string `json:"phoneNumber"`
+		Value       string `json:"value"`
+	} `json:"destinationsUi"`
+	CallType   []string `json:"callType"`
+	Duration   string   `json:"duration"`
+	DurationUi struct {
+		Title string `json:"title"`
+		Value string `json:"value"`
+	} `json:"durationUi"`
+	CallDestinations []string `json:"callDestinations"`
+	Patterns         []string `json:"patterns"`
+	Devices          []string `json:"devices"`
+
+	Reasons []string `json:"reasons"`
+	Results []string `json:"results"`
+	Choices []string `json:"choices"`
+	Origins []string `json:"origins"`
 
 	Time struct {
-		Group    string `json:"group"`
-		Division string `json:"division"`
-		Range    string `json:"range"`
-		Interval struct {
+		Group             string `json:"group"`
+		Division          string `json:"division"`
+		Range             string `json:"range"`
+		CdrDashboardRange string `json:"cdrDashboardRange"`
+		Interval          struct {
 			Start string `json:"start"`
 			End   string `json:"end"`
 		} `json:"interval"`
 	} `json:"time"`
 
+	CurrentUser string `json:"currentUser"`
+
 	Caller   string `json:"caller"`
 	Name     string `json:"contactName"`
+	GeoGroup string `json:"geoGroup"`
 }
 
 type Search struct {
 	Name    string `json:"name"`
+	Report  string `json:"report"`
 	Section string `json:"section"`
 	View    string `json:"view"`
 	Filter  Filter `json:"filter"`

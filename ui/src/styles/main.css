@@ -42,10 +42,6 @@
     margin-right: 20px !important;
 }
 
-.align-center {
-    text-align: center !important;
-}
-
 .right-floated {
     float: right !important;
 }
@@ -80,4 +76,10 @@
 
 .white-color {
     color: white !important;
+}
+
+.ellipsis {
+    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
 }

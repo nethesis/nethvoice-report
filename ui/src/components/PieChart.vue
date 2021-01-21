@@ -1,8 +1,10 @@
 <script>
 import { Pie } from "vue-chartjs";
+import UtilService from "../services/utils";
 
 export default {
   extends: Pie,
+  mixins: [UtilService],
   props: {
     caption: {
       type: String,
@@ -24,6 +26,8 @@ export default {
     return {
       labels: [],
       values: [],
+      format: "",
+      mergeFunction: "",
       chartData: {},
       options: {
         responsive: true,
@@ -36,13 +40,40 @@ export default {
             scheme: this.$root.colorScheme,
           },
         },
+        tooltips: {
+          callbacks: {
+            label: (tooltipItem, data) => {
+              const index = tooltipItem.index;
+              const label = data.labels[index];
+              const formattedValue = this.formatValue(
+                data.datasets[0].data[index],
+                this.format,
+                this.$parent.$data.adminSettings.currency
+              );
+              return label + ": " + formattedValue;
+            },
+          },
+        },
       },
-      MAX_ENTRIES: 8,
     };
   },
   watch: {
     data: function () {
       if (this.data && this.data.length > 1) {
+        // data format
+        const dataColumn = this.data[0][1];
+        this.format = dataColumn.split("£")[1];
+
+        // function to merge minor entries
+        if (
+          dataColumn.toLowerCase().includes("avg") ||
+          dataColumn.toLowerCase().includes("average")
+        ) {
+          this.mergeFunction = "avg";
+        } else {
+          this.mergeFunction = "sum";
+        }
+
         // remove first element (query columns)
         const entries = this.data.filter((_, i) => i !== 0);
 
@@ -53,7 +84,7 @@ export default {
           return parseFloat(entry[1]);
         });
 
-        if (entries.length <= this.MAX_ENTRIES) {
+        if (entries.length <= this.$parent.MAX_CHART_ENTRIES) {
           this.labels = labels;
           this.values = values;
         } else {
@@ -66,7 +97,7 @@ export default {
     "$root.colorScheme": function () {
       this.options.plugins.colorschemes.scheme = this.$root.colorScheme;
       this.renderChart(this.chartData, this.options);
-    }
+    },
   },
   methods: {
     renderPieChart() {
@@ -84,17 +115,26 @@ export default {
     },
     mergeMinorEntries(labels, values) {
       // assume entries are already sorted by backend in descending order
-      labels = labels.filter((_, i) => i < this.MAX_ENTRIES - 1);
+      labels = labels.filter((_, i) => i < this.$parent.MAX_CHART_ENTRIES - 1);
       labels.push(this.$i18n.t("misc.others"));
       this.labels = labels;
-      let firstValues = values.filter((_, i) => i < this.MAX_ENTRIES - 1);
+      let firstValues = values.filter(
+        (_, i) => i < this.$parent.MAX_CHART_ENTRIES - 1
+      );
 
       // merge minor values
       let othersValue = 0;
+      let numMerged = 0;
 
-      for (let i = this.MAX_ENTRIES - 1; i < values.length; i++) {
+      for (let i = this.$parent.MAX_CHART_ENTRIES - 1; i < values.length; i++) {
         othersValue += values[i];
+        numMerged++;
       }
+
+      if (this.mergeFunction == "avg") {
+        othersValue = othersValue / numMerged;
+      }
+
       firstValues.push(othersValue);
       this.values = firstValues;
     },

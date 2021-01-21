@@ -76,9 +76,15 @@ func main() {
 	api.Use(middleware.InstanceJWT().MiddlewareFunc())
 	{
 
-		filters := api.Group("/filters/:section/:view")
+		filters := api.Group("/filters")
 		{
 			filters.GET("", methods.GetDefaultFilter)
+			filters.GET("/:field", methods.GetDefaultFilter)
+		}
+
+		details := api.Group("/details/:linkedid")
+		{
+			details.GET("", methods.GetCallDetails)
 		}
 
 		phonebook := api.Group("/phonebook")
@@ -86,17 +92,17 @@ func main() {
 			phonebook.GET("", methods.GetPhonebook)
 		}
 
-		queryTree := api.Group("/query_tree")
+		queryTree := api.Group("/query_tree/:report")
 		{
 			queryTree.GET("", methods.GetQueryTree)
 		}
 
-		queues := api.Group("/queues/:section/:view")
+		graph := api.Group("/graph/:report/:section/:view")
 		{
-			queues.GET("", methods.GetQueueReports)
+			graph.GET("", methods.GetGraphData)
 		}
 
-		searches := api.Group("/searches")
+		searches := api.Group("/searches/:report")
 		{
 			searches.GET("", methods.GetSearches)
 			searches.POST("", methods.SetSearches)
@@ -107,6 +113,7 @@ func main() {
 		{
 			settings.GET("", methods.GetSettings)
 			settings.PUT("", methods.SetSettings)
+			settings.DELETE("", methods.DeleteSettings)
 		}
 	}
 

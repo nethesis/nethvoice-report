@@ -189,7 +189,8 @@ ORDER BY
     period,
     cid;
 
-CREATE TABLE IF NOT EXISTS data_caller_day AS
+CREATE TABLE IF NOT EXISTS data_caller_day
+(UNIQUE KEY `period` (`period`,`cid`,`qname`))
 SELECT
     Date_format(From_unixtime(timestamp_in), "%Y-%m-%d") AS `period`,
     cid,
@@ -239,8 +240,6 @@ GROUP BY
 ORDER BY
     period,
     cid;
-
-ALTER TABLE data_caller_day ADD UNIQUE (period,cid,qname);
 
 INSERT IGNORE INTO data_caller_day
 SELECT

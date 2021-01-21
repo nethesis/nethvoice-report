@@ -2,10 +2,10 @@ package methods
 
 import (
 	"fmt"
+	"math"
 	"os"
 	"strings"
 	"time"
-	"math"
 
 	"github.com/nethesis/nethvoice-report/api/configuration"
 	"github.com/nethesis/nethvoice-report/api/models"
@@ -38,7 +38,7 @@ func QueryRrd(rrdFilePath string, filter models.Filter, start time.Time, end tim
 			rrdFilePathReplaced := strings.ReplaceAll(rrdFilePath, "?QUEUE", queue)
 
 			dbFile := fmt.Sprintf("%s/%s/%s", rrdRootPath, hostname, rrdFilePathReplaced)
-			results, errRrd := fetchRrd(dbFile, start, end, queue)
+			results, errRrd := fetchRrd(dbFile, start, end, queue+"£queue")
 			if errRrd != nil {
 				// log error and continue
 				utils.LogError(errRrd)
