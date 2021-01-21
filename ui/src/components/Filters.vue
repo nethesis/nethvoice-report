@@ -1,6 +1,6 @@
 <template>
   <div>
-    <sui-container v-if="this.showFiltersForm">
+    <sui-container v-show="this.showFiltersForm">
       <sui-form class="filters-form" @submit.prevent="applyFilters">
         <!-- saved searches -->
         <sui-form-fields v-if="savedSearches.length" class="mg-bottom-md">

@@ -1,5 +1,5 @@
 <template>
-  <div v-show="dataAvailable" class="fixedbar-container" :style="styleObject">
+  <div v-show="(dataAvailable && $route.meta.report == 'queue') || (cdrDataAvailable && $route.meta.report == 'cdr')" class="fixedbar-container" :style="styleObject">
     <div class="fixedbar" :class="{ fixed: isFixed }">
       <sui-container>
         <strong class="activeFilters">{{$t('menu.active_filters')}}: </strong>
@@ -277,6 +277,7 @@ export default {
       isFixed: false,
       offsetTop: "",
       dataAvailable: true,
+      cdrDataAvailable: true,
       styleObject: {
         "min-height": "62px"
       }
@@ -289,8 +290,11 @@ export default {
       window.addEventListener('scroll', this.scrollHandler, true)
     })
 
-    // event "dataNotAvailable" is triggered by $http interceptor if report tables don't exist yet
+    // event "dataNotAvailable" is triggered by $http interceptor if queue report tables don't exist yet
     this.$root.$on("dataNotAvailable", this.onDataNotAvailable);
+
+    // event "cdrDataNotAvailable" is triggered by $http interceptor if cdr report tables don't exist yet
+    this.$root.$on("cdrDataNotAvailable", this.onCdrDataNotAvailable);
   },
   destroyed() {
     window.removeEventListener('scroll', this.scrollHandler);
@@ -305,6 +309,9 @@ export default {
     },
     onDataNotAvailable() {
       this.dataAvailable = false;
+    },
+    onCdrDataNotAvailable() {
+      this.cdrDataAvailable = false;
     },
     scrollHandler(evt) {
       if (evt.target.attributes["views-wrapper"] && (window.innerWidth > this.$mobileBound)) {

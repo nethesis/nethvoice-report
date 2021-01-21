@@ -35,6 +35,9 @@ Vue.http.interceptors.push(function () {
     if (response.status == 401 && response.body && response.body.message == "Token is expired") {
       // authentication token has expired, show login page
       this.$root.$emit("logout");
+    } else if (response.status == 400 && response.body && /Table 'asteriskcdrdb.+doesn't exist/.test(response.body.status)) {
+      // non-existent table, come back tomorrow
+      this.$root.$emit("cdrDataNotAvailable");
     }
   };
 });

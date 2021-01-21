@@ -1,6 +1,6 @@
 <template lang="html">
 <div>
-  <div v-show="!dataAvailable" class="ui placeholder segment report-data-not-available">
+  <div v-show="!((dataAvailable && $route.meta.report == 'queue') || (cdrDataAvailable && $route.meta.report == 'cdr'))" class="ui placeholder segment report-data-not-available">
     <div class="ui icon header">
       <i class="frown outline icon mg-bottom-sm"></i>
       {{ $t("message.come_back_tomorrow") }}
@@ -9,7 +9,7 @@
       {{ $t("message.come_back_tomorrow_desc") }}
     </div>
   </div>
-  <div v-show="dataAvailable">
+  <div v-show="(dataAvailable && $route.meta.report == 'queue') || (cdrDataAvailable && $route.meta.report == 'cdr')">
     <div v-if="!$root.filtersReady">
       <sui-loader active centered inline class="loading-filters" />
       <div>{{ $t("message.loading_filters") }}...</div>
@@ -231,6 +231,7 @@ export default {
       openDetailsModal: false,
       chartDetails: null,
       dataAvailable: true,
+      cdrDataAvailable: true,
       adminSettings: {
         officeHours: {
           start_hour: null,
@@ -260,10 +261,15 @@ export default {
     };
   },
   mounted() {
-    // event "dataNotAvailable" is triggered by $http interceptor if report tables don't exist yet
+    // event "dataNotAvailable" is triggered by $http interceptor if queue report tables don't exist yet
     this.$root.$on("dataNotAvailable", this.onDataNotAvailable);
+
+    // event "cdrDataNotAvailable" is triggered by $http interceptor if cdr report tables don't exist yet
+    this.$root.$on("cdrDataNotAvailable", this.onCdrDataNotAvailable);
+
     // event "reloadAdminSettings" is triggered by TopBar when configuring costs
     this.$root.$on("reloadAdminSettings", this.getAdminSettings);
+
     this.$root.$on("applyFilters", this.applyFilters);
 
     // get office hours
@@ -317,6 +323,9 @@ export default {
     onDataNotAvailable() {
       this.dataAvailable = false;
     },
+    onCdrDataNotAvailable() {
+      this.cdrDataAvailable = false;
+    },
     retrieveQueryTree() {
       this.getQueryTree(
         this.$route.meta.report,
@@ -342,7 +351,7 @@ export default {
       );
     },
     initCharts() {
-      if (this.dataAvailable) {
+      if ((this.dataAvailable && this.$route.meta.report == 'queue') || (this.cdrDataAvailable && this.$route.meta.report == 'cdr')) {
         let charts = [];
 
         this.queries = this.queryTree[this.$route.meta.section][
