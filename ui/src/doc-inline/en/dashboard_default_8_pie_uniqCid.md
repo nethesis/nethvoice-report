@@ -9,7 +9,7 @@ Unique callers are all telephone numbers that have contacted the
 queue counted individually.
 
 If no queues have been selected, the graph will show the unique callers of all
-the queues available.
+the available queues.
 
 The chart can contain a maximum of 8 sections. Queues exceeding this number
 will appear in `Others` section.
