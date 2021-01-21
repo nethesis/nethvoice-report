@@ -257,7 +257,7 @@
       "loading_filters": "Caricamento filtri",
       "chart_error": "Si è verificato un errore durante il caricamento del grafico",
       "query_limit_description": "Questo è il numero massimo di risultati che possono essere mostrati da un grafico tabellare. Se questo limite viene raggiunto appare un'icona di avvertimento di fianco al titolo del grafico",
-      "null_call_description": "Le chiamate con durata minore o uguale a questo valore sono considerate nulle, questo valore viene utilizzato anche dal Qmanger del CTI per elaborare i dati giornalieri"
+      "null_call_description": "Le chiamate con durata minore o uguale a questo valore sono considerate nulle, questo valore viene utilizzato anche dal Qmanger del CTI per elaborare i dati giornalieri",
       "slow_query": "Il caricamento sta impiegando più del previsto. Restringi i filtri di ricerca, oppure continua ad attendere",
       "cdr_details_wait": "Questa operazione potrebbe richiedere un po' di tempo, attendi oppure torna più tardi...",
       "welcome_in_cdr": "Benvenuto/a nel Report Chiamate & Costi",
