@@ -1,7 +1,7 @@
 # Hourly Distribution Exit No Agents Calls
 
 Data regarding *Time Distribution of Exit No Agents calls* 
-for the queues selected during the given period.
+for the selected queues during the given period.
 Data are grouped according to the chosen filter criteria.
 
 The *Time Distribution of Exit No Agents calls* shows the

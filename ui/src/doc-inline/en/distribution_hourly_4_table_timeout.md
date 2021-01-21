@@ -1,7 +1,7 @@
 # Hourly Distribution Timeout Calls
 
 Data regarding the *Hourly Distribution Calls in Timeout* for
-the queues selected during the given period.
+the selected queues during the given period.
 Data are grouped according to the chosen filter criteria.
 
 The *Timeout Call Distribution* shows the distribution 

@@ -1,7 +1,7 @@
 # Time Distribution Exit Menu Calls
 
 Data concerning the *Time Distribution Exit Menu Calls*
-for the queues selected during the given period.
+for the selected queues during the given period.
 Data are grouped according to the chosen filter criteria.
 
 The *Time Distribution Exit Menu Calls* shows the distribution

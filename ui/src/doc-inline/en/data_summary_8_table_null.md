@@ -1,6 +1,6 @@
 # Null Calls
 
-*Null* call data for queues selected in
+*Null* call data for selected queues in
 set period, the data is grouped according to the choice
 made in the filters.
 

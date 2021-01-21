@@ -1,7 +1,7 @@
 # Hourly Distribution of Failed Calls
 
 Data regarding the *Hourly Distribution of Failed Calls*
-for the queues selected during the given period.
+for the selected queues during the given period.
 Data are grouped according to the chosen filter criteria.
 
 The *Hourly Distribution of Failed Calls* shows the 

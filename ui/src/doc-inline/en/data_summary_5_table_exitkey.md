@@ -1,7 +1,7 @@
 # Calls in the Exit Menu
 
 Data concerning the calls in which the caller used the
-*Exit menu* to exit the queue for the queues selected 
+*Exit menu* to exit the queue for the selected queues
 during the given period.
 Data are grouped according to the chosen filter criteria.
 

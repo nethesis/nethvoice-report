@@ -1,7 +1,7 @@
 # Hourly Distribution of Full Queue Calls
 
 Data regarding the *Hourly Distribution of Full Queue Calls* for 
-the queues selected during the given period.
+the selected queues during the given period.
 Data are grouped according to the chosen filter criteria.
 
 The *Hourly Distribution Calls Full Queue* shows the distribution 

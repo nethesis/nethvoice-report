@@ -1,7 +1,7 @@
 # Hourly Distribution of Answered Calls
 
 Data regarding the *Hourly Distribution of Answered Calls* 
-for queues selected during the given period.
+for selected queues during the given period.
 Data are grouped according to the chosen filter criteria.
 
 The *Hourly Distribution of Answered Calls* shows the distribution

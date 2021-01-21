@@ -1,8 +1,7 @@
 # By Call
 
-*Calls* entered the queues selected in
-set period, the data is grouped according to the choice
-made in the filters.
+*Calls* entered the selected queues in set period, the data is 
+grouped according to the choice made in the filters.
 
 The *by Call* data shows each call arriving at the queues
 indicating the outcome and relative values.
