@@ -1,7 +1,7 @@
 SELECT	
     linkedid,
     DATE_FORMAT(calldate, '%Y-%m-%d %H:%i:%s') AS time£hourDate,
-    src AS src£phoneNumber,
+    cnum AS src£phoneNumber,
     dst AS dst£phoneNumber,
     type AS call_type£label,
     SUBSTRING_INDEX(dispositions, ',',- 1) AS result£label, -- get last disposition
@@ -13,9 +13,9 @@ WHERE	calldate >= "{{ .Time.Interval.Start }}"
 	AND calldate <= "{{ .Time.Interval.End }}"
 	AND type = "IN"
 	{{ if (and (gt (len .Sources) 0) (gt (len .Destinations) 0)) }}
-          AND (src IN ({{ ExtractStrings .Sources }}) AND dst IN ({{ ExtractStrings .Destinations }}))
+          AND (cnum IN ({{ ExtractStrings .Sources }}) AND dst IN ({{ ExtractStrings .Destinations }}))
         {{ else if gt (len .Sources) 0 }}
-          AND src IN ({{ ExtractStrings .Sources }})
+          AND cnum IN ({{ ExtractStrings .Sources }})
         {{ else if gt (len .Destinations) 0 }}
           AND dst IN ({{ ExtractStrings .Destinations }})
         {{ else }}

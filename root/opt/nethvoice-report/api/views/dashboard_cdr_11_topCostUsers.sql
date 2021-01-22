@@ -22,7 +22,7 @@ SELECT username, Sum(cost) as cost FROM
               Sum(cost) as cost
        FROM   ',@from,' c 
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
        WHERE  c.type = "OUT" 
@@ -35,7 +35,7 @@ SELECT username, Sum(cost) as cost FROM
               Sum(cost) as cost
        FROM   ',@to,' c
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
        WHERE  c.type = "OUT" 
@@ -54,7 +54,7 @@ SELECT username, Sum(cost) as cost FROM
               Sum(cost) as cost
        FROM   ',@from,' c 
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
        WHERE  c.type = "OUT" 
@@ -67,7 +67,7 @@ SELECT username, Sum(cost) as cost FROM
               Sum(cost) as cost
        FROM   ',@to,' c
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
        WHERE  c.type = "OUT" 
@@ -86,7 +86,7 @@ SELECT username, Sum(cost) as cost FROM
               Sum(cost) as cost
        FROM   ',@from,' c 
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
        WHERE  c.type = "OUT" 
@@ -99,7 +99,7 @@ SELECT username, Sum(cost) as cost FROM
               Sum(cost) as cost
        FROM   ',@to,' c
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
        WHERE  c.type = "OUT" 
@@ -118,7 +118,7 @@ SELECT username, Sum(cost) as cost FROM
               Sum(cost) as cost
        FROM   ',@from,' c 
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
        WHERE  c.type = "OUT" 
@@ -131,7 +131,7 @@ SELECT username, Sum(cost) as cost FROM
               Sum(cost) as cost
        FROM   ',@to,' c
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
        WHERE  c.type = "OUT" 
@@ -150,7 +150,7 @@ SELECT username, Sum(cost) as cost FROM
               Sum(cost) as cost
        FROM   ',@from,' c 
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
        WHERE  c.type = "OUT" 
@@ -163,7 +163,7 @@ SELECT username, Sum(cost) as cost FROM
               Sum(cost) as cost
        FROM   ',@to,' c
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
        WHERE  c.type = "OUT" 
@@ -182,7 +182,7 @@ SELECT username, Sum(cost) as cost FROM
               Sum(cost) as cost
        FROM   ',@from,' c 
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
        WHERE  c.type = "OUT" 
@@ -195,7 +195,7 @@ SELECT username, Sum(cost) as cost FROM
               Sum(cost) as cost
        FROM   ',@to,' c
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
        WHERE  c.type = "OUT" 
@@ -214,7 +214,7 @@ SELECT username, Sum(cost) as cost FROM
               Sum(cost) as cost
        FROM   ',@from,' c 
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
        WHERE  c.type = "OUT" 
@@ -227,7 +227,7 @@ SELECT username, Sum(cost) as cost FROM
               Sum(cost) as cost
        FROM   ',@to,' c
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
        WHERE  c.type = "OUT" 
@@ -246,7 +246,7 @@ SELECT username, Sum(cost) as cost FROM
               Sum(cost) as cost
        FROM   ',@from,' c 
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
        WHERE  c.type = "OUT" 
@@ -259,7 +259,7 @@ SELECT username, Sum(cost) as cost FROM
               Sum(cost) as cost
        FROM   ',@to,' c
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
        WHERE  c.type = "OUT" 

@@ -22,7 +22,7 @@ SELECT cti_group, Sum(cost) AS cost FROM
               Sum(cost) AS cost 
        FROM   ',@from,' c 
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
               JOIN asterisk.rest_cti_users_groups cg 
@@ -38,7 +38,7 @@ SELECT cti_group, Sum(cost) AS cost FROM
               Sum(cost) AS cost 
        FROM   ',@to,' c 
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
               JOIN asterisk.rest_cti_users_groups cg 
@@ -60,7 +60,7 @@ SELECT cti_group, Sum(cost) AS cost  FROM
               Sum(cost) AS cost 
        FROM   ',@from,' c 
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
               JOIN asterisk.rest_cti_users_groups cg 
@@ -76,7 +76,7 @@ SELECT cti_group, Sum(cost) AS cost  FROM
               Sum(cost) AS cost 
        FROM   ',@to,' c 
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
               JOIN asterisk.rest_cti_users_groups cg 
@@ -98,7 +98,7 @@ SELECT cti_group, Sum(cost) AS cost  FROM
               Sum(cost) AS cost 
        FROM   ',@from,' c 
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
               JOIN asterisk.rest_cti_users_groups cg 
@@ -114,7 +114,7 @@ SELECT cti_group, Sum(cost) AS cost  FROM
               Sum(cost) AS cost 
        FROM   ',@to,' c 
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
               JOIN asterisk.rest_cti_users_groups cg 
@@ -136,7 +136,7 @@ SELECT cti_group, Sum(cost) AS cost  FROM
               Sum(cost) AS cost 
        FROM   ',@from,' c 
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
               JOIN asterisk.rest_cti_users_groups cg 
@@ -152,7 +152,7 @@ SELECT cti_group, Sum(cost) AS cost  FROM
               Sum(cost) AS cost 
        FROM   ',@to,' c 
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
               JOIN asterisk.rest_cti_users_groups cg 
@@ -174,7 +174,7 @@ SELECT cti_group, Sum(cost) AS cost  FROM
               Sum(cost) AS cost 
        FROM   ',@from,' c 
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
               JOIN asterisk.rest_cti_users_groups cg 
@@ -190,7 +190,7 @@ SELECT cti_group, Sum(cost) AS cost  FROM
               Sum(cost) AS cost 
        FROM   ',@to,' c 
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
               JOIN asterisk.rest_cti_users_groups cg 
@@ -212,7 +212,7 @@ SELECT cti_group, Sum(cost) AS cost  FROM
               Sum(cost) AS cost 
        FROM   ',@from,' c 
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
               JOIN asterisk.rest_cti_users_groups cg 
@@ -228,7 +228,7 @@ SELECT cti_group, Sum(cost) AS cost  FROM
               Sum(cost) AS cost 
        FROM   ',@to,' c 
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
               JOIN asterisk.rest_cti_users_groups cg 
@@ -250,7 +250,7 @@ SELECT cti_group, Sum(cost) AS cost  FROM
               Sum(cost) AS cost 
        FROM   ',@from,' c 
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
               JOIN asterisk.rest_cti_users_groups cg 
@@ -266,7 +266,7 @@ SELECT cti_group, Sum(cost) AS cost  FROM
               Sum(cost) AS cost 
        FROM   ',@to,' c 
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
               JOIN asterisk.rest_cti_users_groups cg 
@@ -288,7 +288,7 @@ SELECT cti_group, Sum(cost) AS cost  FROM
               Sum(cost) AS cost 
        FROM   ',@from,' c 
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
               JOIN asterisk.rest_cti_users_groups cg 
@@ -304,7 +304,7 @@ SELECT cti_group, Sum(cost) AS cost  FROM
               Sum(cost) AS cost 
        FROM   ',@to,' c 
               JOIN asterisk.rest_devices_phones p 
-              ON p.extension = c.src
+              ON p.extension = c.cnum
               JOIN asterisk.userman_users u
               ON u.id = p.user_id
               JOIN asterisk.rest_cti_users_groups cg 
