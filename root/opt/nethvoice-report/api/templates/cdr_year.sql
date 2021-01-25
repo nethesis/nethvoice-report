@@ -1,5 +1,8 @@
 CREATE TABLE IF NOT EXISTS `cdr_{{ YearMap .Year }}`
-(`cost` DOUBLE DEFAULT NULL, UNIQUE KEY uniq (calldate,uniqueid,dstchannel))
+(
+	`call_type` TEXT DEFAULT '',
+	`cost` DOUBLE DEFAULT NULL, UNIQUE KEY uniq (calldate,uniqueid,dstchannel)
+)
 SELECT *,
        IF(Substring_index(Substring_index(channel, '-', 1), '/', -1) IN
              (SELECT channelid
