@@ -90,10 +90,10 @@
             </div>
             <!-- pie chart -->
             <div v-if="chart.type == 'pie'">
-              <div v-show="chart.data && chart.data.filter(function(entry, index) { return index > 0 && entry[1]}).length">
+              <div v-show="chart.data && chart.data.filter(function(entry, index) { return index > 0 && Number(entry[1])}).length">
                 <pie-chart :data="chart.data" :caption="chart.caption"></pie-chart>
               </div>
-              <div v-show="chart.data && !chart.data.filter(function(entry, index) { return index > 0 && entry[1]}).length">
+              <div v-show="chart.data && !chart.data.filter(function(entry, index) { return index > 0 && Number(entry[1])}).length">
                 <!-- pie chart contains only datasets with zero value -->
                 <sui-message warning>
                   <i class="exclamation triangle icon"></i>{{ $t("message.no_data_for_current_filter") }}
