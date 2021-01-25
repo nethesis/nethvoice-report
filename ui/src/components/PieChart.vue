@@ -81,7 +81,7 @@ export default {
           return entry[0];
         });
         let values = entries.map((entry) => {
-          return parseFloat(entry[1]);
+          return parseFloat(entry[1]) || 0;
         });
 
         if (entries.length <= this.$parent.MAX_CHART_ENTRIES) {

@@ -17,7 +17,7 @@ DROP TABLE IF EXISTS dashboard_cdr_10_current_year;
 /* QUERIES */
 SET @q_past_year = CONCAT('
 CREATE TABLE dashboard_cdr_10_past_year AS 
-SELECT cti_group, Sum(cost) AS cost FROM 
+SELECT cti_group, Sum(IF(cost, cost, 0)) AS cost FROM 
        (SELECT g.name AS cti_group, 
               Sum(cost) AS cost 
        FROM   ',@from,' c 
@@ -55,7 +55,7 @@ GROUP  BY cti_group
 ORDER  BY cost DESC');
 SET @q_current_year = CONCAT('
 CREATE TABLE dashboard_cdr_10_current_year AS
-SELECT cti_group, Sum(cost) AS cost  FROM 
+SELECT cti_group, Sum(IF(cost, cost, 0)) AS cost  FROM 
        (SELECT g.name AS cti_group, 
               Sum(cost) AS cost 
        FROM   ',@from,' c 
@@ -93,7 +93,7 @@ GROUP  BY cti_group
 ORDER  BY cost DESC');
 SET @q_past_semester = CONCAT('
 CREATE TABLE dashboard_cdr_10_past_semester AS
-SELECT cti_group, Sum(cost) AS cost  FROM 
+SELECT cti_group, Sum(IF(cost, cost, 0)) AS cost  FROM 
        (SELECT g.name AS cti_group, 
               Sum(cost) AS cost 
        FROM   ',@from,' c 
@@ -131,7 +131,7 @@ GROUP  BY cti_group
 ORDER  BY cost DESC');
 SET @q_past_quarter = CONCAT('
 CREATE TABLE dashboard_cdr_10_past_quarter AS
-SELECT cti_group, Sum(cost) AS cost  FROM 
+SELECT cti_group, Sum(IF(cost, cost, 0)) AS cost  FROM 
        (SELECT g.name AS cti_group, 
               Sum(cost) AS cost 
        FROM   ',@from,' c 
@@ -169,7 +169,7 @@ GROUP  BY cti_group
 ORDER  BY cost DESC');
 SET @q_past_month = CONCAT('
 CREATE TABLE dashboard_cdr_10_past_month AS
-SELECT cti_group, Sum(cost) AS cost  FROM 
+SELECT cti_group, Sum(IF(cost, cost, 0)) AS cost  FROM 
        (SELECT g.name AS cti_group, 
               Sum(cost) AS cost 
        FROM   ',@from,' c 
@@ -207,7 +207,7 @@ GROUP  BY cti_group
 ORDER  BY cost DESC');
 SET @q_current_month = CONCAT('
 CREATE TABLE dashboard_cdr_10_current_month AS
-SELECT cti_group, Sum(cost) AS cost  FROM 
+SELECT cti_group, Sum(IF(cost, cost, 0)) AS cost  FROM 
        (SELECT g.name AS cti_group, 
               Sum(cost) AS cost 
        FROM   ',@from,' c 
@@ -245,7 +245,7 @@ GROUP  BY cti_group
 ORDER  BY cost DESC');
 SET @q_past_week = CONCAT('
 CREATE TABLE dashboard_cdr_10_past_week AS
-SELECT cti_group, Sum(cost) AS cost  FROM 
+SELECT cti_group, Sum(IF(cost, cost, 0)) AS cost  FROM 
        (SELECT g.name AS cti_group, 
               Sum(cost) AS cost 
        FROM   ',@from,' c 
@@ -283,7 +283,7 @@ GROUP  BY cti_group
 ORDER  BY cost DESC');
 SET @q_current_week = CONCAT('
 CREATE TABLE dashboard_cdr_10_current_week AS
-SELECT cti_group, Sum(cost) AS cost  FROM 
+SELECT cti_group, Sum(IF(cost, cost, 0)) AS cost  FROM 
        (SELECT g.name AS cti_group, 
               Sum(cost) AS cost 
        FROM   ',@from,' c 
@@ -320,7 +320,7 @@ WHERE  cti_group IS NOT NULL
 GROUP  BY cti_group
 ORDER  BY cost DESC');
 
-/* STATMENTS */
+/* STATEMENTS */
 PREPARE stmt_past_year from @q_past_year;
 PREPARE stmt_current_year from @q_current_year;
 PREPARE stmt_past_semester from @q_past_semester;

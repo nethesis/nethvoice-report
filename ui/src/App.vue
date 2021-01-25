@@ -253,6 +253,7 @@ body {
 
 .pie-chart {
   max-width: 26rem;
+  min-width: 20rem;
   margin: 2rem 2rem 3rem 2rem;
 }
 
