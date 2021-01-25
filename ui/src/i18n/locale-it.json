@@ -213,7 +213,7 @@
       "inboundAvgDuration": "Inbound average duration",
       "inboundAvgWait": "Inbound average wait",
       "inboundHourlyDistribution": "Inbound hourly distribution",
-      "inboundMonthlyDistribution": "",
+      "inboundMonthlyDistribution": "Inbound monthly distribution",
       "inboundRegions": "Inbound regions",
       "inboundProvinces": "Inbound provinces",
       "outboundCallsByRoute": "Outbound calls by route",
@@ -230,7 +230,12 @@
       "personalLocal": "Personal local calls",
       "summary": "Summary",
       "answers": "Risposte",
-      "lost": "Non risposte"
+      "lost": "Non risposte",
+      "inboundCallsByDid": "Inbound calls by DID",
+      "inboundAvgDurationByDid": "Inbound average duration by DID",
+      "inboundAvgWaitByDid": "Inbound average wait by DID",
+      "inboundHourlyDistributionByDid": "Inbound hourly distribution by DID",
+      "inboundMonthlyDistributionByDid": "Inbound monthly distribution by DID"
     },
     "message": {
       "are_you_sure": "Sei sicuro?",
