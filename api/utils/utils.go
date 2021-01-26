@@ -218,9 +218,10 @@ func ExtractCallDestinations(v []string) string {
 }
 
 func ExtractPatterns() string {
-	// init vars
-	var settings models.Settings
 	var patterns string
+
+	// get settings struct from configuration
+	settings := configuration.Config.Settings
 
 	// init cache connection
 	cacheConnection := cache.Instance()
@@ -228,20 +229,30 @@ func ExtractPatterns() string {
 	// check if settings is locally cached
 	settingsString, errCache := cacheConnection.Get("admin_settings").Result()
 
-	// get settings struct from configuration
-	settings = configuration.Config.Settings
-
 	if errCache == nil {
 		// settings is cached
 
 		// convert to struct
-		var settingsCache map[string]models.Settings
+		var settingsMap map[string]models.Settings
 
-		errJson := json.Unmarshal([]byte(settingsString), &settingsCache)
+		errJson := json.Unmarshal([]byte(settingsString), &settingsMap)
 		if errJson != nil {
 			return ""
 		}
-		settings = settingsCache["settings"]
+		settingsCache := settingsMap["settings"]
+
+		v := reflect.ValueOf(&settingsCache).Elem()
+		typeOfV := v.Type()
+
+		for i := 0; i < v.NumField(); i++ {
+			f := v.Field(i)
+
+			// override default call patterns value if value from cache is nonempty
+
+			if typeOfV.Field(i).Type.String() == "[]models.CallPattern" && len(f.Interface().([]models.CallPattern)) != 0 {
+				reflect.ValueOf(&settings).Elem().FieldByName(typeOfV.Field(i).Name).Set(reflect.ValueOf(f.Interface()))
+			}
+		}
 	}
 
 	// sort patterns by long
