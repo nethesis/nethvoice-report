@@ -1,3 +1,4 @@
+<CDR_SELECT: type,call_type,sum(total£num) AS "total£num",sum(answered£num) AS "answered£num",sum(noAnswer£num) AS "noAnswer£num",sum(busy£num) AS "busy£num",sum(failed£num) AS "failed£num",sum(totalDuration£seconds) AS "totalDuration£seconds",avg(avgDuration£seconds) AS "avgDuration£seconds",sum(totalCost£currency) AS "totalCost£currency",avg(avgCost£currency) AS "avgCost£currency",sum(totalWait£seconds) AS "totalWait£seconds",avg(avgWait£seconds) AS "avgWait£seconds">
 SELECT type,
        call_type,	
        Count(*)                                                 AS "total£num", 

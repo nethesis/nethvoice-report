@@ -383,9 +383,11 @@ func buildCdrQuery(queryFile string, filter models.Filter) (string, error) {
 	// GROUP BY and ORDER BY must be applied to the result of UNION ALL
 
 	// define regexps
+	rS := regexp.MustCompile(`<CDR_SELECT: (.+)>`)
 	rG := regexp.MustCompile(`<CDR_GROUP: (.+)>`)
 	rO := regexp.MustCompile(`<CDR_ORDER: (.+)>`)
 
+	findsS := rS.FindStringSubmatch(queryWithTablePlaceholder)
 	findsG := rG.FindStringSubmatch(queryWithTablePlaceholder)
 	findsO := rO.FindStringSubmatch(queryWithTablePlaceholder)
 
@@ -395,16 +397,26 @@ func buildCdrQuery(queryFile string, filter models.Filter) (string, error) {
 		// build a query like this:
 		// SELECT * FROM ( SELECT ... UNION ALL SELECT... UNION ALL SELECT...) t GROUP BY ... ORDER BY ... LIMIT ...
 		// "t" is the alias for derived table
-		queryBuilder.WriteString("SELECT * FROM (")
+		// if there is at least one CDR_SELECT, change SELECT * with <CDR_SELECT> value
+		if len(findsS) > 0 {
+			// extract select fields
+			querySelect := strings.Join(findsS[1:], ",")
+
+			// build query string
+			queryBuilder.WriteString("SELECT "+ querySelect  +" FROM (")
+		} else {
+			queryBuilder.WriteString("SELECT * FROM (")
+		}
 	}
 
 	for i, cdrTable := range cdrTables {
 		// clean placeholders
 		query = strings.ReplaceAll(queryWithTablePlaceholder, "<CDR_TABLE>", cdrTable)
 
-		// remove groups and orders
+		// remove selects, groups and orders
 		query = rG.ReplaceAllString(query, "")
 		query = rO.ReplaceAllString(query, "")
+		query = rS.ReplaceAllString(query, "")
 
 		// remove trailing semicolon
 		query = strings.ReplaceAll(query, ";", "")
