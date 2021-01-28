@@ -5,18 +5,18 @@ SELECT CONCAT('cdr_', DATE_FORMAT(NOW() - INTERVAL 1 YEAR - INTERVAL 1 DAY, "%Y"
 SELECT CONCAT('cdr_', DATE_FORMAT(NOW() - INTERVAL 1 DAY, "%Y")) INTO @to;
 
 /* DROPS */
-DROP TABLE IF EXISTS dashboard_cdr_15_past_week;
-DROP TABLE IF EXISTS dashboard_cdr_15_current_week;
-DROP TABLE IF EXISTS dashboard_cdr_15_past_month;
-DROP TABLE IF EXISTS dashboard_cdr_15_current_month;
-DROP TABLE IF EXISTS dashboard_cdr_15_past_quarter;
-DROP TABLE IF EXISTS dashboard_cdr_15_past_semester;
-DROP TABLE IF EXISTS dashboard_cdr_15_past_year;
-DROP TABLE IF EXISTS dashboard_cdr_15_current_year;
+DROP TABLE IF EXISTS dashboard_cdr_9_past_week;
+DROP TABLE IF EXISTS dashboard_cdr_9_current_week;
+DROP TABLE IF EXISTS dashboard_cdr_9_past_month;
+DROP TABLE IF EXISTS dashboard_cdr_9_current_month;
+DROP TABLE IF EXISTS dashboard_cdr_9_past_quarter;
+DROP TABLE IF EXISTS dashboard_cdr_9_past_semester;
+DROP TABLE IF EXISTS dashboard_cdr_9_past_year;
+DROP TABLE IF EXISTS dashboard_cdr_9_current_year;
 
 /* QUERIES */
 SET @q_past_year = CONCAT('
-CREATE TABLE dashboard_cdr_15_past_year AS
+CREATE TABLE dashboard_cdr_9_past_year AS
 SELECT did, Avg(avg_duration) AS avg_duration FROM
        (SELECT did, 
               Avg(duration)                                                   AS avg_duration 
@@ -38,7 +38,7 @@ WHERE  did IS NOT NULL AND did <> ""
 GROUP  BY did
 ORDER  BY avg_duration DESC');
 SET @q_current_year = CONCAT('
-CREATE TABLE dashboard_cdr_15_current_year AS SELECT did, Avg(avg_duration) AS avg_duration FROM
+CREATE TABLE dashboard_cdr_9_current_year AS SELECT did, Avg(avg_duration) AS avg_duration FROM
        (SELECT did,
               Avg(duration)                                                   AS avg_duration 
        FROM   ',@from,'
@@ -59,7 +59,7 @@ WHERE  did IS NOT NULL AND did <> ""
 GROUP  BY did
 ORDER  BY avg_duration DESC');
 SET @q_past_semester = CONCAT('
-CREATE TABLE dashboard_cdr_15_past_semester AS SELECT did, Avg(avg_duration) AS avg_duration FROM
+CREATE TABLE dashboard_cdr_9_past_semester AS SELECT did, Avg(avg_duration) AS avg_duration FROM
        (SELECT did,
               Avg(duration)                                                   AS avg_duration 
        FROM   ',@from,'
@@ -80,7 +80,7 @@ WHERE  did IS NOT NULL AND did <> ""
 GROUP  BY did
 ORDER  BY avg_duration DESC');
 SET @q_past_quarter = CONCAT('
-CREATE TABLE dashboard_cdr_15_past_quarter AS SELECT did, Avg(avg_duration) AS avg_duration FROM
+CREATE TABLE dashboard_cdr_9_past_quarter AS SELECT did, Avg(avg_duration) AS avg_duration FROM
        (SELECT did,
               Avg(duration)                                                   AS avg_duration 
        FROM   ',@from,'
@@ -101,7 +101,7 @@ WHERE  did IS NOT NULL AND did <> ""
 GROUP  BY did
 ORDER  BY avg_duration DESC');
 SET @q_past_month = CONCAT('
-CREATE TABLE dashboard_cdr_15_past_month AS SELECT did, Avg(avg_duration) AS avg_duration FROM
+CREATE TABLE dashboard_cdr_9_past_month AS SELECT did, Avg(avg_duration) AS avg_duration FROM
        (SELECT did,
               Avg(duration)                                                   AS avg_duration 
        FROM   ',@from,'
@@ -122,7 +122,7 @@ WHERE  did IS NOT NULL AND did <> ""
 GROUP  BY did
 ORDER  BY avg_duration DESC');
 SET @q_current_month = CONCAT('
-CREATE TABLE dashboard_cdr_15_current_month AS SELECT did, Avg(avg_duration) AS avg_duration FROM
+CREATE TABLE dashboard_cdr_9_current_month AS SELECT did, Avg(avg_duration) AS avg_duration FROM
        (SELECT did,
               Avg(duration)                                                   AS avg_duration 
        FROM   ',@from,'
@@ -143,7 +143,7 @@ WHERE  did IS NOT NULL AND did <> ""
 GROUP  BY did
 ORDER  BY avg_duration DESC');
 SET @q_past_week = CONCAT('
-CREATE TABLE dashboard_cdr_15_past_week AS SELECT did, Avg(avg_duration) AS avg_duration FROM
+CREATE TABLE dashboard_cdr_9_past_week AS SELECT did, Avg(avg_duration) AS avg_duration FROM
        (SELECT did,
               Avg(duration)                                                   AS avg_duration 
        FROM   ',@from,'
@@ -164,7 +164,7 @@ WHERE  did IS NOT NULL AND did <> ""
 GROUP  BY did
 ORDER  BY avg_duration DESC');
 SET @q_current_week = CONCAT('
-CREATE TABLE dashboard_cdr_15_current_week AS SELECT did, Avg(avg_duration) AS avg_duration FROM
+CREATE TABLE dashboard_cdr_9_current_week AS SELECT did, Avg(avg_duration) AS avg_duration FROM
        (SELECT did,
               Avg(duration)                                                   AS avg_duration 
        FROM   ',@from,'

@@ -1,4 +1,4 @@
 SELECT
     did,
     total AS total£num
-FROM dashboard_cdr_14_{{ .Time.CdrDashboardRange }}
+FROM dashboard_cdr_8_{{ .Time.CdrDashboardRange }}
