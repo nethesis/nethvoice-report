@@ -196,6 +196,12 @@ func ExtractStrings(v []string) string {
 	return "\"" + result + "\""
 }
 
+func ExtractRegexpStrings(v []string) string {
+	result := strings.Join(v, `|`)
+
+        return "'" + result + "'"
+}
+
 func ExtractCallDestinations(v []string) string {
 	// init result var
 	result := ""

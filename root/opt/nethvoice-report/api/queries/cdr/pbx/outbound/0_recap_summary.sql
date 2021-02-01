@@ -18,11 +18,11 @@ WHERE	calldate >= "{{ .Time.Interval.Start }}"
 	AND calldate <= "{{ .Time.Interval.End }}"
 	AND type = "OUT"
 	{{ if (and (gt (len .Sources) 0) (gt (len .Destinations) 0)) }}
-          AND (cnum IN ({{ ExtractStrings .Sources }}) AND dst IN ({{ ExtractStrings .Destinations }}))
+          AND (cnum REGEXP ({{ ExtractRegexpStrings .Sources }}) AND dst REGEXP ({{ ExtractRegexpStrings .Destinations }}))
         {{ else if gt (len .Sources) 0 }}
-          AND cnum IN ({{ ExtractStrings .Sources }})
+          AND cnum REGEXP ({{ ExtractRegexpStrings .Sources }})
         {{ else if gt (len .Destinations) 0 }}
-          AND dst IN ({{ ExtractStrings .Destinations }})
+          AND dst REGEXP ({{ ExtractRegexpStrings .Destinations }})
         {{ else }}
         {{ end }}
 	{{ if .CallType }}
@@ -35,7 +35,7 @@ WHERE	calldate >= "{{ .Time.Interval.Start }}"
 	  AND dstchannel LIKE "%{{ .Trunks }}%"
 	{{ end }}
 	{{ if gt (len .Patterns) 0 }}
-	  AND call_type IN ({{ ExtractStrings .Patterns }})
+	  AND call_type REGEXP ({{ ExtractRegexpStrings .Patterns }})
 	{{ end }}
 <CDR_GROUP: type, call_type>
 <CDR_ORDER: type, call_type>
