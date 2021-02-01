@@ -199,7 +199,7 @@ func ExtractStrings(v []string) string {
 func ExtractRegexpStrings(v []string) string {
 	result := strings.Join(v, `|`)
 
-        return "'" + result + "'"
+	return "'" + result + "'"
 }
 
 func ExtractCallDestinations(v []string) string {
