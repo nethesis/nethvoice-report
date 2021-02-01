@@ -202,13 +202,13 @@
                 </span>
                 <span v-else>
                   <!-- search phone number in phonebook -->
-                  <span v-if="reversePhonebookSearch(element)" v-tooltip="'<div><b class=\'mg-right-xs\'>' + $t('misc.contact') + '</b>' + $options.filters.reversePhonebookLookup(element, 'name|company', $root) + '</div>'">
-                    {{ element }}
+                  <span v-if="reversePhonebookSearch(element)" v-tooltip="'<div><b class=\'mg-right-xs\'>' + $t('misc.contact') + '</b>' + element + '</div>'">
+                    {{ $options.filters.reversePhonebookLookup(element, 'name|company', $root) }}
                     <sui-icon name='user' />
                   </span>
                   <span v-else>
                     <!-- phone number not found in phonebook -->
-                    {{ isNumber(element) ? element : $t(`table.pbx`) }}
+                    {{ (isNumber(element) && element !== "1") ? element : $t(`table.pbx`) }}
                     <country-flag
                       v-if="$route.meta.view == 'outbound' && columns[index].name == 'dst' && isNumber(element) && getCountryCode(element)"
                       :country="getCountryCode(element)"
