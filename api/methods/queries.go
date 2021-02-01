@@ -213,7 +213,7 @@ func executeSqlQuery(filter models.Filter, report string, section string, view s
 	}
 
 	// create template
-	q := template.New(path.Base(queryFile)).Funcs(template.FuncMap{"ExtractRegexpStrings": utils.ExtractRegexpStrings}).Funcs(template.FuncMap{"ExtractStrings": utils.ExtractStrings}).Funcs(template.FuncMap{"ExtractPhones": utils.ExtractPhones}).Funcs(template.FuncMap{"ExtractOrigins": utils.ExtractOrigins}).Funcs(template.FuncMap{"ExtractSettings": utils.ExtractSettings}).Funcs(template.FuncMap{"PivotGroup": utils.PivotGroup}).Funcs(template.FuncMap{"ExtractUserExtensions": utils.ExtractUserExtensions}).Funcs(template.FuncMap{"ExtractPatterns": utils.ExtractPatterns}).Funcs(template.FuncMap{"ExtractCallDestinations": utils.ExtractCallDestinations})
+	q := template.New(path.Base(queryFile)).Funcs(template.FuncMap{"ExtractStrings": utils.ExtractStrings}).Funcs(template.FuncMap{"ExtractPhones": utils.ExtractPhones}).Funcs(template.FuncMap{"ExtractOrigins": utils.ExtractOrigins}).Funcs(template.FuncMap{"ExtractSettings": utils.ExtractSettings}).Funcs(template.FuncMap{"PivotGroup": utils.PivotGroup}).Funcs(template.FuncMap{"ExtractUserExtensions": utils.ExtractUserExtensions}).Funcs(template.FuncMap{"ExtractPatterns": utils.ExtractPatterns}).Funcs(template.FuncMap{"ExtractCallDestinations": utils.ExtractCallDestinations}).Funcs(template.FuncMap{"ExtractDispositions": utils.ExtractDispositions}).Funcs(template.FuncMap{"ExtractRegexpStrings": utils.ExtractRegexpStrings})
 
 	// parse template
 

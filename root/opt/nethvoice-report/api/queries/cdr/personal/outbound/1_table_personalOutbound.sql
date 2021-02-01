@@ -21,7 +21,7 @@ WHERE	calldate >= "{{ .Time.Interval.Start }}"
         {{ else }}
         {{ end }}
 	{{ if .CallType }}
-	  AND dispositions REGEXP "{{ .CallType }}$"
+	  AND ({{ ExtractDispositions .CallType }})
 	{{ end }}
 	{{ if .Duration }}
 	  AND duration <= {{ .Duration }}
