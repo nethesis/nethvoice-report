@@ -72,7 +72,7 @@ func GetCallDetails(c *gin.Context) {
 	results, errQuery := db.Query(`
 	select
 		DATE_FORMAT(calldate, '%Y-%m-%d %H:%i:%s') AS time£hourDate,
-		src AS src£phoneNumber,
+		IF(cnum IS NULL OR cnum = "", src, cnum) AS src£phoneNumber,
 		dst AS dst£phoneNumber,
 		disposition AS result£label,
 		duration AS totalDuration£seconds,
