@@ -248,14 +248,18 @@ func executeSqlQuery(filter models.Filter, report string, section string, view s
 
 		// set sources and destinations for pbx calls
 		if section == "pbx" {
-			// append groups to sources and destinations
-			if len(filter.Groups) > 0 {
+			// append groups and users to sources and/or destinations
+			if view == "inbound" {
+				filter.Destinations = append(filter.Destinations, filter.Groups...)
+				filter.Destinations = append(filter.Destinations, filter.Users...)
+			} else if view == "outbound" {
+				filter.Sources = append(filter.Sources, filter.Groups...)
+				filter.Sources = append(filter.Sources, filter.Users...)
+			} else if view == "local" {
+				// append groups
 				filter.Sources = append(filter.Sources, filter.Groups...)
 				filter.Destinations = append(filter.Destinations, filter.Groups...)
-			}
-
-			// append users to sources and destinations
-			if len(filter.Users) > 0 {
+				// append destinations
 				filter.Sources = append(filter.Sources, filter.Users...)
 				filter.Destinations = append(filter.Destinations, filter.Users...)
 			}
@@ -403,7 +407,7 @@ func buildCdrQuery(queryFile string, filter models.Filter) (string, error) {
 			querySelect := strings.Join(findsS[1:], ",")
 
 			// build query string
-			queryBuilder.WriteString("SELECT "+ querySelect  +" FROM (")
+			queryBuilder.WriteString("SELECT " + querySelect + " FROM (")
 		} else {
 			queryBuilder.WriteString("SELECT * FROM (")
 		}
