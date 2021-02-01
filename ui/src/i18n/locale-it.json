@@ -472,7 +472,8 @@
       "just_created": "Appena creato",
       "seconds": "secondi",
       "user": "Utente",
-      "contact": "Contatto"
+      "contact": "Contatto",
+      "queue": "Coda"
     },
     "validation": {
       "office_hours_invalid": "Orario non valido",

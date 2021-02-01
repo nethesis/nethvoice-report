@@ -1195,11 +1195,6 @@ export default {
             for (const queue of this.filterValues.queues) {
               // set queues into root object
               this.$root.queues[queue.value] = queue.text;
-
-              // add queues to devices list
-              this.filterValues.devices[queue.value] = {
-                type: 'queue',
-              };
             }
           }
 

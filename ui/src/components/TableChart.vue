@@ -13,7 +13,12 @@
         <sui-table-row>
           <template v-for="(header, index) in topHeaders">
             <sui-table-header-cell
-              v-if="!(report == 'cdr' && (header.name == 'linkedid' || header.name == 'call_type'))"
+              v-if="
+                !(
+                  report == 'cdr' &&
+                  (header.name == 'linkedid' || header.name == 'call_type')
+                )
+              "
               v-bind:key="index"
               ref="tableHeader"
               :class="[
@@ -123,7 +128,7 @@
                   report == 'cdr' &&
                   columns[index] &&
                   (columns[index].name == 'linkedid' ||
-                  columns[index].name == 'call_type')
+                    columns[index].name == 'call_type')
                 )
               "
               v-show="columns[index] && columns[index].visible"
@@ -177,10 +182,11 @@
               </span>
               <span
                 v-else-if="
-                  columns[index] &&
-                  columns[index].format == 'phoneNumber'"
+                  columns[index] && columns[index].format == 'phoneNumber'
+                "
               >
-                <span v-if="$root.devices[element]"
+                <span
+                  v-if="$root.devices[element]"
                   v-tooltip="getDeviceTooltip(element)"
                 >
                   {{ element }}
@@ -196,21 +202,52 @@
                         ? 'users'
                         : $root.devices[element].type == 'meetme'
                         ? 'comment alternate outline'
-                        : 'hourglass half'
+                        : ''
                     "
                   />
                 </span>
+                <span
+                  v-else-if="$root.queues[element]"
+                  v-tooltip="getQueueTooltip(element)"
+                >
+                  {{ $root.queues[element] }}
+                  <sui-icon :name="'hourglass half'" />
+                </span>
                 <span v-else>
                   <!-- search phone number in phonebook -->
-                  <span v-if="reversePhonebookSearch(element)" v-tooltip="'<div><b class=\'mg-right-xs\'>' + $t('misc.contact') + '</b>' + element + '</div>'">
-                    {{ $options.filters.reversePhonebookLookup(element, 'name|company', $root) }}
-                    <sui-icon name='user' />
+                  <span
+                    v-if="reversePhonebookSearch(element)"
+                    v-tooltip="
+                      '<div><b class=\'mg-right-xs\'>' +
+                      $t('misc.contact') +
+                      '</b>' +
+                      element +
+                      '</div>'
+                    "
+                  >
+                    {{
+                      $options.filters.reversePhonebookLookup(
+                        element,
+                        "name|company",
+                        $root
+                      )
+                    }}
+                    <sui-icon name="user" />
                   </span>
                   <span v-else>
                     <!-- phone number not found in phonebook -->
-                    {{ (isNumber(element) && element !== "1") ? element : $t(`table.pbx`) }}
+                    {{
+                      isNumber(element) && element !== "1"
+                        ? element
+                        : $t(`table.pbx`)
+                    }}
                     <country-flag
-                      v-if="$route.meta.view == 'outbound' && columns[index].name == 'dst' && isNumber(element) && getCountryCode(element)"
+                      v-if="
+                        $route.meta.view == 'outbound' &&
+                        columns[index].name == 'dst' &&
+                        isNumber(element) &&
+                        getCountryCode(element)
+                      "
                       :country="getCountryCode(element)"
                       size="small"
                       v-tooltip="getCountryName(element)"
@@ -223,7 +260,9 @@
                   columns[index] && columns[index].format == 'currency'
                 "
               >
-                {{ element | formatCurrency($parent.$data.adminSettings.currency) }}
+                {{
+                  element | formatCurrency($parent.$data.adminSettings.currency)
+                }}
               </span>
               <span
                 v-else-if="
@@ -332,8 +371,8 @@
 import UtilService from "../services/utils";
 import StorageService from "../services/storage";
 import HorizontalScrollers from "../components/HorizontalScrollers.vue";
-import parsePhoneNumber from 'libphonenumber-js';
-import CountryFlag from 'vue-country-flag';
+import parsePhoneNumber from "libphonenumber-js";
+import CountryFlag from "vue-country-flag";
 
 let countries = require("i18n-iso-countries");
 countries.registerLocale(require("i18n-iso-countries/langs/en.json"));
@@ -421,42 +460,32 @@ export default {
     },
   },
   methods: {
-    getCountryCode (number) {
-      if (!number) return null
+    getCountryCode(number) {
+      if (!number) return null;
       // adapt number for libphonenumber
-      number = number.replace(/^00/g, "+")
+      number = number.replace(/^00/g, "+");
       // parse number
-      const parsedNumber = parsePhoneNumber(number)
+      const parsedNumber = parsePhoneNumber(number);
 
       // return country
-      return (
-        parsedNumber ? (
-          parsedNumber.country
-        ) : (
-          null
-        )
-      )
+      return parsedNumber ? parsedNumber.country : null;
     },
-    getCountryName (number) {
-      if (!number) return null
+    getCountryName(number) {
+      if (!number) return null;
       // adapt number for libphonenumber
-      number = number.replace(/^00/g, "+")
+      number = number.replace(/^00/g, "+");
       // parse number
-      const parsedNumber = parsePhoneNumber(number)
+      const parsedNumber = parsePhoneNumber(number);
 
       // return country
-      return (
-        parsedNumber ? (
-          countries.getName(parsedNumber.country, this.$root.currentLocale, {select: "official"})
-        ) : (
-          null
-        )
-      )
+      return parsedNumber
+        ? countries.getName(parsedNumber.country, this.$root.currentLocale, {
+            select: "official",
+          })
+        : null;
     },
-    isNumber (value) {
-      return (
-        !Number.isNaN(Number(value)) ? true : false
-      )
+    isNumber(value) {
+      return !Number.isNaN(Number(value)) ? true : false;
     },
     onApplyFilters() {
       this.sortedBy = "period";
@@ -1073,19 +1102,29 @@ export default {
       });
       this.updatePagination();
     },
+    getQueueTooltip(queueNum) {
+      let tooltipContent =
+        '<div><b class="mg-right-xs">' +
+        this.$t("misc.queue") +
+        "</b>" +
+        queueNum;
+      ("</div>");
+      return tooltipContent;
+    },
     getDeviceTooltip(extension) {
-      let tooltipContent = '';
+      let tooltipContent = "";
 
       const userFound = this.$root.users.find((u) => {
         return u.value && u.value.split(",").includes(extension);
       });
 
       if (userFound) {
-        tooltipContent += '<div><b class="mg-right-xs">' +
-        this.$t("misc.user") +
-        "</b>" +
-        userFound.text +
-        "</div>";
+        tooltipContent +=
+          '<div><b class="mg-right-xs">' +
+          this.$t("misc.user") +
+          "</b>" +
+          userFound.text +
+          "</div>";
       }
 
       tooltipContent +=
@@ -1108,9 +1147,13 @@ export default {
       return tooltipContent;
     },
     reversePhonebookSearch(element) {
-      const found = this.$options.filters.reversePhonebookLookup(element, "name", this.$root);
+      const found = this.$options.filters.reversePhonebookLookup(
+        element,
+        "name",
+        this.$root
+      );
       return found !== "-";
-    }
+    },
   },
 };
 </script>

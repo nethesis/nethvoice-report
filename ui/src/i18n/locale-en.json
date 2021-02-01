@@ -472,7 +472,8 @@
       "just_created": "Just created",
       "seconds": "seconds",
       "user": "User",
-      "contact": "Contact"
+      "contact": "Contact",
+      "queue": "Queue"
     },
     "validation": {
       "office_hours_invalid": "Invalid time",
