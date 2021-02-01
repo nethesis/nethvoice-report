@@ -18,9 +18,9 @@ WHERE	calldate >= "{{ .Time.Interval.Start }}"
 	AND calldate <= "{{ .Time.Interval.End }}"
 	AND type = "IN"
 	{{ if (and (gt (len .Sources) 0) (gt (len .Destinations) 0)) }}
-          AND (cnum REGEXP ({{ ExtractRegexpStrings .Sources }}) AND dst REGEXP ({{ ExtractRegexpStrings .Destinations }}))
+          AND (IF(cnum IS NULL OR cnum = "", src, cnum) REGEXP ({{ ExtractRegexpStrings .Sources }}) AND dst REGEXP ({{ ExtractRegexpStrings .Destinations }}))
         {{ else if gt (len .Sources) 0 }}
-          AND cnum REGEXP ({{ ExtractRegexpStrings .Sources }})
+          AND IF(cnum IS NULL OR cnum = "", src, cnum) REGEXP ({{ ExtractRegexpStrings .Sources }})
         {{ else if gt (len .Destinations) 0 }}
           AND dst REGEXP ({{ ExtractRegexpStrings .Destinations }})
         {{ else }}
