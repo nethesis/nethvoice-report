@@ -26,7 +26,6 @@ import (
 	"bytes"
 	"fmt"
 	"path"
-	"strconv"
 	"text/template"
 	"time"
 
@@ -174,94 +173,87 @@ func executeReportCDR(flags bool) {
 	} else {
 		// define vars
 		var minYear int
-		var maxYear int
 		var minMonth int
-		var maxMonth int
 		var objTemplate CDRObj
 
 		// define template path
 		templateY := configuration.Config.TemplatePath + "/cdr_year.sql"
 		templateM := configuration.Config.TemplatePath + "/cdr_month.sql"
 
-		// get min and max year
-		rowMinMax := db.QueryRow("SELECT year(min(calldate)), year(max(calldate)) FROM cdr")
-		errQueryMinMax := rowMinMax.Scan(&minYear, &maxYear)
+		// get min year and min month
+		rowMin := db.QueryRow("SELECT year(min(calldate)), month(min(calldate)) FROM cdr")
+		errQueryMin := rowMin.Scan(&minYear, &minMonth)
 
 		// check errors
-		if errQueryMinMax != nil {
-			helper.FatalError(errors.Wrap(errQueryMinMax, "error getting min and max year"))
+		if errQueryMin != nil {
+			helper.FatalError(errors.Wrap(errQueryMin, "error getting min year and min month"))
 		}
-
-		// get min month of min year
-		rowMinMax = db.QueryRow("SELECT month(min(calldate)) FROM `cdr_" + strconv.Itoa(minYear) + "`")
-		errQueryMinMax = rowMinMax.Scan(&minMonth)
 
 		// save minYear and minMonth in cache
 		cacheConnection := cache.Instance()
 		errCache := cacheConnection.Set("cdr_first_month", fmt.Sprintf("%d-%02d", minYear, minMonth), 0).Err()
+		if errCache != nil {
+			helper.FatalError(errors.Wrap(errCache, "error saving to cache"))
+		}
 
-		// loop years
-		for y := minYear; y <= maxYear; y++ {
-			// create query for y year
-			var queryY bytes.Buffer
-			objTemplate.Year = y
-			objTemplate.Month = 0
+		now := time.Now()
 
-			tplY := template.Must(template.New(path.Base(templateY)).Funcs(template.FuncMap{"YearMap": yearMap}).Funcs(template.FuncMap{"MonthMap": monthMap}).Funcs(template.FuncMap{"ExtractPatterns": utils.ExtractPatterns}).ParseFiles(templateY))
-			errTpl := tplY.Execute(&queryY, &objTemplate)
-			if errTpl != nil {
-				helper.FatalError(errors.Wrap(errTpl, "invalid query template compiling"))
-			}
+		// used to generate cdr tables
+		cdrTime := time.Date(minYear, time.Month(minMonth), now.Day(), now.Hour(), now.Minute(), now.Second(), now.Nanosecond(), now.Location())
 
-			helper.LogDebug("\nExecuting query %s for [%d]:\n%s", templateY, y, queryY.String())
+		// loop months from minYear-minMonth to maxYear-maxMonth
+		for cdrTime.Before(now) || cdrTime.Equal(now) {
+			y := cdrTime.Year()
+			m := int(cdrTime.Month())
 
-			// execute query
-			rowsY, errQueryY := db.Query(queryY.String())
-			if errQueryY != nil {
-				helper.FatalError(errors.Wrap(errQueryY, "Error in query [year] execution:\n"+queryY.String()))
-			}
-
-			// close results
-			rowsY.Close()
-
-			// get min and max month
-			rowMinMax = db.QueryRow("SELECT month(min(calldate)), month(max(calldate)) FROM `cdr_" + strconv.Itoa(y) + "`")
-			errQueryMinMax = rowMinMax.Scan(&minMonth, &maxMonth)
-
-			// handle cache error
-			if errCache != nil {
-				helper.FatalError(errors.Wrap(errCache, "Error on saving to cache"))
-			}
-
-			// check errors
-			if errQueryMinMax != nil {
-				helper.FatalError(errors.Wrap(errQueryMinMax, "error getting min and max month"))
-			}
-
-			// loop months
-			for m := minMonth; m <= maxMonth; m++ {
-				// create query for m month
-				var queryM bytes.Buffer
+			// create year table on minYear-minMonth and on every January
+			if m == 1 || (y == minYear && m == minMonth) {
+				// create query for year
+				var queryY bytes.Buffer
 				objTemplate.Year = y
-				objTemplate.Month = m
+				objTemplate.Month = 0
 
-				tplM := template.Must(template.New(path.Base(templateM)).Funcs(template.FuncMap{"YearMap": yearMap}).Funcs(template.FuncMap{"MonthMap": monthMap}).ParseFiles(templateM))
-				errTpl := tplM.Execute(&queryM, &objTemplate)
+				tplY := template.Must(template.New(path.Base(templateY)).Funcs(template.FuncMap{"YearMap": yearMap}).Funcs(template.FuncMap{"MonthMap": monthMap}).Funcs(template.FuncMap{"ExtractPatterns": utils.ExtractPatterns}).ParseFiles(templateY))
+				errTpl := tplY.Execute(&queryY, &objTemplate)
 				if errTpl != nil {
 					helper.FatalError(errors.Wrap(errTpl, "invalid query template compiling"))
 				}
 
-				helper.LogDebug("\nExecuting query %s for [%d-%d]:\n%s", templateM, y, m, queryM.String())
+				helper.LogDebug("\nExecuting query %s for [%d]:\n%s", templateY, y, queryY.String())
 
 				// execute query
-				rowsM, errQueryM := db.Query(queryM.String())
-				if errQueryM != nil {
-					helper.FatalError(errors.Wrap(errQueryM, "Error in query [month] execution:\n"+queryM.String()))
+				rowsY, errQueryY := db.Query(queryY.String())
+				if errQueryY != nil {
+					helper.FatalError(errors.Wrap(errQueryY, "Error in query [year] execution:\n"+queryY.String()))
 				}
 
 				// close results
-				rowsM.Close()
+				rowsY.Close()
 			}
+
+			var queryM bytes.Buffer
+			objTemplate.Year = y
+			objTemplate.Month = m
+
+			tplM := template.Must(template.New(path.Base(templateM)).Funcs(template.FuncMap{"YearMap": yearMap}).Funcs(template.FuncMap{"MonthMap": monthMap}).ParseFiles(templateM))
+			errTpl := tplM.Execute(&queryM, &objTemplate)
+			if errTpl != nil {
+				helper.FatalError(errors.Wrap(errTpl, "invalid query template compiling"))
+			}
+
+			helper.LogDebug("\nExecuting query %s for [%d-%d]:\n%s", templateM, y, m, queryM.String())
+
+			// execute query
+			rowsM, errQueryM := db.Query(queryM.String())
+			if errQueryM != nil {
+				helper.FatalError(errors.Wrap(errQueryM, "Error in query [month] execution:\n"+queryM.String()))
+			}
+
+			// close results
+			rowsM.Close()
+
+			// go to next month for loop iteration
+			cdrTime = cdrTime.AddDate(0, 1, 0)
 		}
 	}
 }
