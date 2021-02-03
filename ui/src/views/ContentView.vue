@@ -78,7 +78,7 @@
           <div v-show="chart.data && chart.data.length > 1">
             <!-- table chart -->
             <div v-if="chart.type == 'table'">
-              <TableChart :caption="chart.caption" :data="chart.data" :chartKey="`${index}`" :officeHours="adminSettings.officeHours" :filterTimeSplit="filterTimeSplit" :report="$route.meta.report"/>
+              <TableChart :caption="chart.caption" :data="chart.data" :chartKey="`${index}`" :officeHours="adminSettings.officeHours" :filterTimeSplit="filterTimeSplit" :report="$route.meta.report" :hideHeaders="true"/>
             </div>
             <!-- line chart -->
             <div v-if="chart.type == 'line'">
@@ -177,7 +177,7 @@
               }}</sui-statistic-label>
             </sui-statistic>
           </sui-statistics-group>
-          <TableChart v-if="cdr.details.data.length" :minimal="true" :caption="$t('misc.details')" :data="cdr.details.data" class="cdr-details"/>
+          <TableChart v-if="cdr.details.data.length" :minimal="true" :caption="$t('misc.details')" :data="cdr.details.data" :hideHeaders="true" class="cdr-details"/>
           <div v-else>
             <sui-loader active centered inline class="mg-bottom-sm fix" />
             <sui-message warning class="align-center">

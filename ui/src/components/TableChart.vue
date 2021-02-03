@@ -13,7 +13,7 @@
         <sui-table-row>
           <template v-for="(header, index) in topHeaders">
             <sui-table-header-cell
-              v-if="!(report == 'cdr' && hiddenHeaders.includes(header.name))"
+              v-if="!(hideHeaders && hiddenHeaders.includes(header.name))"
               v-bind:key="index"
               ref="tableHeader"
               :class="[
@@ -120,7 +120,7 @@
             <sui-table-cell
               v-if="
                 !(
-                  report == 'cdr' &&
+                  hideHeaders &&
                   columns[index] &&
                   hiddenHeaders.includes(columns[index].name)
                 )
@@ -181,14 +181,20 @@
               >
                 <span
                   v-if="$root.users[element]"
-                  v-tooltip="getUserTooltip(element, index, row)"
+                  v-tooltip="{
+                    content: getUserTooltip(element, index, row),
+                    autoHide: false,
+                  }"
                 >
                   {{ $root.users[element] }}
                   <sui-icon :name="'user'" />
                 </span>
                 <span
                   v-else-if="$root.devices[element]"
-                  v-tooltip="getDeviceTooltip(element)"
+                  v-tooltip="{
+                    content: getDeviceTooltip(element),
+                    autoHide: false,
+                  }"
                 >
                   {{ element }}
                   <sui-icon
@@ -209,7 +215,10 @@
                 </span>
                 <span
                   v-else-if="$root.queues[element]"
-                  v-tooltip="getQueueTooltip(element)"
+                  v-tooltip="{
+                    content: getQueueTooltip(element),
+                    autoHide: false,
+                  }"
                 >
                   {{ $root.queues[element] }}
                   <sui-icon :name="'hourglass half'" />
@@ -218,13 +227,10 @@
                   <!-- search phone number in phonebook -->
                   <span
                     v-if="reversePhonebookSearch(element)"
-                    v-tooltip="
-                      '<div><b class=\'mg-right-xs\'>' +
-                      $t('misc.contact') +
-                      '</b>' +
-                      element +
-                      '</div>'
-                    "
+                    v-tooltip="{
+                      content: getContactTooltip(element),
+                      autoHide: false,
+                    }"
                   >
                     {{
                       $options.filters.reversePhonebookLookup(
@@ -251,7 +257,10 @@
                       "
                       :country="getCountryCode(element)"
                       size="small"
-                      v-tooltip="getCountryName(element)"
+                      v-tooltip="{
+                        content: getCountryName(element),
+                        autoHide: false,
+                      }"
                     />
                   </span>
                 </span>
@@ -406,6 +415,12 @@ export default {
     report: {
       type: String,
     },
+    hideHeaders: {
+      type: Boolean,
+      default: function () {
+        return false;
+      },
+    }
   },
   mixins: [UtilService, StorageService],
   components: { HorizontalScrollers, CountryFlag },
@@ -1113,8 +1128,15 @@ export default {
       ("</div>");
       return tooltipContent;
     },
+    getContactTooltip(value) {
+      "<div><b class='mg-right-xs'>" +
+        this.$t("misc.contact") +
+        "</b>" +
+        value +
+        "</div>";
+    },
     getUserTooltip(extension, rowIndex, row) {
-      let mainExtension;
+      let mainExtension = "-";
 
       // find main extension
 
@@ -1133,26 +1155,32 @@ export default {
         mainExtension = row[this.colIndex("peeraccount")];
       }
 
-      let tooltipContent = "";
+      // main extension
+      let tooltipContent =
+        '<div><b class="mg-right-xs">' +
+        this.$t("misc.main_extension") +
+        "</b>" +
+        mainExtension +
+        "</div>";
 
-      if (mainExtension) {
+      // actual extension
+      tooltipContent +=
+        '<div><b class="mg-right-xs">' +
+        this.$t("misc.actual_extension") +
+        "</b>" +
+        extension +
+        "</div>";
+
+      // device
+      if (this.$root.devices[extension]) {
+        tooltipContent += this.getDeviceTooltip(extension);
+      } else {
         tooltipContent +=
           '<div><b class="mg-right-xs">' +
-          this.$t("misc.main_extension") +
-          "</b>" +
-          mainExtension +
-          "</div>";
+          this.$t("device.type") +
+          "</b> - </div>";
       }
 
-      if (mainExtension != extension) {
-        // actual extension
-        tooltipContent +=
-          '<div><b class="mg-right-xs">' +
-          this.$t("misc.actual_extension") +
-          "</b>" +
-          extension +
-          "</div>";
-      }
       return tooltipContent;
     },
     colIndex(columnName) {
