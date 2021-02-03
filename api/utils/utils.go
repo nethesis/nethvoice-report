@@ -196,6 +196,18 @@ func ExtractStrings(v []string) string {
 	return "\"" + result + "\""
 }
 
+func ExtractRegexpStrings(v []string) string {
+	// escape "+" character, it is used in country calling codes (e.g. "+39")
+	// other special regexp characters work as expected (e.g. ".", "*", ...)
+	escaped := []string{}
+
+	for _, r := range v {
+		escaped = append(escaped, strings.ReplaceAll(r, "+", "\\\\+"))
+	}
+	result := strings.Join(escaped, `|`)
+	return "'" + result + "'"
+}
+
 func ExtractCallDestinations(v []string) string {
 	// init result var
 	result := ""
