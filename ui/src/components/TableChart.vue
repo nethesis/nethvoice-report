@@ -420,7 +420,7 @@ export default {
       default: function () {
         return false;
       },
-    }
+    },
   },
   mixins: [UtilService, StorageService],
   components: { HorizontalScrollers, CountryFlag },
@@ -1129,11 +1129,13 @@ export default {
       return tooltipContent;
     },
     getContactTooltip(value) {
-      "<div><b class='mg-right-xs'>" +
+      return (
+        "<div><b class='mg-right-xs'>" +
         this.$t("misc.contact") +
         "</b>" +
         value +
-        "</div>";
+        "</div>"
+      );
     },
     getUserTooltip(extension, rowIndex, row) {
       let mainExtension = "-";
