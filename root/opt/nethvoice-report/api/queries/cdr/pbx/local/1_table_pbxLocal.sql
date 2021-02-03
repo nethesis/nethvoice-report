@@ -1,5 +1,7 @@
 SELECT
     linkedid,
+    accountcode,
+    peeraccount,
     DATE_FORMAT(calldate, '%Y-%m-%d %H:%i:%s') AS time£hourDate,
     IF(cnum IS NULL OR cnum = "", src, cnum) AS src£phoneNumber,
     dst AS dst£phoneNumber,

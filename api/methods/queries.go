@@ -76,7 +76,9 @@ func GetCallDetails(c *gin.Context) {
 		dst AS dst£phoneNumber,
 		disposition AS result£label,
 		duration AS totalDuration£seconds,
-		billsec AS billsec£seconds
+		billsec AS billsec£seconds,
+		accountcode,
+		peeraccount
 	FROM cdr
 	WHERE linkedid = ?
 	ORDER BY calldate

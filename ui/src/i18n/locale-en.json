@@ -111,7 +111,8 @@
       "failed": "Failed",
       "did": "DID",
       "geo_group": "Group origin by",
-      "select_time_range": "Select time range"
+      "select_time_range": "Select time range",
+      "result": "Result"
     },
     "menu": {
       "queue": "Queue report",
@@ -473,7 +474,9 @@
       "seconds": "seconds",
       "user": "User",
       "contact": "Contact",
-      "queue": "Queue"
+      "queue": "Queue",
+      "main_extension": "Main ext.",
+      "actual_extension": "Actual ext."
     },
     "validation": {
       "office_hours_invalid": "Invalid time",

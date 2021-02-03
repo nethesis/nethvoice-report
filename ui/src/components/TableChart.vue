@@ -13,12 +13,7 @@
         <sui-table-row>
           <template v-for="(header, index) in topHeaders">
             <sui-table-header-cell
-              v-if="
-                !(
-                  report == 'cdr' &&
-                  (header.name == 'linkedid' || header.name == 'call_type')
-                )
-              "
+              v-if="!(report == 'cdr' && hiddenHeaders.includes(header.name))"
               v-bind:key="index"
               ref="tableHeader"
               :class="[
@@ -127,8 +122,7 @@
                 !(
                   report == 'cdr' &&
                   columns[index] &&
-                  (columns[index].name == 'linkedid' ||
-                    columns[index].name == 'call_type')
+                  hiddenHeaders.includes(columns[index].name)
                 )
               "
               v-show="columns[index] && columns[index].visible"
@@ -186,7 +180,14 @@
                 "
               >
                 <span
-                  v-if="$root.devices[element]"
+                  v-if="$root.users[element]"
+                  v-tooltip="getUserTooltip(element, index, row)"
+                >
+                  {{ $root.users[element] }}
+                  <sui-icon :name="'user'" />
+                </span>
+                <span
+                  v-else-if="$root.devices[element]"
                   v-tooltip="getDeviceTooltip(element)"
                 >
                   {{ element }}
@@ -427,6 +428,7 @@ export default {
       },
       sortedBy: "period",
       sortedDirection: "ascending",
+      hiddenHeaders: ["linkedid", "call_type", "accountcode", "peeraccount"],
     };
   },
   mounted() {
@@ -1111,23 +1113,53 @@ export default {
       ("</div>");
       return tooltipContent;
     },
-    getDeviceTooltip(extension) {
+    getUserTooltip(extension, rowIndex, row) {
+      let mainExtension;
+
+      // find main extension
+
+      if (
+        this.columns[rowIndex].name == "src" &&
+        (this.$route.meta.view == "outbound" ||
+          this.$route.meta.view == "local")
+      ) {
+        // for outbound calls, main extension of src is accountcode value
+        mainExtension = row[this.colIndex("accountcode")];
+      } else if (
+        this.columns[rowIndex].name == "dst" &&
+        this.$route.meta.view == "inbound"
+      ) {
+        // for inbound calls, main extension of dst is peeraccount value
+        mainExtension = row[this.colIndex("peeraccount")];
+      }
+
       let tooltipContent = "";
 
-      const userFound = this.$root.users.find((u) => {
-        return u.value && u.value.split(",").includes(extension);
-      });
-
-      if (userFound) {
+      if (mainExtension) {
         tooltipContent +=
           '<div><b class="mg-right-xs">' +
-          this.$t("misc.user") +
+          this.$t("misc.main_extension") +
           "</b>" +
-          userFound.text +
+          mainExtension +
           "</div>";
       }
 
-      tooltipContent +=
+      if (mainExtension != extension) {
+        // actual extension
+        tooltipContent +=
+          '<div><b class="mg-right-xs">' +
+          this.$t("misc.actual_extension") +
+          "</b>" +
+          extension +
+          "</div>";
+      }
+      return tooltipContent;
+    },
+    colIndex(columnName) {
+      return this.columns.findIndex((col) => col.name == columnName);
+    },
+    getDeviceTooltip(extension) {
+      let tooltipContent =
         '<div><b class="mg-right-xs">' +
         this.$t("device.type") +
         "</b>" +
