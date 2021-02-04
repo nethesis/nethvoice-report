@@ -111,7 +111,8 @@
       "failed": "Fallite",
       "did": "DID",
       "geo_group": "Raggruppa origine per",
-      "select_time_range": "Seleziona intervallo temporale"
+      "select_time_range": "Seleziona intervallo temporale",
+      "result": "Risultato"
     },
     "menu": {
       "queue": "Report Code",
@@ -472,7 +473,10 @@
       "just_created": "Appena creato",
       "seconds": "secondi",
       "user": "Utente",
-      "contact": "Contatto"
+      "contact": "Contatto",
+      "queue": "Coda",
+      "main_extension": "Principale",
+      "actual_extension": "Effettivo"
     },
     "validation": {
       "office_hours_invalid": "Orario non valido",

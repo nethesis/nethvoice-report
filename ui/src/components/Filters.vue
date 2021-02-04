@@ -509,13 +509,13 @@
               key="destinationsUi"
             />
           </sui-form-field>
-          <!-- cdr: call type -->
+          <!-- cdr: call type (result) -->
           <sui-form-field v-if="showFilterCdrCallType" width="four">
-            <label>{{ $t("filter.call_type") }}</label>
+            <label>{{ $t("filter.result") }}</label>
             <sui-dropdown
               multiple
               :options="cdrCallTypeMap"
-              :placeholder="$t('filter.call_type')"
+              :placeholder="$t('filter.result')"
               search
               selection
               v-model="filter.callType"
@@ -1048,6 +1048,21 @@ export default {
         this.applyFilters();
       }
     },
+    mapUserExtensions(users) {
+      let userMap = {};
+
+      users.forEach((user) => {
+        if (user.value) {
+          const extensions = user.value.split(",");
+
+          extensions.forEach((extension) => {
+            userMap[extension] = user.text;
+          });
+        }
+      });
+
+      return userMap;
+    },
     retrieveFilter() {
       this.loader.filter = true;
       let filter = this.get(this.reportFilterStorageName);
@@ -1062,7 +1077,7 @@ export default {
         filterValues = filterValues.item;
         this.filterValues = filterValues;
         this.$root.devices = this.filterValues.devices;
-        this.$root.users = this.filterValues.users;
+        this.$root.users = this.mapUserExtensions(this.filterValues.users);
 
         // set queue into root object
         this.$root.queues = {};
@@ -1179,7 +1194,7 @@ export default {
                 value: parsedUser[2],
               };
             });
-            this.$root.users = this.filterValues.users;
+            this.$root.users = this.mapUserExtensions(this.filterValues.users);
           }
 
           // queues
@@ -1195,11 +1210,6 @@ export default {
             for (const queue of this.filterValues.queues) {
               // set queues into root object
               this.$root.queues[queue.value] = queue.text;
-
-              // add queues to devices list
-              this.filterValues.devices[queue.value] = {
-                type: 'queue',
-              };
             }
           }
 

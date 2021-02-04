@@ -72,11 +72,13 @@ func GetCallDetails(c *gin.Context) {
 	results, errQuery := db.Query(`
 	select
 		DATE_FORMAT(calldate, '%Y-%m-%d %H:%i:%s') AS time£hourDate,
-		src AS src£phoneNumber,
+		IF(cnum IS NULL OR cnum = "", src, cnum) AS src£phoneNumber,
 		dst AS dst£phoneNumber,
 		disposition AS result£label,
 		duration AS totalDuration£seconds,
-		billsec AS billsec£seconds
+		billsec AS billsec£seconds,
+		accountcode,
+		peeraccount
 	FROM cdr
 	WHERE linkedid = ?
 	ORDER BY calldate
@@ -213,7 +215,7 @@ func executeSqlQuery(filter models.Filter, report string, section string, view s
 	}
 
 	// create template
-	q := template.New(path.Base(queryFile)).Funcs(template.FuncMap{"ExtractRegexpStrings": utils.ExtractRegexpStrings}).Funcs(template.FuncMap{"ExtractStrings": utils.ExtractStrings}).Funcs(template.FuncMap{"ExtractPhones": utils.ExtractPhones}).Funcs(template.FuncMap{"ExtractOrigins": utils.ExtractOrigins}).Funcs(template.FuncMap{"ExtractSettings": utils.ExtractSettings}).Funcs(template.FuncMap{"PivotGroup": utils.PivotGroup}).Funcs(template.FuncMap{"ExtractUserExtensions": utils.ExtractUserExtensions}).Funcs(template.FuncMap{"ExtractPatterns": utils.ExtractPatterns}).Funcs(template.FuncMap{"ExtractCallDestinations": utils.ExtractCallDestinations})
+	q := template.New(path.Base(queryFile)).Funcs(template.FuncMap{"ExtractStrings": utils.ExtractStrings}).Funcs(template.FuncMap{"ExtractPhones": utils.ExtractPhones}).Funcs(template.FuncMap{"ExtractOrigins": utils.ExtractOrigins}).Funcs(template.FuncMap{"ExtractSettings": utils.ExtractSettings}).Funcs(template.FuncMap{"PivotGroup": utils.PivotGroup}).Funcs(template.FuncMap{"ExtractUserExtensions": utils.ExtractUserExtensions}).Funcs(template.FuncMap{"ExtractPatterns": utils.ExtractPatterns}).Funcs(template.FuncMap{"ExtractCallDestinations": utils.ExtractCallDestinations}).Funcs(template.FuncMap{"ExtractDispositions": utils.ExtractDispositions}).Funcs(template.FuncMap{"ExtractRegexpStrings": utils.ExtractRegexpStrings})
 
 	// parse template
 
@@ -248,14 +250,18 @@ func executeSqlQuery(filter models.Filter, report string, section string, view s
 
 		// set sources and destinations for pbx calls
 		if section == "pbx" {
-			// append groups to sources and destinations
-			if len(filter.Groups) > 0 {
+			// append groups and users to sources and/or destinations
+			if view == "inbound" {
+				filter.Destinations = append(filter.Destinations, filter.Groups...)
+				filter.Destinations = append(filter.Destinations, filter.Users...)
+			} else if view == "outbound" {
+				filter.Sources = append(filter.Sources, filter.Groups...)
+				filter.Sources = append(filter.Sources, filter.Users...)
+			} else if view == "local" {
+				// append groups
 				filter.Sources = append(filter.Sources, filter.Groups...)
 				filter.Destinations = append(filter.Destinations, filter.Groups...)
-			}
-
-			// append users to sources and destinations
-			if len(filter.Users) > 0 {
+				// append destinations
 				filter.Sources = append(filter.Sources, filter.Users...)
 				filter.Destinations = append(filter.Destinations, filter.Users...)
 			}
@@ -403,7 +409,7 @@ func buildCdrQuery(queryFile string, filter models.Filter) (string, error) {
 			querySelect := strings.Join(findsS[1:], ",")
 
 			// build query string
-			queryBuilder.WriteString("SELECT "+ querySelect  +" FROM (")
+			queryBuilder.WriteString("SELECT " + querySelect + " FROM (")
 		} else {
 			queryBuilder.WriteString("SELECT * FROM (")
 		}

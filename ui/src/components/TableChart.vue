@@ -13,7 +13,7 @@
         <sui-table-row>
           <template v-for="(header, index) in topHeaders">
             <sui-table-header-cell
-              v-if="!(report == 'cdr' && (header.name == 'linkedid' || header.name == 'call_type'))"
+              v-if="!(hideHeaders && hiddenHeaders.includes(header.name))"
               v-bind:key="index"
               ref="tableHeader"
               :class="[
@@ -120,10 +120,9 @@
             <sui-table-cell
               v-if="
                 !(
-                  report == 'cdr' &&
+                  hideHeaders &&
                   columns[index] &&
-                  (columns[index].name == 'linkedid' ||
-                  columns[index].name == 'call_type')
+                  hiddenHeaders.includes(columns[index].name)
                 )
               "
               v-show="columns[index] && columns[index].visible"
@@ -177,11 +176,25 @@
               </span>
               <span
                 v-else-if="
-                  columns[index] &&
-                  columns[index].format == 'phoneNumber'"
+                  columns[index] && columns[index].format == 'phoneNumber'
+                "
               >
-                <span v-if="$root.devices[element]"
-                  v-tooltip="getDeviceTooltip(element)"
+                <span
+                  v-if="$root.users[element]"
+                  v-tooltip="{
+                    content: getUserTooltip(element, index, row),
+                    autoHide: false,
+                  }"
+                >
+                  {{ $root.users[element] }}
+                  <sui-icon :name="'user'" />
+                </span>
+                <span
+                  v-else-if="$root.devices[element]"
+                  v-tooltip="{
+                    content: getDeviceTooltip(element),
+                    autoHide: false,
+                  }"
                 >
                   {{ element }}
                   <sui-icon
@@ -196,24 +209,58 @@
                         ? 'users'
                         : $root.devices[element].type == 'meetme'
                         ? 'comment alternate outline'
-                        : 'hourglass half'
+                        : ''
                     "
                   />
                 </span>
+                <span
+                  v-else-if="$root.queues[element]"
+                  v-tooltip="{
+                    content: getQueueTooltip(element),
+                    autoHide: false,
+                  }"
+                >
+                  {{ $root.queues[element] }}
+                  <sui-icon :name="'hourglass half'" />
+                </span>
                 <span v-else>
                   <!-- search phone number in phonebook -->
-                  <span v-if="reversePhonebookSearch(element)" v-tooltip="'<div><b class=\'mg-right-xs\'>' + $t('misc.contact') + '</b>' + $options.filters.reversePhonebookLookup(element, 'name|company', $root) + '</div>'">
-                    {{ element }}
-                    <sui-icon name='user' />
+                  <span
+                    v-if="reversePhonebookSearch(element)"
+                    v-tooltip="{
+                      content: getContactTooltip(element),
+                      autoHide: false,
+                    }"
+                  >
+                    {{
+                      $options.filters.reversePhonebookLookup(
+                        element,
+                        "name|company",
+                        $root
+                      )
+                    }}
+                    <sui-icon name="user" />
                   </span>
                   <span v-else>
                     <!-- phone number not found in phonebook -->
-                    {{ isNumber(element) ? element : $t(`table.pbx`) }}
+                    {{
+                      isNumber(element) && element !== "1"
+                        ? element
+                        : $t(`table.pbx`)
+                    }}
                     <country-flag
-                      v-if="$route.meta.view == 'outbound' && columns[index].name == 'dst' && isNumber(element) && getCountryCode(element)"
+                      v-if="
+                        $route.meta.view == 'outbound' &&
+                        columns[index].name == 'dst' &&
+                        isNumber(element) &&
+                        getCountryCode(element)
+                      "
                       :country="getCountryCode(element)"
                       size="small"
-                      v-tooltip="getCountryName(element)"
+                      v-tooltip="{
+                        content: getCountryName(element),
+                        autoHide: false,
+                      }"
                     />
                   </span>
                 </span>
@@ -223,7 +270,9 @@
                   columns[index] && columns[index].format == 'currency'
                 "
               >
-                {{ element | formatCurrency($parent.$data.adminSettings.currency) }}
+                {{
+                  element | formatCurrency($parent.$data.adminSettings.currency)
+                }}
               </span>
               <span
                 v-else-if="
@@ -332,8 +381,8 @@
 import UtilService from "../services/utils";
 import StorageService from "../services/storage";
 import HorizontalScrollers from "../components/HorizontalScrollers.vue";
-import parsePhoneNumber from 'libphonenumber-js';
-import CountryFlag from 'vue-country-flag';
+import parsePhoneNumber from "libphonenumber-js";
+import CountryFlag from "vue-country-flag";
 
 let countries = require("i18n-iso-countries");
 countries.registerLocale(require("i18n-iso-countries/langs/en.json"));
@@ -366,6 +415,12 @@ export default {
     report: {
       type: String,
     },
+    hideHeaders: {
+      type: Boolean,
+      default: function () {
+        return false;
+      },
+    },
   },
   mixins: [UtilService, StorageService],
   components: { HorizontalScrollers, CountryFlag },
@@ -388,6 +443,7 @@ export default {
       },
       sortedBy: "period",
       sortedDirection: "ascending",
+      hiddenHeaders: ["linkedid", "call_type", "accountcode", "peeraccount"],
     };
   },
   mounted() {
@@ -421,42 +477,32 @@ export default {
     },
   },
   methods: {
-    getCountryCode (number) {
-      if (!number) return null
+    getCountryCode(number) {
+      if (!number) return null;
       // adapt number for libphonenumber
-      number = number.replace(/^00/g, "+")
+      number = number.replace(/^00/g, "+");
       // parse number
-      const parsedNumber = parsePhoneNumber(number)
+      const parsedNumber = parsePhoneNumber(number);
 
       // return country
-      return (
-        parsedNumber ? (
-          parsedNumber.country
-        ) : (
-          null
-        )
-      )
+      return parsedNumber ? parsedNumber.country : null;
     },
-    getCountryName (number) {
-      if (!number) return null
+    getCountryName(number) {
+      if (!number) return null;
       // adapt number for libphonenumber
-      number = number.replace(/^00/g, "+")
+      number = number.replace(/^00/g, "+");
       // parse number
-      const parsedNumber = parsePhoneNumber(number)
+      const parsedNumber = parsePhoneNumber(number);
 
       // return country
-      return (
-        parsedNumber ? (
-          countries.getName(parsedNumber.country, this.$root.currentLocale, {select: "official"})
-        ) : (
-          null
-        )
-      )
+      return parsedNumber
+        ? countries.getName(parsedNumber.country, this.$root.currentLocale, {
+            select: "official",
+          })
+        : null;
     },
-    isNumber (value) {
-      return (
-        !Number.isNaN(Number(value)) ? true : false
-      )
+    isNumber(value) {
+      return !Number.isNaN(Number(value)) ? true : false;
     },
     onApplyFilters() {
       this.sortedBy = "period";
@@ -1073,22 +1119,77 @@ export default {
       });
       this.updatePagination();
     },
-    getDeviceTooltip(extension) {
-      let tooltipContent = '';
-
-      const userFound = this.$root.users.find((u) => {
-        return u.value && u.value.split(",").includes(extension);
-      });
-
-      if (userFound) {
-        tooltipContent += '<div><b class="mg-right-xs">' +
-        this.$t("misc.user") +
+    getQueueTooltip(queueNum) {
+      let tooltipContent =
+        '<div><b class="mg-right-xs">' +
+        this.$t("misc.queue") +
         "</b>" +
-        userFound.text +
-        "</div>";
+        queueNum;
+      ("</div>");
+      return tooltipContent;
+    },
+    getContactTooltip(value) {
+      return (
+        "<div><b class='mg-right-xs'>" +
+        this.$t("misc.contact") +
+        "</b>" +
+        value +
+        "</div>"
+      );
+    },
+    getUserTooltip(extension, rowIndex, row) {
+      let mainExtension = "-";
+
+      // find main extension
+
+      if (
+        this.columns[rowIndex].name == "src" &&
+        (this.$route.meta.view == "outbound" ||
+          this.$route.meta.view == "local")
+      ) {
+        // for outbound calls, main extension of src is accountcode value
+        mainExtension = row[this.colIndex("accountcode")];
+      } else if (
+        this.columns[rowIndex].name == "dst" &&
+        this.$route.meta.view == "inbound"
+      ) {
+        // for inbound calls, main extension of dst is peeraccount value
+        mainExtension = row[this.colIndex("peeraccount")];
       }
 
+      // main extension
+      let tooltipContent =
+        '<div><b class="mg-right-xs">' +
+        this.$t("misc.main_extension") +
+        "</b>" +
+        mainExtension +
+        "</div>";
+
+      // actual extension
       tooltipContent +=
+        '<div><b class="mg-right-xs">' +
+        this.$t("misc.actual_extension") +
+        "</b>" +
+        extension +
+        "</div>";
+
+      // device
+      if (this.$root.devices[extension]) {
+        tooltipContent += this.getDeviceTooltip(extension);
+      } else {
+        tooltipContent +=
+          '<div><b class="mg-right-xs">' +
+          this.$t("device.type") +
+          "</b> - </div>";
+      }
+
+      return tooltipContent;
+    },
+    colIndex(columnName) {
+      return this.columns.findIndex((col) => col.name == columnName);
+    },
+    getDeviceTooltip(extension) {
+      let tooltipContent =
         '<div><b class="mg-right-xs">' +
         this.$t("device.type") +
         "</b>" +
@@ -1108,9 +1209,13 @@ export default {
       return tooltipContent;
     },
     reversePhonebookSearch(element) {
-      const found = this.$options.filters.reversePhonebookLookup(element, "name", this.$root);
+      const found = this.$options.filters.reversePhonebookLookup(
+        element,
+        "name",
+        this.$root
+      );
       return found !== "-";
-    }
+    },
   },
 };
 </script>

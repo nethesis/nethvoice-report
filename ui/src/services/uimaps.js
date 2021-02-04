@@ -78,10 +78,10 @@ var UiMaps = {
         { value: "7200", title: this.$i18n.t('filter.two_hours') }
       ],
       cdrCallTypeMap: [
-        { value: "answered", text: this.$i18n.t('filter.answered') },
-        { value: "no_answer", text: this.$i18n.t('filter.no_answer') },
-        { value: "busy", text: this.$i18n.t('filter.busy') },
-        { value: "failed", text: this.$i18n.t('filter.failed') }
+        { value: "ANSWERED", text: this.$i18n.t('filter.answered') },
+        { value: "NO ANSWER", text: this.$i18n.t('filter.no_answer') },
+        { value: "BUSY", text: this.$i18n.t('filter.busy') },
+        { value: "FAILED", text: this.$i18n.t('filter.failed') }
       ],
       callDestinationsMap: [
         { value: "dcontext,ext-group", text: this.$i18n.t('filter.call_groups') },
