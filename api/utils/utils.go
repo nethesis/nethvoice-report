@@ -298,10 +298,12 @@ func ExtractDispositions(d []string) string {
 
 	// loop dispositions: dispositions REGEXP <d1> OR dispositions = <d2> OR ...
 	for _, disposition := range d {
-		if disposition == "FAILED" {
-			dispositions = append(dispositions, "dispositions REGEXP \"FAILED$\" OR dispositions REGEXP \"CONGESTION$\"")
+		if disposition == "ANSWERED" {
+			dispositions = append(dispositions, "dispositions REGEXP 'ANSWERED'")
+		} else if disposition == "FAILED" {
+			dispositions = append(dispositions, "dispositions NOT REGEXP 'ANSWERED' AND (dispositions REGEXP 'FAILED$' OR dispositions REGEXP 'CONGESTION$')")
 		} else {
-			dispositions = append(dispositions, "dispositions REGEXP \""+disposition+"$\"")
+			dispositions = append(dispositions, "dispositions NOT REGEXP 'ANSWERED' AND dispositions REGEXP '"+disposition+"$'")
 		}
 	}
 	return strings.Join(dispositions[:], " OR ")
