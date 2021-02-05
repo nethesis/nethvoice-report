@@ -1145,13 +1145,15 @@ export default {
       if (
         this.columns[rowIndex].name == "src" &&
         (this.$route.meta.view == "outbound" ||
-          this.$route.meta.view == "local")
+          this.$route.meta.view == "local") &&
+        row[this.colIndex("accountcode")]
       ) {
         // for outbound calls, main extension of src is accountcode value
         mainExtension = row[this.colIndex("accountcode")];
       } else if (
         this.columns[rowIndex].name == "dst" &&
-        this.$route.meta.view == "inbound"
+        this.$route.meta.view == "inbound" &&
+        row[this.colIndex("peeraccount")]
       ) {
         // for inbound calls, main extension of dst is peeraccount value
         mainExtension = row[this.colIndex("peeraccount")];

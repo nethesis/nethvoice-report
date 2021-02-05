@@ -185,12 +185,12 @@
           </span>
         </div>
         <!-- label: cti groups active filter -->
-        <div class="ui label" v-if="showFilterCdrCtiGroups && activeFilters.groupsUi && (activeFilters.groupsUi.length > 0)">
+        <div class="ui label" v-if="showFilterCdrCtiGroups && activeFilters.groups && (activeFilters.groups.length > 0)">
           <span class="field">
             {{$t('filter.cti_group')}}:
           </span>
           <span class="value">
-            {{activeFilters.groupsUi}}
+            {{activeFilters.groups}}
           </span>
         </div>
         <!-- label: users active filter -->
@@ -346,13 +346,9 @@ export default {
         this.activeFilters.queues = this.activeFilters.queues.join(", ")
       }
     },
-    "activeFilters.groupsUi": function () {
-      if (this.activeFilters.groupsUi && this.lodash.isArray(this.activeFilters.groupsUi) && this.activeFilters.groupsUi.length > 0) {
-        this.activeFilters.groupsUi.forEach((element, key) => {
-         let groupsValuesText = this.filterValues.ctiGroups.find(obj => obj.value === element).text
-          this.activeFilters.groupsUi[key] = groupsValuesText
-        })
-        this.activeFilters.groupsUi = this.activeFilters.groupsUi.join(", ")
+    "activeFilters.groups": function () {
+      if (this.activeFilters.groups && this.lodash.isArray(this.activeFilters.groups) && this.activeFilters.groups.length > 0) {
+        this.activeFilters.groups = this.activeFilters.groups.join(", ")
       }
     },
     "activeFilters.agents": function () {

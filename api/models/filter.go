@@ -24,7 +24,6 @@ package models
 
 type Filter struct {
 	Queues       []string `json:"queues"`
-	GroupsUi     []string `json:"groupsUi"`
 	Groups       []string `json:"groups"`
 	Agents       []string `json:"agents"`
 	UsersUi      []string `json:"usersUi"`

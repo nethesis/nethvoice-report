@@ -20,15 +20,15 @@
  * author: Edoardo Spadoni <edoardo.spadoni@nethesis.it>
  */
 
- package cmd
+package cmd
 
 import (
 	"bytes"
-	"path"
+	"encoding/json"
 	"fmt"
+	"path"
 	"text/template"
 	"time"
-	"encoding/json"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -42,11 +42,11 @@ import (
 )
 
 var (
-	from string
-	to string
-	cost string
+	from        string
+	to          string
+	cost        string
 	destination string
-	trunk string
+	trunk       string
 )
 
 // Define command handled by cobra
@@ -61,17 +61,17 @@ var costCmd = &cobra.Command{
 				helper.FatalError(errors.New("Missing <from> flag"))
 			}
 			if !cmd.Flags().Changed("to") {
-                                helper.FatalError(errors.New("Missing <to> flag"))
-                        }
+				helper.FatalError(errors.New("Missing <to> flag"))
+			}
 			if !cmd.Flags().Changed("cost") {
-                                helper.FatalError(errors.New("Missing <from> flag"))
-                        }
+				helper.FatalError(errors.New("Missing <from> flag"))
+			}
 			if !cmd.Flags().Changed("destination") {
-                                helper.FatalError(errors.New("Missing <destination> flag"))
-                        }
+				helper.FatalError(errors.New("Missing <destination> flag"))
+			}
 			if !cmd.Flags().Changed("trunk") {
-                                helper.FatalError(errors.New("Missing <trunk> flag"))
-                        }
+				helper.FatalError(errors.New("Missing <trunk> flag"))
+			}
 
 			// execute command with flags
 			executeReportCost(true)
@@ -95,10 +95,10 @@ func init() {
 }
 
 type CostObj struct {
-	Table string
-	Cost string
+	Table       string
+	Cost        string
 	Destination string
-	Trunk string
+	Trunk       string
 }
 
 // Entry point for "cost" command
@@ -153,9 +153,9 @@ func executeReportCost(flags bool) {
 		}
 
 		tTo, errTo := time.Parse("2006-01-02", to)
-                if errTo != nil {
+		if errTo != nil {
 			helper.FatalError(errors.Wrap(errTo, "Error parsing <to> date. Format date: YYYY-MM-DD"))
-                }
+		}
 
 		// iterate over dates
 		var tables []string
@@ -181,25 +181,25 @@ func executeReportCost(flags bool) {
 			templateCost := configuration.Config.TemplatePath + "/cdr_cost_update.sql"
 
 			// define query
-                        var query bytes.Buffer
+			var query bytes.Buffer
 
 			tpl := template.Must(template.New(path.Base(templateCost)).ParseFiles(templateCost))
-                        errTpl := tpl.Execute(&query, &objTemplate)
-                        if errTpl != nil {
-                                helper.FatalError(errors.Wrap(errTpl, "invalid query template compiling"))
-                        }
+			errTpl := tpl.Execute(&query, &objTemplate)
+			if errTpl != nil {
+				helper.FatalError(errors.Wrap(errTpl, "invalid query template compiling"))
+			}
 
-                        helper.LogDebug("\nExecuting query %s for [%s]:\n%s", templateCost, t, query.String())
+			helper.LogDebug("\nExecuting query %s for [%s]:\n%s", templateCost, t, query.String())
 
 			// execute query
-                        rows, errQueryCost := db.Query(query.String())
-                        if errQueryCost != nil {
+			rows, errQueryCost := db.Query(query.String())
+			if errQueryCost != nil {
 				helper.LogDebug(errQueryCost.Error() + ". Skipping...")
 				continue
-                        }
+			}
 
-                        // close results
-                        rows.Close()
+			// close results
+			rows.Close()
 		}
 	} else {
 		// define cost object
@@ -209,7 +209,7 @@ func executeReportCost(flags bool) {
 		templateCost := configuration.Config.TemplatePath + "/cdr_cost.sql"
 
 		// get all cdr tables
-		cdrTables, errQuery := db.Query("SHOW TABLES LIKE 'cdr_%'")
+		cdrTables, errQuery := db.Query("SHOW TABLES LIKE 'cdr_2%'")
 		if errQuery != nil {
 			helper.FatalError(errors.Wrap(errQuery, "Error getting cdr tables"))
 		}
@@ -241,11 +241,11 @@ func executeReportCost(flags bool) {
 			// execute query
 			rows, errQueryCost := db.Query(query.String())
 			if errQueryCost != nil {
-				helper.FatalError(errors.Wrap(errQueryCost, "Error in query [cdr] execution:\n"+query.String()))
+				helper.LogError(errors.Wrap(errQueryCost, "Error in query [cdr] execution:\n"+query.String()))
+			} else {
+				// close results
+				rows.Close()
 			}
-
-			// close results
-			rows.Close()
 		}
 	}
 }

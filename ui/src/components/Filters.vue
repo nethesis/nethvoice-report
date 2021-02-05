@@ -583,7 +583,7 @@
               :placeholder="$t('filter.cti_group')"
               search
               selection
-              v-model="filter.groupsUi"
+              v-model="filter.groups"
             />
           </sui-form-field>
           <!-- cdr: user -->
@@ -843,7 +843,6 @@ export default {
         contactName: "",
         sourcesUi: {},
         sources: [],
-        groupsUi: [],
         groups: [],
         callType: [],
         durationUi: {},
@@ -1179,7 +1178,7 @@ export default {
                 let parsedGroup = group.split("|");
                 return {
                   text: parsedGroup[0],
-                  value: parsedGroup[1],
+                  value: parsedGroup[0],
                 };
               }
             );
@@ -1386,7 +1385,6 @@ export default {
     setFilterSelection(filter, fromLocalStorage) {
       if (fromLocalStorage) {
         this.filter.queues = filter.queues;
-        this.filter.groupsUi = filter.groupsUi;
         this.filter.agents = filter.agents;
         this.filter.reasons = filter.reasons;
         this.filter.results = filter.results;
@@ -1834,17 +1832,6 @@ export default {
         backendFilter.destinations = [];
       }
 
-      // groups
-
-      if (backendFilter.groupsUi && backendFilter.groupsUi.length) {
-        let parsedGroups = [];
-        backendFilter.groupsUi.forEach((groups) => {
-          let groupExt = groups.split(",");
-          parsedGroups = parsedGroups.concat(groupExt);
-        });
-        backendFilter.groups = parsedGroups;
-      }
-
       // users
 
       if (backendFilter.usersUi && backendFilter.usersUi.length) {
@@ -2178,7 +2165,7 @@ export default {
     },
     clearFilters() {
       this.filter.queues = [];
-      this.filter.groupsUi = [];
+      this.filter.groups = [];
       this.filter.agents = [];
       this.filter.ivrs = [];
       this.filter.reasons = [];
