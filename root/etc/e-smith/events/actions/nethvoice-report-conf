@@ -47,7 +47,7 @@ scl enable rh-php56 /var/lib/asterisk/bin/retrieve_conf
 MIGRATE_RES=$(/usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "SHOW TABLES LIKE 'dashboard_cdr_%'")
 if [[ "x$MIGRATE_RES" == "x" ]]; then
 	# migration is needed: drop data_call table with bad fields. The table will be recreated overnight.
-	/usr/bin/mysql --defaults-file=/root/.my.cnf -e "DROP TABLE data_call"
+	/usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "DROP TABLE data_call"
 
 	# migration is needed: migrate save searches to new format.
 	/opt/nethvoice-report/tasks/tasks migrate-searches
