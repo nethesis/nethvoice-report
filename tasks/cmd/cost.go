@@ -209,7 +209,7 @@ func executeReportCost(flags bool) {
 		templateCost := configuration.Config.TemplatePath + "/cdr_cost.sql"
 
 		// get all cdr tables
-		cdrTables, errQuery := db.Query("SHOW TABLES LIKE 'cdr_%'")
+		cdrTables, errQuery := db.Query("SHOW TABLES LIKE 'cdr_2%'")
 		if errQuery != nil {
 			helper.FatalError(errors.Wrap(errQuery, "Error getting cdr tables"))
 		}
@@ -241,11 +241,11 @@ func executeReportCost(flags bool) {
 			// execute query
 			rows, errQueryCost := db.Query(query.String())
 			if errQueryCost != nil {
-				helper.FatalError(errors.Wrap(errQueryCost, "Error in query [cdr] execution:\n"+query.String()))
+				helper.LogError(errors.Wrap(errQueryCost, "Error in query [cdr] execution:\n"+query.String()))
+			} else {
+				// close results
+				rows.Close()
 			}
-
-			// close results
-			rows.Close()
 		}
 	}
 }
