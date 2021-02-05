@@ -251,16 +251,22 @@ func executeSqlQuery(filter models.Filter, report string, section string, view s
 		// set sources and destinations for pbx calls
 		if section == "pbx" {
 			// append groups and users to sources and/or destinations
+
+			groupExtensions, groupExtErr := getExtensionsFromGroups(filter.Groups)
+			if groupExtErr != nil {
+				return "", groupExtErr
+			}
+
 			if view == "inbound" {
-				filter.Destinations = append(filter.Destinations, filter.Groups...)
+				filter.Destinations = append(filter.Destinations, groupExtensions...)
 				filter.Destinations = append(filter.Destinations, filter.Users...)
 			} else if view == "outbound" {
-				filter.Sources = append(filter.Sources, filter.Groups...)
+				filter.Sources = append(filter.Sources, groupExtensions...)
 				filter.Sources = append(filter.Sources, filter.Users...)
 			} else if view == "local" {
 				// append groups
-				filter.Sources = append(filter.Sources, filter.Groups...)
-				filter.Destinations = append(filter.Destinations, filter.Groups...)
+				filter.Sources = append(filter.Sources, groupExtensions...)
+				filter.Destinations = append(filter.Destinations, groupExtensions...)
 				// append destinations
 				filter.Sources = append(filter.Sources, filter.Users...)
 				filter.Destinations = append(filter.Destinations, filter.Users...)
@@ -483,4 +489,41 @@ func buildCdrQuery(queryFile string, filter models.Filter) (string, error) {
 	queryBuilder.WriteString(" LIMIT " + queryLimit)
 
 	return queryBuilder.String(), nil
+}
+
+func getExtensionsFromGroups(groups []string) ([]string, error) {
+	extensions := make([]string, 0)
+
+	// if no group return empty array
+	if len(groups) == 0 {
+		return extensions, nil
+	}
+
+	db := source.CDRInstance()
+	results, errQuery := db.Query(`
+	SELECT extension
+	FROM   asterisk.userman_users u 
+		JOIN asterisk.rest_cti_users_groups cg 
+			ON cg.user_id = u.id 
+		JOIN asterisk.rest_cti_groups g 
+			ON g.id = cg.group_id 
+		JOIN asterisk.rest_devices_phones p 
+			ON p.user_id = u.id 
+	WHERE g.name IN (?)
+	`, strings.Join(groups, ","))
+	if errQuery != nil {
+		return nil, errQuery
+	}
+
+	// close results
+	defer results.Close()
+
+	for results.Next() {
+		var extension string
+		if err := results.Scan(&extension); err != nil {
+			return nil, err
+		}
+		extensions = append(extensions, extension)
+	}
+	return extensions, nil
 }
