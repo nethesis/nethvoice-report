@@ -48,6 +48,9 @@ MIGRATE_RES=$(/usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "SHO
 if [[ "x$MIGRATE_RES" == "x" ]]; then
 	# migration is needed: drop data_call table with bad fields. The table will be recreated overnight.
 	/usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "DROP TABLE data_call"
+	
+	# migration is needed: uniform collate charset
+	/usr/bin/mysql --defaults-file=/root/.my.cnf asterisk -e "ALTER TABLE rest_devices_phones convert TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 
 	# migration is needed: migrate save searches to new format.
 	/opt/nethvoice-report/tasks/tasks migrate-searches
