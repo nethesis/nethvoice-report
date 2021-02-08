@@ -14,7 +14,7 @@ WHERE	calldate >= "{{ .Time.Interval.Start }}"
 	AND calldate <= "{{ .Time.Interval.End }}"
 	AND type = "LOCAL"
 	{{ if (and (gt (len .Sources) 0) (gt (len .Destinations) 0)) }}
-          AND (IF(cnum IS NULL OR cnum = "", src, cnum) REGEXP ({{ ExtractRegexpStrings .Sources }}) OR dst REGEXP ({{ ExtractRegexpStrings .Destinations }}))
+          AND (IF(cnum IS NULL OR cnum = "", src, cnum) REGEXP ({{ ExtractRegexpStrings .Sources }}) AND dst REGEXP ({{ ExtractRegexpStrings .Destinations }}))
         {{ else if gt (len .Sources) 0 }}
           AND IF(cnum IS NULL OR cnum = "", src, cnum) REGEXP ({{ ExtractRegexpStrings .Sources }})
         {{ else if gt (len .Destinations) 0 }}

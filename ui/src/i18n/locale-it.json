@@ -25,7 +25,7 @@
       "results_label": "Risultati",
       "time_split_label": "Periodo",
       "caller_label": "Chiamante",
-      "caller_callee_placeholder": "Contatto o numero di telefono",
+      "caller_callee_placeholder": "Contatto, utente, gruppo o numero di telefono",
       "contact_name_label": "Nome contatto / Azienda",
       "reasons_label": "Ragione",
       "clear_filters": "Cancella filtri",
@@ -277,8 +277,7 @@
       "access_cdr_report": "Accedi al Report Chiamate & Costi",
       "reset_settings_description": "Ripristina tutte le impostazioni ai loro valori predefiniti",
       "you_are_about_to_reset_settings": "Stai per ripristinare TUTTE le impostazioni ai valori di default. Questa azione non può essere annullata",
-      "call_duration_info": "Puoi selezionare un valore dal menu a tendina oppure digitare una durata espressa in secondi",
-      "caller_callee_info": "Cerca un contatto oppure digita un numero di telefono"
+      "call_duration_info": "Puoi selezionare un valore dal menu a tendina oppure digitare una durata espressa in secondi"
     },
     "pagination": {
       "page": "pagina",

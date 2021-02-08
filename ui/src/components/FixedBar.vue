@@ -184,24 +184,6 @@
             {{activeFilters.trunks}}
           </span>
         </div>
-        <!-- label: cti groups active filter -->
-        <div class="ui label" v-if="showFilterCdrCtiGroups && activeFilters.groups && (activeFilters.groups.length > 0)">
-          <span class="field">
-            {{$t('filter.cti_group')}}:
-          </span>
-          <span class="value">
-            {{activeFilters.groups}}
-          </span>
-        </div>
-        <!-- label: users active filter -->
-        <div class="ui label" v-if="showFilterCdrUser && activeFilters.usersUi && (activeFilters.usersUi.length > 0)">
-          <span class="field">
-            {{$t('filter.user')}}:
-          </span>
-          <span class="value">
-            {{activeFilters.usersUi}}
-          </span>
-        </div>
         <!-- label: destination type active filter -->
         <div class="ui label" v-if="showFilterCdrCallDestination && activeFilters.callDestinations && (activeFilters.callDestinations.length > 0)">
           <span class="field">
@@ -260,8 +242,6 @@ export default {
     "showFilterCdrCallDuration",
     "showFilterCdrDid",
     "showFilterCdrTrunk",
-    "showFilterCdrCtiGroups",
-    "showFilterCdrUser",
     "showFilterCdrCalleeType",
     "showFilterCdrCallDestination",
     "showFilterCdrDestination",
