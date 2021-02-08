@@ -396,7 +396,7 @@
           </sui-form-field>
           <!-- geo group -->
           <sui-form-field v-if="showFilterGeoGroup" width="four">
-            <label>{{$t('filter.geo_group')}}</label>
+            <label>{{ $t("filter.geo_group") }}</label>
             <sui-dropdown
               :options="geoGroupValuesMap"
               search
@@ -462,8 +462,8 @@
             <label key="caller_label">
               <span>{{ $t("filter.caller") }}</span>
               <sui-popup flowing hoverable position="top center">
-                <div class="doc-info">
-                  {{ $t('message.caller_callee_info') }}
+                <div class="doc-info markdown">
+                  <VueShowdown :markdown="callerCalleeDoc"></VueShowdown>
                 </div>
                 <sui-icon
                   name="info circle"
@@ -476,7 +476,7 @@
               :options="filterValues.cdrCaller"
               :placeholder="$t('filter.caller_callee_placeholder')"
               :minCharacters="3"
-              :searchFields="['title', 'description', 'phoneNumber']"
+              :searchFields="['title', 'description', 'value']"
               @input="onSourcesInput"
               @select="onSourcesSelect"
               ref="sourcesUi"
@@ -488,8 +488,8 @@
             <label key="callee_label">
               <span>{{ $t("filter.callee") }}</span>
               <sui-popup flowing hoverable position="top center">
-                <div class="doc-info">
-                  {{ $t('message.caller_callee_info') }}
+                <div class="doc-info markdown">
+                  <VueShowdown :markdown="callerCalleeDoc"></VueShowdown>
                 </div>
                 <sui-icon
                   name="info circle"
@@ -502,7 +502,7 @@
               :options="filterValues.cdrCallee"
               :placeholder="$t('filter.caller_callee_placeholder')"
               :minCharacters="3"
-              :searchFields="['title', 'description', 'phoneNumber']"
+              :searchFields="['title', 'description', 'value']"
               @input="onDestinationsInput"
               @select="onDestinationsSelect"
               ref="destinationsUi"
@@ -523,11 +523,14 @@
           </sui-form-field>
           <!-- cdr: call duration -->
           <sui-form-field v-show="showFilterCdrCallDuration" width="four">
-            <label :class="{ 'error-color': errorCallDuration }" key="duration_label">
+            <label
+              :class="{ 'error-color': errorCallDuration }"
+              key="duration_label"
+            >
               <span>{{ $t("filter.call_duration") }}</span>
               <sui-popup flowing hoverable position="top center">
                 <div class="doc-info">
-                  {{ $t('message.call_duration_info') }}
+                  {{ $t("message.call_duration_info") }}
                 </div>
                 <sui-icon
                   name="info circle"
@@ -574,30 +577,6 @@
             />
           </sui-form-field>
           <!-- EVERYWHERE END -->
-          <!-- cdr: cti groups -->
-          <sui-form-field v-if="showFilterCdrCtiGroups" width="four">
-            <label>{{ $t("filter.cti_group") }}</label>
-            <sui-dropdown
-              multiple
-              :options="filterValues.ctiGroups"
-              :placeholder="$t('filter.cti_group')"
-              search
-              selection
-              v-model="filter.groups"
-            />
-          </sui-form-field>
-          <!-- cdr: user -->
-          <sui-form-field v-if="showFilterCdrUser" width="four">
-            <label>{{ $t("filter.user") }}</label>
-            <sui-dropdown
-              multiple
-              :options="filterValues.users"
-              :placeholder="$t('filter.user')"
-              search
-              selection
-              v-model="filter.usersUi"
-            />
-          </sui-form-field>
           <!-- cdr: call destinations -->
           <sui-form-field v-if="showFilterCdrCallDestination" width="four">
             <label>{{ $t("filter.call_destination") }}</label>
@@ -767,8 +746,6 @@
       :showFilterCdrCallDuration="showFilterCdrCallDuration"
       :showFilterCdrTrunk="showFilterCdrTrunk"
       :showFilterCdrDid="showFilterCdrDid"
-      :showFilterCdrCtiGroups="showFilterCdrCtiGroups"
-      :showFilterCdrUser="showFilterCdrUser"
       :showFilterCdrCallDestination="showFilterCdrCallDestination"
       :showFilterCdrDestination="showFilterCdrDestination"
       :showFilterTimeHour="showFilterTimeHour"
@@ -843,13 +820,10 @@ export default {
         contactName: "",
         sourcesUi: {},
         sources: [],
-        groups: [],
         callType: [],
         durationUi: {},
         duration: "",
         trunks: [],
-        usersUi: [],
-        users: [],
         callDestinations: [],
         patterns: [],
         dids: [],
@@ -909,6 +883,7 @@ export default {
       showSearchResults: false,
       searchContactResults: [],
       currentReport: "",
+      callerCalleeDoc: "",
     };
   },
   watch: {
@@ -1037,6 +1012,8 @@ export default {
     ) {
       this.selectTime(this.filter.time.cdrDashboardRange);
     }
+
+    this.retrieveCallerCalleeDoc();
   },
   methods: {
     moment(...args) {
@@ -1055,11 +1032,10 @@ export default {
           const extensions = user.value.split(",");
 
           extensions.forEach((extension) => {
-            userMap[extension] = user.text;
+            userMap[extension] = user.title;
           });
         }
       });
-
       return userMap;
     },
     retrieveFilter() {
@@ -1080,7 +1056,7 @@ export default {
 
         // set queue into root object
         this.$root.queues = {};
-        this.filterValues.queues.forEach(q => {
+        this.filterValues.queues.forEach((q) => {
           this.$root.queues[q.value] = q.text;
         });
 
@@ -1097,8 +1073,20 @@ export default {
         this.$refs.duration.$data.query += " " + this.$t("misc.seconds");
       }
     },
-    // add phonebook contacts to filterValues
-    addContactsToValues() {
+    // add phonebook contacts, CTI groups and users to caller and callee filters
+    addToCallerAndCalleeFilters() {
+      // users
+
+      this.filterValues.cdrCaller.push(...this.filterValues.users);
+      this.filterValues.cdrCallee.push(...this.filterValues.users);
+
+      // cti groups
+
+      this.filterValues.cdrCaller.push(...this.filterValues.ctiGroups);
+      this.filterValues.cdrCallee.push(...this.filterValues.ctiGroups);
+
+      // phonebook
+
       let contacts = this.$root.phonebook.map((contact) => {
         let contactNumbers = [];
         if (
@@ -1119,13 +1107,12 @@ export default {
         return {
           title: contact.title,
           description: `${contact.cleanName} ${contact.company}`,
-          phoneNumber: contactNumbers.join(","),
           value: contactNumbers.join(","),
+          type: "contact",
         };
       });
-      // add contacts to caller values
+
       this.filterValues.cdrCaller.push(...contacts);
-      // add contacts to callee values
       this.filterValues.cdrCallee.push(...contacts);
     },
 
@@ -1173,12 +1160,14 @@ export default {
 
           // cdr cti groups
           if (this.defaultFilter.groups) {
+            // prepare for caller / callee
             this.filterValues.ctiGroups = this.defaultFilter.groups.map(
               (group) => {
                 let parsedGroup = group.split("|");
                 return {
-                  text: parsedGroup[0],
-                  value: parsedGroup[0],
+                  title: parsedGroup[0],
+                  value: parsedGroup[1],
+                  type: "cti_group",
                 };
               }
             );
@@ -1186,11 +1175,13 @@ export default {
 
           // cdr users
           if (this.defaultFilter.users) {
+            // prepare for caller / callee
             this.filterValues.users = this.defaultFilter.users.map((user) => {
               let parsedUser = user.split("|");
               return {
-                text: parsedUser[1],
+                title: parsedUser[1],
                 value: parsedUser[2],
+                type: "user",
               };
             });
             this.$root.users = this.mapUserExtensions(this.filterValues.users);
@@ -1258,7 +1249,9 @@ export default {
           // reasons
           if (this.defaultFilter.reasons) {
             let reasons = this.defaultFilter.reasons.map((reason) => {
-              const reasonText = this.$te("filter." + reason) ? this.$t("filter." + reason) : reason;
+              const reasonText = this.$te("filter." + reason)
+                ? this.$t("filter." + reason)
+                : reason;
               return { value: reason, text: reasonText };
             });
             this.filterValues.reasons = reasons.sort(
@@ -1733,14 +1726,6 @@ export default {
         filter.dids = [];
       }
 
-      if (!this.showFilterCdrCtiGroups) {
-        filter.groups = [];
-      }
-
-      if (!this.showFilterCdrUser) {
-        filter.users = [];
-      }
-
       if (!this.showFilterCdrCallDestination) {
         filter.callDestinations = [];
       }
@@ -2076,7 +2061,7 @@ export default {
         this.$root.phonebook = phonebook[0].phonebook;
         this.phonebookReady = true;
         // function to add phonebook contacts to filters
-        this.addContactsToValues();
+        this.addToCallerAndCalleeFilters();
       } else {
         await this.clearDb(this.phonebookDb, this.PHONEBOOK_DB_NAME);
 
@@ -2119,7 +2104,7 @@ export default {
               new Date().getTime() + this.PHONEBOOK_TTL_MINUTES * 60 * 1000;
             this.set("reportPhonebookExpiry", expiry);
             // function to add phonebook contacts to filters
-            this.addContactsToValues();
+            this.addToCallerAndCalleeFilters();
           },
           (error) => {
             console.error(error.body);
@@ -2206,6 +2191,16 @@ export default {
     onDurationSelect(searchResult) {
       this.filter.durationUi = searchResult;
     },
+    retrieveCallerCalleeDoc() {
+      try {
+        let doc = require("../doc-inline/" +
+          this.$root.currentLocale +
+          "/caller_callee.md");
+        this.callerCalleeDoc = doc.default;
+      } catch (error) {
+        this.callerCalleeDoc = "";
+      }
+    },
   },
   computed: {
     showFilterTime: function () {
@@ -2277,14 +2272,6 @@ export default {
     // cdr did check
     showFilterCdrDid: function () {
       return this.isFilterInView("cdr_did", this.filtersMap);
-    },
-    // cdr cti groups check
-    showFilterCdrCtiGroups: function () {
-      return this.isFilterInView("cdr_ctiGroups", this.filtersMap);
-    },
-    // cdr user check
-    showFilterCdrUser: function () {
-      return this.isFilterInView("cdr_user", this.filtersMap);
     },
     // cdr destination type
     showFilterCdrCallDestination: function () {

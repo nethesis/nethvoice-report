@@ -37,9 +37,9 @@ var UiMaps = {
             "default": ["cdr_dashboardTimeRange", "hour", "cdr_caller", "cdr_callee", "cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk"],
           },
           "pbx": {
-            "inbound": ["cdr_timeRange", "hour", "cdr_caller", "cdr_callee", "cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_ctiGroups", "cdr_user", "cdr_callDestination"],
-            "outbound": ["cdr_timeRange", "hour", "cdr_caller", "cdr_callee", "cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_ctiGroups", "cdr_user", "cdr_destination"],
-            "local": ["cdr_timeRange", "hour", "cdr_caller", "cdr_callee", "cdr_did", "cdr_callType", "cdr_callDuration", "cdr_user", "cdr_ctiGroups"],
+            "inbound": ["cdr_timeRange", "hour", "cdr_caller", "cdr_callee", "cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_callDestination"],
+            "outbound": ["cdr_timeRange", "hour", "cdr_caller", "cdr_callee", "cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_destination"],
+            "local": ["cdr_timeRange", "hour", "cdr_caller", "cdr_callee", "cdr_did", "cdr_callType", "cdr_callDuration"],
           },
           "personal": {
             "inbound": ["cdr_timeRange", "hour", "cdr_caller", "cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_callDestination"],

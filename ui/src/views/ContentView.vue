@@ -26,7 +26,7 @@
           </h4>
           <span v-if="chart.doc">
             <sui-popup flowing hoverable position="top center">
-              <div class="doc-info">
+              <div class="doc-info markdown">
                 <VueShowdown :markdown="chart.doc"></VueShowdown>
               </div>
               <sui-icon name="info circle" class="doc-info-icon" slot="trigger" />
@@ -34,7 +34,7 @@
           </span>
           <span v-if="chart.queryLimitHit">
             <sui-popup flowing hoverable position="top center">
-              <div class="chart-query-limit">
+              <div class="chart-query-limit markdown">
                 <VueShowdown :markdown="queryLimitMessage"></VueShowdown>
               </div>
               <sui-icon name="exclamation triangle" class="chart-query-limit-icon" slot="trigger" />

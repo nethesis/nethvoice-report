@@ -68,7 +68,7 @@
       </h1>
       <span v-if="viewDoc">
         <sui-popup flowing hoverable position="bottom center">
-          <div class="doc-info">
+          <div class="doc-info markdown">
             <VueShowdown :markdown="viewDoc"></VueShowdown>
           </div>
           <sui-icon name="info circle" class="doc-info-icon doc-info-view-title" slot="trigger" />

@@ -562,19 +562,19 @@ body {
   overflow-y: auto;
 }
 
-.doc-info h1 {
+.markdown h1 {
   font-size: 1.28571429rem;
 }
 
-.doc-info h2 {
+.markdown h2 {
   font-size: 1.07142857rem;
 }
 
-.doc-info h3 {
+.markdown h3 {
   font-size: 1rem;
 }
 
-.doc-info h4 {
+.markdown h4 {
   font-size: 0.67em;
 }
 
