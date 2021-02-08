@@ -76,7 +76,7 @@
                       }}
                       <span v-if="!detail.destination">
                         <sui-popup flowing hoverable position="top center">
-                          <div class="popup-md">
+                          <div class="popup-md markdown">
                             <VueShowdown
                               :markdown="unknownDestinationMessage"
                             ></VueShowdown>

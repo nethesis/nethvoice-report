@@ -462,7 +462,7 @@
             <label key="caller_label">
               <span>{{ $t("filter.caller") }}</span>
               <sui-popup flowing hoverable position="top center">
-                <div class="doc-info">
+                <div class="doc-info markdown">
                   <VueShowdown :markdown="callerCalleeDoc"></VueShowdown>
                 </div>
                 <sui-icon
@@ -488,7 +488,7 @@
             <label key="callee_label">
               <span>{{ $t("filter.callee") }}</span>
               <sui-popup flowing hoverable position="top center">
-                <div class="doc-info">
+                <div class="doc-info markdown">
                   <VueShowdown :markdown="callerCalleeDoc"></VueShowdown>
                 </div>
                 <sui-icon
