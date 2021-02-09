@@ -1,5 +1,5 @@
 Name:		nethvoice-report
-Version: 0.1.2
+Version: 0.2.0
 Release: 1%{?dist}
 Summary:	Queue and CDR/Costs reports
 
@@ -80,6 +80,9 @@ cat %{name}-%{version}-filelist
 %doc COPYING
 
 %changelog
+* Tue Feb 09 2021 Edoardo Spadoni <edoardo.spadoni@nethesis.it> - 0.2.0-1
+- NethVoice: new CDR/Costs report - nethesis/dev#5907
+
 * Thu Dec 03 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 0.1.2-1
 - NethVoice: new Queue report - nethesis/dev#5865
 
