@@ -18,7 +18,7 @@
               ref="tableHeader"
               :class="[
                 header.subHeaders.length ? 'not-sortable' : 'sortable',
-                header.name == sortedBy ? 'sorted ' + sortedDirection : '',
+                (header.rawColumnName == sortedBy && !header.subHeaders.length) ? 'sorted ' + sortedDirection : '',
               ]"
               @click="sortTable(header, $event)"
               :rowspan="
@@ -63,7 +63,7 @@
             ref="tableHeader"
             :class="[
               header.subHeaders.length ? 'not-sortable' : 'sortable',
-              header.name == sortedBy ? 'sorted ' + sortedDirection : '',
+              (header.rawColumnName == sortedBy && !header.subHeaders.length) ? 'sorted ' + sortedDirection : '',
             ]"
             @click="sortTable(header, $event)"
             v-bind:key="index"
@@ -97,7 +97,7 @@
             ref="tableHeader"
             :class="[
               header.subHeaders.length ? 'not-sortable' : 'sortable',
-              header.name == sortedBy ? 'sorted ' + sortedDirection : '',
+              header.rawColumnName == sortedBy ? 'sorted ' + sortedDirection : '',
             ]"
             @click="sortTable(header, $event)"
             v-bind:key="index"
@@ -1073,14 +1073,14 @@ export default {
       // check if the header is sortable
       if (event.target.classList.contains("not-sortable")) return;
       // switch the ordering direction in the header currently sorted by
-      this.sortedDirection == "ascending" && this.sortedBy == header.name
+      this.sortedDirection == "ascending" && this.sortedBy == header.rawColumnName
         ? (this.sortedDirection = "descending")
         : (this.sortedDirection = "ascending");
       // set the header currently sorted by
-      this.sortedBy = header.name;
+      this.sortedBy = header.rawColumnName;
       // get the header's column position in the rows array
       let columnKey = this.columns.indexOf(
-        this.columns.find((obj) => obj.name === header.name)
+        this.columns.find((obj) => obj.rawColumnName === header.rawColumnName)
       );
       // sort table considering direction and column data type
       this.rows.sort((a, b) => {
