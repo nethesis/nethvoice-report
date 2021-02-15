@@ -18,11 +18,11 @@ WHERE	calldate >= "{{ .Time.Interval.Start }}"
 	AND calldate <= "{{ .Time.Interval.End }}"
 	AND type = "LOCAL"
 	{{ if (and (gt (len .Sources) 0) (gt (len .Destinations) 0)) }}
-	  AND (IF(cnum IS NULL OR cnum = "", src, cnum) REGEXP ({{ ExtractRegexpStrings .Sources }}) OR dst REGEXP ({{ ExtractRegexpStrings .Destinations }}))
+	  AND (IF(cnum IS NULL OR cnum = "", src, cnum) REGEXP ({{ ExtractRegexpSrcOrDst .Sources }}) OR dst REGEXP ({{ ExtractRegexpSrcOrDst .Destinations }}))
 	{{ else if gt (len .Sources) 0 }}
-	  AND IF(cnum IS NULL OR cnum = "", src, cnum) REGEXP ({{ ExtractRegexpStrings .Sources }})
+	  AND IF(cnum IS NULL OR cnum = "", src, cnum) REGEXP ({{ ExtractRegexpSrcOrDst .Sources }})
 	{{ else if gt (len .Destinations) 0 }}
-	  AND dst REGEXP ({{ ExtractRegexpStrings .Destinations }})
+	  AND dst REGEXP ({{ ExtractRegexpSrcOrDst .Destinations }})
 	{{ else }}
 	{{ end }}
 	{{ if .CallType }}
@@ -32,7 +32,7 @@ WHERE	calldate >= "{{ .Time.Interval.Start }}"
 	  AND duration <= {{ .Duration }}
 	{{ end }}
 	{{ if gt (len .Trunks) 0 }}
-	  AND channel LIKE "%{{ .Trunks }}%"
+	  AND channel REGEXP ({{ ExtractRegexpTrunks .Trunks}})
 	{{ end }}
 <CDR_GROUP: type, call_type>
 <CDR_ORDER: type, call_type>
