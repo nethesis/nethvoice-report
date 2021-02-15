@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS `cdr_{{ YearMap .Year }}`
 (
 	`call_type` TEXT DEFAULT '',
-	`cost` DOUBLE DEFAULT NULL, UNIQUE KEY uniq (calldate,uniqueid,dstchannel),
+	`cost` DOUBLE DEFAULT NULL, UNIQUE KEY uniq (calldate,uniqueid,dstchannel,duration),
 	`dispositions` LONGTEXT DEFAULT ''
 )
 SELECT *,

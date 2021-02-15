@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS `cdr_{{ YearMap .Year }}-{{ MonthMap .Month }}`
-(UNIQUE KEY uniq (calldate,uniqueid,dstchannel))
+(UNIQUE KEY uniq (calldate,uniqueid,dstchannel,duration))
 SELECT *
 FROM `cdr_{{ YearMap .Year }}`
 WHERE date_format(calldate, "%Y-%m") = "{{ .Year }}-{{ MonthMap .Month }}";
