@@ -38,7 +38,7 @@ WHERE	calldate >= "{{ .Time.Interval.Start }}"
 	  AND channel REGEXP ({{ ExtractRegexpTrunks .Trunks}})
 	{{ end }}
         {{ if gt (len .CallDestinations) 0 }}
-	  {{ ExtractCallDestinations .CallDestinations }}
+	  AND ({{ ExtractCallDestinations .CallDestinations }})
         {{ end }}
 <CDR_GROUP: type, call_type>
 <CDR_ORDER: type, call_type>

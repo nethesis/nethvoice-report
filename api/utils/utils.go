@@ -230,7 +230,7 @@ func ExtractRegexpStrings(v []string) string {
 
 func ExtractCallDestinations(v []string) string {
 	// init result var
-	result := ""
+	var callDestinations []string
 
 	// loop destinations
 	for _, d := range v {
@@ -239,14 +239,12 @@ func ExtractCallDestinations(v []string) string {
 		// switch type of destination
 		switch parts[0] {
 		case "dcontext":
-			result = "AND dcontext = " + parts[1]
-
+			callDestinations = append(callDestinations, "dcontext = '" + parts[1] + "'")
 		case "lastapp":
-			result = "AND lastapps REGEXP '" + parts[1] + "$'"
+			callDestinations = append(callDestinations, "lastapps REGEXP '" + parts[1] + "$'")
 		}
 	}
-
-	return result
+	return strings.Join(callDestinations[:], " OR ")
 }
 
 func ExtractPatterns() string {
