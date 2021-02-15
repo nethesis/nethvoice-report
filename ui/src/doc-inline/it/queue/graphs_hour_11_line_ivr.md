@@ -11,5 +11,5 @@ Se nessun IVR è stato selezionato, non verranno mostrati i dati.
 Il grafico può contenere al massimo 8 sezioni. Gli IVR eccedenti questo
 numero verranno visualizzati in una sezione `Altri`.
 
-Se presente, cliccare il bottone `Visualizza dettagli` per visualizzare
+Se presente, cliccare il bottone `Mostra dettagli` per visualizzare
 tutti i dati in formato tabellare.
