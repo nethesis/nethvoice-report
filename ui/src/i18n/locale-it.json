@@ -475,7 +475,8 @@
       "contact": "Contatto",
       "queue": "Coda",
       "main_extension": "Principale",
-      "actual_extension": "Effettivo"
+      "actual_extension": "Effettivo",
+      "extension": "Interno"
     },
     "validation": {
       "office_hours_invalid": "Orario non valido",

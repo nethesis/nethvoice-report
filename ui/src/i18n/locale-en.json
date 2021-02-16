@@ -475,7 +475,8 @@
       "contact": "Contact",
       "queue": "Queue",
       "main_extension": "Main",
-      "actual_extension": "Actual"
+      "actual_extension": "Actual",
+      "extension": "Extension"
     },
     "validation": {
       "office_hours_invalid": "Invalid time",
