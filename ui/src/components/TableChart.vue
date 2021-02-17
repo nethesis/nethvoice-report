@@ -145,6 +145,26 @@
                 v-else-if="columns[index] && columns[index].format == 'label'"
               >
                 {{ $t("table." + element) }}
+                <!-- show user of call group -->
+                <span v-show="columns[index].name === 'result' &&
+                  $root.devices[row[colIndex('dst')]] &&
+                  $root.devices[row[colIndex('dst')]].type == 'ringgroups'"
+                >
+                  <!-- show username if available -->
+                  <span
+                    v-if="$root.users[row[colIndex('peeraccount')]]"
+                    v-tooltip="{
+                      content: getCallGroupUserTooltip(row[colIndex('peeraccount')]),
+                      autoHide: false,
+                    }"
+                  >
+                    ({{ $root.users[row[colIndex('peeraccount')]] }}
+                    <sui-icon :name="'user'" />)
+                  </span>
+                  <span v-else>
+                    ({{ row[colIndex('peeraccount')] }})
+                  </span>
+                </span>
               </span>
               <span
                 v-else-if="
@@ -1136,6 +1156,25 @@ export default {
         value +
         "</div>"
       );
+    },
+    getCallGroupUserTooltip(extension) {
+      let tooltipContent =
+        '<div><b class="mg-right-xs">' +
+        this.$t("misc.extension") +
+        "</b>" +
+        extension +
+        "</div>";
+
+      // device
+      if (this.$root.devices[extension]) {
+        tooltipContent += this.getDeviceTooltip(extension);
+      } else {
+        tooltipContent +=
+          '<div><b class="mg-right-xs">' +
+          this.$t("device.type") +
+          "</b> - </div>";
+      }
+      return tooltipContent;
     },
     getUserTooltip(extension, rowIndex, row) {
       let mainExtension = "-";

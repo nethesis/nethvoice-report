@@ -448,7 +448,7 @@
                   " (" +
                   adminSettings.currency +
                   " " +
-                  $t("misc.per_second") +
+                  $t("misc.per_minute") +
                   ")"
                 }}</label>
                 <input
@@ -457,7 +457,7 @@
                   min="0"
                   step=".01"
                   :placeholder="
-                    adminSettings.currency + ' ' + $t('misc.per_second')
+                    adminSettings.currency + ' ' + $t('misc.per_minute')
                   "
                   disabled
                 />
@@ -531,7 +531,7 @@
                   " (" +
                   adminSettings.currency +
                   " " +
-                  $t("misc.per_second") +
+                  $t("misc.per_minute") +
                   ")"
                 }}</label>
                 <input
@@ -540,7 +540,7 @@
                   min="0"
                   step=".01"
                   :placeholder="
-                    adminSettings.currency + ' ' + $t('misc.per_second')
+                    adminSettings.currency + ' ' + $t('misc.per_minute')
                   "
                   ref="newCostValue"
                 />

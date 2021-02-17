@@ -18,11 +18,11 @@ WHERE	calldate >= "{{ .Time.Interval.Start }}"
 	AND calldate <= "{{ .Time.Interval.End }}"
 	AND type = "OUT"
 	{{ if (and (gt (len .Sources) 0) (gt (len .Destinations) 0)) }}
-          AND (IF(cnum IS NULL OR cnum = "", src, cnum) REGEXP ({{ ExtractRegexpStrings .Sources }}) AND dst REGEXP ({{ ExtractRegexpStrings .Destinations }}))
+          AND (IF(cnum IS NULL OR cnum = "", src, cnum) REGEXP ({{ ExtractRegexpSrcOrDst .Sources }}) AND dst REGEXP ({{ ExtractRegexpSrcOrDst .Destinations }}))
         {{ else if gt (len .Sources) 0 }}
-          AND IF(cnum IS NULL OR cnum = "", src, cnum) REGEXP ({{ ExtractRegexpStrings .Sources }})
+          AND IF(cnum IS NULL OR cnum = "", src, cnum) REGEXP ({{ ExtractRegexpSrcOrDst .Sources }})
         {{ else if gt (len .Destinations) 0 }}
-          AND dst REGEXP ({{ ExtractRegexpStrings .Destinations }})
+          AND dst REGEXP ({{ ExtractRegexpSrcOrDst .Destinations }})
         {{ else }}
         {{ end }}
 	{{ if .CallType }}
