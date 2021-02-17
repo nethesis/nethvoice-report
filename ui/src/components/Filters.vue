@@ -1149,10 +1149,10 @@ export default {
           if (this.defaultFilter.trunks) {
             this.filterValues.cdrTrunk = this.defaultFilter.trunks.map(
               (trunk) => {
-                let text = `${trunk.split(",")[0]} (${trunk.split(",")[1]})`;
+                let split = trunk.split(",");
                 return {
-                  text: text,
-                  value: trunk,
+                  text: split[0],
+                  value: split[1],
                 };
               }
             );

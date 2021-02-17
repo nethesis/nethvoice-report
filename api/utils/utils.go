@@ -196,7 +196,7 @@ func ExtractStrings(v []string) string {
 	return "\"" + result + "\""
 }
 
-func ExtractRegexpStrings(v []string) string {
+func ExtractRegexpSrcOrDst(v []string) string {
 	// escape "+" character, it is used in country calling codes (e.g. "+39")
 	// add "." before "*" character
 	// match whole string, adding "^" and "$"
@@ -212,9 +212,25 @@ func ExtractRegexpStrings(v []string) string {
 	return "'" + result + "'"
 }
 
+func ExtractRegexpTrunks(v []string) string {
+	result := strings.Join(v, `|`)
+	return "'" + result + "'"
+}
+
+func ExtractRegexpStrings(v []string) string {
+	// match whole string, adding "^" and "$"
+	regExps := []string{}
+
+	for _, r := range v {
+		regExps = append(regExps, "^"+r+"$")
+	}
+	result := strings.Join(regExps, `|`)
+	return "'" + result + "'"
+}
+
 func ExtractCallDestinations(v []string) string {
 	// init result var
-	result := ""
+	var callDestinations []string
 
 	// loop destinations
 	for _, d := range v {
@@ -223,14 +239,12 @@ func ExtractCallDestinations(v []string) string {
 		// switch type of destination
 		switch parts[0] {
 		case "dcontext":
-			result = "AND dcontext = " + parts[1]
-
+			callDestinations = append(callDestinations, "dcontext = '" + parts[1] + "'")
 		case "lastapp":
-			result = "AND lastapps REGEXP '" + parts[1] + "$'"
+			callDestinations = append(callDestinations, "lastapps REGEXP '" + parts[1] + "$'")
 		}
 	}
-
-	return result
+	return strings.Join(callDestinations[:], " OR ")
 }
 
 func ExtractPatterns() string {

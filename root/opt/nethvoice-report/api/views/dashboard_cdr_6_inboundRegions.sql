@@ -4,6 +4,9 @@
 SELECT CONCAT('cdr_', DATE_FORMAT(NOW() - INTERVAL 1 YEAR - INTERVAL 1 DAY, "%Y")) INTO @from;
 SELECT CONCAT('cdr_', DATE_FORMAT(NOW() - INTERVAL 1 DAY, "%Y")) INTO @to;
 
+/* check if table of previous year exists; if not, set @from = @to */
+SELECT IF(EXISTS (SELECT * FROM information_schema.tables WHERE table_schema = 'asteriskcdrdb' AND table_name = @from), @from, @to) INTO @from;
+
 /* DROPS */
 DROP TABLE IF EXISTS dashboard_cdr_6_past_week;
 DROP TABLE IF EXISTS dashboard_cdr_6_current_week;

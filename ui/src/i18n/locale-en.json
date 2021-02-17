@@ -467,7 +467,7 @@
       "week": "Week",
       "others": "Others",
       "call_details": "Call details",
-      "per_second": "per second",
+      "per_minute": "per minute",
       "unknown": "Unknown",
       "just_created": "Just created",
       "seconds": "seconds",
@@ -475,7 +475,8 @@
       "contact": "Contact",
       "queue": "Queue",
       "main_extension": "Main",
-      "actual_extension": "Actual"
+      "actual_extension": "Actual",
+      "extension": "Extension"
     },
     "validation": {
       "office_hours_invalid": "Invalid time",
