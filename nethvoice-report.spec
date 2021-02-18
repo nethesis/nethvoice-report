@@ -1,5 +1,5 @@
 Name:		nethvoice-report
-Version: 0.2.0
+Version: 0.2.1
 Release: 1%{?dist}
 Summary:	Queue and CDR/Costs reports
 
@@ -80,6 +80,9 @@ cat %{name}-%{version}-filelist
 %doc COPYING
 
 %changelog
+* Thu Feb 18 2021 Edoardo Spadoni <edoardo.spadoni@nethesis.it> - 0.2.1-1
+- Change cost configuration from seconds to minutes
+
 * Tue Feb 09 2021 Edoardo Spadoni <edoardo.spadoni@nethesis.it> - 0.2.0-1
 - NethVoice: new CDR/Costs report - nethesis/dev#5907
 
