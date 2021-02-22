@@ -22,27 +22,27 @@ SET @q_past_year = CONCAT('
 CREATE TABLE dashboard_cdr_7_past_year AS
 SELECT province, 
        Sum(total) AS total 
-FROM   (SELECT LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)               AS prefix, 
-              Count(*)                   AS total, 
-              (SELECT provincia 
-              FROM   zone 
-              WHERE  prefisso = prefix) AS province 
+FROM   (SELECT (SELECT GROUP_CONCAT(provincia) 
+                     FROM zone 
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
+               ) AS province,
+               COUNT(*) AS total
        FROM   ',@from,' 
        WHERE  type = "IN" 
               AND calldate >= (SELECT MAKEDATE(YEAR(NOW()-INTERVAL 1 YEAR),1)) 
               AND calldate <= (SELECT DATE_FORMAT(NOW()-INTERVAL 1 YEAR, "%Y-12-31"))
-       GROUP  BY LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)
+       GROUP  BY province
        UNION ALL
-       SELECT LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)               AS prefix, 
-              Count(*)                   AS total, 
-              (SELECT provincia 
-              FROM   zone 
-              WHERE  prefisso = prefix) AS province 
+       SELECT (SELECT GROUP_CONCAT(provincia) 
+                     FROM zone 
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
+              ) AS province,
+              COUNT(*) AS total
        FROM   ',@to,'
        WHERE  type = "IN" 
               AND calldate >= (SELECT MAKEDATE(YEAR(NOW()-INTERVAL 1 YEAR),1))
               AND calldate <= (SELECT DATE_FORMAT(NOW()-INTERVAL 1 YEAR, "%Y-12-31"))
-       GROUP  BY LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)
+       GROUP  BY province
        ) t
 WHERE  province IS NOT NULL 
 GROUP  BY province 
@@ -51,27 +51,27 @@ SET @q_current_year = CONCAT('
 CREATE TABLE dashboard_cdr_7_current_year AS
 SELECT province, 
        Sum(total) AS total 
-FROM   (SELECT LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)               AS prefix, 
-              Count(*)                   AS total, 
-              (SELECT provincia 
-              FROM   zone 
-              WHERE  prefisso = prefix) AS province 
+FROM   (SELECT (SELECT GROUP_CONCAT(provincia) 
+                     FROM zone 
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
+               ) AS province,
+               COUNT(*) AS total
        FROM   ',@from,' 
        WHERE  type = "IN" 
               AND calldate >= (SELECT MAKEDATE(YEAR(NOW()),1))
               AND calldate <= (SELECT DATE_FORMAT(NOW(), "%Y-12-31"))
-       GROUP  BY LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)
+       GROUP  BY province
        UNION ALL
-       SELECT LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)               AS prefix, 
-              Count(*)                   AS total, 
-              (SELECT provincia 
-              FROM   zone 
-              WHERE  prefisso = prefix) AS province 
+       SELECT (SELECT GROUP_CONCAT(provincia) 
+                     FROM zone 
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
+              ) AS province,
+              COUNT(*) AS total
        FROM   ',@to,'
        WHERE  type = "IN" 
               AND calldate >= (SELECT MAKEDATE(YEAR(NOW()),1))
               AND calldate <= (SELECT DATE_FORMAT(NOW(), "%Y-12-31"))
-       GROUP  BY LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)
+       GROUP  BY province
        ) t
 WHERE  province IS NOT NULL 
 GROUP  BY province 
@@ -80,27 +80,27 @@ SET @q_past_semester = CONCAT('
 CREATE TABLE dashboard_cdr_7_past_semester AS
 SELECT province, 
        Sum(total) AS total 
-FROM   (SELECT LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)               AS prefix, 
-              Count(*)                   AS total, 
-              (SELECT provincia 
-              FROM   zone 
-              WHERE  prefisso = prefix) AS province 
+FROM   (SELECT (SELECT GROUP_CONCAT(provincia) 
+                     FROM zone 
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
+               ) AS province,
+               COUNT(*) AS total
        FROM   ',@from,' 
        WHERE  type = "IN" 
               AND calldate >= (SELECT IF(MONTH(NOW()) < 7, DATE_FORMAT(NOW() - INTERVAL 1 YEAR, "%Y-07-01"), DATE_FORMAT(NOW(), "%Y-01-01")))
               AND calldate <= (SELECT IF(MONTH(NOW()) < 7, DATE_FORMAT(NOW() - INTERVAL 1 YEAR, "%Y-12-31"), DATE_FORMAT(NOW(), "%Y-06-30")))
-       GROUP  BY LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)
+       GROUP  BY province
        UNION ALL
-       SELECT LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)               AS prefix, 
-              Count(*)                   AS total, 
-              (SELECT provincia 
-              FROM   zone 
-              WHERE  prefisso = prefix) AS province 
+       SELECT (SELECT GROUP_CONCAT(provincia) 
+                     FROM zone 
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
+              ) AS province,
+              COUNT(*) AS total
        FROM   ',@to,'
        WHERE  type = "IN" 
               AND calldate >= (SELECT IF(MONTH(NOW()) < 7, DATE_FORMAT(NOW() - INTERVAL 1 YEAR, "%Y-07-01"), DATE_FORMAT(NOW(), "%Y-01-01")))
               AND calldate <= (SELECT IF(MONTH(NOW()) < 7, DATE_FORMAT(NOW() - INTERVAL 1 YEAR, "%Y-12-31"), DATE_FORMAT(NOW(), "%Y-06-30")))
-       GROUP  BY LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)
+       GROUP  BY province
        ) t
 WHERE  province IS NOT NULL 
 GROUP  BY province 
@@ -109,27 +109,27 @@ SET @q_past_quarter = CONCAT('
 CREATE TABLE dashboard_cdr_7_past_quarter AS
 SELECT province, 
        Sum(total) AS total 
-FROM   (SELECT LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)               AS prefix, 
-              Count(*)                   AS total, 
-              (SELECT provincia 
-              FROM   zone 
-              WHERE  prefisso = prefix) AS province 
+FROM   (SELECT (SELECT GROUP_CONCAT(provincia) 
+                     FROM zone 
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
+               ) AS province,
+               COUNT(*) AS total
        FROM   ',@from,' 
        WHERE  type = "IN" 
               AND calldate >= (select if(quarter(NOW()) > 1, date_format(NOW(), "%Y-01-01") + INTERVAL (quarter(NOW()) - 2) QUARTER, date_format(NOW() - INTERVAL 1 YEAR, "%Y-10-01")))
               AND calldate <= (select if(quarter(NOW()) > 1, date_format(NOW(), "%Y-01-01") + INTERVAL (quarter(NOW()) - 1) QUARTER - INTERVAL 1 DAY, date_format(NOW() - INTERVAL 1 YEAR, "%Y-12-31")))
-       GROUP  BY LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)
+       GROUP  BY province
        UNION ALL
-       SELECT LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)               AS prefix, 
-              Count(*)                   AS total, 
-              (SELECT provincia 
-              FROM   zone 
-              WHERE  prefisso = prefix) AS province 
+       SELECT (SELECT GROUP_CONCAT(provincia) 
+                     FROM zone 
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
+              ) AS province,
+              COUNT(*) AS total
        FROM   ',@to,'
        WHERE  type = "IN" 
               AND calldate >= (select if(quarter(NOW()) > 1, date_format(NOW(), "%Y-01-01") + INTERVAL (quarter(NOW()) - 2) QUARTER, date_format(NOW() - INTERVAL 1 YEAR, "%Y-10-01")))
               AND calldate <= (select if(quarter(NOW()) > 1, date_format(NOW(), "%Y-01-01") + INTERVAL (quarter(NOW()) - 1) QUARTER - INTERVAL 1 DAY, date_format(NOW() - INTERVAL 1 YEAR, "%Y-12-31")))
-       GROUP  BY LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)
+       GROUP  BY province
        ) t
 WHERE  province IS NOT NULL 
 GROUP  BY province 
@@ -138,27 +138,27 @@ SET @q_past_month = CONCAT('
 CREATE TABLE dashboard_cdr_7_past_month AS
 SELECT province, 
        Sum(total) AS total 
-FROM   (SELECT LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)               AS prefix, 
-              Count(*)                   AS total, 
-              (SELECT provincia 
-              FROM   zone 
-              WHERE  prefisso = prefix) AS province 
+FROM   (SELECT (SELECT GROUP_CONCAT(provincia) 
+                     FROM zone 
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
+               ) AS province,
+               COUNT(*) AS total
        FROM   ',@from,' 
        WHERE  type = "IN" 
               AND calldate >= (SELECT DATE_FORMAT(NOW()-INTERVAL 1 MONTH, "%Y-%m-01"))
               AND calldate <= (SELECT LAST_DAY(NOW()-INTERVAL 1 MONTH))
-       GROUP  BY LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)
+       GROUP  BY province
        UNION ALL
-       SELECT LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)               AS prefix, 
-              Count(*)                   AS total, 
-              (SELECT provincia 
-              FROM   zone 
-              WHERE  prefisso = prefix) AS province 
+       SELECT (SELECT GROUP_CONCAT(provincia) 
+                     FROM zone 
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
+              ) AS province,
+              COUNT(*) AS total
        FROM   ',@to,'
        WHERE  type = "IN" 
               AND calldate >= (SELECT DATE_FORMAT(NOW()-INTERVAL 1 MONTH, "%Y-%m-01"))
               AND calldate <= (SELECT LAST_DAY(NOW()-INTERVAL 1 MONTH))
-       GROUP  BY LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)
+       GROUP  BY province
        ) t
 WHERE  province IS NOT NULL 
 GROUP  BY province 
@@ -167,27 +167,27 @@ SET @q_current_month = CONCAT('
 CREATE TABLE dashboard_cdr_7_current_month AS
 SELECT province, 
        Sum(total) AS total 
-FROM   (SELECT LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)               AS prefix, 
-              Count(*)                   AS total, 
-              (SELECT provincia 
-              FROM   zone 
-              WHERE  prefisso = prefix) AS province 
+FROM   (SELECT (SELECT GROUP_CONCAT(provincia) 
+                     FROM zone 
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
+               ) AS province,
+               COUNT(*) AS total
        FROM   ',@from,' 
        WHERE  type = "IN" 
               AND calldate >= (SELECT DATE_FORMAT(NOW(), "%Y-%m-01"))
               AND calldate <= (SELECT LAST_DAY(NOW()))
-       GROUP  BY LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)
+       GROUP  BY province
        UNION ALL
-       SELECT LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)               AS prefix, 
-              Count(*)                   AS total, 
-              (SELECT provincia 
-              FROM   zone 
-              WHERE  prefisso = prefix) AS province 
+       SELECT (SELECT GROUP_CONCAT(provincia) 
+                     FROM zone 
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
+              ) AS province,
+              COUNT(*) AS total
        FROM   ',@to,'
        WHERE  type = "IN" 
               AND calldate >= (SELECT DATE_FORMAT(NOW(), "%Y-%m-01"))
               AND calldate <= (SELECT LAST_DAY(NOW()))
-       GROUP  BY LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)
+       GROUP  BY province
        ) t
 WHERE  province IS NOT NULL 
 GROUP  BY province 
@@ -196,27 +196,27 @@ SET @q_past_week = CONCAT('
 CREATE TABLE dashboard_cdr_7_past_week AS
 SELECT province, 
        Sum(total) AS total 
-FROM   (SELECT LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)               AS prefix, 
-              Count(*)                   AS total, 
-              (SELECT provincia 
-              FROM   zone 
-              WHERE  prefisso = prefix) AS province 
+FROM   (SELECT (SELECT GROUP_CONCAT(provincia) 
+                     FROM zone 
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
+               ) AS province,
+               COUNT(*) AS total
        FROM   ',@from,' 
        WHERE  type = "IN" 
               AND calldate >= (SELECT DATE_FORMAT(DATE_ADD(NOW()-INTERVAL 1 WEEK, INTERVAL(-WEEKDAY(NOW()-INTERVAL 1 WEEK)) DAY), "%Y-%m-%d"))
               AND calldate <= (SELECT DATE_FORMAT(DATE_ADD(DATE_ADD(NOW()-INTERVAL 1 WEEK, INTERVAL(-WEEKDAY(NOW()-INTERVAL 1 WEEK)) DAY), INTERVAL 6 DAY), "%Y-%m-%d"))
-       GROUP  BY LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)
+       GROUP  BY province
        UNION ALL
-       SELECT LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)               AS prefix, 
-              Count(*)                   AS total, 
-              (SELECT provincia 
-              FROM   zone 
-              WHERE  prefisso = prefix) AS province 
+       SELECT (SELECT GROUP_CONCAT(provincia) 
+                     FROM zone 
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
+              ) AS province,
+              COUNT(*) AS total
        FROM   ',@to,'
        WHERE  type = "IN" 
               AND calldate >= (SELECT DATE_FORMAT(DATE_ADD(NOW()-INTERVAL 1 WEEK, INTERVAL(-WEEKDAY(NOW()-INTERVAL 1 WEEK)) DAY), "%Y-%m-%d"))
               AND calldate <= (SELECT DATE_FORMAT(DATE_ADD(DATE_ADD(NOW()-INTERVAL 1 WEEK, INTERVAL(-WEEKDAY(NOW()-INTERVAL 1 WEEK)) DAY), INTERVAL 6 DAY), "%Y-%m-%d"))
-       GROUP  BY LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)
+       GROUP  BY province
        ) t
 WHERE  province IS NOT NULL 
 GROUP  BY province 
@@ -225,27 +225,27 @@ SET @q_current_week = CONCAT('
 CREATE TABLE dashboard_cdr_7_current_week AS
 SELECT province, 
        Sum(total) AS total 
-FROM   (SELECT LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)               AS prefix, 
-              Count(*)                   AS total, 
-              (SELECT provincia 
-              FROM   zone 
-              WHERE  prefisso = prefix) AS province 
+FROM   (SELECT (SELECT GROUP_CONCAT(provincia) 
+                     FROM zone 
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
+               ) AS province,
+               COUNT(*) AS total
        FROM   ',@from,' 
        WHERE  type = "IN" 
               AND calldate >= (SELECT DATE_FORMAT(DATE_ADD(NOW(), INTERVAL(-WEEKDAY(NOW())) DAY), "%Y-%m-%d"))
               AND calldate <= (SELECT DATE_FORMAT(DATE_ADD(DATE_ADD(NOW(), INTERVAL(-WEEKDAY(NOW())) DAY), INTERVAL 6 DAY), "%Y-%m-%d"))
-       GROUP  BY LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)
+       GROUP  BY province
        UNION ALL
-       SELECT LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)               AS prefix, 
-              Count(*)                   AS total, 
-              (SELECT provincia 
-              FROM   zone 
-              WHERE  prefisso = prefix) AS province 
+       SELECT (SELECT GROUP_CONCAT(provincia) 
+                     FROM zone 
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
+              ) AS province,
+              COUNT(*) AS total
        FROM   ',@to,'
        WHERE  type = "IN" 
               AND calldate >= (SELECT DATE_FORMAT(DATE_ADD(NOW(), INTERVAL(-WEEKDAY(NOW())) DAY), "%Y-%m-%d"))
               AND calldate <= (SELECT DATE_FORMAT(DATE_ADD(DATE_ADD(NOW(), INTERVAL(-WEEKDAY(NOW())) DAY), INTERVAL 6 DAY), "%Y-%m-%d"))
-       GROUP  BY LEFT(IF(cnum IS NULL OR cnum = "", src, cnum), 4)
+       GROUP  BY province
        ) t
 WHERE  province IS NOT NULL 
 GROUP  BY province 
