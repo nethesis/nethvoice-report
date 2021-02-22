@@ -1,7 +1,7 @@
 {{ if gt (len .Queues) 0  }}
 SELECT provincia, 
        sum(total) AS total£num
-FROM   distribution_geo_{{ .Time.Group }}
+FROM   distribution_geo_{{ .Time.Group }}_provincia
 WHERE  TRUE
         {{ if and .Time.Interval.Start .Time.Interval.End }}
             AND period >= "{{ .Time.Interval.Start }}"
