@@ -1,7 +1,7 @@
 {{ if gt (len .Queues) 0  }}
 SELECT comune, 
        sum(total) AS total£num
-FROM   distribution_geo_{{ .Time.Group }}
+FROM   distribution_geo_{{ .Time.Group }}_comune
 WHERE  TRUE
         {{ if and .Time.Interval.Start .Time.Interval.End }}
             AND period >= "{{ .Time.Interval.Start }}"
