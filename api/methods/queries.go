@@ -123,6 +123,10 @@ func GetGraphData(c *gin.Context) {
 		return
 	}
 
+	// set current user inside filter
+	user := GetClaims(c)["id"].(string)
+	filter.CurrentUser = user
+
 	// convert struct to json to preserve item orders
 	filterString, errConvert := json.Marshal(filter)
 	if errConvert != nil {
@@ -180,10 +184,6 @@ func GetGraphData(c *gin.Context) {
 }
 
 func executeSqlQuery(filter models.Filter, report string, section string, view string, graph string, c *gin.Context) (string, error) {
-	// get current user
-	user := GetClaims(c)["id"].(string)
-	filter.CurrentUser = user
-
 	if report != "queue" && report != "cdr" {
 		return "", errors.Errorf("unknown report: %s", report)
 	}
@@ -221,6 +221,8 @@ func executeSqlQuery(filter models.Filter, report string, section string, view s
 	if report == "queue" {
 		q = template.Must(q.ParseFiles(queryFile))
 	} else {
+		user := filter.CurrentUser
+
 		// set sources and destinations for personal calls
 		if section == "personal" && user != "admin" && user != "X" {
 			// get user extensions
