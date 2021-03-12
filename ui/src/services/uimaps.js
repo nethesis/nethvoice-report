@@ -34,7 +34,7 @@ var UiMaps = {
         },
         "cdr": {
           "dashboard": {
-            "default": ["cdr_dashboardTimeRange", "hour", "cdr_caller", "cdr_callee", "cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk"],
+            "default": ["cdr_dashboardTimeRange", "hour", "cdr_did", "cdr_trunk"],
           },
           "pbx": {
             "inbound": ["cdr_timeRange", "hour", "cdr_caller", "cdr_callee", "cdr_did", "cdr_callType", "cdr_callDuration", "cdr_trunk", "cdr_callDestination"],

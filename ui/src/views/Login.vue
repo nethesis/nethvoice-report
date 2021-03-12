@@ -73,9 +73,12 @@ export default {
       this.loading = true;
       this.sessionExpired = false;
 
+      // remove domain (if any)
+      const username = this.username.split("@")[0];
+
       this.execLogin(
         {
-          username: this.username,
+          username: username,
           password: this.password,
         },
         (success) => {
@@ -84,7 +87,7 @@ export default {
 
           // extract loggedUser info
           var loggedUser = success.body;
-          loggedUser.username = this.username;
+          loggedUser.username = username;
 
           // save to localstorage
           this.set("loggedUser", loggedUser);
