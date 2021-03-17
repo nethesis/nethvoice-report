@@ -2,7 +2,7 @@
 
 Distribuzione mensile delle chiamate *in Entrata* per i Fasci selezionati.
 
-Il grafico mostra per i mesi dell'intervallao impostato il totale delle chiamate in
+Il grafico mostra per i mesi dell'intervallo impostato il totale delle chiamate in
 entrata dai fasci selezionati.
 
 Se nessun fascio è stato selezionato, il grafico mostrerà tutti i fasci disponibili.
