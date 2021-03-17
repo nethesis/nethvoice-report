@@ -8,8 +8,7 @@ entrata dai fasci selezionati.
 Se nessun fascio è stato selezionato, il grafico mostrerà tutti i fasci disponibili.
 
 Il grafico può contenere al massimo 8 sezioni. I fasci eccedenti questo numero
-verranno visualizzate in una sezione `Altri`.
+verranno visualizzati in una sezione `Altri`.
 
 Se presente, cliccare il bottone `Mostra dettagli` per visualizzare tutti i dati
 in formato tabellare.
-
