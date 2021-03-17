@@ -1,6 +1,6 @@
 # Chiamate in Entrata per Fascio
 
-Numero di chiamate totali *in Entrata* per Fasci selezionati.
+Numero di chiamate totali *in Entrata* per i Fasci selezionati.
 
 Il grafico a torta mostra il totale delle chiamate entrate dai fasci selezionati
 e le mette a confronto in modo proporzionale.
@@ -12,4 +12,3 @@ verranno visualizzate in una sezione `Altri`.
 
 Se presente, cliccare il bottone `Mostra dettagli` per visualizzare tutti i dati
 in formato tabellare.
-
