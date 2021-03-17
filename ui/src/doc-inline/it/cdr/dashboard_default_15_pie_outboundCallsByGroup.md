@@ -7,8 +7,7 @@ gruppi configurati sul centralino telefonico e le mette a confronto in modo
 proporzionale.
 
 Il grafico può contenere al massimo 8 sezioni. I gruppi eccedenti questo numero
-verranno visualizzate in una sezione `Altri`.
+verranno visualizzati in una sezione `Altri`.
 
 Se presente, cliccare il bottone `Mostra dettagli` per visualizzare tutti i dati
 in formato tabellare.
-
