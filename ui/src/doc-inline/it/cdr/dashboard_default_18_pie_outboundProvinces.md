@@ -8,7 +8,7 @@ Il grafico a torta mostra il numero delle chiamate entrate dai fasci
 in modo proporzionale.
 
 Il grafico può contenere al massimo 8 sezioni. Le province eccedenti 
-questo numero verranno visualizzate in una sezione `Altri`.
+questo numero verranno visualizzati in una sezione `Altri`.
 
 Se presente, cliccare il bottone `Mostra dettagli` per 
 visualizzare tutti i dati in formato tabellare.
