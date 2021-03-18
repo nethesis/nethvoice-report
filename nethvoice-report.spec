@@ -1,5 +1,5 @@
 Name:		nethvoice-report
-Version: 0.2.1
+Version: 1.0.0
 Release: 1%{?dist}
 Summary:	Queue and CDR/Costs reports
 
@@ -80,6 +80,13 @@ cat %{name}-%{version}-filelist
 %doc COPYING
 
 %changelog
+* Thu Mar 18 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.0.0-1
+- First stable release - Nethesis/dev#5975
+- Add inline cdr doc (#124)
+- ui & queries. fix filters and login with domain (#123)
+- api. fix check filter in cache (#122)
+- views. fix provinces and regions retrieval (#121)
+
 * Thu Feb 18 2021 Edoardo Spadoni <edoardo.spadoni@nethesis.it> - 0.2.1-1
 - Change cost configuration from seconds to minutes
 
