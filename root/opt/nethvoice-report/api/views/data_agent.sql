@@ -11,12 +11,12 @@ CREATE TABLE data_agent_year AS
          t1.agent  AS agent, 
          t1.qname  AS qname, 
          t1.qdescr AS qdescr, 
-         t2.logon  AS logon, 
-         t2.work   AS login, 
-         t2.pause  AS pause,
+         IF(t2.logon IS NULL, 0, t2.logon)  AS logon, 
+         IF(t2.work IS NULL, 6336000, t2.work)   AS login, -- if there is no login (static agent), then use 6336000 (220 working days)
+         IF(t2.pause IS NULL, 0, t2.pause)  AS pause, 
          answered, 
          unanswered,
-         afterwork,	
+         IF(afterwork IS NULL, 0, afterwork)  AS afterwork, 
          totcall, 
          min_duration, 
          max_duration, 
@@ -40,7 +40,7 @@ CREATE TABLE data_agent_year AS
           GROUP  BY agent, 
                     period, 
                     qname) t1 
-         JOIN (SELECT agent, 
+         LEFT JOIN (SELECT agent, 
                       qname, 
                       Sum(IF(action IN ( 'logon', 'agent' ), 
                           timestamp_out - timestamp_in 
@@ -65,12 +65,12 @@ CREATE TABLE data_agent_month AS
          t1.agent  AS agent, 
          t1.qname  AS qname, 
          t1.qdescr AS qdescr, 
-         t2.logon  AS logon, 
-         t2.work   AS login, 
-         t2.pause  AS pause,
+         IF(t2.logon IS NULL, 0, t2.logon)  AS logon, 
+         IF(t2.work IS NULL, 633600, t2.work)   AS login, -- if there is no login (static agent), then use 633600 (22 working days)
+         IF(t2.pause IS NULL, 0, t2.pause)  AS pause, 
          answered, 
          unanswered,
-         afterwork,	
+         IF(afterwork IS NULL, 0, afterwork)  AS afterwork, 
          totcall, 
          min_duration, 
          max_duration, 
@@ -94,7 +94,7 @@ CREATE TABLE data_agent_month AS
           GROUP  BY agent, 
                     period, 
                     qname) t1 
-         JOIN (SELECT agent, 
+         LEFT JOIN (SELECT agent, 
                       qname, 
                       Sum(IF(action IN ( 'logon', 'agent' ), 
                           timestamp_out - timestamp_in 
@@ -119,12 +119,12 @@ CREATE TABLE data_agent_week AS
          t1.agent  AS agent, 
          t1.qname  AS qname, 
          t1.qdescr AS qdescr, 
-         t2.logon  AS logon, 
-         t2.work   AS login, 
-         t2.pause  AS pause, 
+         IF(t2.logon IS NULL, 0, t2.logon)  AS logon, 
+         IF(t2.work IS NULL, 144000, t2.work)   AS login, -- if there is no login (static agent), then use 144000 (5 working days)
+         IF(t2.pause IS NULL, 0, t2.pause)  AS pause, 
          answered, 
          unanswered,
-         afterwork,
+         IF(afterwork IS NULL, 0, afterwork)  AS afterwork, 
          totcall, 
          min_duration, 
          max_duration, 
@@ -148,7 +148,7 @@ CREATE TABLE data_agent_week AS
           GROUP  BY agent, 
                     period, 
                     qname) t1 
-         JOIN (SELECT agent, 
+         LEFT JOIN (SELECT agent, 
                       qname, 
                       Sum(IF(action IN ( 'logon', 'agent' ), 
                           timestamp_out - timestamp_in 
@@ -174,12 +174,12 @@ CREATE TABLE data_agent_day AS
          t1.agent  AS agent, 
          t1.qname  AS qname, 
          t1.qdescr AS qdescr, 
-         t2.logon  AS logon, 
-         t2.work   AS login, 
-         t2.pause  AS pause, 
+         IF(t2.logon IS NULL, 0, t2.logon)  AS logon, 
+         IF(t2.work IS NULL, 28800, t2.work)   AS login, -- if there is no login (static agent), then use 28800 (8 hours)
+         IF(t2.pause IS NULL, 0, t2.pause)  AS pause, 
          answered, 
          unanswered,
-         afterwork,
+         IF(afterwork IS NULL, 0, afterwork)  AS afterwork, 
          totcall, 
          min_duration, 
          max_duration, 
@@ -203,7 +203,7 @@ CREATE TABLE data_agent_day AS
           GROUP  BY agent, 
                     period, 
                     qname) t1 
-         JOIN (SELECT agent, 
+          LEFT JOIN (SELECT agent, 
                       qname, 
                       Sum(IF(action IN ( 'logon', 'agent' ), 
                           timestamp_out - timestamp_in 
