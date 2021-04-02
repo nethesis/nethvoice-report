@@ -29,7 +29,7 @@ WHERE	calldate >= "{{ .Time.Interval.Start }}"
 	  AND duration <= {{ .Duration }}
 	{{ end }}
 	{{ if gt (len .Trunks) 0 }}
-	  AND dstchannel LIKE "%{{ .Trunks }}%"
+	  AND dstchannel REGEXP ({{ ExtractRegexpTrunks .Trunks}})
 	{{ end }}
 	{{ if gt (len .Patterns) 0 }}
 	  AND call_type REGEXP ({{ ExtractRegexpStrings .Patterns }})
