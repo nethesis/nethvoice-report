@@ -13,7 +13,7 @@ Le voci mostrate per i dati *per Agente* sono:
 - `Numero Coda`
 - `Nome Coda`
 - `Giorni Lavorativi`: giorni con attività nel periodo selezionato
-- `Login`: tempo totale di login in coda
+- `Login`: tempo totale di login in coda. Se si tratta di un agente statico, viene mostrato `-`
 - `Pausa`: tempo totale di pausa in coda
 - `Dopo Chiusura`: il totale del tempo che ogni coda può concedere 
 alla chiusura di ogni chiamata risposta prima di sottoporne un'altra

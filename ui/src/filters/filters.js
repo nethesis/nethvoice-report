@@ -55,7 +55,7 @@ var Filters = {
         return num.toLocaleString() + " %";
     },
     formatTime: function (value) {
-        if (value != 0 && (!value || value.length == 0)) {
+        if (value == "" || (!value && value != 0)) {
             return '-'
         }
 

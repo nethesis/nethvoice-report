@@ -3,7 +3,7 @@ SELECT
     agent,
     qname,
     qdescr,
-    logon as `activity$logonDays£days`,
+    logon as `activity$logonDays£num`,
     login as `activity$login£seconds#`,
     pause as `activity$pause£seconds#`,
     afterwork as `activity$afterwork£seconds#`,
