@@ -22,7 +22,17 @@ SELECT
        Count(DISTINCT clid) AS uniqCid,
        Min(billsec) AS minBill,
        Avg(billsec) AS avgBill,
-       Max(billsec) AS maxBill
+       Max(billsec) AS maxBill,
+       IF(Substring_index(Substring_index(channel, '-', 1), '/', -1) IN
+             (SELECT channelid
+                                                                         FROM
+             asterisk.trunks), "IN", IF(Substring_index(Substring_index(
+                                                        dstchannel, '-'
+                                                        , 1), '/', -1) IN (
+                                        SELECT
+                                                                      channelid
+                                        FROM
+       asterisk.trunks), "OUT", "LOCAL"))  AS type
 FROM
        asteriskcdrdb.cdr
 WHERE
@@ -35,7 +45,8 @@ WHERE
        )
 GROUP BY
        period,
-       IF(cnum IS NULL OR cnum = "", src, cnum);
+       IF(cnum IS NULL OR cnum = "", src, cnum),
+       type;
 
 CREATE TABLE data_summary_agent_month AS
 SELECT
@@ -53,7 +64,17 @@ SELECT
        Count(DISTINCT clid) AS uniqCid,
        Min(billsec) AS minBill,
        Avg(billsec) AS avgBill,
-       Max(billsec) AS maxBill
+       Max(billsec) AS maxBill,
+       IF(Substring_index(Substring_index(channel, '-', 1), '/', -1) IN
+             (SELECT channelid
+                                                                         FROM
+             asterisk.trunks), "IN", IF(Substring_index(Substring_index(
+                                                        dstchannel, '-'
+                                                        , 1), '/', -1) IN (
+                                        SELECT
+                                                                      channelid
+                                        FROM
+       asterisk.trunks), "OUT", "LOCAL"))  AS type
 FROM
        asteriskcdrdb.cdr
 WHERE
@@ -66,7 +87,8 @@ WHERE
        )
 GROUP BY
        period,
-       IF(cnum IS NULL OR cnum = "", src, cnum);
+       IF(cnum IS NULL OR cnum = "", src, cnum),
+       type;
 
 CREATE TABLE data_summary_agent_week AS
 SELECT
@@ -84,7 +106,17 @@ SELECT
        Count(DISTINCT clid) AS uniqCid,
        Min(billsec) AS minBill,
        Avg(billsec) AS avgBill,
-       Max(billsec) AS maxBill
+       Max(billsec) AS maxBill,
+       IF(Substring_index(Substring_index(channel, '-', 1), '/', -1) IN
+             (SELECT channelid
+                                                                         FROM
+             asterisk.trunks), "IN", IF(Substring_index(Substring_index(
+                                                        dstchannel, '-'
+                                                        , 1), '/', -1) IN (
+                                        SELECT
+                                                                      channelid
+                                        FROM
+       asterisk.trunks), "OUT", "LOCAL"))  AS type
 FROM
        asteriskcdrdb.cdr
 WHERE
@@ -97,7 +129,8 @@ WHERE
        )
 GROUP BY
        period,
-       IF(cnum IS NULL OR cnum = "", src, cnum);
+       IF(cnum IS NULL OR cnum = "", src, cnum),
+       type;
 
 CREATE TABLE data_summary_agent_day AS
 SELECT
@@ -115,7 +148,17 @@ SELECT
        Count(DISTINCT clid) AS uniqCid,
        Min(billsec) AS minBill,
        Avg(billsec) AS avgBill,
-       Max(billsec) AS maxBill
+       Max(billsec) AS maxBill,
+       IF(Substring_index(Substring_index(channel, '-', 1), '/', -1) IN
+             (SELECT channelid
+                                                                         FROM
+             asterisk.trunks), "IN", IF(Substring_index(Substring_index(
+                                                        dstchannel, '-'
+                                                        , 1), '/', -1) IN (
+                                        SELECT
+                                                                      channelid
+                                        FROM
+       asterisk.trunks), "OUT", "LOCAL"))  AS type
 FROM
        asteriskcdrdb.cdr
 WHERE
@@ -128,4 +171,5 @@ WHERE
        )
 GROUP BY
        period,
-       IF(cnum IS NULL OR cnum = "", src, cnum);
+       IF(cnum IS NULL OR cnum = "", src, cnum),
+       type;

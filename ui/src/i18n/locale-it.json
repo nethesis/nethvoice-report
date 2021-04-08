@@ -401,6 +401,7 @@
       "avgHold": "Attesa Media",
       "actions": "Azioni",
       "call_type": "Tipo chiamata",
+      "callType": "Tipo chiamata",
       "cost": "Costo",
       "ANSWER": "Risposta",
       "ABANDON": "Abbandono",

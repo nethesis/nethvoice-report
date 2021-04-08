@@ -401,6 +401,7 @@
       "avgHold": "Average wait",
       "actions": "Actions",
       "call_type": "Call type",
+      "callType": "Call type",
       "cost": "Cost",
       "ANSWER": "Answer",
       "ABANDON": "Abandon",

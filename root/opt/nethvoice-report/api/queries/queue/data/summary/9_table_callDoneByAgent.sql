@@ -1,6 +1,7 @@
 SELECT period  AS period£{{ .Time.Group }}Date, 
        agentNum,
        agentName,
+       type AS callType£label,
        total   AS total£num, 
        uniqcid AS uniqCid£num, 
        minbill AS duration$min_duration£seconds, 
