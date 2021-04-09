@@ -10,8 +10,8 @@ by each selected agent.
 The items shown for *Made by Agent* calls are:
 
 - `Grouping Period`
-- `Agent Number`
 - `Agent Name`
+- `Call type`
 - `Total Calls Made`
 - `Unique Callers`: total telephone numbers that have been called
 counted individually

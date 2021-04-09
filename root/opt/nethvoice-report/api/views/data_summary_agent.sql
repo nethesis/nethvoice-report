@@ -9,7 +9,6 @@ DROP TABLE IF EXISTS data_summary_agent_day;
 CREATE TABLE data_summary_agent_year AS
 SELECT
        Date_format(calldate, "%Y") AS period,
-       IF(cnum IS NULL OR cnum = "", src, cnum) AS agentNum,
        (
               SELECT
                      name
@@ -32,7 +31,7 @@ SELECT
                                         SELECT
                                                                       channelid
                                         FROM
-       asterisk.trunks), "OUT", "LOCAL"))  AS type
+       asterisk.trunks), "EXTERNAL", "LOCAL"))  AS type
 FROM
        asteriskcdrdb.cdr
 WHERE
@@ -45,13 +44,12 @@ WHERE
        )
 GROUP BY
        period,
-       IF(cnum IS NULL OR cnum = "", src, cnum),
+       agentName,
        type;
 
 CREATE TABLE data_summary_agent_month AS
 SELECT
        Date_format(calldate, "%Y-%m") AS period,
-       IF(cnum IS NULL OR cnum = "", src, cnum) AS agentNum,
        (
               SELECT
                      name
@@ -74,7 +72,7 @@ SELECT
                                         SELECT
                                                                       channelid
                                         FROM
-       asterisk.trunks), "OUT", "LOCAL"))  AS type
+       asterisk.trunks), "EXTERNAL", "LOCAL"))  AS type
 FROM
        asteriskcdrdb.cdr
 WHERE
@@ -87,13 +85,12 @@ WHERE
        )
 GROUP BY
        period,
-       IF(cnum IS NULL OR cnum = "", src, cnum),
+       agentName,
        type;
 
 CREATE TABLE data_summary_agent_week AS
 SELECT
        Date_format(calldate, "%x-W%v") AS period,
-       IF(cnum IS NULL OR cnum = "", src, cnum) AS agentNum,
        (
               SELECT
                      name
@@ -116,7 +113,7 @@ SELECT
                                         SELECT
                                                                       channelid
                                         FROM
-       asterisk.trunks), "OUT", "LOCAL"))  AS type
+       asterisk.trunks), "EXTERNAL", "LOCAL"))  AS type
 FROM
        asteriskcdrdb.cdr
 WHERE
@@ -129,13 +126,12 @@ WHERE
        )
 GROUP BY
        period,
-       IF(cnum IS NULL OR cnum = "", src, cnum),
+       agentName,
        type;
 
 CREATE TABLE data_summary_agent_day AS
 SELECT
        Date_format(calldate, "%Y-%m-%d") AS period,
-       IF(cnum IS NULL OR cnum = "", src, cnum) AS agentNum,
        (
               SELECT
                      name
@@ -158,7 +154,7 @@ SELECT
                                         SELECT
                                                                       channelid
                                         FROM
-       asterisk.trunks), "OUT", "LOCAL"))  AS type
+       asterisk.trunks), "EXTERNAL", "LOCAL"))  AS type
 FROM
        asteriskcdrdb.cdr
 WHERE
@@ -171,5 +167,5 @@ WHERE
        )
 GROUP BY
        period,
-       IF(cnum IS NULL OR cnum = "", src, cnum),
+       agentName,
        type;
