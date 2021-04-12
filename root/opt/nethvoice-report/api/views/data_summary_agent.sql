@@ -18,7 +18,7 @@ SELECT
                      extension = IF(asteriskcdrdb.cdr.cnum IS NULL OR asteriskcdrdb.cdr.cnum = "", asteriskcdrdb.cdr.src, asteriskcdrdb.cdr.cnum)
        ) AS agentName,
        Count(*) AS total,
-       Count(DISTINCT clid) AS uniqCid,
+       Count(DISTINCT dst) AS uniqCid,
        Min(billsec) AS minBill,
        Avg(billsec) AS avgBill,
        Max(billsec) AS maxBill,
@@ -59,7 +59,7 @@ SELECT
                      extension = IF(asteriskcdrdb.cdr.cnum IS NULL OR asteriskcdrdb.cdr.cnum = "", asteriskcdrdb.cdr.src, asteriskcdrdb.cdr.cnum)
        ) AS agentName,
        Count(*) AS total,
-       Count(DISTINCT clid) AS uniqCid,
+       Count(DISTINCT dst) AS uniqCid,
        Min(billsec) AS minBill,
        Avg(billsec) AS avgBill,
        Max(billsec) AS maxBill,
@@ -100,7 +100,7 @@ SELECT
                      extension = IF(asteriskcdrdb.cdr.cnum IS NULL OR asteriskcdrdb.cdr.cnum = "", asteriskcdrdb.cdr.src, asteriskcdrdb.cdr.cnum)
        ) AS agentName,
        Count(*) AS total,
-       Count(DISTINCT clid) AS uniqCid,
+       Count(DISTINCT dst) AS uniqCid,
        Min(billsec) AS minBill,
        Avg(billsec) AS avgBill,
        Max(billsec) AS maxBill,
@@ -141,7 +141,7 @@ SELECT
                      extension = IF(asteriskcdrdb.cdr.cnum IS NULL OR asteriskcdrdb.cdr.cnum = "", asteriskcdrdb.cdr.src, asteriskcdrdb.cdr.cnum)
        ) AS agentName,
        Count(*) AS total,
-       Count(DISTINCT clid) AS uniqCid,
+       Count(DISTINCT dst) AS uniqCid,
        Min(billsec) AS minBill,
        Avg(billsec) AS avgBill,
        Max(billsec) AS maxBill,
