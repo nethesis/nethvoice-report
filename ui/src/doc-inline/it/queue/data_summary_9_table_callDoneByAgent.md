@@ -13,7 +13,7 @@ Le voci mostrate per le chiamate *Effettuate per Agente* sono:
 - `Nome Agente`
 - `Tipo Chiamata`
 - `Totale Chiamate Effettuate`
-- `Chiamanti Univoci`: totale numeri telefonici che sono stati chiamati 
+- `Chiamati Univoci`: totale numeri telefonici che sono stati chiamati 
 contati singolarmente
 - `Durata Minima, Media, Massima`
 

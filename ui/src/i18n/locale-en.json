@@ -354,6 +354,7 @@
       "timestamp": "Timestamp",
       "value": "Value",
       "uniqCid": "Unique caller ID",
+      "uniqCallees": "Unique callees",
       "max_hold": "Max hold",
       "min_hold": "Min hold",
       "avg_hold": "Average hold",

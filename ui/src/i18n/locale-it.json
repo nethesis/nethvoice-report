@@ -354,6 +354,7 @@
       "timestamp": "Timestamp",
       "value": "Valore",
       "uniqCid": "Chiamanti Univoci",
+      "uniqCallees": "Chiamati Univoci",
       "max_hold": "Attesa Massima",
       "min_hold": "Attesa Minima",
       "avg_hold": "Attesa Media",
