@@ -16,7 +16,7 @@ CREATE TABLE data_agent_year AS
          t2.pause  AS pause,
          answered, 
          unanswered,
-         afterwork,	
+         afterwork,
          totcall, 
          min_duration, 
          max_duration, 
@@ -40,7 +40,7 @@ CREATE TABLE data_agent_year AS
           GROUP  BY agent, 
                     period, 
                     qname) t1 
-         JOIN (SELECT agent, 
+         LEFT JOIN (SELECT agent, 
                       qname, 
                       Sum(IF(action IN ( 'logon', 'agent' ), 
                           timestamp_out - timestamp_in 
@@ -70,7 +70,7 @@ CREATE TABLE data_agent_month AS
          t2.pause  AS pause,
          answered, 
          unanswered,
-         afterwork,	
+         afterwork,
          totcall, 
          min_duration, 
          max_duration, 
@@ -94,7 +94,7 @@ CREATE TABLE data_agent_month AS
           GROUP  BY agent, 
                     period, 
                     qname) t1 
-         JOIN (SELECT agent, 
+         LEFT JOIN (SELECT agent, 
                       qname, 
                       Sum(IF(action IN ( 'logon', 'agent' ), 
                           timestamp_out - timestamp_in 
@@ -148,7 +148,7 @@ CREATE TABLE data_agent_week AS
           GROUP  BY agent, 
                     period, 
                     qname) t1 
-         JOIN (SELECT agent, 
+         LEFT JOIN (SELECT agent, 
                       qname, 
                       Sum(IF(action IN ( 'logon', 'agent' ), 
                           timestamp_out - timestamp_in 
@@ -203,7 +203,7 @@ CREATE TABLE data_agent_day AS
           GROUP  BY agent, 
                     period, 
                     qname) t1 
-         JOIN (SELECT agent, 
+          LEFT JOIN (SELECT agent, 
                       qname, 
                       Sum(IF(action IN ( 'logon', 'agent' ), 
                           timestamp_out - timestamp_in 

@@ -9,7 +9,6 @@ DROP TABLE IF EXISTS data_summary_agent_day;
 CREATE TABLE data_summary_agent_year AS
 SELECT
        Date_format(calldate, "%Y") AS period,
-       IF(cnum IS NULL OR cnum = "", src, cnum) AS agentNum,
        (
               SELECT
                      name
@@ -19,10 +18,20 @@ SELECT
                      extension = IF(asteriskcdrdb.cdr.cnum IS NULL OR asteriskcdrdb.cdr.cnum = "", asteriskcdrdb.cdr.src, asteriskcdrdb.cdr.cnum)
        ) AS agentName,
        Count(*) AS total,
-       Count(DISTINCT clid) AS uniqCid,
+       Count(DISTINCT dst) AS uniqCallees,
        Min(billsec) AS minBill,
        Avg(billsec) AS avgBill,
-       Max(billsec) AS maxBill
+       Max(billsec) AS maxBill,
+       IF(Substring_index(Substring_index(channel, '-', 1), '/', -1) IN
+             (SELECT channelid
+                                                                         FROM
+             asterisk.trunks), "IN", IF(Substring_index(Substring_index(
+                                                        dstchannel, '-'
+                                                        , 1), '/', -1) IN (
+                                        SELECT
+                                                                      channelid
+                                        FROM
+       asterisk.trunks), "EXTERNAL", "LOCAL"))  AS type
 FROM
        asteriskcdrdb.cdr
 WHERE
@@ -35,12 +44,12 @@ WHERE
        )
 GROUP BY
        period,
-       IF(cnum IS NULL OR cnum = "", src, cnum);
+       agentName,
+       type;
 
 CREATE TABLE data_summary_agent_month AS
 SELECT
        Date_format(calldate, "%Y-%m") AS period,
-       IF(cnum IS NULL OR cnum = "", src, cnum) AS agentNum,
        (
               SELECT
                      name
@@ -50,10 +59,20 @@ SELECT
                      extension = IF(asteriskcdrdb.cdr.cnum IS NULL OR asteriskcdrdb.cdr.cnum = "", asteriskcdrdb.cdr.src, asteriskcdrdb.cdr.cnum)
        ) AS agentName,
        Count(*) AS total,
-       Count(DISTINCT clid) AS uniqCid,
+       Count(DISTINCT dst) AS uniqCallees,
        Min(billsec) AS minBill,
        Avg(billsec) AS avgBill,
-       Max(billsec) AS maxBill
+       Max(billsec) AS maxBill,
+       IF(Substring_index(Substring_index(channel, '-', 1), '/', -1) IN
+             (SELECT channelid
+                                                                         FROM
+             asterisk.trunks), "IN", IF(Substring_index(Substring_index(
+                                                        dstchannel, '-'
+                                                        , 1), '/', -1) IN (
+                                        SELECT
+                                                                      channelid
+                                        FROM
+       asterisk.trunks), "EXTERNAL", "LOCAL"))  AS type
 FROM
        asteriskcdrdb.cdr
 WHERE
@@ -66,12 +85,12 @@ WHERE
        )
 GROUP BY
        period,
-       IF(cnum IS NULL OR cnum = "", src, cnum);
+       agentName,
+       type;
 
 CREATE TABLE data_summary_agent_week AS
 SELECT
        Date_format(calldate, "%x-W%v") AS period,
-       IF(cnum IS NULL OR cnum = "", src, cnum) AS agentNum,
        (
               SELECT
                      name
@@ -81,10 +100,20 @@ SELECT
                      extension = IF(asteriskcdrdb.cdr.cnum IS NULL OR asteriskcdrdb.cdr.cnum = "", asteriskcdrdb.cdr.src, asteriskcdrdb.cdr.cnum)
        ) AS agentName,
        Count(*) AS total,
-       Count(DISTINCT clid) AS uniqCid,
+       Count(DISTINCT dst) AS uniqCallees,
        Min(billsec) AS minBill,
        Avg(billsec) AS avgBill,
-       Max(billsec) AS maxBill
+       Max(billsec) AS maxBill,
+       IF(Substring_index(Substring_index(channel, '-', 1), '/', -1) IN
+             (SELECT channelid
+                                                                         FROM
+             asterisk.trunks), "IN", IF(Substring_index(Substring_index(
+                                                        dstchannel, '-'
+                                                        , 1), '/', -1) IN (
+                                        SELECT
+                                                                      channelid
+                                        FROM
+       asterisk.trunks), "EXTERNAL", "LOCAL"))  AS type
 FROM
        asteriskcdrdb.cdr
 WHERE
@@ -97,12 +126,12 @@ WHERE
        )
 GROUP BY
        period,
-       IF(cnum IS NULL OR cnum = "", src, cnum);
+       agentName,
+       type;
 
 CREATE TABLE data_summary_agent_day AS
 SELECT
        Date_format(calldate, "%Y-%m-%d") AS period,
-       IF(cnum IS NULL OR cnum = "", src, cnum) AS agentNum,
        (
               SELECT
                      name
@@ -112,10 +141,20 @@ SELECT
                      extension = IF(asteriskcdrdb.cdr.cnum IS NULL OR asteriskcdrdb.cdr.cnum = "", asteriskcdrdb.cdr.src, asteriskcdrdb.cdr.cnum)
        ) AS agentName,
        Count(*) AS total,
-       Count(DISTINCT clid) AS uniqCid,
+       Count(DISTINCT dst) AS uniqCallees,
        Min(billsec) AS minBill,
        Avg(billsec) AS avgBill,
-       Max(billsec) AS maxBill
+       Max(billsec) AS maxBill,
+       IF(Substring_index(Substring_index(channel, '-', 1), '/', -1) IN
+             (SELECT channelid
+                                                                         FROM
+             asterisk.trunks), "IN", IF(Substring_index(Substring_index(
+                                                        dstchannel, '-'
+                                                        , 1), '/', -1) IN (
+                                        SELECT
+                                                                      channelid
+                                        FROM
+       asterisk.trunks), "EXTERNAL", "LOCAL"))  AS type
 FROM
        asteriskcdrdb.cdr
 WHERE
@@ -128,4 +167,5 @@ WHERE
        )
 GROUP BY
        period,
-       IF(cnum IS NULL OR cnum = "", src, cnum);
+       agentName,
+       type;

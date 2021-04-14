@@ -10,10 +10,10 @@ completate da ogni agente selezionato.
 Le voci mostrate per le chiamate *Effettuate per Agente* sono:
 
 - `Periodo di Raggruppamento`
-- `Numero Agente`
 - `Nome Agente`
+- `Tipo Chiamata`
 - `Totale Chiamate Effettuate`
-- `Chiamanti Univoci`: totale numeri telefonici che sono stati chiamati 
+- `Chiamati Univoci`: totale numeri telefonici che sono stati chiamati 
 contati singolarmente
 - `Durata Minima, Media, Massima`
 

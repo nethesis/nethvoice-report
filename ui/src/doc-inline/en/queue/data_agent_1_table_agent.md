@@ -14,7 +14,7 @@ The items shown for the *by Agent* data are:
 - `Queue Number`
 - `Queue Name`
 - `Working Days`: days with activity in the selected period
-- `Login`: total login time in queue
+- `Login`: total login time in queue. If the agent is static, then `-` is shown
 - `Pause`: total pause time in queue
 - `After Work`: the total amount of time each queue can grant
 at the end of each call answered before submitting another one
