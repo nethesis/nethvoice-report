@@ -1,5 +1,5 @@
 Name:		nethvoice-report
-Version: 1.0.0
+Version: 1.0.1
 Release: 1%{?dist}
 Summary:	Queue and CDR/Costs reports
 
@@ -80,6 +80,9 @@ cat %{name}-%{version}-filelist
 %doc COPYING
 
 %changelog
+* Fri Apr 16 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.0.1-1
+- Queue Report: static agent data are not shown correctly - Bug nethesis/dev#5981
+
 * Thu Mar 18 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.0.0-1
 - First stable release - Nethesis/dev#5975
 - Add inline cdr doc (#124)
