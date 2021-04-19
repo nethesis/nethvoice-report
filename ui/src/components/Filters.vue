@@ -327,7 +327,7 @@
             <label>{{ $t("filter.agents_label") }}</label>
             <sui-dropdown
               multiple
-              :options="filterValues.agents"
+              :options="agentsFilteredByQueue"
               :placeholder="$t('filter.agents_label')"
               search
               selection
@@ -849,6 +849,7 @@ export default {
         devices: {},
         cdrPatterns: [],
         dids: [],
+        queueAgentsMap: {},
       },
       savedSearches: [],
       openSaveSearchModal: false,
@@ -995,6 +996,12 @@ export default {
           }
         }
       }
+    },
+    "filter.queues": function () {
+      // remove previously selected agents if incompatible with selected queues
+      this.filter.agents = this.filter.agents.filter((agent) => {
+        return this.agentsFilteredByQueue.some((a) => a.value === agent);
+      });
     },
   },
   mounted() {
@@ -1209,6 +1216,21 @@ export default {
               return { value: agent, text: agent };
             });
             this.filterValues.agents = agents.sort(this.sortByProperty("text"));
+          }
+
+          // queue/agents map (used to show only agents of selected queues)
+          if (this.defaultFilter.queueAgents) {
+            let queueAgentsMap = {};
+            this.defaultFilter.queueAgents.forEach((qa) => {
+              let [queue, agent] = qa.split(",");
+
+              if (queueAgentsMap[queue]) {
+                queueAgentsMap[queue].push({ value: agent, text: agent });
+              } else {
+                queueAgentsMap[queue] = [{ value: agent, text: agent }];
+              }
+            });
+            this.filterValues.queueAgentsMap = queueAgentsMap;
           }
 
           // ivr
@@ -2292,6 +2314,21 @@ export default {
     },
     filtersReady: function () {
       return !this.loader.filter && this.phonebookReady;
+    },
+    agentsFilteredByQueue: function () {
+      if (!this.filter.queues.length) {
+        // no queue selected
+        return this.filterValues.agents;
+      } else {
+        // show only agents of selected queues
+        let agentsFilteredByQueue = [];
+
+        this.filter.queues.forEach((queue) => {
+          agentsFilteredByQueue = agentsFilteredByQueue.concat(this.filterValues.queueAgentsMap[queue]);
+        });
+
+        return agentsFilteredByQueue.sort(this.sortByProperty("text"));
+      }
     },
   },
 };
