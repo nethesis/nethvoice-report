@@ -74,9 +74,10 @@ type Filter struct {
 
 	CurrentUser string `json:"currentUser"`
 
-	Caller   string `json:"caller"`
-	Name     string `json:"contactName"`
-	GeoGroup string `json:"geoGroup"`
+	Caller      string   `json:"caller"`
+	Name        string   `json:"contactName"`
+	GeoGroup    string   `json:"geoGroup"`
+	QueueAgents []string `json:"queueAgents"`
 }
 
 type Search struct {
