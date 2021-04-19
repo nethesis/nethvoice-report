@@ -199,6 +199,12 @@ github.com/mwitkow/go-conntrack v0.0.0-20161129095857-cc309e4a2223/go.mod h1:qRW
 github.com/nethesis/nethvoice-report v0.0.0-20210205110415-9a3776a34cfc h1:ec0Gp9pZjnOFAzSdZ3PueH0RHgEmenFKiYkjcJrJyRk=
 github.com/nethesis/nethvoice-report/api v0.0.0-20210205110415-9a3776a34cfc h1:dJCYqymxBXyqeQwCoXnmQh/k6rs8OF9uMv0Y67lG0TM=
 github.com/nethesis/nethvoice-report/api v0.0.0-20210205110415-9a3776a34cfc/go.mod h1:EVlrgK6wN3zaCi8E0e8A9YwMlTKj+2u8lbFF811x5K8=
+github.com/nethesis/nethvoice-report/api v0.0.0-20210416094223-32cc5c16629e h1:sEE1s1MUiQrrKNTvnUSGvWsKHYZL4vIKfQTJ7AYeDBs=
+github.com/nethesis/nethvoice-report/api v0.0.0-20210416094223-32cc5c16629e/go.mod h1:EVlrgK6wN3zaCi8E0e8A9YwMlTKj+2u8lbFF811x5K8=
+github.com/nethesis/nethvoice-report/api v0.0.0-20210419082642-b0a6400a2c4b h1:bDOsUoAgBYjz0Omde4qYZhGI4ug7xR6ts8HMShZBET8=
+github.com/nethesis/nethvoice-report/api v0.0.0-20210419082642-b0a6400a2c4b/go.mod h1:EVlrgK6wN3zaCi8E0e8A9YwMlTKj+2u8lbFF811x5K8=
+github.com/nethesis/nethvoice-report/api v0.0.0-20210419090104-4330b1e5fe02 h1:0iqb7I3ZMizTTUV2pbisn29Ob3hv3GGinuTAkQMD4A4=
+github.com/nethesis/nethvoice-report/api v0.0.0-20210419090104-4330b1e5fe02/go.mod h1:EVlrgK6wN3zaCi8E0e8A9YwMlTKj+2u8lbFF811x5K8=
 github.com/nleeper/goment v1.4.0 h1:k+PnV26S9wnxI+ryxKEkpG7JhVtDJpM6+CzeRxh5S54=
 github.com/nleeper/goment v1.4.0/go.mod h1:zDl5bAyDhqxwQKAvkSXMRLOdCowrdZz53ofRJc4VhTo=
 github.com/oklog/ulid v1.3.1/go.mod h1:CirwcVhetQ6Lv90oh/F+FBtV6XMibvdAFo93nm5qn4U=
