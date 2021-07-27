@@ -1,5 +1,5 @@
 Name:		nethvoice-report
-Version: 1.0.2
+Version: 1.0.3
 Release: 1%{?dist}
 Summary:	Queue and CDR/Costs reports
 
@@ -80,6 +80,9 @@ cat %{name}-%{version}-filelist
 %doc COPYING
 
 %changelog
+* Tue Jul 27 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.0.3-1
+- NethVoice report: CVE-2020-28483 - Nethesis/dev#6046
+
 * Fri Apr 23 2021 Andrea Leardini <andrea.leardini@nethesis.it> - 1.0.2-1
 - NethVoice report: show only agents of selected queues - nethesis/dev#5989
 
