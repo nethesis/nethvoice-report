@@ -56,3 +56,9 @@ if [[ "x$MIGRATE_RES" == "x" ]]; then
 	/opt/nethvoice-report/tasks/tasks migrate-searches
 fi
 
+# Add INDEX for report_queue if it doesn't exist
+EXISTS=$(/usr/bin/mysql --defaults-file=/root/.my.cnf -e "SHOW KEYS FROM report_queue WHERE Key_name='uid'")
+if [[ $EXISTS == "" ]]; then
+        /usr/bin/mysql --defaults-file=/root/.my.cnf -e "ALTER IGNORE TABLE report_queue ADD UNIQUE uid (id,timestamp_in,action,agent)"
+fi
+
