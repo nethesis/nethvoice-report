@@ -62,3 +62,9 @@ if [[ $EXISTS == "" ]]; then
         /usr/bin/mysql --defaults-file=/root/.my.cnf -e "ALTER IGNORE TABLE report_queue ADD UNIQUE uid (id,timestamp_in,action,agent)"
 fi
 
+# Add "agents" column to report_queue table if it is needed
+EXISTS=$(/usr/bin/mysql --defaults-file=/root/.my.cnf -e "SHOW COLUMNS FROM report_queue LIKE 'agents'")
+if [[ $EXISTS == "" ]]; then
+        /usr/bin/mysql --defaults-file=/root/.my.cnf -e "ALTER TABLE report_queue ADD COLUMN agents VARCHAR(100) NOT NULL DEFAULT ''"
+fi
+
