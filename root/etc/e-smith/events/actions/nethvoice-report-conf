@@ -68,3 +68,9 @@ if [[ $EXISTS == "" ]]; then
         /usr/bin/mysql --defaults-file=/root/.my.cnf -e "ALTER TABLE report_queue ADD COLUMN agents VARCHAR(100) NOT NULL DEFAULT ''"
 fi
 
+# Add "agents" column to data_call table if it is needed
+EXISTS=$(/usr/bin/mysql --defaults-file=/root/.my.cnf -e "SHOW COLUMNS FROM data_call LIKE 'agents'")
+if [[ $EXISTS == "" ]]; then
+        /usr/bin/mysql --defaults-file=/root/.my.cnf -e "ALTER TABLE data_call ADD COLUMN agents VARCHAR(100) NOT NULL DEFAULT ''"
+fi
+
