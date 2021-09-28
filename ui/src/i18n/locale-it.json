@@ -431,7 +431,8 @@
       "pbx": "Centralino",
       "did": "DID",
       "srcDevice": "Dispositivo sorgente",
-      "dstDevice": "Dispositivo destinazione"
+      "dstDevice": "Dispositivo destinazione",
+      "transfered": "Trasferite"
     },
     "command": {
       "save": "Salva",

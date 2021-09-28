@@ -432,7 +432,8 @@
       "pbx": "PBX",
       "did": "DID",
       "srcDevice": "Source device",
-      "dstDevice": "Destination device"
+      "dstDevice": "Destination device",
+      "transfered": "Transfered"
     },
     "command": {
       "save": "Save",
