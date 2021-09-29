@@ -433,7 +433,8 @@
       "did": "DID",
       "srcDevice": "Source device",
       "dstDevice": "Destination device",
-      "transfered": "Transfered"
+      "transfered": "Transfered",
+      "agentsTransfer": "Agents Transfer"
     },
     "command": {
       "save": "Save",

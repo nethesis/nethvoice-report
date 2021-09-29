@@ -301,6 +301,13 @@
               >
                 {{ element | formatTwoDecimals }}
               </span>
+              <span
+                v-else-if="
+                  columns[index] && columns[index].format == 'commasList'
+                "
+              >
+                {{ element | formatCommasList }}
+              </span>
               <span v-else>
                 {{ element }}
               </span>

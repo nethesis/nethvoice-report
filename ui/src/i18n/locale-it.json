@@ -432,7 +432,8 @@
       "did": "DID",
       "srcDevice": "Dispositivo sorgente",
       "dstDevice": "Dispositivo destinazione",
-      "transfered": "Trasferite"
+      "transfered": "Trasferite",
+      "agentsTransfer": "Agenti Trasferimento"
     },
     "command": {
       "save": "Salva",
