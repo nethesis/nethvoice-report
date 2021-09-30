@@ -16,6 +16,7 @@ The items shown for the *by Call* data are:
 - `Queue Name`
 - `Agent`: agent who answered the call in case of a call with
 ANSWER result
+- `Transfer Agents`: agents involved in the transfer
 - `Position`: postion of the call at the entrance to the queue
 - `Waiting`: waiting time in queue
 - `Duration`: duration of the call if answered by an agent

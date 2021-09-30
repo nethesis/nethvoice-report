@@ -15,6 +15,6 @@ The items shown for *Made by Agent* calls are:
 - `Total Calls Made`
 - `Unique Callees`: total telephone numbers that have been called
 counted individually
-- `Minimum, Average, Maximum Duration`
+- `Minimum, Average, Maximum, Total Duration`
 
 If no agent has been selected, calls made by all agents will be shown.

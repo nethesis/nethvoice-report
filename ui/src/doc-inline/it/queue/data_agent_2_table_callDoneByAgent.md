@@ -15,7 +15,7 @@ Le voci mostrate per le chiamate *Effettuate per Agente* sono:
 - `Totale Chiamate Effettuate`
 - `Chiamati Univoci`: totale numeri telefonici che sono stati chiamati 
 contati singolarmente
-- `Durata Minima, Media, Massima`
+- `Durata Minima, Media, Massima, Totale`
 
 Se nessun agente è stato selezionato, verranno mostrati i dati di tutti
 gli agenti disponibili.

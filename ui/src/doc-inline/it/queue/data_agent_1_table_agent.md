@@ -23,6 +23,7 @@ tempo di Login e la somma di tempo di Pausa e tempo di Dopo Chiusura
 risposte
 - `Risposte`: numero totale delle chiamate risposte
 - `Non risposte`: numero totale delle chiamate non risposte
+- `Trasferite`: numero totale delle chiamate trasferite
 - `Chiamate all'ora`: il rapporto tra il numero di chiamate risposte e il 
 tempo effettivo in ore
 - `Occupazione`: la percentuale di tempo effettivo passato al telefono
