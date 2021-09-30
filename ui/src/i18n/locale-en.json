@@ -434,7 +434,8 @@
       "srcDevice": "Source device",
       "dstDevice": "Destination device",
       "transfered": "Transfered",
-      "agentsTransfer": "Agents Transfer"
+      "agentsTransfer": "Agents transfer",
+      "total_duration": "Total duration"
     },
     "command": {
       "save": "Save",
