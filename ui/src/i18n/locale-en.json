@@ -433,7 +433,7 @@
       "did": "DID",
       "srcDevice": "Source device",
       "dstDevice": "Destination device",
-      "transfered": "Transfered",
+      "transfered": "Transferred",
       "agentsTransfer": "Agents transfer",
       "total_duration": "Total duration"
     },
