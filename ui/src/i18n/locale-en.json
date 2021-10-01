@@ -587,7 +587,8 @@
       "total_cost": "Total cost",
       "avg_cost": "Average cost",
       "total_wait_duration": "Total wait duration",
-      "avg_wait_duration": "Avg wait duration"
+      "avg_wait_duration": "Avg wait duration",
+      "total_effective_duration": "Total effective duration"
     },
     "device": {
       "type": "Type",
