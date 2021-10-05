@@ -15,6 +15,7 @@ CREATE TABLE data_agent_year AS
          t2.work   AS login, 
          t2.pause  AS pause,
          answered, 
+         transfered,
          unanswered,
          afterwork,
          totcall, 
@@ -25,8 +26,9 @@ CREATE TABLE data_agent_year AS
                  qname, 
                  qdescr, 
                  Sum(IF(action = 'ANSWER', 1, 0))               AS answered, 
+                 Sum(IF(action = 'TRANSFER', 1, 0))             AS transfered,
                  Sum(IF(action = 'RINGNOANSWER', 1, 0))         AS unanswered,
-	         Sum(IF(action = 'ANSWER', 1, 0)) * (
+	         Sum(IF(action IN ('ANSWER','TRANSFER'), 1, 0)) * (
 		     SELECT data
 		     FROM asterisk.queues_details
 		     WHERE keyword = "wrapuptime" and id = report_queue_agents.qname
@@ -69,6 +71,7 @@ CREATE TABLE data_agent_month AS
          t2.work   AS login, 
          t2.pause  AS pause,
          answered, 
+         transfered,
          unanswered,
          afterwork,
          totcall, 
@@ -79,8 +82,9 @@ CREATE TABLE data_agent_month AS
                  qname, 
                  qdescr, 
                  Sum(IF(action = 'ANSWER', 1, 0))               AS answered, 
+                 Sum(IF(action = 'TRANSFER', 1, 0))             AS transfered,
                  Sum(IF(action = 'RINGNOANSWER', 1, 0))         AS unanswered,
-	         Sum(IF(action = 'ANSWER', 1, 0)) * (
+	         Sum(IF(action IN ('ANSWER','TRANSFER'), 1, 0)) * (
                      SELECT data
                      FROM asterisk.queues_details
                      WHERE keyword = "wrapuptime" and id = report_queue_agents.qname
@@ -123,6 +127,7 @@ CREATE TABLE data_agent_week AS
          t2.work   AS login, 
          t2.pause  AS pause, 
          answered, 
+         transfered,
          unanswered,
          afterwork,
          totcall, 
@@ -133,8 +138,9 @@ CREATE TABLE data_agent_week AS
                  qname, 
                  qdescr, 
                  Sum(IF(action = 'ANSWER', 1, 0))               AS answered, 
+                 Sum(IF(action = 'TRANSFER', 1, 0))             AS transfered,
                  Sum(IF(action = 'RINGNOANSWER', 1, 0))         AS unanswered,
-	         Sum(IF(action = 'ANSWER', 1, 0)) * (
+	         Sum(IF(action IN ('ANSWER','TRANSFER'), 1, 0)) * (
                      SELECT data
                      FROM asterisk.queues_details
                      WHERE keyword = "wrapuptime" and id = report_queue_agents.qname
@@ -178,6 +184,7 @@ CREATE TABLE data_agent_day AS
          t2.work   AS login, 
          t2.pause  AS pause, 
          answered, 
+         transfered,
          unanswered,
          afterwork,
          totcall, 
@@ -188,8 +195,9 @@ CREATE TABLE data_agent_day AS
                  qname, 
                  qdescr, 
                  Sum(IF(action = 'ANSWER', 1, 0))               AS answered, 
+                 Sum(IF(action = 'TRANSFER', 1, 0))             AS transfered,
                  Sum(IF(action = 'RINGNOANSWER', 1, 0))         AS unanswered,
-	         Sum(IF(action = 'ANSWER', 1, 0)) * (
+	         Sum(IF(action IN ('ANSWER','TRANSFER'), 1, 0)) * (
                      SELECT data
                      FROM asterisk.queues_details
                      WHERE keyword = "wrapuptime" and id = report_queue_agents.qname

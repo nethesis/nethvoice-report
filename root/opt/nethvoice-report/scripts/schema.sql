@@ -61,6 +61,7 @@ CREATE TABLE IF NOT EXISTS report_queue (
     cid varchar(100),
     qdescr varchar(35) NOT NULL,
     data4 bigint(21) unsigned NOT NULL DEFAULT 0,
+    agents varchar(100) NOT NULL DEFAULT "",
     UNIQUE KEY `uid` (`id`,`timestamp_in`,`action`,`agent`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
