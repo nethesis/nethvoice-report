@@ -433,7 +433,7 @@
       "srcDevice": "Dispositivo sorgente",
       "dstDevice": "Dispositivo destinazione",
       "transfered": "Trasferite",
-      "agentsTransfer": "Agenti Trasferimento",
+      "agentsTransfer": "Agenti coinvolti",
       "total_duration": "Durata Totale"
     },
     "command": {

@@ -422,7 +422,6 @@
       "COMPLETECALLER": "Done",
       "IN": "Inbound",
       "OUT": "Outbound",
-      "NO ANSWER": "No answer",
       "LOCAL": "Internal",
       "EXTERNAL": "External",
       "totalDuration": "Total duration",
@@ -434,7 +433,7 @@
       "srcDevice": "Source device",
       "dstDevice": "Destination device",
       "transfered": "Transferred",
-      "agentsTransfer": "Agents transfer",
+      "agentsTransfer": "Involved Agents",
       "total_duration": "Total duration"
     },
     "command": {
