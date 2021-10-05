@@ -22,6 +22,7 @@ SELECT
        Min(billsec) AS minBill,
        Avg(billsec) AS avgBill,
        Max(billsec) AS maxBill,
+       Sum(billsec) AS totalBill,
        IF(Substring_index(Substring_index(channel, '-', 1), '/', -1) IN
              (SELECT channelid
                                                                          FROM
@@ -63,6 +64,7 @@ SELECT
        Min(billsec) AS minBill,
        Avg(billsec) AS avgBill,
        Max(billsec) AS maxBill,
+       Sum(billsec) AS totalBill,
        IF(Substring_index(Substring_index(channel, '-', 1), '/', -1) IN
              (SELECT channelid
                                                                          FROM
@@ -104,6 +106,7 @@ SELECT
        Min(billsec) AS minBill,
        Avg(billsec) AS avgBill,
        Max(billsec) AS maxBill,
+       Sum(billsec) AS totalBill,
        IF(Substring_index(Substring_index(channel, '-', 1), '/', -1) IN
              (SELECT channelid
                                                                          FROM
@@ -145,6 +148,7 @@ SELECT
        Min(billsec) AS minBill,
        Avg(billsec) AS avgBill,
        Max(billsec) AS maxBill,
+       Sum(billsec) AS totalBill,
        IF(Substring_index(Substring_index(channel, '-', 1), '/', -1) IN
              (SELECT channelid
                                                                          FROM

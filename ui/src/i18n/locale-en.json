@@ -422,7 +422,6 @@
       "COMPLETECALLER": "Done",
       "IN": "Inbound",
       "OUT": "Outbound",
-      "NO ANSWER": "No answer",
       "LOCAL": "Internal",
       "EXTERNAL": "External",
       "totalDuration": "Total duration",
@@ -432,7 +431,10 @@
       "pbx": "PBX",
       "did": "DID",
       "srcDevice": "Source device",
-      "dstDevice": "Destination device"
+      "dstDevice": "Destination device",
+      "transfered": "Transferred",
+      "agentsTransfer": "Involved Agents",
+      "total_duration": "Total duration"
     },
     "command": {
       "save": "Save",
@@ -584,7 +586,8 @@
       "total_cost": "Total cost",
       "avg_cost": "Average cost",
       "total_wait_duration": "Total wait duration",
-      "avg_wait_duration": "Avg wait duration"
+      "avg_wait_duration": "Avg wait duration",
+      "total_effective_duration": "Total effective duration"
     },
     "device": {
       "type": "Type",

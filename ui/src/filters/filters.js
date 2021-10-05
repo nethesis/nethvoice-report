@@ -145,6 +145,9 @@ var Filters = {
         } else {
             return root.reversePhonebook[phoneNumber][field];
         }
+    },
+    formatCommasList: function (value) {
+        return value.replace(/,/g, ', ')
     }
 };
 

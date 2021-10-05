@@ -143,6 +143,14 @@
                         </sui-statistic>
                         <sui-statistic in-group>
                           <sui-statistic-value>{{
+                            detail.totalEffectiveDuration | formatTime
+                          }}</sui-statistic-value>
+                          <sui-statistic-label>{{
+                            $t("recap.total_effective_duration")
+                          }}</sui-statistic-label>
+                        </sui-statistic>
+                        <sui-statistic in-group>
+                          <sui-statistic-value>{{
                             detail.avgDuration | formatTime
                           }}</sui-statistic-value>
                           <sui-statistic-label>{{
@@ -315,6 +323,7 @@ export default {
           avgCost: row[10],
           totalWaitDuration: row[11],
           avgWaitDuration: row[12],
+          totalEffectiveDuration: row[13]
         };
 
         if (entries[type]) {

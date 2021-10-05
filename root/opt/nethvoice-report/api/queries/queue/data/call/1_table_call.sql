@@ -7,6 +7,7 @@ SELECT
     qname,
     qdescr,
     agent,
+    agents AS `agentsTransfer£commasList`,
     position,
     hold AS hold£seconds,
     duration AS duration£seconds,

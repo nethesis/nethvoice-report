@@ -65,7 +65,7 @@ func GetSearches(c *gin.Context) {
 		search.Report = s[1]
 		search.Section = s[2]
 		search.View = s[3]
-		search.Name = s[4]
+		search.Name = s[len(s)-1]
 
 		// consider only searches matching request report
 		if report != search.Report {

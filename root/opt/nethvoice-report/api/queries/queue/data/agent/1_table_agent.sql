@@ -11,6 +11,7 @@ SELECT
     totcall as `load$totCall£seconds`,
     answered as `load$answered£num#`,
     unanswered as `load$unAnswered£num#`,
+    transfered as `load$transfered£num#`,
     round(answered / ((login - pause) / 3600), 2) as `load$callOnHour£num#`,
     round(totcall / (login - pause), 2) as `load$occupation£percent#`,
     min_duration as `duration$min_duration£seconds`,

@@ -431,7 +431,10 @@
       "pbx": "Centralino",
       "did": "DID",
       "srcDevice": "Dispositivo sorgente",
-      "dstDevice": "Dispositivo destinazione"
+      "dstDevice": "Dispositivo destinazione",
+      "transfered": "Trasferite",
+      "agentsTransfer": "Agenti coinvolti",
+      "total_duration": "Durata Totale"
     },
     "command": {
       "save": "Salva",
@@ -583,7 +586,8 @@
       "total_cost": "Costo totale",
       "avg_cost": "Costo medio",
       "total_wait_duration": "Durata attesa totale",
-      "avg_wait_duration": "Durata attesa media"
+      "avg_wait_duration": "Durata attesa media",
+      "total_effective_duration": "Durata totale effettiva"
     },
     "device": {
       "type": "Tipo",

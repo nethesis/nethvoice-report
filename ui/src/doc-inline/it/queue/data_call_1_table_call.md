@@ -17,6 +17,7 @@ Le voci mostrate per i dati *per Chiamata* sono:
 - `Nome Coda`
 - `Agente`: agente che ha risposto alla chiamata in caso di chiamata con 
 risultato ANSWER
+- `Agenti coinvolti`: agenti coinvolti nella chiamata
 - `Posizione`: posizione della chiamata all'entrata in coda
 - `Attesa`: tempo di attesa in coda
 - `Durata`: durata della chiamata se risposta da un agente

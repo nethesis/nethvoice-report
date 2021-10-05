@@ -998,11 +998,20 @@ export default {
       }
     },
     "filter.queues": function () {
-      // remove previously selected agents if incompatible with selected queues
-      this.filter.agents = this.filter.agents.filter((agent) => {
-        return this.agentsFilteredByQueue.some((a) => a.value === agent);
-      });
-    },
+      if (this.$route.meta.report === 'queue' && this.$route.meta.name === 'data.by_call') {
+        // remove selected agents when incompatible with selected queues
+        this.filter.agents = this.filter.agents.filter((agent) => {
+          return this.agentsFilteredByQueue.some((a) => a.value === agent);
+        });
+      } else {
+        // set agents filter based on selected queues
+        this.filter.queues.length > 0 ? (
+          this.filter.agents = this.agentsFilteredByQueue.map(agent => agent.value)
+        ) : (
+          this.filter.agents = []
+        )
+      }
+    }
   },
   mounted() {
     this.retrieveFilter();
