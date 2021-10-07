@@ -432,7 +432,7 @@
       "did": "DID",
       "srcDevice": "Dispositivo sorgente",
       "dstDevice": "Dispositivo destinazione",
-      "transfered": "Trasferite",
+      "transfered": "Trasferimenti",
       "agentsTransfer": "Agenti coinvolti",
       "total_duration": "Durata Totale"
     },
