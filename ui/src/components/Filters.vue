@@ -1477,6 +1477,8 @@ export default {
         this.currentReport,
         (success) => {
           const savedSearches = success.body.searches;
+          if (!savedSearches) return
+
           this.mapSavedSearches(savedSearches);
 
           if (searchToSelect) {

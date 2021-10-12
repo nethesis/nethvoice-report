@@ -26,12 +26,14 @@ import (
 	"encoding/json"
 	"net/http"
 	"strings"
+	"github.com/pkg/errors"
 
 	"github.com/gin-gonic/gin"
 	guuid "github.com/google/uuid"
 
 	"github.com/nethesis/nethvoice-report/api/cache"
 	"github.com/nethesis/nethvoice-report/api/models"
+	"github.com/nethesis/nethvoice-report/api/utils"
 )
 
 func GetSearches(c *gin.Context) {
@@ -62,10 +64,23 @@ func GetSearches(c *gin.Context) {
 
 		// search key is: search_REPORT_SECTION_VIEW_NAME
 		s := strings.Split(k, "_")
+		idl := len(s)
+
+		// set view with backward compatibility
+		var view string
+		if idl == 6 {
+			view = s[idl-3] + "_" + s[idl-2]
+		} else if idl == 5 {
+			view = s[idl-2]
+		} else {
+			utils.LogError(errors.New("error reading saved search data for: " + s[idl-1]))
+			continue
+		}
+
 		search.Report = s[1]
 		search.Section = s[2]
-		search.View = s[3]
-		search.Name = s[len(s)-1]
+		search.View = view
+		search.Name = s[idl-1]
 
 		// consider only searches matching request report
 		if report != search.Report {
