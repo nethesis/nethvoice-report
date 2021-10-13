@@ -1,5 +1,5 @@
 Name:		nethvoice-report
-Version: 1.0.3
+Version: 1.0.4
 Release: 1%{?dist}
 Summary:	Queue and CDR/Costs reports
 
@@ -80,6 +80,11 @@ cat %{name}-%{version}-filelist
 %doc COPYING
 
 %changelog
+* Wed Oct 13 2021 Stefano Fancello <stefano.fancello@nethesis.it> - 1.0.4-1
+- Make sure that agent columns don't show negative values - Bug nethesis/dev#6069
+- Fix saved searches names and enhance some report's informations - Bug nethesis/dev#6064
+- Duplicated rows in report_queue table - Bug nethesis/dev#6057
+
 * Tue Jul 27 2021 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.0.3-1
 - NethVoice report: CVE-2020-28483 - Nethesis/dev#6046
 
