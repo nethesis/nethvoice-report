@@ -52,7 +52,7 @@ GROUP BY period, cid, qname
 ORDER BY
     period;
 
-INSERT IGNORE INTO data_call
+INSERT IGNORE INTO data_call (`period`, `cid`, `qname`, `qdescr`, `agent`, `agents`, `position`, `hold`, `duration`, `result`)
 SELECT
     DATE_FORMAT(
         FROM_UNIXTIME(`timestamp_in`),
