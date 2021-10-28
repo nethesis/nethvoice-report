@@ -71,7 +71,7 @@ fi
 # Recreate data_call table over night if agents field is missing or is in the wrong order
 EXISTS=$(/usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "SHOW COLUMNS FROM data_call LIKE 'agents'")
 COLUMNS=$(/usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -B -N -e "SHOW COLUMNS FROM data_call" | awk '{print $1}' | xargs echo -n)
-if [[ $EXISTS == "" or $COLUMNS == "period cid qname qdescr agent position hold duration result agents" ]]; then
+if [[ $EXISTS == "" || $COLUMNS == "period cid qname qdescr agent position hold duration result agents" ]]; then
     # drop data_call table with bad fields. The table will be recreated overnight
     /usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "DROP TABLE data_call"
 fi
