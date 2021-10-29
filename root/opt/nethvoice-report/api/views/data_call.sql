@@ -37,7 +37,7 @@ SELECT
         FROM_UNIXTIME(`timestamp_in`),
         '%Y-%m-%d %H:%i:%s'
     ) AS period,
-    cid,
+    IF (report_queue.cid IS NOT NULL,report_queue.cid,"") AS cid,
     qname,
     qdescr,
     agent,
@@ -48,7 +48,7 @@ SELECT
     ACTION AS result
 FROM
     report_queue
-GROUP BY period, cid, qname
+GROUP BY period, report_queue.cid, qname
 ORDER BY
     period;
 
@@ -58,7 +58,7 @@ SELECT
         FROM_UNIXTIME(`timestamp_in`),
         '%Y-%m-%d %H:%i:%s'
     ) AS period,
-    cid,
+    IF (report_queue.cid IS NOT NULL,report_queue.cid,"") AS cid,
     qname,
     qdescr,
     agent,
@@ -70,6 +70,6 @@ SELECT
 FROM
     report_queue
 WHERE Date_format(From_unixtime(timestamp_in), "%Y-%m-%d") = Date_format(NOW() - INTERVAL 1 DAY, "%Y-%m-%d")
-GROUP BY period, cid, qname
+GROUP BY period, report_queue.cid, qname
 ORDER BY
     period;
