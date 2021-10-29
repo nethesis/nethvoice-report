@@ -1,5 +1,5 @@
 Name:		nethvoice-report
-Version: 1.0.4
+Version: 1.0.5
 Release: 1%{?dist}
 Summary:	Queue and CDR/Costs reports
 
@@ -80,6 +80,9 @@ cat %{name}-%{version}-filelist
 %doc COPYING
 
 %changelog
+* Fri Oct 29 2021 Stefano Fancello <stefano.fancello@nethesis.it> - 1.0.5-1
+- Wrong data inside data by call table - Bug nethesis/dev#6072
+
 * Wed Oct 13 2021 Stefano Fancello <stefano.fancello@nethesis.it> - 1.0.4-1
 - Make sure that agent columns don't show negative values - Bug nethesis/dev#6069
 - Fix saved searches names and enhance some report's informations - Bug nethesis/dev#6064
