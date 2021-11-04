@@ -148,3 +148,27 @@ func GetAllowedAgents(c *gin.Context) ([]string, error) {
 	}
 	return auths.Agents, nil
 }
+
+func GetAllowedGroups(c *gin.Context) ([]string, error) {
+	// get current user
+	user := GetClaims(c)["id"].(string)
+
+	// get user auths
+	auths, err := GetUserAuthorizations(user)
+	if err != nil {
+		return nil, err
+	}
+	return auths.Groups, nil
+}
+
+func GetAllowedUsers(c *gin.Context) ([]string, error) {
+	// get current user
+	user := GetClaims(c)["id"].(string)
+
+	// get user auths
+	auths, err := GetUserAuthorizations(user)
+	if err != nil {
+		return nil, err
+	}
+	return auths.Users, nil
+}

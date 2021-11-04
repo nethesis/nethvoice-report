@@ -152,9 +152,87 @@ func GetGraphData(c *gin.Context) {
 	}
 
 	// query result is not cached, execute query
-
 	var err error
 	var queryResult string
+
+	// check permissions for not admin users
+	if user != "admin" && user != "X" {
+		// differ between queue report and cdr report
+		if report == "queue" {
+
+			// check allowed queues list
+			allowedQueues, errQueues := GetAllowedQueues(c)
+			if errQueues != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"message": "error executing SQL query", "status": "cannot retrieve allowed queues"})
+				return
+			} else if len(allowedQueues) == 0 {
+				c.JSON(http.StatusBadRequest, gin.H{"message": "error executing SQL query", "status": "no allowed queues found"})
+				return
+			}
+
+			// check allowed agents list
+			allowedAgents, errAgents := GetAllowedAgents(c)
+			if errAgents != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"message": "error executing SQL query", "status": "cannot retrieve allowed agents"})
+				return
+			} else if len(allowedAgents) == 0 {
+				c.JSON(http.StatusBadRequest, gin.H{"message": "error executing SQL query", "status": "no allowed agents found"})
+				return
+			}
+
+			// check witch queried queues are in allowed list
+			mixedQueues := utils.Intersect(filter.Queues, allowedQueues, "queues")
+			if len(mixedQueues) == 0 {
+				filter.Queues = allowedQueues
+			} else {
+				filter.Queues = mixedQueues
+			}
+
+			// check witch queried agents are in allowed list
+			mixedAgents := utils.Intersect(filter.Agents, allowedAgents, "agents")
+			if len(mixedAgents) == 0 {
+				filter.Agents = allowedAgents
+			} else {
+				filter.Agents = mixedAgents
+			}
+
+		} else if report == "cdr" {
+
+			// check allowed groups list, groups can be empty and users can contain only the current user
+			allowedGroups, errGroups := GetAllowedGroups(c)
+			if errGroups != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"message": "error executing SQL query", "status": "cannot retrieve allowed groups"})
+				return
+			}
+
+			// check allowed users list
+			allowedUsers, errUsers := GetAllowedUsers(c)
+			if errUsers != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"message": "error executing SQL query", "status": "cannot retrieve allowed users"})
+				return
+			} else if len(allowedUsers) == 0 {
+				c.JSON(http.StatusBadRequest, gin.H{"message": "error executing SQL query", "status": "no allowed users found"})
+				return
+			}
+
+			// check witch queried groups are in allowed list
+			mixedGroups := utils.Intersect(filter.Groups, allowedGroups, "groups")
+			if len(mixedGroups) == 0 {
+				filter.Groups = allowedGroups
+			} else {
+				filter.Groups = mixedGroups
+			}
+
+			// check witch queried users are in allowed list
+			mixedUsers := utils.Intersect(filter.Users, allowedUsers, "users")
+			if len(mixedUsers) == 0 {
+				filter.Users = allowedUsers
+			} else {
+				filter.Users = mixedUsers
+			}
+
+		}
+	}
 
 	switch queryType {
 	case "sql":
@@ -193,24 +271,6 @@ func executeSqlQuery(filter models.Filter, report string, section string, view s
 	// check if query file exists
 	if _, errExists := os.Stat(queryFile); os.IsNotExist(errExists) {
 		return "", errors.Wrap(errExists, "query file does not exists")
-	}
-
-	// if no queue has been selected, restrict filter to allowed queues
-	if len(filter.Queues) == 0 {
-		allowedQueues, errQueues := GetAllowedQueues(c)
-		if errQueues != nil {
-			return "", errors.Wrap(errQueues, "cannot retrieve allowed queues")
-		}
-		filter.Queues = allowedQueues
-	}
-
-	// if no agent has been selected, restrict filter to allowed agents
-	if len(filter.Agents) == 0 {
-		allowedAgents, errAgents := GetAllowedAgents(c)
-		if errAgents != nil {
-			return "", errors.Wrap(errAgents, "cannot retrieve allowed agents")
-		}
-		filter.Agents = allowedAgents
 	}
 
 	// create template
