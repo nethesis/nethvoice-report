@@ -29,3 +29,14 @@ type UserAuthorizations struct {
 	Agents   []string `json:"agents"`
 	Users    []string `json:"users"`
 }
+
+type AuthStats struct {
+	FileName 			string
+	ModTime				int64
+}
+
+type AuthMap struct {
+	Queues 				bool
+	CdrPbx				bool
+	CdrPersonal		bool
+}

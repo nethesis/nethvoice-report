@@ -25,6 +25,8 @@ package methods
 import (
 	"encoding/json"
 	"io/ioutil"
+	"os"
+	"net/http"
 
 	"github.com/pkg/errors"
 
@@ -171,4 +173,56 @@ func GetAllowedUsers(c *gin.Context) ([]string, error) {
 		return nil, err
 	}
 	return auths.Users, nil
+}
+
+func GetAuthFileStats(c *gin.Context) {
+	// get authorizations file stat
+	fileInfo, err := os.Stat(configuration.Config.UserAuthorizationsFile)
+	if err != nil {
+		utils.LogError(errors.Wrap(err, "error reading user authorizations file stats"))
+		// return not found status
+		c.JSON(http.StatusNotFound, gin.H{"message": "error reading user authorizations file stats"})
+		return
+	}
+	authStats := &models.AuthStats{
+		FileName: fileInfo.Name(),
+		ModTime: fileInfo.ModTime().Unix(),
+	}
+	// return mofification time and file name
+	c.JSON(http.StatusOK, authStats)
+	return
+}
+
+func ParseAuthMap(c *gin.Context) (models.AuthMap, error) {
+	// get current user
+	user := GetClaims(c)["id"].(string)
+	// get user auths
+	auths, err := GetUserAuthorizations(user)
+	if err != nil {
+		return models.AuthMap{}, err
+	}
+	// parse authorizations
+	authMap := models.AuthMap{}
+	if len(auths.Queues) > 0 {
+		authMap.Queues = true
+	}
+	if len(auths.Groups) > 0 {
+		authMap.CdrPbx = true
+	}
+	if len(auths.Users) > 0 {
+		authMap.CdrPersonal = true
+	}
+	return authMap, nil
+}
+
+func GetAuthMap(c *gin.Context) {
+	// parse authorizations map
+	authMap, err := ParseAuthMap(c)
+	if err != nil  {
+		c.JSON(http.StatusNotFound, gin.H{"message": "error parsing user authorizations file"})
+		return
+	}
+	// return authorizations map
+	c.JSON(http.StatusOK, authMap)
+	return
 }

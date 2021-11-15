@@ -115,6 +115,12 @@ func main() {
 			settings.PUT("", methods.SetSettings)
 			settings.DELETE("", methods.DeleteSettings)
 		}
+
+		authorizations := api.Group("/authorizations")
+		{
+			authorizations.GET("/stats", methods.GetAuthFileStats)
+			authorizations.GET("/map", methods.GetAuthMap)
+		}
 	}
 
 	// handle missing endpoint
