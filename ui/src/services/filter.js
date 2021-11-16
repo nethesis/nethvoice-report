@@ -29,6 +29,20 @@ var FilterService = {
           }
         )
         .then(success, error);
+    },
+    getAuthModified() {
+      return this.$http
+        .get(
+          this.$root.apiScheme + this.$root.apiEndpoint + "/authorizations/stats",
+          {
+            headers: {
+              Authorization:
+                "Bearer " +
+                (this.get("loggedUser") && this.get("loggedUser").token) ||
+                "",
+            },
+          }
+        )
     }
   },
 };

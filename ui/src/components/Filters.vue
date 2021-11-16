@@ -1054,12 +1054,26 @@ export default {
       });
       return userMap;
     },
-    retrieveFilter() {
+    async checkAuthModified() {
+      // check if authorizations were modified in the last 8 hours
+      const authModified = await this.getAuthModified()
+      const localModTime = this.get("authModTime")
+      const modTime = authModified.body.ModTime
+      const forceDefault = true
+      // compare mod times
+      if (modTime != localModTime) {
+        this.retrieveFilter(forceDefault)
+      }
+      // update authorizations modification time locally
+      this.set("authModTime", modTime)
+    },
+    retrieveFilter(forceDefault) {
       this.loader.filter = true;
       let filter = this.get(this.reportFilterStorageName);
       let filterValues = this.get(this.reportFilterValuesStorageName);
       // check filters validity
       if (
+        !forceDefault &&
         filter &&
         filterValues &&
         new Date().getTime() < filterValues.expiry
@@ -1080,6 +1094,8 @@ export default {
         this.setFilterSelection(filter, true);
         // retrieve phonebook when
         this.retrievePhonebook();
+        // check if authorizations were modified to reload
+        this.checkAuthModified()
       } else {
         this.retrieveDefaultFilter();
       }
