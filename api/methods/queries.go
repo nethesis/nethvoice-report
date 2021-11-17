@@ -145,10 +145,18 @@ func GetGraphData(c *gin.Context) {
 	// check if hash is locally cached
 	data, errCache := cacheConnection.Get(hash).Result()
 
-	// data is cached, return immediately
 	if errCache == nil {
-		c.Data(http.StatusOK, "application/json; charset=utf-8", []byte(data))
-		return
+		// data is cached
+		// get cached data ttl
+		ttl,_ := cacheConnection.TTL(hash).Result()
+		// parse authorizations file stats
+		stats,_ := ParseAuthFileStats()
+		// check cached data authorizations validity
+		if CacheHasValidAuth(ttl, stats.ModTime) == true {
+			// return data from cache
+			c.Data(http.StatusOK, "application/json; charset=utf-8", []byte(data))
+			return
+		}
 	}
 
 	// query result is not cached, execute query

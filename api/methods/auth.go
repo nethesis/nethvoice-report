@@ -27,6 +27,7 @@ import (
 	"io/ioutil"
 	"os"
 	"net/http"
+	"time"
 
 	"github.com/pkg/errors"
 
@@ -175,21 +176,31 @@ func GetAllowedUsers(c *gin.Context) ([]string, error) {
 	return auths.Users, nil
 }
 
-func GetAuthFileStats(c *gin.Context) {
-	// get authorizations file stat
+func ParseAuthFileStats() (models.AuthStats, error) {
+	// get authorizations file stats
 	fileInfo, err := os.Stat(configuration.Config.UserAuthorizationsFile)
 	if err != nil {
 		utils.LogError(errors.Wrap(err, "error reading user authorizations file stats"))
+		return models.AuthStats{}, err
+	}
+	authStats := models.AuthStats{
+		FileName: fileInfo.Name(),
+		ModTime: fileInfo.ModTime().Unix(),
+	}
+	// return authorization file stats
+	return authStats, nil
+}
+
+func GetAuthFileStats(c *gin.Context) {
+	// parse authorizations file stats
+	fileStats, err := ParseAuthFileStats()
+	if err != nil {
 		// return not found status
 		c.JSON(http.StatusNotFound, gin.H{"message": "error reading user authorizations file stats"})
 		return
 	}
-	authStats := &models.AuthStats{
-		FileName: fileInfo.Name(),
-		ModTime: fileInfo.ModTime().Unix(),
-	}
-	// return mofification time and file name
-	c.JSON(http.StatusOK, authStats)
+	// return modification time and file name
+	c.JSON(http.StatusOK, fileStats)
 	return
 }
 
@@ -225,4 +236,17 @@ func GetAuthMap(c *gin.Context) {
 	// return authorizations map
 	c.JSON(http.StatusOK, authMap)
 	return
+}
+
+func CacheHasValidAuth(ttl time.Duration, modTime int64) (bool) {
+	// check if cached data has valid authorizations
+	now := time.Now().Unix()
+	ttlTime := int64(ttl.Seconds())
+	ttlCache := int64((time.Duration(configuration.Config.TTLCache)*time.Minute).Seconds())
+	// return true when time passed from the data insert in chache
+	// is lower than time passed from the authorizations modify time
+	if (ttlCache - ttlTime) < (now - modTime) {
+		return true
+	}
+	return false
 }
