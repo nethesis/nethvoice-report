@@ -1,9 +1,9 @@
-var FilterService = {
+const AuthService = {
   methods: {
-    getDefaultFilter(success, error) {
-      this.$http
+    getAuthModified() {
+      return this.$http
         .get(
-          this.$root.apiScheme + this.$root.apiEndpoint + "/filters",
+          this.$root.apiScheme + this.$root.apiEndpoint + "/authorizations/stats",
           {
             headers: {
               Authorization:
@@ -13,12 +13,11 @@ var FilterService = {
             },
           }
         )
-        .then(success, error);
     },
-    getFilterField(field, success, error) {
-      this.$http
+    getAuthMap() {
+      return this.$http
         .get(
-          this.$root.apiScheme + this.$root.apiEndpoint + "/filters/" + field,
+          this.$root.apiScheme + this.$root.apiEndpoint + "/authorizations/map",
           {
             headers: {
               Authorization:
@@ -28,8 +27,7 @@ var FilterService = {
             },
           }
         )
-        .then(success, error);
-    }
+    },
   },
 };
-export default FilterService;
+export default AuthService;

@@ -767,6 +767,7 @@ import SearchService from "../services/searches";
 import PhonebookService from "../services/phonebook";
 import FixedBar from "../components/FixedBar.vue";
 import FilterService from "../services/filter";
+import AuthService from "../services/authorizations";
 import SettingsService from "../services/settings";
 import SearchInput from "../components/SearchInput";
 
@@ -787,6 +788,7 @@ export default {
     FilterService,
     UiMaps,
     SettingsService,
+    AuthService
   ],
   props: ["showFiltersForm"],
   data() {
@@ -1058,7 +1060,7 @@ export default {
       // check if authorizations were modified in the last 8 hours
       const authModified = await this.getAuthModified()
       const localModTime = this.get("authModTime")
-      const modTime = authModified.body.ModTime
+      const modTime = authModified.data.ModTime
       const forceDefault = true
       // compare mod times
       if (modTime != localModTime) {

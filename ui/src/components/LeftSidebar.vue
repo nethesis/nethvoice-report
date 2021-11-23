@@ -19,12 +19,12 @@
       <div class="report-switch-container">
         <sui-dropdown :text="$t('menu.' + selectedReport)">
           <sui-dropdown-menu>
-            <sui-dropdown-item @click="selectReport('queue')" class="report-select">
+            <sui-dropdown-item v-if="authMap.Queues" @click="selectReport('queue')" class="report-select">
               <router-link to="/queue" class="menu-item-color report-link">
                 {{ $t("menu.queue") }}
               </router-link>
             </sui-dropdown-item>
-            <sui-dropdown-item @click="selectReport('cdr')" class="report-select">
+            <sui-dropdown-item v-if="authMap.CdrPersonal || authMap.CdrPbx" @click="selectReport('cdr')" class="report-select">
               <router-link to="/cdr" class="menu-item-color report-link">
                 {{ $t("menu.cdr") }}
               </router-link>
@@ -58,7 +58,7 @@
       />
     </sui-menu-item>
     <!-- is queue -->
-    <div v-if="selectedReport == 'queue'">
+    <div v-if="selectedReport == 'queue' && authMap.Queues">
       <router-link
         class="item fw-6 menu-section"
         :class="isActive('/queue') ? 'active' : ''"
@@ -279,7 +279,11 @@
           class="press-enter dot no-margin-top"
         ></span>
       </router-link>
-      <sui-menu-item class="menu-section" :active="isActive('data', true)">
+      <sui-menu-item
+        v-if="authMap.CdrPbx"
+        class="menu-section"
+        :active="isActive('data', true)"
+      >
         <sui-menu-header>{{ $t("menu.pbx") }}</sui-menu-header>
         <sui-menu-menu>
           <span
@@ -317,7 +321,7 @@
         </sui-menu-menu>
       </sui-menu-item>
       <sui-menu-item
-        v-if="loggedUsername != 'admin' && loggedUsername != 'X'"
+        v-if="authMap.CdrPersonal"
         class="menu-section"
         :active="isActive('data', true)"
       >
@@ -363,10 +367,14 @@
 
 <script>
 import StorageService from "../services/storage";
+import AuthService from "../services/authorizations";
 
 export default {
   name: "LeftSidebar",
-  mixins: [StorageService],
+  mixins: [
+    StorageService,
+    AuthService
+  ],
   data() {
     return {
       search: "",
@@ -376,6 +384,11 @@ export default {
         ? this.get("loggedUser").username
         : "",
       cdrVisited: false,
+      authMap: {
+        CdrPbx: false,
+        CdrPersonal: false,
+        Queues: false
+      }
     };
   },
   watch: {
@@ -409,6 +422,7 @@ export default {
   mounted() {
     this.cdrVisited = this.get("cdrVisited");
     this.checkCdrVisited();
+    this.authMapInit()
   },
   methods: {
     selectReport(report) {
@@ -435,6 +449,21 @@ export default {
         this.set("cdrVisited", true);
       }
     },
+    goTo(report) {
+      this.$router.push({ path: `/${report}` })
+      this.selectReport(report)
+    },
+    async authMapInit() {
+      const authMap = await this.getAuthMap()
+      this.authMap.CdrPbx = authMap.data.CdrPbx
+      this.authMap.CdrPersonal = authMap.data.CdrPersonal
+      this.authMap.Queues = authMap.data.Queues
+      if (!authMap.data.Queues) {
+        this.goTo("cdr")
+      } else if (!authMap.data.CdrPbx && !authMap.data.CdrPersonal) {
+        this.goTo("queue")
+      }
+    }
   },
 };
 </script>
