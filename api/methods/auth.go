@@ -205,15 +205,23 @@ func GetAuthFileStats(c *gin.Context) {
 }
 
 func ParseAuthMap(c *gin.Context) (models.AuthMap, error) {
+	// init auth map
+	authMap := models.AuthMap{}
 	// get current user
 	user := GetClaims(c)["id"].(string)
+	// grant auths to admin or X
+	if user == "admin" || user == "X" {
+		authMap.Queues = true
+		authMap.CdrPbx = true
+		authMap.CdrPersonal = true
+		return authMap, nil
+	}
 	// get user auths
 	auths, err := GetUserAuthorizations(user)
 	if err != nil {
 		return models.AuthMap{}, err
 	}
 	// parse authorizations
-	authMap := models.AuthMap{}
 	if len(auths.Queues) > 0 {
 		authMap.Queues = true
 	}
