@@ -189,7 +189,7 @@ func GetGraphData(c *gin.Context) {
 			}
 
 			// check witch queried queues are in allowed list
-			mixedQueues := utils.Intersect(filter.Queues, allowedQueues, "queues")
+			mixedQueues := utils.Intersect(filter.Queues, allowedQueues, "")
 			if len(mixedQueues) == 0 {
 				filter.Queues = allowedQueues
 			} else {
@@ -197,7 +197,7 @@ func GetGraphData(c *gin.Context) {
 			}
 
 			// check witch queried agents are in allowed list
-			mixedAgents := utils.Intersect(filter.Agents, allowedAgents, "agents")
+			mixedAgents := utils.Intersect(filter.Agents, allowedAgents, "")
 			if len(mixedAgents) == 0 {
 				filter.Agents = allowedAgents
 			} else {
@@ -224,7 +224,7 @@ func GetGraphData(c *gin.Context) {
 			}
 
 			// check witch queried groups are in allowed list
-			mixedGroups := utils.Intersect(filter.Groups, allowedGroups, "groups")
+			mixedGroups := utils.Intersect(filter.Groups, allowedGroups, "")
 			if len(mixedGroups) == 0 {
 				filter.Groups = allowedGroups
 			} else {
@@ -232,7 +232,7 @@ func GetGraphData(c *gin.Context) {
 			}
 
 			// check witch queried users are in allowed list
-			mixedUsers := utils.Intersect(filter.Users, allowedUsers, "users")
+			mixedUsers := utils.Intersect(filter.Users, allowedUsers, "")
 			if len(mixedUsers) == 0 {
 				filter.Users = allowedUsers
 			} else {

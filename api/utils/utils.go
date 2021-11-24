@@ -134,6 +134,7 @@ func Intersect(a []string, b []string, objType string) []string {
 
 	// clean values before intersect
 	switch objType {
+
 	case "queues":
 		// create regexp to extract queue number
 		var rgx = regexp.MustCompile(`\((.*?)\)`)
@@ -184,10 +185,20 @@ func Intersect(a []string, b []string, objType string) []string {
 		}
 
 		return result
-	}
 
-	// return empty array
-	return result
+	default:
+		// intersect arrays and return []interface{}
+		r := intersect.Simple(a, b).([]interface{})
+
+		// iterate over []interface{}
+		result := make([]string, len(r))
+		for i, v := range r {
+			result[i] = fmt.Sprint(v)
+		}
+
+		return result
+
+	}
 }
 
 func ExtractStrings(v []string) string {
