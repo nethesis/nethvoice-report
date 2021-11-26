@@ -1,5 +1,5 @@
 Name:		nethvoice-report
-Version: 1.0.5
+Version: 1.0.6
 Release: 1%{?dist}
 Summary:	Queue and CDR/Costs reports
 
@@ -80,6 +80,9 @@ cat %{name}-%{version}-filelist
 %doc COPYING
 
 %changelog
+* Fri Nov 26 2021 Stefano Fancello <stefano.fancello@nethesis.it> - 1.0.6-1
+- nethvoice-report-update FAILS at first install - Bug nethesis/dev#6092
+
 * Fri Oct 29 2021 Stefano Fancello <stefano.fancello@nethesis.it> - 1.0.5-1
 - Wrong data inside data by call table - Bug nethesis/dev#6072
 
