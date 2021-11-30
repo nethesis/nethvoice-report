@@ -140,6 +140,10 @@ function do_time_queries($start_ts,$end_ts) {
     global $cdrdb;
     $sqls = array();
 
+    $sqls[] = "DROP TABLE IF EXISTS tmp_cdr";
+
+    $sqls[] = "CREATE TABLE tmp_cdr () SELECT * FROM cdr WHERE UNIX_TIMESTAMP(calldate) >= $start_ts AND UNIX_TIMESTAMP(calldate) <= $end_ts";
+
     $sqls[] = "INSERT IGNORE INTO report_queue ( id,timestamp_out,timestamp_in,qname,action,position,duration,hold,data4,agent,qdescr,agents)
     select id,UNIX_TIMESTAMP(time) as timestamp_out, callid as timestamp_in, queuename as qname,
          event as action,
@@ -159,7 +163,7 @@ function do_time_queries($start_ts,$end_ts) {
          cast(data1 as UNSIGNED) as hold,
          cast(data4 as UNSIGNED) as data4,
          agent,qc.descr as qdescr,
-         (SELECT GROUP_CONCAT(DISTINCT name SEPARATOR ',') from cdr LEFT JOIN agent_extensions on SUBSTRING(REPLACE(dstchannel,'PJSIP/',''),1,POSITION('-' IN REPLACE(dstchannel,'PJSIP/',''))-1) = agent_extensions.extension where linkedid != uniqueid and billsec > 0 and dstchannel not like 'Local%' AND UNIX_TIMESTAMP(calldate) >  $start_ts AND UNIX_TIMESTAMP(calldate) < $end_ts AND linkedid = callid) as agents
+         (SELECT GROUP_CONCAT(DISTINCT name SEPARATOR ',') from tmp_cdr LEFT JOIN agent_extensions on SUBSTRING(REPLACE(dstchannel,'PJSIP/',''),1,POSITION('-' IN REPLACE(dstchannel,'PJSIP/',''))-1) = agent_extensions.extension where linkedid != uniqueid and billsec > 0 and dstchannel not like 'Local%' AND UNIX_TIMESTAMP(calldate) >  $start_ts AND UNIX_TIMESTAMP(calldate) < $end_ts AND linkedid = callid) as agents
        from queue_log_history a inner join asterisk.queues_config qc on queuename=qc.extension
        where event in ('COMPLETEAGENT','COMPLETECALLER') AND UNIX_TIMESTAMP(time) > $start_ts AND UNIX_TIMESTAMP(time) < $end_ts";
 
@@ -183,7 +187,7 @@ function do_time_queries($start_ts,$end_ts) {
        FROM
            queue_log_history a
            inner join asterisk.queues_config qc on queuename=qc.extension
-           inner join ( select * from cdr where linkedid != uniqueid and billsec > 0 and dstchannel not like 'Local%' AND UNIX_TIMESTAMP(calldate) > $start_ts AND UNIX_TIMESTAMP(calldate) < $end_ts
+           inner join ( select * from tmp_cdr where linkedid != uniqueid and billsec > 0 and dstchannel not like 'Local%' AND UNIX_TIMESTAMP(calldate) > $start_ts AND UNIX_TIMESTAMP(calldate) < $end_ts
            order by calldate asc) c ON linkedid = callid
            LEFT JOIN agent_extensions on SUBSTRING(REPLACE(dstchannel,'PJSIP/',''),1,POSITION('-' IN REPLACE(dstchannel,'PJSIP/',''))-1) = agent_extensions.extension
        where event in ('COMPLETEAGENT','COMPLETECALLER') AND UNIX_TIMESTAMP(time) > $start_ts AND UNIX_TIMESTAMP(time) < $end_ts
@@ -239,14 +243,14 @@ function do_time_queries($start_ts,$end_ts) {
                         WHERE z.event = 'ENTERQUEUE' AND z.callid=a.callid
                     ) AS cid,
                     (
-                        SELECT DISTINCT(cdr.cnam)
-                        FROM asteriskcdrdb.cdr cdr
-                        WHERE cdr.uniqueid = a.callid GROUP BY cdr.uniqueid
+                        SELECT DISTINCT(tmp_cdr.cnam)
+                        FROM asteriskcdrdb.tmp_cdr tmp_cdr
+                        WHERE tmp_cdr.uniqueid = a.callid GROUP BY tmp_cdr.uniqueid
                     ) AS name,
                     (
-                    SELECT DISTINCT(cdr.ccompany)
-                    FROM asteriskcdrdb.cdr cdr
-                    WHERE cdr.uniqueid = a.callid GROUP BY cdr.uniqueid
+                    SELECT DISTINCT(tmp_cdr.ccompany)
+                    FROM asteriskcdrdb.tmp_cdr tmp_cdr
+                    WHERE tmp_cdr.uniqueid = a.callid GROUP BY tmp_cdr.uniqueid
                     ) AS company,
                     agent,
                     event
@@ -269,14 +273,14 @@ function do_time_queries($start_ts,$end_ts) {
                         WHERE z.event='ENTERQUEUE' AND z.callid=a.callid
                     ) AS cid,
                     (
-                        SELECT DISTINCT(cdr.cnam)
-                        FROM asteriskcdrdb.cdr cdr
-                        WHERE cdr.uniqueid = a.callid GROUP BY cdr.uniqueid
+                        SELECT DISTINCT(tmp_cdr.cnam)
+                        FROM asteriskcdrdb.tmp_cdr tmp_cdr
+                        WHERE tmp_cdr.uniqueid = a.callid GROUP BY tmp_cdr.uniqueid
                     ) AS name,
                     (
-                        SELECT DISTINCT(cdr.ccompany)
-                        FROM asteriskcdrdb.cdr cdr
-                        WHERE cdr.uniqueid = a.callid GROUP BY cdr.uniqueid
+                        SELECT DISTINCT(tmp_cdr.ccompany)
+                        FROM asteriskcdrdb.tmp_cdr tmp_cdr
+                        WHERE tmp_cdr.uniqueid = a.callid GROUP BY tmp_cdr.uniqueid
                     ) AS company,
                     agent,
                     event
@@ -298,7 +302,7 @@ function do_time_queries($start_ts,$end_ts) {
                     ccompany AS company,
                     accountcode AS agent,
                     ''
-                FROM cdr c
+                FROM tmp_cdr c
                 INNER JOIN asteriskcdrdb.queue_log_history l ON c.dst=l.data2
                 WHERE l.event='ENTERQUEUE'
                 AND UNIX_TIMESTAMP(calldate) > $start_ts AND UNIX_TIMESTAMP(calldate) < $end_ts
