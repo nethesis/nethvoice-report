@@ -48,6 +48,10 @@ $sqls[] = "INSERT IGNORE INTO queue_log_history (time,callid,queuename,agent,eve
 # Delete queue_log
 $sqls[] = "DELETE FROM queue_log WHERE UNIX_TIMESTAMP(time) < ?";
 
+$sqls[] = "DROP TABLE IF EXISTS agent_extensions";
+
+$sqls[] = "CREATE TABLE agent_extensions AS SELECT DISTINCT extension,name FROM asterisk.users WHERE name IN ( SELECT DISTINCT agent FROM asteriskcdrdb.queue_log_history WHERE agent NOT LIKE 'Local%' and agent != 'NONE'  and agent != '')";
+
 if (!empty($sqls)) {
     foreach ($sqls as $sql) {
         try {
