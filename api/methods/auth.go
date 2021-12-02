@@ -97,6 +97,7 @@ func GetUserAuthorizations(username string) (models.UserAuthorizations, error) {
 			userAuthorizations.Groups = ua.Groups
 			userAuthorizations.Agents = ua.Agents
 			userAuthorizations.Users  = ua.Users
+			userAuthorizations.Cdr  = ua.Cdr
 			return userAuthorizations, nil
 		}
 	}
@@ -126,54 +127,6 @@ func GetAdminHashPass() string {
 	}
 
 	return hash
-}
-
-func GetAllowedQueues(c *gin.Context) ([]string, error) {
-	// get current user
-	user := GetClaims(c)["id"].(string)
-
-	// get user auths
-	auths, err := GetUserAuthorizations(user)
-	if err != nil {
-		return nil, err
-	}
-	return auths.Queues, nil
-}
-
-func GetAllowedAgents(c *gin.Context) ([]string, error) {
-	// get current user
-	user := GetClaims(c)["id"].(string)
-
-	// get user auths
-	auths, err := GetUserAuthorizations(user)
-	if err != nil {
-		return nil, err
-	}
-	return auths.Agents, nil
-}
-
-func GetAllowedGroups(c *gin.Context) ([]string, error) {
-	// get current user
-	user := GetClaims(c)["id"].(string)
-
-	// get user auths
-	auths, err := GetUserAuthorizations(user)
-	if err != nil {
-		return nil, err
-	}
-	return auths.Groups, nil
-}
-
-func GetAllowedUsers(c *gin.Context) ([]string, error) {
-	// get current user
-	user := GetClaims(c)["id"].(string)
-
-	// get user auths
-	auths, err := GetUserAuthorizations(user)
-	if err != nil {
-		return nil, err
-	}
-	return auths.Users, nil
 }
 
 func ParseAuthFileStats() (models.AuthStats, error) {
@@ -212,6 +165,7 @@ func ParseAuthMap(c *gin.Context) (models.AuthMap, error) {
 	// grant auths to admin or X
 	if user == "admin" || user == "X" {
 		authMap.Queues = true
+		authMap.CdrGlobal = true
 		authMap.CdrPbx = true
 		authMap.CdrPersonal = true
 		return authMap, nil
@@ -222,14 +176,20 @@ func ParseAuthMap(c *gin.Context) (models.AuthMap, error) {
 		return models.AuthMap{}, err
 	}
 	// parse authorizations
-	if len(auths.Queues) > 0 {
+	if len(auths.Queues) > 0 && len(auths.Agents) > 0 {
 		authMap.Queues = true
 	}
-	if len(auths.Groups) > 0 {
-		authMap.CdrPbx = true
-	}
 	if len(auths.Users) > 0 {
-		authMap.CdrPersonal = true
+		if auths.Cdr == "global" {
+			authMap.CdrGlobal = true
+			authMap.CdrPbx = true
+			authMap.CdrPersonal = true
+		} else if auths.Cdr == "group" {
+			authMap.CdrPbx = true
+			authMap.CdrPersonal = true
+		} else if auths.Cdr == "personal" {
+			authMap.CdrPersonal = true
+		}
 	}
 	return authMap, nil
 }

@@ -160,87 +160,106 @@ func GetGraphData(c *gin.Context) {
 	}
 
 	// query result is not cached, execute query
-	var err error
-	var queryResult string
-
-	// check permissions for not admin users
+	// check authorizations for not admin users
 	if user != "admin" && user != "X" {
+
+		// initialize authorizations
+		auths, err := GetUserAuthorizations(user)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"message": "error executing SQL query", "status": "cannot retrieve user's authorizations"})
+			return
+		}
+
 		// differ between queue report and cdr report
 		if report == "queue" {
 
-			// check allowed queues list
-			allowedQueues, errQueues := GetAllowedQueues(c)
-			if errQueues != nil {
-				c.JSON(http.StatusBadRequest, gin.H{"message": "error executing SQL query", "status": "cannot retrieve allowed queues"})
-				return
-			} else if len(allowedQueues) == 0 {
+			// check authorized queues list
+			if len(auths.Queues) == 0 {
 				c.JSON(http.StatusBadRequest, gin.H{"message": "error executing SQL query", "status": "no allowed queues found"})
 				return
 			}
 
-			// check allowed agents list
-			allowedAgents, errAgents := GetAllowedAgents(c)
-			if errAgents != nil {
-				c.JSON(http.StatusBadRequest, gin.H{"message": "error executing SQL query", "status": "cannot retrieve allowed agents"})
-				return
-			} else if len(allowedAgents) == 0 {
+			// check authorized agents list
+			if len(auths.Agents) == 0 {
 				c.JSON(http.StatusBadRequest, gin.H{"message": "error executing SQL query", "status": "no allowed agents found"})
 				return
 			}
 
-			// check witch queried queues are in allowed list
-			mixedQueues := utils.Intersect(filter.Queues, allowedQueues, "")
+			// check which queried queues are in authorized queues
+			mixedQueues := utils.Intersect(filter.Queues, auths.Queues, "")
 			if len(mixedQueues) == 0 {
-				filter.Queues = allowedQueues
+				filter.Queues = auths.Queues
 			} else {
 				filter.Queues = mixedQueues
 			}
 
-			// check witch queried agents are in allowed list
-			mixedAgents := utils.Intersect(filter.Agents, allowedAgents, "")
+			// check which queried agents are in authorized agents
+			mixedAgents := utils.Intersect(filter.Agents, auths.Agents, "")
 			if len(mixedAgents) == 0 {
-				filter.Agents = allowedAgents
+				filter.Agents = auths.Agents
 			} else {
 				filter.Agents = mixedAgents
 			}
 
 		} else if report == "cdr" {
 
-			// check allowed groups list, groups can be empty and users can contain only the current user
-			allowedGroups, errGroups := GetAllowedGroups(c)
-			if errGroups != nil {
-				c.JSON(http.StatusBadRequest, gin.H{"message": "error executing SQL query", "status": "cannot retrieve allowed groups"})
-				return
-			}
-
-			// check allowed users list
-			allowedUsers, errUsers := GetAllowedUsers(c)
-			if errUsers != nil {
-				c.JSON(http.StatusBadRequest, gin.H{"message": "error executing SQL query", "status": "cannot retrieve allowed users"})
-				return
-			} else if len(allowedUsers) == 0 {
+			// check authorized users list
+			if len(auths.Users) == 0 {
 				c.JSON(http.StatusBadRequest, gin.H{"message": "error executing SQL query", "status": "no allowed users found"})
 				return
 			}
 
-			// check witch queried groups are in allowed list
-			mixedGroups := utils.Intersect(filter.Groups, allowedGroups, "")
-			if len(mixedGroups) == 0 {
-				filter.Groups = allowedGroups
-			} else {
-				filter.Groups = mixedGroups
-			}
+			// differ cdr authorizations by section and view
+			// skip permissins when cdr authorization is global
+			if section == "pbx" && auths.Cdr != "global" {
+				// manage authorizations by views
+				if view == "inbound" {
 
-			// check witch queried users are in allowed list
-			mixedUsers := utils.Intersect(filter.Users, allowedUsers, "")
-			if len(mixedUsers) == 0 {
-				filter.Users = allowedUsers
-			} else {
-				filter.Users = mixedUsers
-			}
+					// check which queried destinations are in authorized users
+					mixedDest := utils.Intersect(filter.Destinations, auths.Users, "")
+					if len(mixedDest) == 0 {
+						filter.Destinations = auths.Users
+					} else {
+						filter.Destinations = mixedDest
+					}
 
+				} else if view == "outbound" {
+
+					// check which queried sources are in authorized users
+					mixedSrc := utils.Intersect(filter.Sources, auths.Users, "")
+					if len(mixedSrc) == 0 {
+						filter.Sources = auths.Users
+					} else {
+						filter.Sources = mixedSrc
+					}
+
+				} else if view == "local" {
+
+					// check which queried sources or destinations are in authorized users
+					// check authorized sources
+					mixedSrc := utils.Intersect(filter.Sources, auths.Users, "")
+					if len(mixedSrc) == 0 {
+
+						// check authorized destinations
+						mixedDest := utils.Intersect(filter.Destinations, auths.Users, "")
+						if len(mixedDest) == 0 {
+							filter.Sources = auths.Users
+							filter.Destinations = auths.Users
+						} else {
+							filter.Destinations = mixedDest
+						}
+
+					} else {
+						filter.Sources = mixedSrc
+					}
+
+				}
+			}
 		}
 	}
+
+	var err error
+	var queryResult string
 
 	switch queryType {
 	case "sql":

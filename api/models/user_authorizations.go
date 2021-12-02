@@ -28,6 +28,7 @@ type UserAuthorizations struct {
 	Groups   []string `json:"groups"`
 	Agents   []string `json:"agents"`
 	Users    []string `json:"users"`
+	Cdr      string   `json:"cdr"`
 }
 
 type AuthStats struct {
@@ -37,6 +38,7 @@ type AuthStats struct {
 
 type AuthMap struct {
 	Queues 				bool
+	CdrGlobal	   	bool
 	CdrPbx				bool
 	CdrPersonal		bool
 }
