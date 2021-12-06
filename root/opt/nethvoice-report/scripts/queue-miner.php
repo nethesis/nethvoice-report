@@ -146,7 +146,7 @@ function do_time_queries($start_ts,$end_ts) {
 
     $sqls[] = "DROP TABLE IF EXISTS tmp_cdr";
 
-    $sqls[] = "CREATE TABLE tmp_cdr () SELECT * FROM cdr WHERE UNIX_TIMESTAMP(calldate) >= $start_ts AND UNIX_TIMESTAMP(calldate) <= $end_ts";
+    $sqls[] = "CREATE TABLE tmp_cdr (SELECT * FROM cdr WHERE UNIX_TIMESTAMP(calldate) >= $start_ts AND UNIX_TIMESTAMP(calldate) <= $end_ts)";
 
     $sqls[] = "INSERT IGNORE INTO report_queue ( id,timestamp_out,timestamp_in,qname,action,position,duration,hold,data4,agent,qdescr,agents)
     select id,UNIX_TIMESTAMP(time) as timestamp_out, callid as timestamp_in, queuename as qname,
