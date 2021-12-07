@@ -23,10 +23,12 @@ SELECT
        Avg(billsec) AS avgBill,
        Max(billsec) AS maxBill,
        Sum(billsec) AS totalBill,
-       IF(Substring_index(SUBSTRING(channel,1,LENGTH(channel)-LOCATE('-',REVERSE(channel))), '/', -1) IN
+       IF(Substring_index(Substring_index(channel, '-', 1), '/', -1) IN
              (SELECT channelid
                                                                          FROM
-             asterisk.trunks), "IN", IF(Substring_index(SUBSTRING(dstchannel,1,LENGTH(dstchannel)-LOCATE('-',REVERSE(dstchannel))), '/', -1) IN (
+             asterisk.trunks), "IN", IF(Substring_index(Substring_index(
+                                                        dstchannel, '-'
+                                                        , 1), '/', -1) IN (
                                         SELECT
                                                                       channelid
                                         FROM
@@ -63,10 +65,12 @@ SELECT
        Avg(billsec) AS avgBill,
        Max(billsec) AS maxBill,
        Sum(billsec) AS totalBill,
-       IF(Substring_index(SUBSTRING(channel,1,LENGTH(channel)-LOCATE('-',REVERSE(channel))), '/', -1) IN
+       IF(Substring_index(Substring_index(channel, '-', 1), '/', -1) IN
              (SELECT channelid
                                                                          FROM
-             asterisk.trunks), "IN", IF(Substring_index(SUBSTRING(dstchannel,1,LENGTH(dstchannel)-LOCATE('-',REVERSE(dstchannel))), '/', -1) IN (
+             asterisk.trunks), "IN", IF(Substring_index(Substring_index(
+                                                        dstchannel, '-'
+                                                        , 1), '/', -1) IN (
                                         SELECT
                                                                       channelid
                                         FROM
@@ -103,10 +107,12 @@ SELECT
        Avg(billsec) AS avgBill,
        Max(billsec) AS maxBill,
        Sum(billsec) AS totalBill,
-       IF(Substring_index(SUBSTRING(channel,1,LENGTH(channel)-LOCATE('-',REVERSE(channel))), '/', -1) IN
+       IF(Substring_index(Substring_index(channel, '-', 1), '/', -1) IN
              (SELECT channelid
                                                                          FROM
-             asterisk.trunks), "IN", IF(Substring_index(SUBSTRING(dstchannel,1,LENGTH(dstchannel)-LOCATE('-',REVERSE(dstchannel))), '/', -1) IN (
+             asterisk.trunks), "IN", IF(Substring_index(Substring_index(
+                                                        dstchannel, '-'
+                                                        , 1), '/', -1) IN (
                                         SELECT
                                                                       channelid
                                         FROM
@@ -143,10 +149,12 @@ SELECT
        Avg(billsec) AS avgBill,
        Max(billsec) AS maxBill,
        Sum(billsec) AS totalBill,
-       IF(Substring_index(SUBSTRING(channel,1,LENGTH(channel)-LOCATE('-',REVERSE(channel))), '/', -1) IN
+       IF(Substring_index(Substring_index(channel, '-', 1), '/', -1) IN
              (SELECT channelid
                                                                          FROM
-             asterisk.trunks), "IN", IF(Substring_index(SUBSTRING(dstchannel,1,LENGTH(dstchannel)-LOCATE('-',REVERSE(dstchannel))), '/', -1) IN (
+             asterisk.trunks), "IN", IF(Substring_index(Substring_index(
+                                                        dstchannel, '-'
+                                                        , 1), '/', -1) IN (
                                         SELECT
                                                                       channelid
                                         FROM
