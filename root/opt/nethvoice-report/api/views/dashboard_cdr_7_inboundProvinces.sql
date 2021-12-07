@@ -24,7 +24,7 @@ SELECT province,
        Sum(total) AS total 
 FROM   (SELECT (SELECT GROUP_CONCAT(provincia) 
                      FROM zone 
-                     WHERE INSTR(REPLACE(Substring_index(IF(cnum IS NULL OR cnum = "", src, cnum),"+39",-1),"+","00"), prefisso) = 1
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
                ) AS province,
                COUNT(*) AS total
        FROM   ',@from,' 
@@ -35,7 +35,7 @@ FROM   (SELECT (SELECT GROUP_CONCAT(provincia)
        UNION ALL
        SELECT (SELECT GROUP_CONCAT(provincia) 
                      FROM zone 
-                     WHERE INSTR(REPLACE(Substring_index(IF(cnum IS NULL OR cnum = "", src, cnum),"+39",-1),"+","00"), prefisso) = 1
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
               ) AS province,
               COUNT(*) AS total
        FROM   ',@to,'
@@ -53,7 +53,7 @@ SELECT province,
        Sum(total) AS total 
 FROM   (SELECT (SELECT GROUP_CONCAT(provincia) 
                      FROM zone 
-                     WHERE INSTR(REPLACE(Substring_index(IF(cnum IS NULL OR cnum = "", src, cnum),"+39",-1),"+","00"), prefisso) = 1
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
                ) AS province,
                COUNT(*) AS total
        FROM   ',@from,' 
@@ -64,7 +64,7 @@ FROM   (SELECT (SELECT GROUP_CONCAT(provincia)
        UNION ALL
        SELECT (SELECT GROUP_CONCAT(provincia) 
                      FROM zone 
-                     WHERE INSTR(REPLACE(Substring_index(IF(cnum IS NULL OR cnum = "", src, cnum),"+39",-1),"+","00"), prefisso) = 1
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
               ) AS province,
               COUNT(*) AS total
        FROM   ',@to,'
@@ -82,7 +82,7 @@ SELECT province,
        Sum(total) AS total 
 FROM   (SELECT (SELECT GROUP_CONCAT(provincia) 
                      FROM zone 
-                     WHERE INSTR(REPLACE(Substring_index(IF(cnum IS NULL OR cnum = "", src, cnum),"+39",-1),"+","00"), prefisso) = 1
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
                ) AS province,
                COUNT(*) AS total
        FROM   ',@from,' 
@@ -93,7 +93,7 @@ FROM   (SELECT (SELECT GROUP_CONCAT(provincia)
        UNION ALL
        SELECT (SELECT GROUP_CONCAT(provincia) 
                      FROM zone 
-                     WHERE INSTR(REPLACE(Substring_index(IF(cnum IS NULL OR cnum = "", src, cnum),"+39",-1),"+","00"), prefisso) = 1
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
               ) AS province,
               COUNT(*) AS total
        FROM   ',@to,'
@@ -111,7 +111,7 @@ SELECT province,
        Sum(total) AS total 
 FROM   (SELECT (SELECT GROUP_CONCAT(provincia) 
                      FROM zone 
-                     WHERE INSTR(REPLACE(Substring_index(IF(cnum IS NULL OR cnum = "", src, cnum),"+39",-1),"+","00"), prefisso) = 1
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
                ) AS province,
                COUNT(*) AS total
        FROM   ',@from,' 
@@ -122,7 +122,7 @@ FROM   (SELECT (SELECT GROUP_CONCAT(provincia)
        UNION ALL
        SELECT (SELECT GROUP_CONCAT(provincia) 
                      FROM zone 
-                     WHERE INSTR(REPLACE(Substring_index(IF(cnum IS NULL OR cnum = "", src, cnum),"+39",-1),"+","00"), prefisso) = 1
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
               ) AS province,
               COUNT(*) AS total
        FROM   ',@to,'
@@ -140,7 +140,7 @@ SELECT province,
        Sum(total) AS total 
 FROM   (SELECT (SELECT GROUP_CONCAT(provincia) 
                      FROM zone 
-                     WHERE INSTR(REPLACE(Substring_index(IF(cnum IS NULL OR cnum = "", src, cnum),"+39",-1),"+","00"), prefisso) = 1
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
                ) AS province,
                COUNT(*) AS total
        FROM   ',@from,' 
@@ -151,7 +151,7 @@ FROM   (SELECT (SELECT GROUP_CONCAT(provincia)
        UNION ALL
        SELECT (SELECT GROUP_CONCAT(provincia) 
                      FROM zone 
-                     WHERE INSTR(REPLACE(Substring_index(IF(cnum IS NULL OR cnum = "", src, cnum),"+39",-1),"+","00"), prefisso) = 1
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
               ) AS province,
               COUNT(*) AS total
        FROM   ',@to,'
@@ -169,7 +169,7 @@ SELECT province,
        Sum(total) AS total 
 FROM   (SELECT (SELECT GROUP_CONCAT(provincia) 
                      FROM zone 
-                     WHERE INSTR(REPLACE(Substring_index(IF(cnum IS NULL OR cnum = "", src, cnum),"+39",-1),"+","00"), prefisso) = 1
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
                ) AS province,
                COUNT(*) AS total
        FROM   ',@from,' 
@@ -180,7 +180,7 @@ FROM   (SELECT (SELECT GROUP_CONCAT(provincia)
        UNION ALL
        SELECT (SELECT GROUP_CONCAT(provincia) 
                      FROM zone 
-                     WHERE INSTR(REPLACE(Substring_index(IF(cnum IS NULL OR cnum = "", src, cnum),"+39",-1),"+","00"), prefisso) = 1
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
               ) AS province,
               COUNT(*) AS total
        FROM   ',@to,'
@@ -198,7 +198,7 @@ SELECT province,
        Sum(total) AS total 
 FROM   (SELECT (SELECT GROUP_CONCAT(provincia) 
                      FROM zone 
-                     WHERE INSTR(REPLACE(Substring_index(IF(cnum IS NULL OR cnum = "", src, cnum),"+39",-1),"+","00"), prefisso) = 1
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
                ) AS province,
                COUNT(*) AS total
        FROM   ',@from,' 
@@ -209,7 +209,7 @@ FROM   (SELECT (SELECT GROUP_CONCAT(provincia)
        UNION ALL
        SELECT (SELECT GROUP_CONCAT(provincia) 
                      FROM zone 
-                     WHERE INSTR(REPLACE(Substring_index(IF(cnum IS NULL OR cnum = "", src, cnum),"+39",-1),"+","00"), prefisso) = 1
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
               ) AS province,
               COUNT(*) AS total
        FROM   ',@to,'
@@ -227,7 +227,7 @@ SELECT province,
        Sum(total) AS total 
 FROM   (SELECT (SELECT GROUP_CONCAT(provincia) 
                      FROM zone 
-                     WHERE INSTR(REPLACE(Substring_index(IF(cnum IS NULL OR cnum = "", src, cnum),"+39",-1),"+","00"), prefisso) = 1
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
                ) AS province,
                COUNT(*) AS total
        FROM   ',@from,' 
@@ -238,7 +238,7 @@ FROM   (SELECT (SELECT GROUP_CONCAT(provincia)
        UNION ALL
        SELECT (SELECT GROUP_CONCAT(provincia) 
                      FROM zone 
-                     WHERE INSTR(REPLACE(Substring_index(IF(cnum IS NULL OR cnum = "", src, cnum),"+39",-1),"+","00"), prefisso) = 1
+                     WHERE INSTR(IF(cnum IS NULL OR cnum = "", src, cnum), prefisso) = 1
               ) AS province,
               COUNT(*) AS total
        FROM   ',@to,'
