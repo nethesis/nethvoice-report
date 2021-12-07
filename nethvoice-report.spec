@@ -1,5 +1,5 @@
 Name:		nethvoice-report
-Version: 1.0.6
+Version: 1.1.0
 Release: 1%{?dist}
 Summary:	Queue and CDR/Costs reports
 
@@ -80,6 +80,11 @@ cat %{name}-%{version}-filelist
 %doc COPYING
 
 %changelog
+* Tue Dec 07 2021 Stefano Fancello <stefano.fancello@nethesis.it> - 1.1.0-1
+- Agents reports in queue report exists only the day after they are created - Bug nethesis/dev#6095
+- cdr table is locked during the queue report miner script - Bug nethesis/dev#6094
+- Sometimes in nethvoice queue report, billsec and duration are zero even if a call has been answered - Bug nethesis/dev#6096
+
 * Fri Nov 26 2021 Stefano Fancello <stefano.fancello@nethesis.it> - 1.0.6-1
 - nethvoice-report-update FAILS at first install - Bug nethesis/dev#6092
 
