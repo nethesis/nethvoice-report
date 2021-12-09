@@ -458,9 +458,12 @@ export default {
       this.authMap.CdrPbx = authMap.data.CdrPbx
       this.authMap.CdrPersonal = authMap.data.CdrPersonal
       this.authMap.Queues = authMap.data.Queues
-      if (!authMap.data.Queues) {
+      if (
+        (!authMap.data.Queues && this.$route.meta.report == "queue") ||
+        (!authMap.data.CdrPbx && authMap.data.CdrPersonal && this.$route.meta.report == "cdr" && this.$route.meta.section == "pbx")
+      ) {
         this.goTo("cdr")
-      } else if (!authMap.data.CdrPbx && !authMap.data.CdrPersonal) {
+      } else if (!authMap.data.CdrPbx && !authMap.data.CdrPersonal && this.$route.meta.report == "cdr") {
         this.goTo("queue")
       }
     }
