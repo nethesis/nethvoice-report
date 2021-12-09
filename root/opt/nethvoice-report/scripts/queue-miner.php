@@ -199,12 +199,12 @@ function do_time_queries($start_ts,$end_ts) {
 
     $sqls[] = "INSERT INTO report_queue_callers ( id,timestamp_out,timestamp_in,qname,cid,action,position,qdescr,prefisso,comune,siglaprov,provincia,regione)
        select id,UNIX_TIMESTAMP(time) as timestamp_out, callid as timestamp_in, queuename as qname, data2 as cid, event as action, data3 as position, qc.descr as qdescr, prefisso, comune, siglaprov, provincia, regione
-       from queue_log_history a inner join asterisk.queues_config qc on queuename=qc.extension left join zone z on (INSTR(data2, prefisso) = 1)
+       from queue_log_history a inner join asterisk.queues_config qc on queuename=qc.extension left join zone z on (INSTR(clean_prefix(data2), prefisso) = 1)
        where event = 'ENTERQUEUE' AND UNIX_TIMESTAMP(time) > $start_ts AND UNIX_TIMESTAMP(time) < $end_ts";
 
     $sqls[] = "INSERT INTO report_queue_callers ( id,timestamp_out,timestamp_in,qname,cid,action,position,qdescr,prefisso,comune,siglaprov,provincia,regione)
        select id,UNIX_TIMESTAMP(time) as timestamp_out, callid as timestamp_in, queuename as qname, data1 as cid, event as action, '0' as position, qc.descr as qdescr, prefisso, comune, siglaprov, provincia, regione
-       from queue_log_history a inner join asterisk.queues_config qc on queuename=qc.extension left join zone z on (INSTR(data2, prefisso) = 1)
+       from queue_log_history a inner join asterisk.queues_config qc on queuename=qc.extension left join zone z on (INSTR(clean_prefix(data2), prefisso) = 1)
        where (event='FULL' or event='JOINEMPTY') AND UNIX_TIMESTAMP(time) > $start_ts AND UNIX_TIMESTAMP(time) < $end_ts";
 
     $sqls[] = "INSERT INTO agentsessions (qname,agent,action,timestamp_in,reason,timestamp_out,qdescr)
