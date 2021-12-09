@@ -2109,10 +2109,12 @@ export default {
           this.phonebookDb,
           this.PHONEBOOK_DB_NAME
         );
-        this.$root.phonebook = phonebook[0].phonebook;
+        if (!this.$root.phonebook) {
+          this.$root.phonebook = phonebook[0].phonebook;
+          // function to add phonebook contacts to filters
+          this.addToCallerAndCalleeFilters();
+        }
         this.phonebookReady = true;
-        // function to add phonebook contacts to filters
-        this.addToCallerAndCalleeFilters();
       } else {
         await this.clearDb(this.phonebookDb, this.PHONEBOOK_DB_NAME);
 
@@ -2147,15 +2149,18 @@ export default {
               this.phonebookDb,
               this.PHONEBOOK_DB_NAME
             );
-            this.$root.phonebook = phonebook;
-            this.phonebookReady = true;
 
             // save phonebook expiry to local storage
             const expiry =
               new Date().getTime() + this.PHONEBOOK_TTL_MINUTES * 60 * 1000;
             this.set("reportPhonebookExpiry", expiry);
-            // function to add phonebook contacts to filters
-            this.addToCallerAndCalleeFilters();
+
+            if (!this.$root.phonebook) {
+              this.$root.phonebook = phonebook;
+              // function to add phonebook contacts to filters
+              this.addToCallerAndCalleeFilters();
+            }
+            this.phonebookReady = true;
           },
           (error) => {
             console.error(error.body);
