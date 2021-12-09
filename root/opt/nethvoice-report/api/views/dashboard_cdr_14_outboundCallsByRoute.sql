@@ -21,7 +21,7 @@ DROP TABLE IF EXISTS dashboard_cdr_14_current_year;
 SET @q_past_year = CONCAT('
 CREATE TABLE dashboard_cdr_14_past_year AS
 SELECT outbound, sum(total) AS total FROM
-       (SELECT Substring_index(Substring_index(dstchannel, \'-\', 1), \'/\', -1) AS outbound, 
+       (SELECT get_trunk_name(dstchannel) AS outbound,
               Count(*)                                                   AS total 
        FROM   ',@from,' 
        WHERE  type = "OUT" 
@@ -29,7 +29,7 @@ SELECT outbound, sum(total) AS total FROM
               AND calldate <= (SELECT DATE_FORMAT(NOW()-INTERVAL 1 YEAR, "%Y-12-31"))
        GROUP BY outbound	
        UNION ALL
-       SELECT Substring_index(Substring_index(dstchannel, \'-\', 1), \'/\', -1) AS outbound, 
+       SELECT get_trunk_name(dstchannel) AS outbound,
               Count(*)                                                   AS total 
        FROM   ',@to,'
        WHERE  type = "OUT" 
@@ -43,7 +43,7 @@ ORDER  BY total DESC');
 SET @q_current_year = CONCAT('
 CREATE TABLE dashboard_cdr_14_current_year AS
 SELECT outbound, sum(total) AS total FROM
-       (SELECT Substring_index(Substring_index(dstchannel, \'-\', 1), \'/\', -1) AS outbound,
+       (SELECT get_trunk_name(dstchannel) AS outbound,
               Count(*)                                                   AS total
        FROM   ',@from,'
        WHERE  type = "OUT"
@@ -51,7 +51,7 @@ SELECT outbound, sum(total) AS total FROM
               AND calldate <= (SELECT DATE_FORMAT(NOW(), "%Y-12-31"))
        GROUP BY outbound
        UNION ALL
-       SELECT Substring_index(Substring_index(dstchannel, \'-\', 1), \'/\', -1) AS outbound,
+       SELECT get_trunk_name(dstchannel) AS outbound,
               Count(*)                                                   AS total
        FROM   ',@to,'
        WHERE  type = "OUT"
@@ -65,7 +65,7 @@ ORDER  BY total DESC');
 SET @q_past_semester = CONCAT('
 CREATE TABLE dashboard_cdr_14_past_semester AS
 SELECT outbound, sum(total) AS total FROM
-       (SELECT Substring_index(Substring_index(dstchannel, \'-\', 1), \'/\', -1) AS outbound,
+       (SELECT get_trunk_name(dstchannel) AS outbound,
               Count(*)                                                   AS total
        FROM   ',@from,'
        WHERE  type = "OUT"
@@ -73,7 +73,7 @@ SELECT outbound, sum(total) AS total FROM
               AND calldate <= (SELECT IF(MONTH(NOW()) < 7, DATE_FORMAT(NOW() - INTERVAL 1 YEAR, "%Y-12-31"), DATE_FORMAT(NOW(), "%Y-06-30")))
        GROUP BY outbound
        UNION ALL
-       SELECT Substring_index(Substring_index(dstchannel, \'-\', 1), \'/\', -1) AS outbound,
+       SELECT get_trunk_name(dstchannel) AS outbound,
               Count(*)                                                   AS total
        FROM   ',@to,'
        WHERE  type = "OUT"
@@ -87,7 +87,7 @@ ORDER  BY total DESC');
 SET @q_past_quarter = CONCAT('
 CREATE TABLE dashboard_cdr_14_past_quarter AS
 SELECT outbound, sum(total) AS total FROM
-       (SELECT Substring_index(Substring_index(dstchannel, \'-\', 1), \'/\', -1) AS outbound,
+       (SELECT get_trunk_name(dstchannel) AS outbound,
               Count(*)                                                   AS total
        FROM   ',@from,'
        WHERE  type = "OUT"
@@ -95,7 +95,7 @@ SELECT outbound, sum(total) AS total FROM
               AND calldate <= (select if(quarter(NOW()) > 1, date_format(NOW(), "%Y-01-01") + INTERVAL (quarter(NOW()) - 1) QUARTER - INTERVAL 1 DAY, date_format(NOW() - INTERVAL 1 YEAR, "%Y-12-31")))
        GROUP BY outbound
        UNION ALL
-       SELECT Substring_index(Substring_index(dstchannel, \'-\', 1), \'/\', -1) AS outbound,
+       SELECT get_trunk_name(dstchannel) AS outbound,
               Count(*)                                                   AS total
        FROM   ',@to,'
        WHERE  type = "OUT"
@@ -109,7 +109,7 @@ ORDER  BY total DESC');
 SET @q_past_month = CONCAT('
 CREATE TABLE dashboard_cdr_14_past_month AS
 SELECT outbound, sum(total) AS total FROM
-       (SELECT Substring_index(Substring_index(dstchannel, \'-\', 1), \'/\', -1) AS outbound,
+       (SELECT get_trunk_name(dstchannel) AS outbound,
               Count(*)                                                   AS total
        FROM   ',@from,'
        WHERE  type = "OUT"
@@ -117,7 +117,7 @@ SELECT outbound, sum(total) AS total FROM
               AND calldate <= (SELECT LAST_DAY(NOW()-INTERVAL 1 MONTH))
        GROUP BY outbound
        UNION ALL
-       SELECT Substring_index(Substring_index(dstchannel, \'-\', 1), \'/\', -1) AS outbound,
+       SELECT get_trunk_name(dstchannel) AS outbound,
               Count(*)                                                   AS total
        FROM   ',@to,'
        WHERE  type = "OUT"
@@ -131,7 +131,7 @@ ORDER  BY total DESC');
 SET @q_current_month = CONCAT('
 CREATE TABLE dashboard_cdr_14_current_month AS
 SELECT outbound, sum(total) AS total FROM
-       (SELECT Substring_index(Substring_index(dstchannel, \'-\', 1), \'/\', -1) AS outbound,
+       (SELECT get_trunk_name(dstchannel) AS outbound,
               Count(*)                                                   AS total
        FROM   ',@from,'
        WHERE  type = "OUT"
@@ -139,7 +139,7 @@ SELECT outbound, sum(total) AS total FROM
               AND calldate <= (SELECT LAST_DAY(NOW()))
        GROUP BY outbound
        UNION ALL
-       SELECT Substring_index(Substring_index(dstchannel, \'-\', 1), \'/\', -1) AS outbound,
+       SELECT get_trunk_name(dstchannel) AS outbound,
               Count(*)                                                   AS total
        FROM   ',@to,'
        WHERE  type = "OUT"
@@ -153,7 +153,7 @@ ORDER  BY total DESC');
 SET @q_past_week = CONCAT('
 CREATE TABLE dashboard_cdr_14_past_week AS
 SELECT outbound, sum(total) AS total FROM
-       (SELECT Substring_index(Substring_index(dstchannel, \'-\', 1), \'/\', -1) AS outbound,
+       (SELECT get_trunk_name(dstchannel) AS outbound,
               Count(*)                                                   AS total
        FROM   ',@from,'
        WHERE  type = "OUT"
@@ -161,7 +161,7 @@ SELECT outbound, sum(total) AS total FROM
               AND calldate <= (SELECT DATE_FORMAT(DATE_ADD(DATE_ADD(NOW()-INTERVAL 1 WEEK, INTERVAL(-WEEKDAY(NOW()-INTERVAL 1 WEEK)) DAY), INTERVAL 6 DAY), "%Y-%m-%d"))
        GROUP BY outbound
        UNION ALL
-       SELECT Substring_index(Substring_index(dstchannel, \'-\', 1), \'/\', -1) AS outbound,
+       SELECT get_trunk_name(dstchannel) AS outbound,
               Count(*)                                                   AS total
        FROM   ',@to,'
        WHERE  type = "OUT"
@@ -175,7 +175,7 @@ ORDER  BY total DESC');
 SET @q_current_week = CONCAT('
 CREATE TABLE dashboard_cdr_14_current_week AS
 SELECT outbound, sum(total) AS total FROM
-       (SELECT Substring_index(Substring_index(dstchannel, \'-\', 1), \'/\', -1) AS outbound,
+       (SELECT get_trunk_name(dstchannel) AS outbound,
               Count(*)                                                   AS total
        FROM   ',@from,'
        WHERE  type = "OUT"
@@ -183,7 +183,7 @@ SELECT outbound, sum(total) AS total FROM
               AND calldate <= (SELECT DATE_FORMAT(DATE_ADD(DATE_ADD(NOW(), INTERVAL(-WEEKDAY(NOW())) DAY), INTERVAL 6 DAY), "%Y-%m-%d"))
        GROUP BY outbound
        UNION ALL
-       SELECT Substring_index(Substring_index(dstchannel, \'-\', 1), \'/\', -1) AS outbound,
+       SELECT get_trunk_name(dstchannel) AS outbound,
               Count(*)                                                   AS total
        FROM   ',@to,'
        WHERE  type = "OUT"
