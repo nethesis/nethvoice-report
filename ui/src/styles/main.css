@@ -46,6 +46,10 @@
     float: right !important;
 }
 
+.mt-2 {
+    margin-top: 2px;
+}
+
 .mt-10m {
     margin-top: -10px;
 }
@@ -58,12 +62,20 @@
     height: 10px;
 }
 
+.h-19 {
+    height: 19px;
+}
+
 .h-20 {
     height: 20px;
 }
 
 .h-30 {
     height: 30px;
+}
+
+.full-width {
+    width: 100%;
 }
 
 .no-margin-top {

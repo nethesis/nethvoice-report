@@ -76,8 +76,9 @@
               (showFilterTime && filter.time.group == 'day') ||
               (showFilterTime && !showFilterTimeGroup)
             "
+            width="four"
           >
-            <label>{{ $t("filter.time_range") }}</label>
+            <label class="ellipsis">{{ $t("filter.time_range") }}</label>
             <sui-button-group class="fluid">
               <sui-button
                 :active="filter.time.range == 'yesterday'"
@@ -106,8 +107,9 @@
               filter.time.group == 'week' &&
               showFilterTimeGroup
             "
+            width="four"
           >
-            <label>{{ $t("filter.time_range") }}</label>
+            <label class="ellipsis">{{ $t("filter.time_range") }}</label>
             <sui-button-group class="fluid">
               <sui-button
                 :active="filter.time.range == 'last_week'"
@@ -136,8 +138,9 @@
               filter.time.group == 'month' &&
               showFilterTimeGroup
             "
+            width="four"
           >
-            <label>{{ $t("filter.time_range") }}</label>
+            <label class="ellipsis">{{ $t("filter.time_range") }}</label>
             <sui-button-group class="fluid">
               <sui-button
                 :active="filter.time.range == 'last_month'"
@@ -166,8 +169,9 @@
               filter.time.group == 'year' &&
               showFilterTimeGroup
             "
+            width="four"
           >
-            <label>{{ $t("filter.time_range") }}</label>
+            <label class="ellipsis">{{ $t("filter.time_range") }}</label>
             <sui-button-group class="fluid">
               <sui-button
                 :active="filter.time.range == 'last_year'"
@@ -193,6 +197,7 @@
           <sui-form-field
             v-show="$route.meta.report == 'queue'"
             class="datepicker-field"
+            width="four"
           >
             <label :class="{ 'error-color': errorTimeInterval }">{{
               $t("filter.time_interval")
@@ -207,7 +212,7 @@
               :clearable="false"
               :show-second="false"
               :disabled-date="fromToday"
-              :class="{ 'field-error': errorTimeInterval }"
+              :class="{ 'field-error': errorTimeInterval, 'full-width': true, 'mt-2': true }"
               :formatter="momentFormatter"
               :lang="$i18n.vm.locale"
             ></date-picker>
@@ -228,11 +233,17 @@
               :clearable="false"
               :show-second="false"
               :disabled-date="fromToday"
-              :class="{ 'field-error': errorTimeInterval }"
+              :class="{ 'field-error': errorTimeInterval, 'full-width': true, 'mt-2': true }"
               :formatter="momentFormatter"
               :lang="$i18n.vm.locale"
             ></date-picker>
-            <sui-icon name="right arrow time-filter" />
+          </sui-form-field>
+          <sui-form-field
+            v-show="$route.meta.report == 'queue'"
+            class="datepicker-field"
+            width="four"
+          >
+            <label class="h-19"></label>
             <!-- time interval end -->
             <!-- datetime -->
             <date-picker
@@ -243,7 +254,7 @@
               :clearable="false"
               :show-second="false"
               :disabled-date="fromToday"
-              :class="{ 'field-error': errorTimeInterval }"
+              :class="{ 'field-error': errorTimeInterval, 'full-width': true, 'mt-2': true }"
               :formatter="momentFormatter"
               :lang="$i18n.vm.locale"
             ></date-picker>
@@ -264,7 +275,7 @@
               :clearable="false"
               :show-second="false"
               :disabled-date="fromToday"
-              :class="{ 'field-error': errorTimeInterval }"
+              :class="{ 'field-error': errorTimeInterval, 'full-width': true, 'mt-2': true }"
               :formatter="momentFormatter"
               :lang="$i18n.vm.locale"
             ></date-picker>
@@ -274,6 +285,7 @@
           <sui-form-field
             v-show="$route.meta.report == 'cdr'"
             class="datepicker-field"
+            width="four"
           >
             <label :class="{ 'error-color': errorTimeInterval }">{{
               $t("filter.time_interval")
@@ -287,12 +299,18 @@
               :clearable="false"
               :show-second="false"
               :disabled-date="fromToday"
-              :class="{ 'field-error': errorTimeInterval }"
+              :class="{ 'field-error': errorTimeInterval, 'full-width': true, 'mt-2': true }"
               :formatter="momentFormatter"
               :lang="$i18n.vm.locale"
               :disabled="$route.meta.section == 'dashboard'"
             ></date-picker>
-            <sui-icon name="right arrow time-filter" />
+          </sui-form-field>
+          <sui-form-field
+            v-show="$route.meta.report == 'cdr'"
+            class="datepicker-field"
+            width="four"
+          >
+            <label class="h-19"></label>
             <!-- time interval end -->
             <!-- datetime -->
             <date-picker
@@ -302,7 +320,7 @@
               :clearable="false"
               :show-second="false"
               :disabled-date="fromToday"
-              :class="{ 'field-error': errorTimeInterval }"
+              :class="{ 'field-error': errorTimeInterval, 'full-width': true, 'mt-2': true }"
               :formatter="momentFormatter"
               :lang="$i18n.vm.locale"
               :disabled="$route.meta.section == 'dashboard'"
