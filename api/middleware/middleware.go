@@ -24,7 +24,6 @@ package middleware
 
 import (
 	"crypto/sha1"
-	"encoding/json"
 
 	"github.com/pkg/errors"
 
@@ -124,23 +123,9 @@ func InitJWT() *jwt.GinJWTMiddleware {
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
 			// read authorization file for current user
 			if user, ok := data.(*models.UserAuthorizations); ok {
-				userAuthorization, err := methods.GetUserAuthorizations(user.Username)
-				if err != nil {
-					utils.LogError(errors.Wrap(err, "error retrieving user authorizations"))
-
-					// return a token with no authorization on queues and groups
-					return jwt.MapClaims{
-						identityKey: user.Username,
-						"queues":    []string{},
-						"groups":    []string{},
-					}
-				}
-
 				// create claims map
 				return jwt.MapClaims{
 					identityKey: user.Username,
-					"queues":    userAuthorization.Queues,
-					"groups":    userAuthorization.Groups,
 				}
 			}
 
@@ -151,21 +136,9 @@ func InitJWT() *jwt.GinJWTMiddleware {
 			// handle identity and extract claims
 			claims := jwt.ExtractClaims(c)
 
-			queues := make([]string, len(claims["queues"].([]interface{})))
-			for i, v := range claims["queues"].([]interface{}) {
-				queues[i] = fmt.Sprint(v)
-			}
-
-			groups := make([]string, len(claims["groups"].([]interface{})))
-			for i, v := range claims["groups"].([]interface{}) {
-				groups[i] = fmt.Sprint(v)
-			}
-
 			// create user object
 			user := &models.UserAuthorizations{
 				Username: claims[identityKey].(string),
-				Queues:   queues,
-				Groups:   groups,
 			}
 
 			// return user
@@ -184,48 +157,6 @@ func InitJWT() *jwt.GinJWTMiddleware {
 					return true
 				}
 
-				authorizedQueues := v.Queues
-				authorizedGroups := v.Groups
-				filterParam := c.Query("filter")
-
-				if filterParam == "" {
-					// no filter in request, access is granted
-					return true
-				}
-
-				// convert to struct
-				var filter models.Filter
-				errJson := json.Unmarshal([]byte(filterParam), &filter)
-				if errJson != nil {
-					utils.LogError(errors.Wrap(errJson, "error unmarshalling filter"))
-					return false
-				}
-
-				// check queues authorization
-				for _, requestedQueue := range filter.Queues {
-					queueAllowed := false
-					for _, authorizedQueue := range authorizedQueues {
-						if requestedQueue == authorizedQueue {
-							queueAllowed = true
-						}
-					}
-					if !queueAllowed {
-						return false
-					}
-				}
-
-				// check groups authorization
-				for _, requestedGroup := range filter.Groups {
-					groupAllowed := false
-					for _, authorizedGroup := range authorizedGroups {
-						if requestedGroup == authorizedGroup {
-							groupAllowed = true
-						}
-					}
-					if !groupAllowed {
-						return false
-					}
-				}
 				return true
 			}
 			return false
