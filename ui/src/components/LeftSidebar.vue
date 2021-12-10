@@ -321,7 +321,7 @@
         </sui-menu-menu>
       </sui-menu-item>
       <sui-menu-item
-        v-if="authMap.CdrPersonal"
+        v-if="authMap.CdrPersonal && loggedUsername != 'admin'"
         class="menu-section"
         :active="isActive('data', true)"
       >
@@ -423,6 +423,9 @@ export default {
     this.cdrVisited = this.get("cdrVisited");
     this.checkCdrVisited();
     this.authMapInit()
+    if (this.loggedUsername == "admin" && this.$route.meta.report == "cdr" && this.$route.meta.section == "personal") {
+      this.goTo("cdr")
+    }
   },
   methods: {
     selectReport(report) {
