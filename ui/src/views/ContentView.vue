@@ -359,6 +359,7 @@ export default {
       );
     },
     initCharts() {
+      if (!this.queryTree) return
       if ((this.dataAvailable && this.$route.meta.report == 'queue') || (this.cdrDataAvailable && this.$route.meta.report == 'cdr')) {
         let charts = [];
 
