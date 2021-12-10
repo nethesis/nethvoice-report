@@ -108,10 +108,20 @@ func InitJWT() *jwt.GinJWTMiddleware {
 				}, nil
 				// it's a normal system PAM user
 			} else {
-				// try PAM authentication
-				err := methods.PamAuth(username, password)
+				// check authorizations
+				authMap, err := methods.ParseAuthMap(c, username)
 				if err != nil {
-					utils.LogError(errors.Wrap(err, "PAM authentication failed for user "+username))
+					utils.LogError(errors.New("Authentication failed for user " + username))
+					return nil, jwt.ErrFailedAuthentication
+				}
+				if !authMap.Queues && !authMap.CdrGlobal && !authMap.CdrPbx  && !authMap.CdrPersonal {
+					return nil, jwt.ErrFailedAuthentication
+				}
+
+				// try PAM authentication
+				errPam := methods.PamAuth(username, password)
+				if errPam != nil {
+					utils.LogError(errors.Wrap(errPam, "PAM authentication failed for user "+username))
 					return nil, jwt.ErrFailedAuthentication
 				}
 

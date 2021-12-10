@@ -157,11 +157,16 @@ func GetAuthFileStats(c *gin.Context) {
 	return
 }
 
-func ParseAuthMap(c *gin.Context) (models.AuthMap, error) {
+func ParseAuthMap(c *gin.Context, username string) (models.AuthMap, error) {
 	// init auth map
 	authMap := models.AuthMap{}
+	var user string
 	// get current user
-	user := GetClaims(c)["id"].(string)
+	if username != "" {
+		user = username
+	} else {
+		user = GetClaims(c)["id"].(string)
+	}
 	// grant auths to admin or X
 	if user == "admin" || user == "X" {
 		authMap.Queues = true
@@ -196,7 +201,7 @@ func ParseAuthMap(c *gin.Context) (models.AuthMap, error) {
 
 func GetAuthMap(c *gin.Context) {
 	// parse authorizations map
-	authMap, err := ParseAuthMap(c)
+	authMap, err := ParseAuthMap(c, "")
 	if err != nil  {
 		c.JSON(http.StatusNotFound, gin.H{"message": "error parsing user authorizations file"})
 		return
