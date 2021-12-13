@@ -1034,7 +1034,8 @@ export default {
     }
   },
   mounted() {
-    this.retrieveFilter();
+    // check if authorizations were modified to reload
+    this.checkAuthModified()
     this.currentReport = this.$route.meta.report;
     this.getSavedSearches();
 
@@ -1079,21 +1080,21 @@ export default {
       const authModified = await this.getAuthModified()
       const localModTime = this.get("authModTime")
       const modTime = authModified.data.ModTime
-      const forceDefault = true
       // compare mod times
       if (modTime != localModTime) {
-        this.retrieveFilter(forceDefault)
+        this.retrieveDefaultFilter()
+      } else {
+        this.retrieveFilter()
       }
       // update authorizations modification time locally
       this.set("authModTime", modTime)
     },
-    retrieveFilter(forceDefault) {
+    retrieveFilter() {
       this.loader.filter = true;
       let filter = this.get(this.reportFilterStorageName);
       let filterValues = this.get(this.reportFilterValuesStorageName);
       // check filters validity
       if (
-        !forceDefault &&
         filter &&
         filterValues &&
         new Date().getTime() < filterValues.expiry
@@ -1114,8 +1115,6 @@ export default {
         this.setFilterSelection(filter, true);
         // retrieve phonebook when
         this.retrievePhonebook();
-        // check if authorizations were modified to reload
-        this.checkAuthModified()
       } else {
         this.retrieveDefaultFilter();
       }
@@ -2127,11 +2126,9 @@ export default {
           this.phonebookDb,
           this.PHONEBOOK_DB_NAME
         );
-        if (!this.$root.phonebook) {
-          this.$root.phonebook = phonebook[0].phonebook;
-          // function to add phonebook contacts to filters
-          this.addToCallerAndCalleeFilters();
-        }
+        this.$root.phonebook = phonebook[0].phonebook;
+        // function to add phonebook contacts to filters
+        this.addToCallerAndCalleeFilters();
         this.phonebookReady = true;
       } else {
         await this.clearDb(this.phonebookDb, this.PHONEBOOK_DB_NAME);
@@ -2173,11 +2170,9 @@ export default {
               new Date().getTime() + this.PHONEBOOK_TTL_MINUTES * 60 * 1000;
             this.set("reportPhonebookExpiry", expiry);
 
-            if (!this.$root.phonebook) {
-              this.$root.phonebook = phonebook;
-              // function to add phonebook contacts to filters
-              this.addToCallerAndCalleeFilters();
-            }
+            this.$root.phonebook = phonebook;
+            // function to add phonebook contacts to filters
+            this.addToCallerAndCalleeFilters();
             this.phonebookReady = true;
           },
           (error) => {
