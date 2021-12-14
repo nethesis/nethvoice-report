@@ -1,5 +1,5 @@
 Name:		nethvoice-report
-Version: 1.1.0
+Version: 1.1.1
 Release: 1%{?dist}
 Summary:	Queue and CDR/Costs reports
 
@@ -80,6 +80,10 @@ cat %{name}-%{version}-filelist
 %doc COPYING
 
 %changelog
+* Tue Dec 14 2021 Stefano Fancello <stefano.fancello@nethesis.it> - 1.1.1-1
+- call and costs report completely broken if trunks has "-" in name  - Bug nethesis/dev#6098
+- if caller or called cointains international prefix like "+39", geographic localization isn't recognized - Bug nethesis/dev#6099
+
 * Tue Dec 07 2021 Stefano Fancello <stefano.fancello@nethesis.it> - 1.1.0-1
 - Agents reports in queue report exists only the day after they are created - Bug nethesis/dev#6095
 - cdr table is locked during the queue report miner script - Bug nethesis/dev#6094
