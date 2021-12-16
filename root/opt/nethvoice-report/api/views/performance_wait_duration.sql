@@ -13,14 +13,12 @@ SELECT
     Max(hold) AS max_hold,
     Min(hold) AS min_hold,
     Avg(hold) AS avg_hold,
-    Max(duration) AS max_duration,
-    Min(Nullif(duration, 0)) AS min_duration,
-    Avg(duration) AS avg_duration,
+    Max(IF(ACTION = 'ANSWER',duration,NULL)) AS max_duration,
+    Min(IF(ACTION = 'ANSWER',Nullif(duration, 0),NULL)) AS min_duration,
+    Avg(IF(ACTION = 'ANSWER',duration,NULL)) AS avg_duration,
     qdescr
 FROM
     report_queue
-WHERE
-    ACTION = 'ANSWER'
 GROUP BY
     period,
     qname;
@@ -32,14 +30,12 @@ SELECT
     Max(hold) AS max_hold,
     Min(hold) AS min_hold,
     Avg(hold) AS avg_hold,
-    Max(duration) AS max_duration,
-    Min(Nullif(duration, 0)) AS min_duration,
-    Avg(duration) AS avg_duration,
+    Max(IF(ACTION = 'ANSWER',duration,NULL)) AS max_duration,
+    Min(IF(ACTION = 'ANSWER',Nullif(duration, 0),NULL)) AS min_duration,
+    Avg(IF(ACTION = 'ANSWER',duration,NULL)) AS avg_duration,
     qdescr
 FROM
     report_queue
-WHERE
-    ACTION = 'ANSWER'
 GROUP BY
     period,
     qname;
@@ -51,14 +47,12 @@ SELECT
     Max(hold) AS max_hold,
     Min(hold) AS min_hold,
     Avg(hold) AS avg_hold,
-    Max(duration) AS max_duration,
-    Min(Nullif(duration, 0)) AS min_duration,
-    Avg(duration) AS avg_duration,
+    Max(IF(ACTION = 'ANSWER',duration,NULL)) AS max_duration,
+    Min(IF(ACTION = 'ANSWER',Nullif(duration, 0),NULL)) AS min_duration,
+    Avg(IF(ACTION = 'ANSWER',duration,NULL)) AS avg_duration,
     qdescr
 FROM
     report_queue
-WHERE
-    ACTION = 'ANSWER'
 GROUP BY
     period,
     qname;
@@ -70,14 +64,12 @@ SELECT
     Max(hold) AS max_hold,
     Min(hold) AS min_hold,
     Avg(hold) AS avg_hold,
-    Max(duration) AS max_duration,
-    Min(Nullif(duration, 0)) AS min_duration,
-    Avg(duration) AS avg_duration,
+    Max(IF(ACTION = 'ANSWER',duration,NULL)) AS max_duration,
+    Min(IF(ACTION = 'ANSWER',Nullif(duration, 0),NULL)) AS min_duration,
+    Avg(IF(ACTION = 'ANSWER',duration,NULL)) AS avg_duration,
     qdescr
 FROM
     report_queue
-WHERE
-    ACTION = 'ANSWER'
 GROUP BY
     period,
     qname;
