@@ -1,5 +1,5 @@
 Name:		nethvoice-report
-Version: 1.1.1
+Version: 1.1.2
 Release: 1%{?dist}
 Summary:	Queue and CDR/Costs reports
 
@@ -80,6 +80,9 @@ cat %{name}-%{version}-filelist
 %doc COPYING
 
 %changelog
+* Wed Dec 22 2021 Stefano Fancello <stefano.fancello@nethesis.it> - 1.1.2-1
+- Improve performance of tmp_cdr by copying indexes from cdr when it is created (#153)
+
 * Tue Dec 14 2021 Stefano Fancello <stefano.fancello@nethesis.it> - 1.1.1-1
 - call and costs report completely broken if trunks has "-" in name  - Bug nethesis/dev#6098
 - if caller or called cointains international prefix like "+39", geographic localization isn't recognized - Bug nethesis/dev#6099
