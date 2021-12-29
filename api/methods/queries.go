@@ -203,12 +203,6 @@ func GetGraphData(c *gin.Context) {
 
 		} else if report == "cdr" {
 
-			// check authorized users list
-			if len(auths.Users) == 0 {
-				c.JSON(http.StatusBadRequest, gin.H{"message": "error executing SQL query", "status": "no allowed users found"})
-				return
-			}
-
 			// differ cdr authorizations by section and view
 			// skip permissins when cdr authorization is global
 			if section == "pbx" && auths.Cdr != "global" {
@@ -218,8 +212,9 @@ func GetGraphData(c *gin.Context) {
 					// check which queried destinations are in authorized users
 					mixedDest := utils.Intersect(filter.Destinations, auths.Users, "")
 					if len(mixedDest) == 0 {
-						filter.Destinations = auths.Users
-					} else {
+						c.Data(http.StatusOK, "application/json; charset=utf-8", []byte("[]"))
+						return
+						} else {
 						filter.Destinations = mixedDest
 					}
 
@@ -228,7 +223,8 @@ func GetGraphData(c *gin.Context) {
 					// check which queried sources are in authorized users
 					mixedSrc := utils.Intersect(filter.Sources, auths.Users, "")
 					if len(mixedSrc) == 0 {
-						filter.Sources = auths.Users
+						c.Data(http.StatusOK, "application/json; charset=utf-8", []byte("[]"))
+						return
 					} else {
 						filter.Sources = mixedSrc
 					}
@@ -243,8 +239,8 @@ func GetGraphData(c *gin.Context) {
 						// check authorized destinations
 						mixedDest := utils.Intersect(filter.Destinations, auths.Users, "")
 						if len(mixedDest) == 0 {
-							filter.Sources = auths.Users
-							filter.Destinations = auths.Users
+							c.Data(http.StatusOK, "application/json; charset=utf-8", []byte("[]"))
+							return
 						} else {
 							filter.Destinations = mixedDest
 						}
