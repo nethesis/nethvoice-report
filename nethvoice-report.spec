@@ -1,5 +1,5 @@
 Name:		nethvoice-report
-Version: 1.1.2
+Version: 1.1.3
 Release: 1%{?dist}
 Summary:	Queue and CDR/Costs reports
 
@@ -80,6 +80,9 @@ cat %{name}-%{version}-filelist
 %doc COPYING
 
 %changelog
+* Mon Jan 17 2022 Stefano Fancello <stefano.fancello@nethesis.it> - 1.1.3-1
+- NethVoice Queue Report: a day with no answered call is not listen - Bug nethesis/dev#6102
+
 * Wed Dec 22 2021 Stefano Fancello <stefano.fancello@nethesis.it> - 1.1.2-1
 - Improve performance of tmp_cdr by copying indexes from cdr when it is created (#153)
 
