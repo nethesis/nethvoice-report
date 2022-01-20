@@ -186,6 +186,19 @@ func Intersect(a []string, b []string, objType string) []string {
 
 		return result
 
+	case "extensions":
+		// loop a array and check users extensions
+		for i, u := range a {
+			parts := strings.Split(u, "|")
+			var userExtensions = strings.Split(parts[2], ",")
+
+			if Contains(userExtensions[0], b) {
+				result = append(result, a[i])
+			}
+		}
+
+		return result
+
 	default:
 		// intersect arrays and return []interface{}
 		r := intersect.Simple(a, b).([]interface{})
