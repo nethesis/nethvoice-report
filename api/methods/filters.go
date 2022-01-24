@@ -104,7 +104,7 @@ func GetDefaultFilter(c *gin.Context) {
 		defaultFilter.Queues = utils.Intersect(valuesFilter.Queues, auths.Queues, "queues")
 		defaultFilter.Groups = utils.Intersect(valuesFilter.Groups, auths.Groups, "groups")
 		defaultFilter.Agents = utils.Intersect(valuesFilter.Agents, auths.Agents, "agents")
-		defaultFilter.Users = utils.Intersect(valuesFilter.Users, auths.Users, "users")
+		defaultFilter.Users = utils.Intersect(valuesFilter.Users, auths.Users, "extensions")
 	}
 
 	if filterField != "" {

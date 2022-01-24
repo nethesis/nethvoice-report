@@ -25,6 +25,9 @@ package methods
 import (
 	"encoding/json"
 	"io/ioutil"
+	"os"
+	"net/http"
+	"time"
 
 	"github.com/pkg/errors"
 
@@ -94,6 +97,7 @@ func GetUserAuthorizations(username string) (models.UserAuthorizations, error) {
 			userAuthorizations.Groups = ua.Groups
 			userAuthorizations.Agents = ua.Agents
 			userAuthorizations.Users  = ua.Users
+			userAuthorizations.Cdr  = ua.Cdr
 			return userAuthorizations, nil
 		}
 	}
@@ -125,26 +129,97 @@ func GetAdminHashPass() string {
 	return hash
 }
 
-func GetAllowedQueues(c *gin.Context) ([]string, error) {
-	// get current user
-	user := GetClaims(c)["id"].(string)
-
-	// get user auths
-	auths, err := GetUserAuthorizations(user)
+func ParseAuthFileStats() (models.AuthStats, error) {
+	// get authorizations file stats
+	fileInfo, err := os.Stat(configuration.Config.UserAuthorizationsFile)
 	if err != nil {
-		return nil, err
+		utils.LogError(errors.Wrap(err, "error reading user authorizations file stats"))
+		return models.AuthStats{}, err
 	}
-	return auths.Queues, nil
+	authStats := models.AuthStats{
+		FileName: fileInfo.Name(),
+		ModTime: fileInfo.ModTime().Unix(),
+	}
+	// return authorization file stats
+	return authStats, nil
 }
 
-func GetAllowedAgents(c *gin.Context) ([]string, error) {
-	// get current user
-	user := GetClaims(c)["id"].(string)
+func GetAuthFileStats(c *gin.Context) {
+	// parse authorizations file stats
+	fileStats, err := ParseAuthFileStats()
+	if err != nil {
+		// return not found status
+		c.JSON(http.StatusNotFound, gin.H{"message": "error reading user authorizations file stats"})
+		return
+	}
+	// return modification time and file name
+	c.JSON(http.StatusOK, fileStats)
+	return
+}
 
+func ParseAuthMap(c *gin.Context, username string) (models.AuthMap, error) {
+	// init auth map
+	authMap := models.AuthMap{}
+	var user string
+	// get current user
+	if username != "" {
+		user = username
+	} else {
+		user = GetClaims(c)["id"].(string)
+	}
+	// grant auths to admin or X
+	if user == "admin" || user == "X" {
+		authMap.Queues = true
+		authMap.CdrGlobal = true
+		authMap.CdrPbx = true
+		authMap.CdrPersonal = true
+		return authMap, nil
+	}
 	// get user auths
 	auths, err := GetUserAuthorizations(user)
 	if err != nil {
-		return nil, err
+		return models.AuthMap{}, err
 	}
-	return auths.Agents, nil
+	// parse authorizations
+	if len(auths.Queues) > 0 && len(auths.Agents) > 0 {
+		authMap.Queues = true
+	}
+	if len(auths.Users) > 0 {
+		if auths.Cdr == "global" {
+			authMap.CdrGlobal = true
+			authMap.CdrPbx = true
+			authMap.CdrPersonal = true
+		} else if auths.Cdr == "group" {
+			authMap.CdrPbx = true
+			authMap.CdrPersonal = true
+		} else if auths.Cdr == "personal" {
+			authMap.CdrPersonal = true
+		}
+	}
+	return authMap, nil
+}
+
+func GetAuthMap(c *gin.Context) {
+	// parse authorizations map
+	authMap, err := ParseAuthMap(c, "")
+	if err != nil  {
+		c.JSON(http.StatusNotFound, gin.H{"message": "error parsing user authorizations file"})
+		return
+	}
+	// return authorizations map
+	c.JSON(http.StatusOK, authMap)
+	return
+}
+
+func CacheHasValidAuth(ttl time.Duration, modTime int64) (bool) {
+	// check if cached data has valid authorizations
+	now := time.Now().Unix()
+	ttlTime := int64(ttl.Seconds())
+	ttlCache := int64((time.Duration(configuration.Config.TTLCache)*time.Minute).Seconds())
+	// return true when time passed from the data insert in chache
+	// is lower than time passed from the authorizations modify time
+	if (ttlCache - ttlTime) < (now - modTime) {
+		return true
+	}
+	return false
 }

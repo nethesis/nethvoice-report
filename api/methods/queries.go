@@ -145,13 +145,114 @@ func GetGraphData(c *gin.Context) {
 	// check if hash is locally cached
 	data, errCache := cacheConnection.Get(hash).Result()
 
-	// data is cached, return immediately
 	if errCache == nil {
-		c.Data(http.StatusOK, "application/json; charset=utf-8", []byte(data))
-		return
+		// data is cached
+		// get cached data ttl
+		ttl,_ := cacheConnection.TTL(hash).Result()
+		// parse authorizations file stats
+		stats,_ := ParseAuthFileStats()
+		// check cached data authorizations validity
+		if CacheHasValidAuth(ttl, stats.ModTime) == true {
+			// return data from cache
+			c.Data(http.StatusOK, "application/json; charset=utf-8", []byte(data))
+			return
+		}
 	}
 
 	// query result is not cached, execute query
+	// check authorizations for not admin users
+	if user != "admin" && user != "X" {
+
+		// initialize authorizations
+		auths, err := GetUserAuthorizations(user)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"message": "error executing SQL query", "status": "cannot retrieve user's authorizations"})
+			return
+		}
+
+		// differ between queue report and cdr report
+		if report == "queue" {
+
+			// check authorized queues list
+			if len(auths.Queues) == 0 {
+				c.JSON(http.StatusBadRequest, gin.H{"message": "error executing SQL query", "status": "no allowed queues found"})
+				return
+			}
+
+			// check authorized agents list
+			if len(auths.Agents) == 0 {
+				c.JSON(http.StatusBadRequest, gin.H{"message": "error executing SQL query", "status": "no allowed agents found"})
+				return
+			}
+
+			// check which queried queues are in authorized queues
+			mixedQueues := utils.Intersect(filter.Queues, auths.Queues, "")
+			if len(mixedQueues) == 0 {
+				filter.Queues = auths.Queues
+			} else {
+				filter.Queues = mixedQueues
+			}
+
+			// check which queried agents are in authorized agents
+			mixedAgents := utils.Intersect(filter.Agents, auths.Agents, "")
+			if len(mixedAgents) == 0 {
+				filter.Agents = auths.Agents
+			} else {
+				filter.Agents = mixedAgents
+			}
+
+		} else if report == "cdr" {
+
+			// differ cdr authorizations by section and view
+			// skip permissins when cdr authorization is global
+			if section == "pbx" && auths.Cdr != "global" {
+				// manage authorizations by views
+				if view == "inbound" {
+
+					// check which queried destinations are in authorized users
+					mixedDest := utils.Intersect(filter.Destinations, auths.Users, "")
+					if len(mixedDest) == 0 {
+						c.Data(http.StatusOK, "application/json; charset=utf-8", []byte("[]"))
+						return
+						} else {
+						filter.Destinations = mixedDest
+					}
+
+				} else if view == "outbound" {
+
+					// check which queried sources are in authorized users
+					mixedSrc := utils.Intersect(filter.Sources, auths.Users, "")
+					if len(mixedSrc) == 0 {
+						c.Data(http.StatusOK, "application/json; charset=utf-8", []byte("[]"))
+						return
+					} else {
+						filter.Sources = mixedSrc
+					}
+
+				} else if view == "local" {
+
+					// check which queried sources or destinations are in authorized users
+					// check authorized sources
+					mixedSrc := utils.Intersect(filter.Sources, auths.Users, "")
+					if len(mixedSrc) == 0 {
+
+						// check authorized destinations
+						mixedDest := utils.Intersect(filter.Destinations, auths.Users, "")
+						if len(mixedDest) == 0 {
+							c.Data(http.StatusOK, "application/json; charset=utf-8", []byte("[]"))
+							return
+						} else {
+							filter.Destinations = mixedDest
+						}
+
+					} else {
+						filter.Sources = mixedSrc
+					}
+
+				}
+			}
+		}
+	}
 
 	var err error
 	var queryResult string
@@ -193,24 +294,6 @@ func executeSqlQuery(filter models.Filter, report string, section string, view s
 	// check if query file exists
 	if _, errExists := os.Stat(queryFile); os.IsNotExist(errExists) {
 		return "", errors.Wrap(errExists, "query file does not exists")
-	}
-
-	// if no queue has been selected, restrict filter to allowed queues
-	if len(filter.Queues) == 0 {
-		allowedQueues, errQueues := GetAllowedQueues(c)
-		if errQueues != nil {
-			return "", errors.Wrap(errQueues, "cannot retrieve allowed queues")
-		}
-		filter.Queues = allowedQueues
-	}
-
-	// if no agent has been selected, restrict filter to allowed agents
-	if len(filter.Agents) == 0 {
-		allowedAgents, errAgents := GetAllowedAgents(c)
-		if errAgents != nil {
-			return "", errors.Wrap(errAgents, "cannot retrieve allowed agents")
-		}
-		filter.Agents = allowedAgents
 	}
 
 	// create template

@@ -76,8 +76,9 @@
               (showFilterTime && filter.time.group == 'day') ||
               (showFilterTime && !showFilterTimeGroup)
             "
+            width="four"
           >
-            <label>{{ $t("filter.time_range") }}</label>
+            <label class="ellipsis">{{ $t("filter.time_range") }}</label>
             <sui-button-group class="fluid">
               <sui-button
                 :active="filter.time.range == 'yesterday'"
@@ -106,8 +107,9 @@
               filter.time.group == 'week' &&
               showFilterTimeGroup
             "
+            width="four"
           >
-            <label>{{ $t("filter.time_range") }}</label>
+            <label class="ellipsis">{{ $t("filter.time_range") }}</label>
             <sui-button-group class="fluid">
               <sui-button
                 :active="filter.time.range == 'last_week'"
@@ -136,8 +138,9 @@
               filter.time.group == 'month' &&
               showFilterTimeGroup
             "
+            width="four"
           >
-            <label>{{ $t("filter.time_range") }}</label>
+            <label class="ellipsis">{{ $t("filter.time_range") }}</label>
             <sui-button-group class="fluid">
               <sui-button
                 :active="filter.time.range == 'last_month'"
@@ -166,8 +169,9 @@
               filter.time.group == 'year' &&
               showFilterTimeGroup
             "
+            width="four"
           >
-            <label>{{ $t("filter.time_range") }}</label>
+            <label class="ellipsis">{{ $t("filter.time_range") }}</label>
             <sui-button-group class="fluid">
               <sui-button
                 :active="filter.time.range == 'last_year'"
@@ -193,6 +197,7 @@
           <sui-form-field
             v-show="$route.meta.report == 'queue'"
             class="datepicker-field"
+            width="four"
           >
             <label :class="{ 'error-color': errorTimeInterval }">{{
               $t("filter.time_interval")
@@ -207,7 +212,7 @@
               :clearable="false"
               :show-second="false"
               :disabled-date="fromToday"
-              :class="{ 'field-error': errorTimeInterval }"
+              :class="{ 'field-error': errorTimeInterval, 'full-width': true, 'mt-2': true }"
               :formatter="momentFormatter"
               :lang="$i18n.vm.locale"
             ></date-picker>
@@ -228,11 +233,17 @@
               :clearable="false"
               :show-second="false"
               :disabled-date="fromToday"
-              :class="{ 'field-error': errorTimeInterval }"
+              :class="{ 'field-error': errorTimeInterval, 'full-width': true, 'mt-2': true }"
               :formatter="momentFormatter"
               :lang="$i18n.vm.locale"
             ></date-picker>
-            <sui-icon name="right arrow time-filter" />
+          </sui-form-field>
+          <sui-form-field
+            v-show="$route.meta.report == 'queue'"
+            class="datepicker-field"
+            width="four"
+          >
+            <label class="h-19"></label>
             <!-- time interval end -->
             <!-- datetime -->
             <date-picker
@@ -243,7 +254,7 @@
               :clearable="false"
               :show-second="false"
               :disabled-date="fromToday"
-              :class="{ 'field-error': errorTimeInterval }"
+              :class="{ 'field-error': errorTimeInterval, 'full-width': true, 'mt-2': true }"
               :formatter="momentFormatter"
               :lang="$i18n.vm.locale"
             ></date-picker>
@@ -264,7 +275,7 @@
               :clearable="false"
               :show-second="false"
               :disabled-date="fromToday"
-              :class="{ 'field-error': errorTimeInterval }"
+              :class="{ 'field-error': errorTimeInterval, 'full-width': true, 'mt-2': true }"
               :formatter="momentFormatter"
               :lang="$i18n.vm.locale"
             ></date-picker>
@@ -274,6 +285,7 @@
           <sui-form-field
             v-show="$route.meta.report == 'cdr'"
             class="datepicker-field"
+            width="four"
           >
             <label :class="{ 'error-color': errorTimeInterval }">{{
               $t("filter.time_interval")
@@ -287,12 +299,18 @@
               :clearable="false"
               :show-second="false"
               :disabled-date="fromToday"
-              :class="{ 'field-error': errorTimeInterval }"
+              :class="{ 'field-error': errorTimeInterval, 'full-width': true, 'mt-2': true }"
               :formatter="momentFormatter"
               :lang="$i18n.vm.locale"
               :disabled="$route.meta.section == 'dashboard'"
             ></date-picker>
-            <sui-icon name="right arrow time-filter" />
+          </sui-form-field>
+          <sui-form-field
+            v-show="$route.meta.report == 'cdr'"
+            class="datepicker-field"
+            width="four"
+          >
+            <label class="h-19"></label>
             <!-- time interval end -->
             <!-- datetime -->
             <date-picker
@@ -302,7 +320,7 @@
               :clearable="false"
               :show-second="false"
               :disabled-date="fromToday"
-              :class="{ 'field-error': errorTimeInterval }"
+              :class="{ 'field-error': errorTimeInterval, 'full-width': true, 'mt-2': true }"
               :formatter="momentFormatter"
               :lang="$i18n.vm.locale"
               :disabled="$route.meta.section == 'dashboard'"
@@ -767,6 +785,7 @@ import SearchService from "../services/searches";
 import PhonebookService from "../services/phonebook";
 import FixedBar from "../components/FixedBar.vue";
 import FilterService from "../services/filter";
+import AuthService from "../services/authorizations";
 import SettingsService from "../services/settings";
 import SearchInput from "../components/SearchInput";
 
@@ -787,6 +806,7 @@ export default {
     FilterService,
     UiMaps,
     SettingsService,
+    AuthService
   ],
   props: ["showFiltersForm"],
   data() {
@@ -1014,7 +1034,8 @@ export default {
     }
   },
   mounted() {
-    this.retrieveFilter();
+    // check if authorizations were modified to reload
+    this.checkAuthModified()
     this.currentReport = this.$route.meta.report;
     this.getSavedSearches();
 
@@ -1053,6 +1074,20 @@ export default {
         }
       });
       return userMap;
+    },
+    async checkAuthModified() {
+      // check if authorizations were modified in the last 8 hours
+      const authModified = await this.getAuthModified()
+      const localModTime = this.get("authModTime")
+      const modTime = authModified.data.ModTime
+      // compare mod times
+      if (modTime != localModTime) {
+        this.retrieveDefaultFilter()
+      } else {
+        this.retrieveFilter()
+      }
+      // update authorizations modification time locally
+      this.set("authModTime", modTime)
     },
     retrieveFilter() {
       this.loader.filter = true;
@@ -2092,9 +2127,9 @@ export default {
           this.PHONEBOOK_DB_NAME
         );
         this.$root.phonebook = phonebook[0].phonebook;
-        this.phonebookReady = true;
         // function to add phonebook contacts to filters
         this.addToCallerAndCalleeFilters();
+        this.phonebookReady = true;
       } else {
         await this.clearDb(this.phonebookDb, this.PHONEBOOK_DB_NAME);
 
@@ -2129,15 +2164,16 @@ export default {
               this.phonebookDb,
               this.PHONEBOOK_DB_NAME
             );
-            this.$root.phonebook = phonebook;
-            this.phonebookReady = true;
 
             // save phonebook expiry to local storage
             const expiry =
               new Date().getTime() + this.PHONEBOOK_TTL_MINUTES * 60 * 1000;
             this.set("reportPhonebookExpiry", expiry);
+
+            this.$root.phonebook = phonebook;
             // function to add phonebook contacts to filters
             this.addToCallerAndCalleeFilters();
+            this.phonebookReady = true;
           },
           (error) => {
             console.error(error.body);

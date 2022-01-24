@@ -1482,6 +1482,7 @@ export default {
         "trunks",
         (success) => {
           const trunkStrings = success.body.filter;
+          if (!trunkStrings) return
           let trunks = [];
 
           for (const trunkString of trunkStrings) {
