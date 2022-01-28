@@ -1,5 +1,5 @@
 Name:		nethvoice-report
-Version: 1.1.3
+Version: 1.1.4
 Release: 1%{?dist}
 Summary:	Queue and CDR/Costs reports
 
@@ -80,6 +80,9 @@ cat %{name}-%{version}-filelist
 %doc COPYING
 
 %changelog
+* Fri Jan 28 2022 Stefano Fancello <stefano.fancello@nethesis.it> - 1.1.4-1
+- Enhance authorizations management and sync cache with those - Bug nethesis/dev#6100
+
 * Mon Jan 17 2022 Stefano Fancello <stefano.fancello@nethesis.it> - 1.1.3-1
 - NethVoice Queue Report: a day with no answered call is not listen - Bug nethesis/dev#6102
 
