@@ -32,13 +32,13 @@ type UserAuthorizations struct {
 }
 
 type AuthStats struct {
-	FileName      string
-	ModTime       int64
+	FileName      string `json:"file_name"`
+	ModTime       int64  `json:"mod_time"`
 }
 
 type AuthMap struct {
-	Queues        bool
-	CdrGlobal     bool
-	CdrPbx        bool
-	CdrPersonal   bool
+	Queues        bool   `json:"queues"`
+	CdrGlobal     bool   `json:"cdr_global"`
+	CdrPbx        bool   `json:"cdr_pbx"`
+	CdrPersonal   bool   `json:"cdr_personal"`
 }

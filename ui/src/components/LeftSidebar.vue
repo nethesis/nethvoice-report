@@ -458,15 +458,15 @@ export default {
     },
     async authMapInit() {
       const authMap = await this.getAuthMap()
-      this.authMap.CdrPbx = authMap.data.CdrPbx
-      this.authMap.CdrPersonal = authMap.data.CdrPersonal
-      this.authMap.Queues = authMap.data.Queues
+      this.authMap.CdrPbx = authMap.data.cdr_pbx
+      this.authMap.CdrPersonal = authMap.data.cdr_personal
+      this.authMap.Queues = authMap.data.queues
       if (
-        (!authMap.data.Queues && this.$route.meta.report == "queue") ||
-        (!authMap.data.CdrPbx && authMap.data.CdrPersonal && this.$route.meta.report == "cdr" && this.$route.meta.section == "pbx")
+        (!authMap.data.queues && this.$route.meta.report == "queue") ||
+        (!authMap.data.cdr_pbx && authMap.data.cdr_personal && this.$route.meta.report == "cdr" && this.$route.meta.section == "pbx")
       ) {
         this.goTo("cdr")
-      } else if (!authMap.data.CdrPbx && !authMap.data.CdrPersonal && this.$route.meta.report == "cdr") {
+      } else if (!authMap.data.cdr_pbx && !authMap.data.cdr_personal && this.$route.meta.report == "cdr") {
         this.goTo("queue")
       }
     }
