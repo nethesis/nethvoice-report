@@ -1079,7 +1079,7 @@ export default {
       // check if authorizations were modified in the last 8 hours
       const authModified = await this.getAuthModified()
       const localModTime = this.get("authModTime")
-      const modTime = authModified.data.ModTime
+      const modTime = authModified.data.mod_time
       // compare mod times
       if (modTime != localModTime) {
         this.retrieveDefaultFilter()
