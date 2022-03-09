@@ -466,3 +466,47 @@ To reduce the numbers of record inside the `cdr`table, the templates query split
     }
   }
   ```
+
+- `GET` `/api/authorizations/stats`
+
+  Used to retrieve users authorizations modification time
+
+  **Header request**
+  ```
+  Authorization: Bearer your_JWT_token (only admin or X user)
+  Content-Type: application/json
+  ```
+  **Body request**
+  ```json
+  {}
+  ```
+  **Body response**
+  ```json
+  {
+    "file_name": "user_authorizations.json",
+    "mod_time": 1646643820
+  }
+  ```
+
+- `GET` `/api/authorizations/map`
+
+  Used to retrieve users authorizations for the ui parts
+
+  **Header request**
+  ```
+  Authorization: Bearer your_JWT_token (only admin or X user)
+  Content-Type: application/json
+  ```
+  **Body request**
+  ```json
+  {}
+  ```
+  **Body response**
+  ```json
+  {
+    "queues": true,
+    "cdr_global": true,
+    "cdr_pbx": false,
+    "cdr_personal": true
+  }
+  ```
