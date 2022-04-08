@@ -1127,17 +1127,14 @@ export default {
     // add phonebook contacts, CTI groups and users to caller and callee filters
     addToCallerAndCalleeFilters() {
       // users
-
-      this.filterValues.cdrCaller.push(...this.filterValues.users);
-      this.filterValues.cdrCallee.push(...this.filterValues.users);
+      this.filterValues.cdrCaller = [...this.filterValues.cdrCaller, ...this.filterValues.users];
+      this.filterValues.cdrCallee = [...this.filterValues.cdrCallee, ...this.filterValues.users];
 
       // cti groups
-
-      this.filterValues.cdrCaller.push(...this.filterValues.ctiGroups);
-      this.filterValues.cdrCallee.push(...this.filterValues.ctiGroups);
+      this.filterValues.cdrCaller = [...this.filterValues.cdrCaller, ...this.filterValues.ctiGroups];
+      this.filterValues.cdrCallee = [...this.filterValues.cdrCallee, ...this.filterValues.ctiGroups];
 
       // phonebook
-
       let contacts = this.$root.phonebook.map((contact) => {
         let contactNumbers = [];
         if (
@@ -1163,8 +1160,8 @@ export default {
         };
       });
 
-      this.filterValues.cdrCaller.push(...contacts);
-      this.filterValues.cdrCallee.push(...contacts);
+      this.filterValues.cdrCaller = [...this.filterValues.cdrCaller, ...contacts];
+      this.filterValues.cdrCallee = [...this.filterValues.cdrCallee, ...contacts];
     },
 
     retrieveDefaultFilter() {
