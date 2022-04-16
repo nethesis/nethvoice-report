@@ -3,7 +3,9 @@ SELECT
     qname,
     qdescr,
     uniqCid AS uniqCid£num,
-    num AS num£num
+    num AS num£num,
+    total_recall AS totalRecall£num,
+    avg_recall AS avgRecall£seconds
 FROM
     data_summary_null_{{ .Time.Group }}
 WHERE   TRUE
