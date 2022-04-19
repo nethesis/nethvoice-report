@@ -45,14 +45,16 @@ SELECT
     position,
     hold AS hold,
     duration AS duration,
-    ACTION AS result
+    ACTION AS result,
+    IF(data4 > 0, 'YES', 'NO') AS recalled,
+    data4 AS recallTime
 FROM
     report_queue
 GROUP BY period, report_queue.cid, qname
 ORDER BY
     period;
 
-INSERT IGNORE INTO data_call (`period`, `cid`, `qname`, `qdescr`, `agent`, `agents`, `position`, `hold`, `duration`, `result`)
+INSERT IGNORE INTO data_call (`period`, `cid`, `qname`, `qdescr`, `agent`, `agents`, `position`, `hold`, `duration`, `result`, `recalled`, `recall_time`)
 SELECT
     DATE_FORMAT(
         FROM_UNIXTIME(`timestamp_in`),
@@ -66,7 +68,9 @@ SELECT
     position,
     hold AS hold,
     duration AS duration,
-    ACTION AS result
+    ACTION AS result,
+    IF(data4 > 0, 'YES', 'NO') AS recalled,
+    data4 AS recall_time
 FROM
     report_queue
 WHERE Date_format(From_unixtime(timestamp_in), "%Y-%m-%d") = Date_format(NOW() - INTERVAL 1 DAY, "%Y-%m-%d")

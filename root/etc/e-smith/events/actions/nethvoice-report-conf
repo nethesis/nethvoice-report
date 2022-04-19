@@ -82,6 +82,19 @@ if [[ ! -z $TABLE_EXISTS ]]; then
     fi
 fi
 
+# Add "recalled" and "recall_time" columns to data_call table if needed
+TABLE_EXISTS=$(/usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "SHOW TABLES LIKE 'data_call'")
+if [[ ! -z $TABLE_EXISTS ]]; then
+    EXISTS=$(/usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "SHOW COLUMNS FROM data_call LIKE 'recalled'")
+    if [[ $EXISTS == "" ]]; then
+        /usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "ALTER TABLE data_call ADD COLUMN recalled varchar(32) DEFAULT NULL"
+    fi
+    EXISTS=$(/usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "SHOW COLUMNS FROM data_call LIKE 'recall_time'")
+    if [[ $EXISTS == "" ]]; then
+        /usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "ALTER TABLE data_call ADD COLUMN recall_time decimal(23,0) DEFAULT NULL"
+    fi
+fi
+
 # Recreate data_call table over night if agents field is missing or is in the wrong order
 TABLE_EXISTS=$(/usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "SHOW TABLES LIKE 'data_call'")
 if [[ ! -z $TABLE_EXISTS ]]; then
