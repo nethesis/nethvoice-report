@@ -20,6 +20,7 @@ FROM
 WHERE
     TRUE
     AND NOT agent = 'NONE'
+    AND action = 'ANSWER'
 GROUP BY
     period,
     agent
@@ -42,6 +43,7 @@ FROM
 WHERE
     TRUE
     AND NOT agent = 'NONE'
+    AND action = 'ANSWER'
 GROUP BY
     period,
     agent
@@ -64,6 +66,7 @@ FROM
 WHERE
     TRUE
     AND NOT agent = 'NONE'
+    AND action = 'ANSWER'
 GROUP BY
     period,
     agent
@@ -86,6 +89,7 @@ FROM
 WHERE
     TRUE
     AND NOT agent = 'NONE'
+    AND action = 'ANSWER'
 GROUP BY
     period,
     agent

@@ -326,6 +326,66 @@ function do_time_queries($start_ts,$end_ts) {
            error_log($e->getMessage());
         }
     }
+
+    // Recall
+    // Get agents in queues
+    $sql = "SELECT DISTINCT queuename,agent FROM queue_log_history
+            WHERE queuename != 'NONE'
+            AND queuename != 'all'
+            AND agent NOT LIKE ''
+            AND agent != 'NONE'
+            AND agent NOT LIKE 'Local/%@from-queue/n'
+            AND UNIX_TIMESTAMP(time) > $start_ts AND UNIX_TIMESTAMP(time) < $end_ts
+            ORDER BY queuename, agent";
+    $stmt = $cdrdb->prepare($sql);
+    $stmt->execute();
+    $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    $queues_agents = [];
+    foreach ($results as $row) {
+        if (!isset($queues_agents[$row['queuename']])) {
+            $queues_agents[$row['queuename']] = [];
+        }
+        $queues_agents[$row['queuename']][] = $row['agent'];
+    }
+
+    // Get failed calls in queues
+    $sql = "SELECT * FROM report_queue WHERE action IN ('ABANDON', 'EXITWITHTIMEOUT', 'EXITWITHKEY', 'EXITEMPTY', 'FULL', 'JOINEMPTY', 'JOINUNAVAIL') AND timestamp_in > $start_ts AND timestamp_in < $end_ts";
+    $stmt = $cdrdb->prepare($sql);
+    $stmt->execute();
+    $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+    foreach ($results as $row) {
+        if (empty($queues_agents[$row['qname']])) {
+            continue;
+        }
+        $agents = $queues_agents[$row['qname']];
+        $tmp_qm = [];
+        for ($i=0; $i<count($agents); $i++) {
+            $tmp_qm[] = '?';
+        }
+        $agents_qm = implode(',',$tmp_qm);
+
+        $sql = "SELECT MIN(uniqueid),cnam AS agent FROM cdr
+        WHERE cnum = ?
+        AND uniqueid > ?
+        AND uniqueid < UNIX_TIMESTAMP(STR_TO_DATE( CONCAT( YEAR(? + INTERVAL 1 DAY) ,'-', MONTH(? + INTERVAL 1 DAY) ,'-', DAY(? + INTERVAL 1 DAY)), '%Y/%m/%d'))
+        AND cnam IN ($agents_qm)
+        AND disposition = 'ANSWERED'
+        AND billsec > 0
+        ";
+        $stmt = $cdrdb->prepare($sql);
+        $stmt->execute(array_merge([$row['cid'], $row['timestamp_in'], $row['timestamp_in'], $row['timestamp_in'], $row['timestamp_in']],$agents));
+        $recall = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        if (empty($recall[0]['MIN(uniqueid)'])) {
+            continue;
+        }
+
+        // Update report_queue to add the recall
+        $sql = "UPDATE report_queue SET agent = ?, data4 = ? WHERE timestamp_in = ?";
+        $stmt = $cdrdb->prepare($sql);
+        $stmt->execute([$recall[0]['agent'],$recall[0]['MIN(uniqueid)']-$row['timestamp_in'],$row['timestamp_in']]);
+    }
+
 }
 
 function do_static_queries() {
