@@ -29,7 +29,8 @@ var UiMaps = {
             "area": ["timeGroup", "time", "queue"],
             "queue_position": ["time", "queue", "timeSplit"],
             "avg_duration": ["time", "queue", "timeSplit"],
-            "avg_wait": ["time", "queue", "timeSplit"]
+            "avg_wait": ["time", "queue", "timeSplit"],
+            "recall": ["time", "queue", "agent"],
           }
         },
         "cdr": {

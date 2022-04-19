@@ -242,6 +242,19 @@ const routes = [
       tags: ["avg", "average", "wait"],
     },
   },
+  {
+    path: "/queue/graphs/recall",
+    name: "QueueGraphsRecall",
+    component: ContentView,
+    meta: {
+      name: "graphs.recall",
+      parent: "graphs",
+      section: "graphs",
+      view: "recall",
+      report: "queue",
+      tags: ["recall"],
+    }
+  },
 
   /* CDR views*/
   {
