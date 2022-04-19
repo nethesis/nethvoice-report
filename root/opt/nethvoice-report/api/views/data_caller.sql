@@ -42,6 +42,8 @@ SELECT
     cid,
     qname,
     qdescr,
+    Sum(IF(data4 > 0, 1, 0)) AS `total_recall`,
+    Avg(IF(data4 > 0, data4, null)) AS `avg_recall`,
     count(id) AS `total`,
     SUM(IF(ACTION = 'ANSWER', 1, 0)) AS `good`,
     SUM(
@@ -93,6 +95,8 @@ SELECT
     cid,
     qname,
     qdescr,
+    Sum(IF(data4 > 0, 1, 0)) AS `total_recall`,
+    Avg(IF(data4 > 0, data4, null)) AS `avg_recall`,
     count(id) AS `total`,
     SUM(IF(ACTION = 'ANSWER', 1, 0)) AS `good`,
     SUM(
@@ -144,6 +148,8 @@ SELECT
     cid,
     qname,
     qdescr,
+    Sum(IF(data4 > 0, 1, 0)) AS `total_recall`,
+    Avg(IF(data4 > 0, data4, null)) AS `avg_recall`,
     count(id) AS `total`,
     SUM(IF(ACTION = 'ANSWER', 1, 0)) AS `good`,
     SUM(
@@ -196,6 +202,8 @@ SELECT
     cid,
     qname,
     qdescr,
+    Sum(IF(data4 > 0, 1, 0)) AS `total_recall`,
+    Avg(IF(data4 > 0, data4, null)) AS `avg_recall`,
     count(id) AS `total`,
     SUM(IF(ACTION = 'ANSWER', 1, 0)) AS `good`,
     SUM(
@@ -247,6 +255,8 @@ SELECT
     cid,
     qname,
     qdescr,
+    Sum(IF(data4 > 0, 1, 0)) AS `total_recall`,
+    Avg(IF(data4 > 0, data4, null)) AS `avg_recall`,
     count(id) AS `total`,
     SUM(IF(ACTION = 'ANSWER', 1, 0)) AS `good`,
     SUM(
