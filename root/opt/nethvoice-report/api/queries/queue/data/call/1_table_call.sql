@@ -12,7 +12,7 @@ SELECT
     hold AS hold£seconds,
     duration AS duration£seconds,
     result AS result£label,
-    recalled AS recalled,
+    IF(recalled != "", recalled, "NO") AS recalled£label,
     recall_time AS recallTime£seconds
 FROM
     data_call

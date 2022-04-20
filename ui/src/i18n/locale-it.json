@@ -156,7 +156,8 @@
       "by_area": "Per Zona",
       "queue_position": "Posizione Coda",
       "average_duration": "Durata Media",
-      "average_wait": "Attesa Media"
+      "average_wait": "Attesa Media",
+      "recall": "Richiamata"
     },
     "login": {
       "invalid_credentials": "Credenziali non valide",
@@ -165,6 +166,9 @@
       "login_again": "Per favore, accedere nuovamente"
     },
     "caption": {
+      "recallTime": "Tempo di Richiamata",
+      "AvgRecallTime": "Tempo medio Richiamata",
+      "RecallByHour": "Richiamata",
       "callByQueueTotal": "Chiamate per Coda",
       "callByAgentTotal": "Chiamate per Agente",
       "callTotalByHour": "Chiamate per Orario",
@@ -285,6 +289,17 @@
       "per_page": "per pagina"
     },
     "table": {
+      "percentageRecall": "Percentuale Richiamate",
+      "YES": "SI",
+      "NO": "NO",
+      "recalled": "Richiamata",
+      "recallTime": "Tempo di Richiamata",
+      "totalRecall": "Totale Richiamate",
+      "avgRecall": "Tempo medio di Richiamata",
+      "recall": "Richiamata",
+      "min_recall": "Tempo di richiamata minimo",
+      "avg_recall": "Tempo di richiamata medio",
+      "max_recall": "Tempo di richiamata massimo",
       "total": "Totale",
       "tot": "Totale",
       "num": "Totale",
