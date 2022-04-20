@@ -10,9 +10,6 @@ WHERE   TRUE
             AND period >= "{{ .Time.Interval.Start }}"
             AND period <= "{{ .Time.Interval.End }}"
         {{ end }}
-        {{ if gt (len .Agents) 0 }}
-            AND agent in ({{ ExtractStrings .Agents }})
-        {{ end }}
         {{ if gt (len .Queues) 0 }}
             AND qname in ({{ ExtractStrings .Queues }})
         {{ end }}
