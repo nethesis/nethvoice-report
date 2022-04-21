@@ -263,6 +263,12 @@
             to="/queue/graphs/avg_wait"
             >{{ $t("graphs.average_wait") }}</router-link
           >
+          <router-link
+            is="sui-menu-item"
+            :active="isActive('/queue/graphs/recall')"
+            to="/queue/graphs/recall"
+            >{{ $t("graphs.recall") }}</router-link
+          >
         </sui-menu-menu>
       </sui-menu-item>
     </div>

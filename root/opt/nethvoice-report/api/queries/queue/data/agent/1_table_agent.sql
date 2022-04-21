@@ -14,6 +14,8 @@ SELECT
     transfered as `load$transfered£num#`,
     IF((login - pause)>=0,round(answered / ((login - pause) / 3600), 2), NULL) as `load$callOnHour£num#`,
     IF((login - pause)>=0,round(totcall / (login - pause), 2), NULL) as `load$occupation£percent#`,
+    total_recall as `load$totalRecall£num#`,
+    avg_recall as `load$avgRecall£seconds#`,
     min_duration as `duration$min_duration£seconds`,
     max_duration as `duration$max_duration£seconds`,
     avg_duration as `duration$avg_duration£seconds`

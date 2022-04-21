@@ -1,13 +1,10 @@
-SELECT
-    period AS period£{{ .Time.Group }}Date,
-    qname,
-    qdescr,
-    uniqCid AS uniqCid£num,
-    num AS num£num,
-    total_recall AS totalRecall£num,
-    avg_recall AS avgRecall£seconds
-FROM
-    data_summary_null_{{ .Time.Group }}
+SELECT period  AS period£{{ .Time.Group }}Date,
+       qname,
+       qdescr,
+       min_recall AS recall$min_recall£seconds,
+       avg_recall AS recall$avg_recall£seconds,
+       max_recall AS recall$max_recall£seconds
+FROM   data_summary_recall_{{ .Time.Group }}
 WHERE   TRUE
         {{ if and .Time.Interval.Start .Time.Interval.End }}
             AND period >= "{{ .Time.Interval.Start }}"

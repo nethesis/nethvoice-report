@@ -12,7 +12,9 @@ SELECT
        qname,
        Count(DISTINCT cid) AS uniqCid,
        Count(id) AS num,
-       qdescr
+       qdescr,
+       Sum(IF(data4 > 0, 1, 0)) AS total_recall,
+       Avg(IF(data4 > 0, data4, null)) AS avg_recall
 FROM
        report_queue
 WHERE
@@ -32,7 +34,9 @@ SELECT
        qname,
        Count(DISTINCT cid) AS uniqCid,
        Count(id) AS num,
-       qdescr
+       qdescr,
+       Sum(IF(data4 > 0, 1, 0)) AS total_recall,
+       Avg(IF(data4 > 0, data4, null)) AS avg_recall
 FROM
        report_queue
 WHERE
@@ -52,7 +56,9 @@ SELECT
        qname,
        Count(DISTINCT cid) AS uniqCid,
        Count(id) AS num,
-       qdescr
+       qdescr,
+       Sum(IF(data4 > 0, 1, 0)) AS total_recall,
+       Avg(IF(data4 > 0, data4, null)) AS avg_recall
 FROM
        report_queue
 WHERE
@@ -72,7 +78,9 @@ SELECT
        qname,
        Count(DISTINCT cid) AS uniqCid,
        Count(id) AS num,
-       qdescr
+       qdescr,
+       Sum(IF(data4 > 0, 1, 0)) AS total_recall,
+       Avg(IF(data4 > 0, data4, null)) AS avg_recall
 FROM
        report_queue
 WHERE

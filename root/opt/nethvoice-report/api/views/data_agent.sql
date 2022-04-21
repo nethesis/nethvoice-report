@@ -19,6 +19,8 @@ CREATE TABLE data_agent_year AS
          unanswered,
          afterwork,
          totcall, 
+         t3.total_recall,
+         t3.avg_recall,
          min_duration, 
          max_duration, 
          avg_duration 
@@ -60,7 +62,21 @@ CREATE TABLE data_agent_year AS
                          qname) t2 
            ON t1.agent = t2.agent 
               AND t1.qname = t2.qname 
-              AND t1.period = t2.period;
+              AND t1.period = t2.period
+         LEFT JOIN (SELECT
+                      Date_format(From_unixtime(timestamp_in), "%Y") AS period,
+                      agent,
+                      qname,
+                      Count(*) AS total_recall,
+                      Avg(data4) AS avg_recall
+               FROM   report_queue
+               WHERE  data4 > 0
+               GROUP  BY agent,
+                         period,
+                         qname) t3
+           ON t1.agent = t3.agent
+              AND t1.qname = t3.qname
+              AND t1.period = t3.period;
 
 CREATE TABLE data_agent_month AS 
   SELECT t1.period AS period, 
@@ -75,6 +91,8 @@ CREATE TABLE data_agent_month AS
          unanswered,
          afterwork,
          totcall, 
+         t3.total_recall,
+         t3.avg_recall,
          min_duration, 
          max_duration, 
          avg_duration 
@@ -116,7 +134,21 @@ CREATE TABLE data_agent_month AS
                          qname) t2 
            ON t1.agent = t2.agent 
               AND t1.qname = t2.qname 
-              AND t1.period = t2.period;
+              AND t1.period = t2.period
+         LEFT JOIN (SELECT
+                      Date_format(From_unixtime(timestamp_in), "%Y-%m") AS period,
+                      agent,
+                      qname,
+                      Count(*) AS total_recall,
+                      Avg(data4) AS avg_recall
+               FROM   report_queue
+               WHERE  data4 > 0
+               GROUP  BY agent,
+                         period,
+                         qname) t3
+           ON t1.agent = t3.agent
+              AND t1.qname = t3.qname
+              AND t1.period = t3.period;
 
 CREATE TABLE data_agent_week AS 
   SELECT t1.period AS period, 
@@ -131,6 +163,8 @@ CREATE TABLE data_agent_week AS
          unanswered,
          afterwork,
          totcall, 
+         t3.total_recall,
+         t3.avg_recall,
          min_duration, 
          max_duration, 
          avg_duration 
@@ -172,8 +206,21 @@ CREATE TABLE data_agent_week AS
                          qname) t2 
            ON t1.agent = t2.agent 
               AND t1.qname = t2.qname 
-              AND t1.period = t2.period;
-
+              AND t1.period = t2.period
+         LEFT JOIN (SELECT
+                      Date_format(From_unixtime(timestamp_in), "%x-W%v") AS period,
+                      agent,
+                      qname,
+                      Count(*) AS total_recall,
+                      Avg(data4) AS avg_recall
+               FROM   report_queue
+               WHERE  data4 > 0
+               GROUP  BY agent,
+                         period,
+                         qname) t3
+           ON t1.agent = t3.agent
+              AND t1.qname = t3.qname
+              AND t1.period = t3.period;
 
 CREATE TABLE data_agent_day AS 
   SELECT t1.period AS period, 
@@ -188,6 +235,8 @@ CREATE TABLE data_agent_day AS
          unanswered,
          afterwork,
          totcall, 
+         t3.total_recall,
+         t3.avg_recall,
          min_duration, 
          max_duration, 
          avg_duration 
@@ -229,4 +278,18 @@ CREATE TABLE data_agent_day AS
                          qname) t2 
            ON t1.agent = t2.agent 
               AND t1.qname = t2.qname 
-              AND t1.period = t2.period;
+              AND t1.period = t2.period
+         LEFT JOIN (SELECT
+                      Date_format(From_unixtime(timestamp_in), "%Y-%m-%d") AS period,
+                      agent,
+                      qname,
+                      Count(*) AS total_recall,
+                      Avg(data4) AS avg_recall
+               FROM   report_queue
+               WHERE  data4 > 0
+               GROUP  BY agent,
+                         period,
+                         qname) t3
+           ON t1.agent = t3.agent
+              AND t1.qname = t3.qname
+              AND t1.period = t3.period;

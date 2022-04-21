@@ -169,6 +169,18 @@ SELECT p_a_d.period AS period£{{ .Time.Group }}Date,
                period = p_a_d.period
                AND qname =
            p_a_d.qname), 2) )                         AS `notProcessed$percentageJoinEmpty£percent#`,
+       (SELECT total_recall
+        FROM   performance_recall_{{ .Time.Group }}
+        WHERE  period = p_a_d.period
+               AND qname = p_a_d.qname) AS `notProcessed$totalRecall£num#`,
+       (SELECT recall_percentage
+        FROM   performance_recall_{{ .Time.Group }}
+        WHERE  period = p_a_d.period
+               AND qname = p_a_d.qname) AS `notProcessed$percentageRecall£percent#`,
+       (SELECT avg_recall
+        FROM   performance_recall_{{ .Time.Group }}
+        WHERE  period = p_a_d.period
+               AND qname = p_a_d.qname) AS `notProcessed$avgRecall£seconds#`,
        (SELECT Sum(count)
         FROM   performance_null_{{ .Time.Group }}
         WHERE  period = p_a_d.period

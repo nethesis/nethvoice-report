@@ -4,6 +4,8 @@ SELECT
     qdescr,
     uniqCid AS uniqCid£num,
     num AS num£num,
+    total_recall AS totalRecall£num,
+    avg_recall AS avgRecall£seconds,
     max_hold AS waiting$max_hold£seconds,
     min_hold AS waiting$min_hold£seconds,
     avg_hold AS waiting$avg_hold£seconds,

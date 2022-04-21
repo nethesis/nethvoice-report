@@ -69,6 +69,32 @@ if [[ $EXISTS == "" ]]; then
         /usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "ALTER TABLE report_queue ADD COLUMN agents VARCHAR(100) NOT NULL DEFAULT ''"
 fi
 
+# Add "total_recall" and "data_caller_day" columns to data_caller_day table if needed
+TABLE_EXISTS=$(/usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "SHOW TABLES LIKE 'data_caller_day'")
+if [[ ! -z $TABLE_EXISTS ]]; then
+    EXISTS=$(/usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "SHOW COLUMNS FROM data_caller_day LIKE 'total_recall'")
+    if [[ $EXISTS == "" ]]; then
+        /usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "ALTER TABLE data_caller_day ADD COLUMN total_recall decimal(23,0) NOT NULL DEFAULT '0'"
+    fi
+    EXISTS=$(/usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "SHOW COLUMNS FROM data_caller_day LIKE 'avg_recall'")
+    if [[ $EXISTS == "" ]]; then
+        /usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "ALTER TABLE data_caller_day ADD COLUMN avg_recall decimal(25,4) DEFAULT NULL"
+    fi
+fi
+
+# Add "recalled" and "recall_time" columns to data_call table if needed
+TABLE_EXISTS=$(/usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "SHOW TABLES LIKE 'data_call'")
+if [[ ! -z $TABLE_EXISTS ]]; then
+    EXISTS=$(/usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "SHOW COLUMNS FROM data_call LIKE 'recalled'")
+    if [[ $EXISTS == "" ]]; then
+        /usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "ALTER TABLE data_call ADD COLUMN recalled varchar(32) DEFAULT NULL"
+    fi
+    EXISTS=$(/usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "SHOW COLUMNS FROM data_call LIKE 'recall_time'")
+    if [[ $EXISTS == "" ]]; then
+        /usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "ALTER TABLE data_call ADD COLUMN recall_time decimal(23,0) DEFAULT NULL"
+    fi
+fi
+
 # Recreate data_call table over night if agents field is missing or is in the wrong order
 TABLE_EXISTS=$(/usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "SHOW TABLES LIKE 'data_call'")
 if [[ ! -z $TABLE_EXISTS ]]; then

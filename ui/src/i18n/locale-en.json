@@ -156,7 +156,8 @@
       "by_area": "By Area",
       "queue_position": "Queue position",
       "average_duration": "Average duration",
-      "average_wait": "Average wait"
+      "average_wait": "Average wait",
+      "recall": "Recall"
     },
     "login": {
       "invalid_credentials": "Invalid credentials",
@@ -165,6 +166,9 @@
       "login_again": "Please login again"
     },
     "caption": {
+      "recallTime": "Recall time",
+      "AvgRecallTime": "Average Recall time",
+      "RecallByHour": "Recall",
       "callByQueueTotal": "Calls by queue",
       "callByAgentTotal": "Calls by agent",
       "callTotalByHour": "Calls by hour",
@@ -285,6 +289,17 @@
       "per_page": "per page"
     },
     "table": {
+      "percentageRecall": "Recall percentage",
+      "YES": "YES",
+      "NO": "NO",
+      "recalled": "Recalled",
+      "recallTime": "Recall time",
+      "totalRecall": "Total recall",
+      "avgRecall": "Avg recall time",
+      "recall": "Recall",
+      "min_recall": "Min recall time",
+      "avg_recall": "Avg recall time",
+      "max_recall": "Max recall time",
       "total": "Total",
       "tot": "Total",
       "num": "Total",

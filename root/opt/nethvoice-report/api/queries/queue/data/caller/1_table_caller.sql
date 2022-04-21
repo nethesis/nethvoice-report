@@ -17,6 +17,8 @@ SELECT
     `full` AS `results$full£num#`,
     `joinempty` AS `results$joinempty£num#`,
     `null` AS `results$null£num#`,
+    total_recall AS `results$totalRecall£num`,
+    avg_recall AS `results$avgRecall£seconds`,
     min_hold AS `hold$min_hold£seconds#`,
     avg_hold AS `hold$avg_hold£seconds`,
     max_hold AS `hold$max_hold£seconds#`,
