@@ -230,6 +230,7 @@ function do_time_queries($start_ts,$end_ts) {
 
     $sqls[] = "
         INSERT INTO `queue_failed` (`cid`,`name`,`company`,`action`,`time`,`direction`,`qname`,`event`)
+          SELECT cid, name, company, action, time, direction, queuename, event FROM (
             SELECT
                 cid, name, company, action, UNIX_TIMESTAMP(time) as time, direction, queuename,
                 IF (event = '', action, event) AS event
@@ -315,9 +316,10 @@ function do_time_queries($start_ts,$end_ts) {
                 AND UNIX_TIMESTAMP(time) > $start_ts AND UNIX_TIMESTAMP(time) < $end_ts
                 ORDER BY time DESC
             ) queue_recall
-            WHERE action != 'DONE'
             GROUP BY cid, queuename
-            ORDER BY time DESC";
+            ORDER BY time DESC
+          ) queue_recall_ordered
+        WHERE action != 'DONE'";
 
     foreach ($sqls as $sql) {
         try {
