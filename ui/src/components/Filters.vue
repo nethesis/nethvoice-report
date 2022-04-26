@@ -1025,11 +1025,9 @@ export default {
         });
       } else {
         // set agents filter based on selected queues
-        this.filter.queues.length > 0 ? (
-          this.filter.agents = this.agentsFilteredByQueue.map(agent => agent.value)
-        ) : (
-          this.filter.agents = []
-        )
+        if (this.filter.queues.length > 0) {
+          this.filter.agents = this.agentsFilteredByQueue.map(agent => agent.value);
+        }
       }
     }
   },
