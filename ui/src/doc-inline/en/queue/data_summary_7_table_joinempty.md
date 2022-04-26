@@ -18,6 +18,9 @@ The items shown for incoming calls *Entry No Agents* are:
 - `Unique Callers`: total telephone numbers that have entered the queue
 counted individually
 - `Total Entry No Agents Calls`
+- `Total Recall: the total of phone numbers that were successfully recalled after the failure due to lack of agents`
+- `Average Recall Time: the average time from failure due to lack of agents to recall`
+
 
 If no queues have been selected, the data of all available queues will 
 be shown.

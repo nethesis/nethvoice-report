@@ -37,6 +37,10 @@ queue for maximum number of calls waiting in queue reached
 - `Total unanswered calls for Entry No Agents`: calls not
 queue due to absence of online / available / free agents
 - `Percentage on Incoming Calls of Entry No Agents Calls`
+- `Total Recall: total number of successfully recall`
+- `Recall Percentage: percentage of successfully recall on total amount of failed calls`
+- `Tempo di Richiamata: il tempo trascorso dal fallimento alla richiamata`
+- `Average Recall Time: average time elapsed from failure to recall`
 - `Total Null Calls`: calls queued and closed since
 caller before the set minimum wait
 - `Percentage of Incoming Calls of Null Calls`

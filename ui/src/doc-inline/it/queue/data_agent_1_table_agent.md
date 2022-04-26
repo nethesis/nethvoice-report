@@ -27,6 +27,8 @@ risposte
 - `Chiamate all'ora`: il rapporto tra il numero di chiamate risposte e il 
 tempo effettivo in ore
 - `Occupazione`: la percentuale di tempo effettivo passato al telefono
+- `Totale Richiamate: il totale delle richiamate effettuate con successo`
+- `Tempo medio di Richiamata: il tempo medio trascorso dal fallimento alla richiamata`
 - `Durata Minima, Massima e Media`: durata delle chiamate risposte
 
 Se nessun agente è stato selezionato, verranno mostrati i dati di tutti 

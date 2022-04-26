@@ -18,6 +18,8 @@ agenti* sono:
 - `Chiamanti Univoci`: totale numeri telefonici che sono entrati in coda
 contati singolarmente
 - `Totale Chiamate Uscita No Agenti`
+- `Totale Richiamate: il totale delle numerazioni che dopo il fallimento per mancanza di agenti sono state richiamate con successo`
+- `Tempo medio di Richiamata: il tempo medio trascorso dal fallimento per mancanza di agenti alla richiamata`
 - `Attesa massima, minima, media`: prima della uscita dalla coda
 - `Posizione di entrata in coda massima`
 - `Posizione di entrata in coda media`

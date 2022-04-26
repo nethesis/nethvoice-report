@@ -31,6 +31,8 @@ massimo di chiamate in attesa in coda raggiunto
 per assenza di agenti online/disponibili/liberi
 - `Nulle`: numero totale delle chiamate entrate in coda e chiuse dal 
 chiamante prima dell'attesa minima impostata
+- `Totale Richiamate: il totale delle richiamate avute con successo`
+- `Tempo medio di Richiamata: il tempo medio trascorso dal fallimento alla richiamata`
 - `Attesa massima, minima, media` 
 - `Durata della chiamata massima, minima e media`
 - `Posizione minima, media, massima`: all'entrata in coda
