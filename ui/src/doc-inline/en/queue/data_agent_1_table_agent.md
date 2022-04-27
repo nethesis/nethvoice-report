@@ -27,8 +27,8 @@ Login time and the sum of Pause time and After Closing time
 - `Calls per hour`: the ratio between the number of answered calls and the
 actual time in hours
 - `Occupation`: the percentage of actual time spent on the phone
-- `Total Recall: total number of successfully recall`
-- `Average Recall Time: average time elapsed from failure to recall`
+- `Total Recall`: total number of successfully recall
+- `Average Recall Time`: average time elapsed from failure to recall
 - `Minimum, Maximum and Average Duration`: duration of answered calls
 
 If no agent has been selected, all agent will be shown.

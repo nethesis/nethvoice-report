@@ -40,9 +40,9 @@ coda per numero massimo di chiamate in attesa in coda raggiunto
 entrate in coda per assenza di agenti online/disponibili/liberi
 - `Percentuale sulle Chiamate Entrate delle Chiamate in Entrata No 
 Agenti`
-- `Totale Richiamate: il totale delle richiamate effettuate con successo`
-- `Percentuale Richiamate: la percentuale sul totale dei fallimenti delle richiamate effettuate con successo`
-- `Tempo medio di Richiamata: il tempo medio trascorso dal fallimento alla richiamata`
+- `Totale Richiamate`: il totale delle richiamate effettuate con successo
+- `Percentuale Richiamate`: la percentuale sul totale dei fallimenti delle richiamate effettuate con successo
+- `Tempo medio di Richiamata`: il tempo medio trascorso dal fallimento alla richiamata
 - `Totale Chiamate Nulle`: chiamate entrate in coda e chiuse dal
 chiamante prima dell'attesa minima impostata
 - `Percentuale sulle Chiamate Entrate delle Chiamate Nulle`

@@ -18,8 +18,8 @@ Le voci mostrate per le chiamate in *Entrata No Agenti* sono:
 - `Chiamanti Univoci`: totale numeri telefonici che sono entrati in coda 
 contati singolarmente 
 - `Totale Chiamate Entrata No Agenti`
-- `Totale Richiamate: il totale delle numerazioni che dopo il fallimento per coda senza agenti sono state richiamate con successo`
-- `Tempo medio di Richiamata: il tempo medio trascorso dal fallimento per coda senza agenti alla richiamata`
+- `Totale Richiamate`: il totale delle numerazioni che dopo il fallimento per coda senza agenti sono state richiamate con successo
+- `Tempo medio di Richiamata`: il tempo medio trascorso dal fallimento per coda senza agenti alla richiamata
 
 
 Se nessuna coda è stata selezionata, verranno mostrati i dati di tutte

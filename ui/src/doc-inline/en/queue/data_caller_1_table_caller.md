@@ -31,8 +31,8 @@ maximum number of calls waiting in queue reached
 due to the absence of online / available / free agents
 - `Null`: total number of calls queued and closed since
 caller before the set minimum wait
-- `Total Recall: total number of successfully recall`
-- `Average Recall Time: average time elapsed from failure to recall`
+- `Total Recall`: total number of successfully recall
+- `Average Recall Time`: average time elapsed from failure to recall
 - `Maximum, minimum, average wait`
 - `Maximum, minimum and average call duration`
 - `Minimum, average, maximum position`: when entering the queue

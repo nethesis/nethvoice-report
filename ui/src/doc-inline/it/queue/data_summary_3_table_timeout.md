@@ -16,8 +16,8 @@ Le voci mostrate per le chiamate in *Timeout* sono:
 - `Chiamanti Univoci`: totale numeri telefonici che sono entrati in coda 
 contati singolarmente
 - `Totale Chiamate in Timeout`
-- `Totale Richiamate: il totale delle numerazioni che dopo il timeout in coda sono state richiamate con successo`
-- `Tempo medio di Richiamata: il tempo medio trascorso dal timeout in coda alla richiamata`
+- `Totale Richiamate`: il totale delle numerazioni che dopo il timeout in coda sono state richiamate con successo
+- `Tempo medio di Richiamata`: il tempo medio trascorso dal timeout in coda alla richiamata
 - `Attesa massima, minima, media`: prima del Timeout
 - `Posizione di entrata in coda massima`
 - `Posizione di entrata in coda media`

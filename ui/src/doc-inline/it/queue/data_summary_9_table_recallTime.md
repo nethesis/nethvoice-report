@@ -10,7 +10,7 @@ quando un agente richiama con successo la numerazione telefonica.
 
 Le voci mostrate per i tempi di *Richiamata* sono:
 
-- `Periodo di Raggruppamento`\
+- `Periodo di Raggruppamento`
 - `Numero Coda`
 - `Nome Coda`
 - `Tempo di Richiamata minimo, medio, massimo`
