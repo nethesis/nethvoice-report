@@ -38,5 +38,6 @@ WHERE	calldate >= "{{ .Time.Interval.Start }}"
 	{{ if gt (len .Patterns) 0 }}
 	  AND call_type REGEXP ({{ ExtractRegexpStrings .Patterns }})
 	{{ end }}
+GROUP BY type, call_type
 <CDR_GROUP: type, call_type>
 <CDR_ORDER: type, call_type>
