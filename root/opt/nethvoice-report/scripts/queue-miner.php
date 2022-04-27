@@ -368,9 +368,9 @@ function do_time_queries($start_ts,$end_ts) {
         $agents_qm = implode(',',$tmp_qm);
 
         $sql = "SELECT MIN(uniqueid),cnam AS agent FROM cdr
-        WHERE cnum = ?
+        WHERE dst = ?
         AND uniqueid > ?
-        AND uniqueid < UNIX_TIMESTAMP(STR_TO_DATE( CONCAT( YEAR(? + INTERVAL 1 DAY) ,'-', MONTH(? + INTERVAL 1 DAY) ,'-', DAY(? + INTERVAL 1 DAY)), '%Y/%m/%d'))
+        AND uniqueid < UNIX_TIMESTAMP(STR_TO_DATE( CONCAT( YEAR(FROM_UNIXTIME(?) + INTERVAL 1 DAY) ,'-', MONTH(FROM_UNIXTIME(?) + INTERVAL 1 DAY) ,'-', DAY(FROM_UNIXTIME(?) + INTERVAL 1 DAY)), '%Y-%m-%d'))
         AND cnam IN ($agents_qm)
         AND disposition = 'ANSWERED'
         AND billsec > 0
