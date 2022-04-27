@@ -13,6 +13,8 @@ The items shown for calls in *Exit Menu* are:
 - `Unique Callers`: total telephone numbers that have entered the queue
 counted individually
 - `Total Exit Menu Calls`
+- `Total Recall: the total of phone numbers that have been successfully recalled after using the exit menu`
+- `Average Recall Time: the average time elapsed from using the exit menu to the callback`
 - `Maximum, minimum, average wait`: before using the Exit Menu
 - `Maximum queue entry position`
 - `Average queue entry position`

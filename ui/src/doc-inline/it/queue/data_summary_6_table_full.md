@@ -17,6 +17,9 @@ Le voci mostrate per le chiamate in *Coda Piena* sono:
 - `Chiamanti Univoci`: totale numeri telefonici che sono entrati in coda 
 contati singolarmente 
 - `Totale Chiamate Coda Piena`
+- `Totale Richiamate: il totale delle numerazioni che dopo il fallimento per coda piena sono state richiamate con successo`
+- `Tempo medio di Richiamata: il tempo medio trascorso dal fallimento per coda piena alla richiamata`
+
 
 Se nessuna coda è stata selezionata, verranno mostrati i dati di tutte
 le code disponibili.

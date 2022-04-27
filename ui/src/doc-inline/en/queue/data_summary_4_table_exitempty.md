@@ -19,6 +19,8 @@ agents* are:
 - `Unique Callers`: total telephone numbers that have entered the queue
 counted individually
 - `Total Failed Calls No Agents`
+- `Total Recall: the total of phone numbers that were successfully recalled after the failure due to lack of agents`
+- `Average Recall Time: the average time from failure due to lack of agents to recall`
 - `Maximum, minimum, average wait`: before exiting the queue
 - `Maximum queue entry position`
 - `Average queue entry position`

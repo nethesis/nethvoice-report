@@ -23,6 +23,8 @@ ANSWER result
 - `Result`: possible results: Answer, Abandon, Exit Menu,
 Timeout, Queue full, Entry with No Agent in queue, Exit for
 No Agent available
+- `Recalled: in event of failure if a successfully recall has been made`
+- `Recall Time: time elapsed from failure to recall`
 
 If no caller has been selected, all calls will be shown.
 If no queues have been selected, data of all available queues will be 

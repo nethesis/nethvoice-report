@@ -17,6 +17,9 @@ The entries shown for calls in *Full Queue* are:
 - `Unique Callers`: total telephone numbers that have entered the queue
 counted individually
 - `Total Full Queue Calls`
+- `Total Recall: the total of phone numbers that were successfully recalled after the failure due to a full queue`
+- `Average Recall Time: the average time from failure due to a full queue to recall`
+
 
 If no queues have been selected, the data of all available queues will be 
 shown.
