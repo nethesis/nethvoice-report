@@ -15,8 +15,8 @@ The items shown for calls in *Timeout* are:
 - `Unique Callers`: total telephone numbers that have entered the queue
 counted individually
 - `Total Calls in Timeout`
-- `Total Recall: the total of phone numbers that have been successfully recalled after the timeout in the queue`
-- `Average Recall Time: the average time elapsed from the timeout queue to recall`
+- `Total Recall`: the total of phone numbers that have been successfully recalled after the timeout in the queue
+- `Average Recall Time`: the average time elapsed from the timeout queue to recall
 - `Maximum, minimum, average wait`: before the Timeout
 - `Maximum queue entry position`
 - `Average queue entry position`

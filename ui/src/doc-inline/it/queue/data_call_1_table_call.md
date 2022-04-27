@@ -24,8 +24,8 @@ risultato ANSWER
 - `Risultato`: possibili risultati: Risposta, Abbandono, Menù Uscita, 
 Timeout, Coda piena, Entrata con Nessun Agente in coda, Uscita per 
 Nessun Agente disponibile
-- `Richiamata: in caso di fallimento se è stato richiamato con successo`
-- `Tempo di Richiamata: il tempo trascorso dal fallimento alla richiamata`
+- `Richiamata`: in caso di fallimento se è stato richiamato con successo
+- `Tempo di Richiamata`: il tempo trascorso dal fallimento alla richiamata
 
 Se nessun chiamante è stato selezionato, verranno mostrate tutte le 
 chiamate.
