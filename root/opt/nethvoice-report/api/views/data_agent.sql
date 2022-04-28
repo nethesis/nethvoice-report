@@ -38,7 +38,11 @@ CREATE TABLE data_agent_year AS
                  Sum(duration)                                  AS totcall, 
                  Max(duration)                                  AS max_duration, 
                  Min(Nullif(duration, 0))                       AS min_duration, 
-                 Avg(duration)                                  AS avg_duration, 
+                 IF(
+                     Sum(IF(action = 'ANSWER', 1, 0)) + Sum(IF(action = 'TRANSFER', 1, 0)) > 0,
+                     Sum(duration) / (Sum(IF(action = 'ANSWER', 1, 0)) + Sum(IF(action = 'TRANSFER', 1, 0))),
+                     0
+                 )                                              AS avg_duration,
                  Date_format(From_unixtime(timestamp_in), '%Y') AS period 
           FROM   report_queue_agents 
           GROUP  BY agent, 
@@ -110,7 +114,11 @@ CREATE TABLE data_agent_month AS
                  Sum(duration)                                  AS totcall, 
                  Max(duration)                                  AS max_duration, 
                  Min(Nullif(duration, 0))                       AS min_duration, 
-                 Avg(duration)                                  AS avg_duration, 
+                 IF(
+                     Sum(IF(action = 'ANSWER', 1, 0)) + Sum(IF(action = 'TRANSFER', 1, 0)) >0,
+                     Sum(duration) / (Sum(IF(action = 'ANSWER', 1, 0)) + Sum(IF(action = 'TRANSFER', 1, 0))),
+                     0
+                 )                                              AS avg_duration,
                  Date_format(From_unixtime(timestamp_in), '%Y-%m') AS period 
           FROM   report_queue_agents 
           GROUP  BY agent, 
@@ -182,7 +190,11 @@ CREATE TABLE data_agent_week AS
                  Sum(duration)                                  AS totcall, 
                  Max(duration)                                  AS max_duration, 
                  Min(Nullif(duration, 0))                       AS min_duration, 
-                 Avg(duration)                                  AS avg_duration, 
+                 IF(
+                     Sum(IF(action = 'ANSWER', 1, 0)) + Sum(IF(action = 'TRANSFER', 1, 0)) >0,
+                     Sum(duration) / (Sum(IF(action = 'ANSWER', 1, 0)) + Sum(IF(action = 'TRANSFER', 1, 0))),
+                     0
+                 )                                              AS avg_duration,
                  Date_format(From_unixtime(timestamp_in), '%x-W%v') AS period 
           FROM   report_queue_agents 
           GROUP  BY agent, 
@@ -254,7 +266,11 @@ CREATE TABLE data_agent_day AS
                  Sum(duration)                                  AS totcall, 
                  Max(duration)                                  AS max_duration, 
                  Min(Nullif(duration, 0))                       AS min_duration, 
-                 Avg(duration)                                  AS avg_duration, 
+                 IF(
+                     Sum(IF(action = 'ANSWER', 1, 0)) + Sum(IF(action = 'TRANSFER', 1, 0)) >0,
+                     Sum(duration) / (Sum(IF(action = 'ANSWER', 1, 0)) + Sum(IF(action = 'TRANSFER', 1, 0))),
+                     0
+                 )                                              AS avg_duration,
                  Date_format(From_unixtime(timestamp_in), '%Y-%m-%d') AS period 
           FROM   report_queue_agents 
           GROUP  BY agent, 
