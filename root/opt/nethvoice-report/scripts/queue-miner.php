@@ -160,7 +160,18 @@ function do_time_queries($start_ts,$end_ts) {
          agent,qc.descr as qdescr,
          '' as agents
        from queue_log_history a inner join asterisk.queues_config qc on queuename=qc.extension
-       where event in ('ABANDON','EXITWITHTIMEOUT','EXITWITHKEY','EXITEMPTY','FULL','JOINEMPTY') AND UNIX_TIMESTAMP(time) > $start_ts AND UNIX_TIMESTAMP(time) < $end_ts
+       where event in ('ABANDON','EXITWITHTIMEOUT','EXITEMPTY','FULL','JOINEMPTY') AND UNIX_TIMESTAMP(time) > $start_ts AND UNIX_TIMESTAMP(time) < $end_ts
+     UNION ALL
+     select id,UNIX_TIMESTAMP(time) as timestamp_out, callid as timestamp_in, queuename as qname,
+         event as action,
+         cast(data2 as UNSIGNED) as position,
+         cast(data3 as UNSIGNED) as duration,
+         cast(data4 as UNSIGNED) as hold,
+         0 as data4,
+         agent,qc.descr as qdescr,
+         '' as agents
+       from queue_log_history a inner join asterisk.queues_config qc on queuename=qc.extension
+       where event in ('EXITWITHKEY') AND UNIX_TIMESTAMP(time) > $start_ts AND UNIX_TIMESTAMP(time) < $end_ts
        UNION ALL
        select id,UNIX_TIMESTAMP(time) as timestamp_out, callid as timestamp_in, queuename as qname,
          'ANSWER' as action,
