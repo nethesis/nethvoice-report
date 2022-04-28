@@ -74,11 +74,11 @@ TABLE_EXISTS=$(/usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "SH
 if [[ ! -z $TABLE_EXISTS ]]; then
     EXISTS=$(/usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "SHOW COLUMNS FROM data_caller_day LIKE 'total_recall'")
     if [[ $EXISTS == "" ]]; then
-        /usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "ALTER TABLE data_caller_day ADD COLUMN total_recall decimal(23,0) NOT NULL DEFAULT '0'"
+        /usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "ALTER TABLE data_caller_day ADD COLUMN total_recall decimal(23,0) NOT NULL DEFAULT '0' AFTER qdescr"
     fi
     EXISTS=$(/usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "SHOW COLUMNS FROM data_caller_day LIKE 'avg_recall'")
     if [[ $EXISTS == "" ]]; then
-        /usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "ALTER TABLE data_caller_day ADD COLUMN avg_recall decimal(25,4) DEFAULT NULL"
+        /usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "ALTER TABLE data_caller_day ADD COLUMN avg_recall decimal(25,4) DEFAULT NULL AFTER total_recall"
     fi
 fi
 
