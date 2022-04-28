@@ -239,6 +239,8 @@ function do_time_queries($start_ts,$end_ts) {
 
     $sqls[] = "UPDATE report_queue SET cid = (SELECT cid FROM report_queue_callers WHERE report_queue_callers.timestamp_in = report_queue.timestamp_in LIMIT 1) WHERE cid IS NULL AND timestamp_in > $start_ts";
 
+    $sqls[] = "UPDATE report_queue SET cid = (SELECT cid FROM tmp_cdr JOIN report_queue_callers ON report_queue_callers.timestamp_in = tmp_cdr.linkedid WHERE tmp_cdr.uniqueid = report_queue.timestamp_in LIMIT 1) WHERE cid IS NULL AND timestamp_in > $start_ts";
+
     $sqls[] = "
         INSERT INTO `queue_failed` (`cid`,`name`,`company`,`action`,`time`,`direction`,`qname`,`event`)
           SELECT cid, name, company, action, time, direction, queuename, event FROM (
