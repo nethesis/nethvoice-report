@@ -315,6 +315,7 @@
       "incoming": "Incoming",
       "processed": "Processed",
       "notProcessed": "Not processed",
+      "notManaged":"Not Managed",
       "null": "Null",
       "percentage": "Percentage",
       "waiting": "Waiting",

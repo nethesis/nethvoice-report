@@ -195,6 +195,18 @@ SELECT p_a_d.period AS period£{{ .Time.Group }}Date,
                period = p_a_d.period
                AND qname =
            p_a_d.qname), 2) )                         AS `null$percentageTot£percent`,
+       (SELECT COALESCE(Sum(count), 0)
+            FROM   performance_notmanaged_{{ .Time.Group }}
+            WHERE  period = p_a_d.period
+                   AND qname = p_a_d.qname)           AS `notManaged$tot£num`,
+       (SELECT COALESCE(Sum(count), 0)
+            FROM   performance_notmanaged_{{ .Time.Group }}
+            WHERE  period = p_a_d.period
+            AND qname = p_a_d.qname) * 100 /
+            (SELECT total
+                FROM performance_total_{{ .Time.Group }}
+                WHERE period = p_a_d.period
+                AND qname = p_a_d.qname)              AS `notManaged$percentageTot£percent`,
        p_a_d.min_hold                                 AS `waiting$min£seconds`,
        p_a_d.max_hold                                 AS `waiting$max£seconds`,
        p_a_d.avg_hold                                 AS `waiting$avg£seconds`,
