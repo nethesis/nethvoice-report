@@ -316,6 +316,7 @@
       "processed": "Evase",
       "notProcessed": "Non Evase",
       "null": "Nulle",
+      "notManaged":"Non Gestite",
       "percentage": "Percentuale",
       "waiting": "Attesa",
       "duration": "Durata",

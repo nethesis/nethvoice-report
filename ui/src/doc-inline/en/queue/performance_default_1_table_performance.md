@@ -43,6 +43,8 @@ queue due to absence of online / available / free agents
 - `Total Null Calls`: calls queued and closed since
 caller before the set minimum wait
 - `Percentage of Incoming Calls of Null Calls`
+- `Total Not Managed calls`: number of calls wich last interaction failed
+- `Percentage of Not Managed calls`: percentage of not managed calls on the total calls
 - `Maximum, minimum, average wait`: before the answer
 - `Maximum, minimum and average call duration`
 

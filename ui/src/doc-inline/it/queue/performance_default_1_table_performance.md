@@ -46,6 +46,8 @@ Agenti`
 - `Totale Chiamate Nulle`: chiamate entrate in coda e chiuse dal
 chiamante prima dell'attesa minima impostata
 - `Percentuale sulle Chiamate Entrate delle Chiamate Nulle`
+- `Totale chiamate non gestite`: numero di chiamate la cui ultima interazione giornaliera non è andata a buon fine
+- `Percentuale chiamate non gestite`: percentuale delle chiamate non gesite rispetto al totale delle chiamate
 - `Attesa massima, minima, media`: prima della risposta
 - `Durata della chiamata massima, minima e media`
 
