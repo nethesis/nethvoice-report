@@ -1,5 +1,5 @@
 Name:		nethvoice-report
-Version: 1.1.4
+Version: 1.2.0
 Release: 1%{?dist}
 Summary:	Queue and CDR/Costs reports
 
@@ -80,6 +80,14 @@ cat %{name}-%{version}-filelist
 %doc COPYING
 
 %changelog
+* Mon May 02 2022 Stefano Fancello <stefano.fancello@nethesis.it> - 1.2.0-1
+- Add not managed calls to queue report performance table - nethesis/dev#6142
+- Add recall times for agents and for queues - nethesis/dev#6127
+- queue report Exitkey calls has wrong data - Bug nethesis/dev#6138
+- cdr report outbound call recap summary missing call type and wrong call counter - Bug nethesis/dev#6137
+- NethVoice Report filter with no queues doesn't save agents - Bug nethesis/dev#6135
+- Remove lost calls from average call duration - nethesis/dev#6139
+
 * Fri Jan 28 2022 Stefano Fancello <stefano.fancello@nethesis.it> - 1.1.4-1
 - Enhance authorizations management and sync cache with those - Bug nethesis/dev#6100
 
