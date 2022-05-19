@@ -510,7 +510,11 @@
       "queue": "Coda",
       "main_extension": "Principale",
       "actual_extension": "Effettivo",
-      "extension": "Interno"
+      "extension": "Interno",
+      "Mobile": "Cellulare",
+      "National": "Nazionale",
+      "International": "Internazionale",
+      "Total": "Totale"
     },
     "validation": {
       "office_hours_invalid": "Orario non valido",
