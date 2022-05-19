@@ -41,7 +41,10 @@
               <!-- not expanded -->
               <sui-statistics-group v-if="!entry.expanded">
                 <sui-statistic in-group>
-                  <sui-statistic-value>{{
+                  <sui-statistic-value v-if="entry.type == 'OUT'">{{
+                    entry.totalNum/2 | formatNumber
+                  }}</sui-statistic-value>
+                  <sui-statistic-value v-else>{{
                     entry.totalNum | formatNumber
                   }}</sui-statistic-value>
                   <sui-statistic-label>{{
@@ -71,7 +74,7 @@
                       <sui-icon name="arrow right" />
                       {{
                         detail.destination
-                          ? detail.destination
+                          ? $t(`misc.${detail.destination }`)
                           : $t("misc.unknown")
                       }}
                       <span v-if="!detail.destination">
