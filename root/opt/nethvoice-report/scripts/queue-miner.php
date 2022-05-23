@@ -237,7 +237,7 @@ function do_time_queries($start_ts,$end_ts) {
 
     $sqls[] = "INSERT IGNORE INTO ivr_choice (select a.uniqueid,unix_timestamp(eventtime) as timestamp_in,a.cid_name,a.cid_num,a.context,b.name,a.exten from cel a inner join asterisk.ivr_details b on a.context=concat('ivr-',b.id) where eventtype='IVR_CHOICE' AND unix_timestamp(eventtime) > $start_ts AND UNIX_TIMESTAMP(eventtime) < $end_ts)";
 
-    $sqls[] = "UPDATE report_queue SET cid = (SELECT cid FROM report_queue_callers WHERE report_queue_callers.timestamp_in = report_queue.timestamp_in LIMIT 1) WHERE cid IS NULL AND timestamp_in > $start_ts";
+    $sqls[] = "UPDATE report_queue INNER JOIN (SELECT cid,timestamp_in FROM report_queue_callers WHERE timestamp_in > $start_ts AND timestamp_in < $end_ts) t ON t.timestamp_in = report_queue.timestamp_in SET report_queue.cid = t.cid WHERE report_queue.cid IS NULL AND report_queue.timestamp_in > $start_ts AND report_queue.timestamp_in < $end_ts";
 
     $sqls[] = "UPDATE report_queue SET cid = (SELECT cid FROM tmp_cdr JOIN report_queue_callers ON report_queue_callers.timestamp_in = tmp_cdr.linkedid WHERE tmp_cdr.uniqueid = report_queue.timestamp_in LIMIT 1) WHERE cid IS NULL AND timestamp_in > $start_ts";
 
