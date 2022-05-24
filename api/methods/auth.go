@@ -64,6 +64,10 @@ func PamAuth(username string, password string) error {
 	if errAuth != nil {
 		return errAuth
 	}
+	errAuth = t.AcctMgmt(0)
+	if errAuth != nil {
+		return errAuth
+	}
 	return nil
 }
 
