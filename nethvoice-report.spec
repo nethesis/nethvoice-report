@@ -1,5 +1,5 @@
 Name:		nethvoice-report
-Version: 1.2.0
+Version: 1.2.1
 Release: 1%{?dist}
 Summary:	Queue and CDR/Costs reports
 
@@ -80,6 +80,11 @@ cat %{name}-%{version}-filelist
 %doc COPYING
 
 %changelog
+* Thu May 26 2022 Stefano Fancello <stefano.fancello@nethesis.it> - 1.2.1-1
+- Slow report miner query take too much time - Bug nethesis/dev#6154
+- Wrong DND and Queues status of physical phone - Bug nethesis/dev#6151
+- NethVoice CDR Report: missing total on outbound search - Bug nethesis/dev#6149
+
 * Mon May 02 2022 Stefano Fancello <stefano.fancello@nethesis.it> - 1.2.0-1
 - Add not managed calls to queue report performance table - nethesis/dev#6142
 - Add recall times for agents and for queues - nethesis/dev#6127
