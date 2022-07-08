@@ -321,7 +321,7 @@ function do_time_queries($start_ts,$end_ts) {
                     dst AS cid,
                     dst_cnam AS name,
                     dst_ccompany AS company,
-                    accountcode AS agent,
+                    cnam AS agent,
                     ''
                 FROM tmp_cdr c
                 INNER JOIN asteriskcdrdb.queue_log_history l ON c.dst=l.data2
