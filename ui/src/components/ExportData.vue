@@ -65,8 +65,50 @@ export default {
     };
   },
   methods: {
+
+    reversePhonebookSearchCsvName(element) {
+      const csvName = this.$options.filters.reversePhonebookLookup (
+        element,
+        "name",
+        this.$root
+      );
+      element = csvName
+      if (element === "-"){
+        element = element.replace(/-/g, ' ')
+      }
+      return element;
+    },
+
+    reversePhonebookSearchCsvCompany(item) {
+      const csvCompany = this.$options.filters.reversePhonebookLookup (
+        item,
+        "company",
+        this.$root
+      );
+      item = csvCompany
+      if (item === "-"){
+        item = item.replace(/-/g, ' ')
+      }
+      return item;
+
+    },
+
+
     exportToCSV () {
       let data = this._.cloneDeep(this.data)
+      if(this.$root._route.path == "/queue/data/caller" || this.$root._route.path == "/queue/data/call") {
+        let nameCompany = data.slice(1).map(item => {
+          if (item[2]) {
+            item[2] = this.reversePhonebookSearchCsvName(item[2]);
+          }
+          if (item[3]) {
+            item[3] = this.reversePhonebookSearchCsvCompany(item[3]);
+          }
+          console.log(nameCompany);
+          return item;
+        });
+      }
+
       // if 'src£phoneNumber' / 'dst£phoneNumber' columns are present, generate 'srcDevice' / 'dstDevice' columns
       data = this.checkDeviceColumns(data);
       // translate col labels
@@ -168,35 +210,135 @@ export default {
         // generate 'srcDevice' and 'dstDevice' columns
         // add new columns near src/dst (add right-most column first)
 
-        if (srcPos < dstPos) {
-          columns.splice(dstPos + 1, 0, "dstDevice");
-          columns.splice(srcPos + 1, 0, "srcDevice");
-        } else {
-          columns.splice(srcPos + 1, 0, "srcDevice");
-          columns.splice(dstPos + 1, 0, "dstDevice");
-        }
         const rows = data.slice(1);
 
-        for (const row of rows) {
-          const srcElem = row[srcPos];
-          const dstElem = row[dstPos];
-          let srcDevice = "";
-          let dstDevice = "";
-
-          if (this.$root.devices[srcElem]) {
-            srcDevice = this.$root.devices[srcElem].type;
+        if (this.$root._route.path == "/cdr/pbx/inbound" || this.$root._route.path == "/cdr/personal/inbound") {
+          if (srcPos < dstPos) {
+            columns.splice(dstPos + 1, 0, "dstDevice");
+            columns.splice(dstPos + 2, 0, "dstName");
+            columns.splice(srcPos + 1, 0, "srcName");
+            columns.splice(srcPos + 2, 0, "srcCompany");
+            
+          } else {
+            columns.splice(srcPos + 1, 0, "srcName");
+            columns.splice(srcPos + 2, 0, "srcCompany");
+            columns.splice(dstPos + 1, 0, "dstDevice");
+            columns.splice(dstPos + 2, 0, "dstName");
           }
+
+          for (const row of rows) {
+            const srcElem = row[srcPos];
+            const dstElem = row[dstPos];
+            let srcName = this.reversePhonebookSearchCsvName(srcElem);
+            let srcCompany = this.reversePhonebookSearchCsvCompany(srcElem);
+            let dstName = this.reversePhonebookSearchCsvName(dstElem);
+            let dstDevice = "";
 
           if (this.$root.devices[dstElem]) {
             dstDevice = this.$root.devices[dstElem].type;
           }
 
+            if (srcPos < dstPos) {
+              row.splice(dstPos + 1, 0, dstDevice);
+              row.splice(dstPos + 2, 0, dstName);
+              row.splice(srcPos + 1, 0, srcName);
+              row.splice(srcPos + 2, 0, srcCompany);
+              
+            } else {
+              row.splice(srcPos + 1, 0, srcName);
+              row.splice(srcPos + 2, 0, srcCompany);
+              row.splice(dstPos + 1, 0, dstDevice);
+              row.splice(dstPos + 2, 0, dstName);
+            }
+
+          }
+        }
+
+        if (this.$root._route.path == "/cdr/pbx/outbound" || this.$root._route.path == "/cdr/personal/outbound") {
+
           if (srcPos < dstPos) {
-            row.splice(dstPos + 1, 0, dstDevice);
-            row.splice(srcPos + 1, 0, srcDevice);
+            columns.splice(dstPos + 1, 0, "dstName");
+            columns.splice(dstPos + 2, 0, "dstCompany");
+            columns.splice(srcPos + 1, 0, "srcDevice");
+            columns.splice(srcPos + 2, 0, "srcName");
+            
           } else {
-            row.splice(srcPos + 1, 0, srcDevice);
-            row.splice(dstPos + 1, 0, dstDevice);
+            columns.splice(srcPos + 1, 0, "srcDevice");
+            columns.splice(srcPos + 2, 0, "srcName");
+            columns.splice(dstPos + 1, 0, "dstName");
+            columns.splice(dstPos + 2, 0, "dstCompany");
+          }
+
+          for (const row of rows) {
+            const srcElem = row[srcPos];
+            const dstElem = row[dstPos];
+            let srcName = this.reversePhonebookSearchCsvName(srcElem);
+            let dstName = this.reversePhonebookSearchCsvName(dstElem);
+            let dstCompany = this.reversePhonebookSearchCsvName(dstElem);
+            let srcDevice = "";
+
+            if (this.$root.devices[srcElem]) {
+              srcDevice = this.$root.devices[srcElem].type;
+            }
+
+            if (srcPos < dstPos) {
+              row.splice(dstPos + 1, 0, dstName);
+              row.splice(dstPos + 2, 0, dstName);
+              row.splice(srcPos + 1, 0, srcDevice);
+              row.splice(srcPos + 2, 0, srcName);
+              
+            } else {
+              row.splice(srcPos + 1, 0, srcDevice);
+              row.splice(srcPos + 2, 0, srcName);
+              row.splice(dstPos + 1, 0, dstCompany);
+              row.splice(dstPos + 2, 0, dstName);
+            }
+
+          }
+        }
+
+        if (this.$root._route.path == "/cdr/pbx/local" || this.$root._route.path == "/cdr/personal/local") {
+
+          if (srcPos < dstPos) {
+            columns.splice(dstPos + 1, 0, "dstDevice");
+            columns.splice(dstPos + 2, 0, "dstName");
+            columns.splice(srcPos + 1, 0, "srcDevice");
+            columns.splice(srcPos + 2, 0, "srcName");
+          } else {
+            columns.splice(srcPos + 1, 0, "srcDevice");
+            columns.splice(srcPos + 2, 0, "srcName");
+            columns.splice(dstPos + 1, 0, "dstDevice");
+            columns.splice(dstPos + 2, 0, "dstName");
+          }
+
+          for (const row of rows) {
+            const srcElem = row[srcPos];
+            const dstElem = row[dstPos];
+            let srcName = this.reversePhonebookSearchCsvName(srcElem);
+            let dstName = this.reversePhonebookSearchCsvName(dstElem);
+            let srcDevice = "";
+            let dstDevice = "";
+
+            if (this.$root.devices[srcElem]) {
+              srcDevice = this.$root.devices[srcElem].type;
+            }
+
+            if (this.$root.devices[dstElem]) {
+              dstDevice = this.$root.devices[dstElem].type;
+            }
+
+            if (srcPos < dstPos) {
+              row.splice(dstPos + 1, 0, dstDevice);
+              row.splice(dstPos + 2, 0, dstName);
+              row.splice(srcPos + 1, 0, srcDevice);
+              row.splice(srcPos + 2, 0, srcName);
+            } else {
+              row.splice(srcPos + 2, 0, srcName);
+              row.splice(dstPos + 1, 0, dstDevice);
+              row.splice(srcPos + 1, 0, srcDevice);
+              row.splice(dstPos + 2, 0, dstName);
+            }
+
           }
         }
       }
