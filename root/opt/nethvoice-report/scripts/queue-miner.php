@@ -241,6 +241,7 @@ function do_time_queries($start_ts,$end_ts) {
 
     $sqls[] = "UPDATE report_queue SET cid = (SELECT cid FROM tmp_cdr JOIN report_queue_callers ON report_queue_callers.timestamp_in = tmp_cdr.linkedid WHERE tmp_cdr.uniqueid = report_queue.timestamp_in LIMIT 1) WHERE cid IS NULL AND timestamp_in > $start_ts";
 
+    // Not managed calls
     $sqls[] = "
         INSERT INTO `queue_failed` (`cid`,`name`,`company`,`action`,`time`,`direction`,`qname`,`event`)
           SELECT cid, name, company, action, time, direction, queuename, event FROM (
@@ -318,9 +319,9 @@ function do_time_queries($start_ts,$end_ts) {
                     0 AS duration,
                     0 AS hold,
                     dst AS cid,
-                    cnam AS name,
-                    ccompany AS company,
-                    accountcode AS agent,
+                    dst_cnam AS name,
+                    dst_ccompany AS company,
+                    cnam AS agent,
                     ''
                 FROM tmp_cdr c
                 INNER JOIN asteriskcdrdb.queue_log_history l ON c.dst=l.data2
