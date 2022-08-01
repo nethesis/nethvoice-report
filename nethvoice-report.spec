@@ -1,5 +1,5 @@
 Name:		nethvoice-report
-Version: 1.2.1
+Version: 1.2.2
 Release: 1%{?dist}
 Summary:	Queue and CDR/Costs reports
 
@@ -80,6 +80,12 @@ cat %{name}-%{version}-filelist
 %doc COPYING
 
 %changelog
+* Mon Aug 01 2022 Stefano Fancello <stefano.fancello@nethesis.it> - 1.2.2-1
+- In not managed calls, take time from first interaction instead of last one - Bug nethesis/dev#6177
+- Incomplete data within the CSV export - Bug nethesis/dev#6175
+- Python : Add query to detect PAM authorization bypass  - github/securitylab#561
+- Golang : Add Query To Detect PAM Authorization Bugs - github/codeql-go#709
+
 * Thu May 26 2022 Stefano Fancello <stefano.fancello@nethesis.it> - 1.2.1-1
 - Slow report miner query take too much time - Bug nethesis/dev#6154
 - Wrong DND and Queues status of physical phone - Bug nethesis/dev#6151
