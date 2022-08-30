@@ -45,3 +45,11 @@ event_services('nethvoice-report-update', qw(
 	collectd restart
 	httpd reload
 ));
+
+#
+# post-restore-data event
+#
+
+event_actions('post-restore-data', qw(
+        nethvoice-report-fix-rsync-perms 10
+));
