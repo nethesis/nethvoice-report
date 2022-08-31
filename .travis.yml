@@ -2,7 +2,7 @@
 sudo: required
 language: go
 go:
-    - master
+    - 1.18
 git:
   depth: false
 
