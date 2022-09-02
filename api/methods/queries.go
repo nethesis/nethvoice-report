@@ -179,12 +179,6 @@ func GetGraphData(c *gin.Context) {
 				return
 			}
 
-			// check authorized agents list
-			if len(auths.Agents) == 0 {
-				c.JSON(http.StatusBadRequest, gin.H{"message": "error executing SQL query", "status": "no allowed agents found"})
-				return
-			}
-
 			// check which queried queues are in authorized queues
 			mixedQueues := utils.Intersect(filter.Queues, auths.Queues, "")
 			if len(mixedQueues) == 0 {

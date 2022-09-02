@@ -185,7 +185,7 @@ func ParseAuthMap(c *gin.Context, username string) (models.AuthMap, error) {
 		return models.AuthMap{}, err
 	}
 	// parse authorizations
-	if len(auths.Queues) > 0 && len(auths.Agents) > 0 {
+	if len(auths.Queues) > 0 {
 		authMap.Queues = true
 	}
 	if len(auths.Users) > 0 {
