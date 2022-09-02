@@ -1,5 +1,5 @@
 Name:		nethvoice-report
-Version: 1.2.2
+Version: 1.2.3
 Release: 1%{?dist}
 Summary:	Queue and CDR/Costs reports
 
@@ -80,6 +80,9 @@ cat %{name}-%{version}-filelist
 %doc COPYING
 
 %changelog
+* Fri Sep 02 2022 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.2.3-1
+- rsync disaster recovery introduces permissions issue - Bug NethServer/dev#6691
+
 * Mon Aug 01 2022 Stefano Fancello <stefano.fancello@nethesis.it> - 1.2.2-1
 - In not managed calls, take time from first interaction instead of last one - Bug nethesis/dev#6177
 - Incomplete data within the CSV export - Bug nethesis/dev#6175
