@@ -193,14 +193,6 @@ func GetGraphData(c *gin.Context) {
 				filter.Queues = mixedQueues
 			}
 
-			// check which queried agents are in authorized agents
-			mixedAgents := utils.Intersect(filter.Agents, auths.Agents, "")
-			if len(mixedAgents) == 0 {
-				filter.Agents = auths.Agents
-			} else {
-				filter.Agents = mixedAgents
-			}
-
 		} else if report == "cdr" {
 
 			// differ cdr authorizations by section and view
