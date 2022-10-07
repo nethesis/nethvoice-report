@@ -204,8 +204,12 @@ function do_time_queries($start_ts,$end_ts) {
        FROM
            queue_log_history a
            inner join asterisk.queues_config qc on queuename=qc.extension
-           inner join ( select * from tmp_cdr where linkedid != uniqueid and billsec > 0 and dstchannel not like 'Local%' AND UNIX_TIMESTAMP(calldate) > $start_ts AND UNIX_TIMESTAMP(calldate) < $end_ts
-           order by calldate asc) c ON linkedid = callid
+           inner join ( select dst_cnam,billsec,dstchannel, zid from
+                       ( select dst_cnam,billsec,dstchannel, linkedid as zid from tmp_cdr where linkedid != uniqueid and billsec > 0 and dstchannel not like 'Local%' AND UNIX_TIMESTAMP(calldate) > $start_ts AND UNIX_TIMESTAMP(calldate) < $end_ts
+           UNION ALL
+             select dst_cnam,billsec,dstchannel, uniqueid as zid from tmp_cdr where linkedid != uniqueid and billsec > 0 and dstchannel not like 'Local%' AND UNIX_TIMESTAMP(calldate) > $start_ts AND UNIX_TIMESTAMP(calldate) < $end_ts
+                       ) temp group by zid
+                      ) c ON zid = callid
            LEFT JOIN agent_extensions on SUBSTRING(REPLACE(dstchannel,'PJSIP/',''),1,POSITION('-' IN REPLACE(dstchannel,'PJSIP/',''))-1) = agent_extensions.extension
        where event in ('COMPLETEAGENT','COMPLETECALLER') AND UNIX_TIMESTAMP(time) > $start_ts AND UNIX_TIMESTAMP(time) < $end_ts
        ";
