@@ -1018,7 +1018,7 @@ export default {
       }
     },
     "filter.queues": function () {
-      if (this.$route.meta.report === 'queue' && this.$route.meta.name === 'data.by_call') {
+      if (this.$route.meta.report === 'queue' && this.$route.meta.name === 'call') {
         // remove selected agents when incompatible with selected queues
         this.filter.agents = this.filter.agents.filter((agent) => {
           return this.agentsFilteredByQueue.some((a) => a.value === agent);
