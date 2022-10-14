@@ -185,29 +185,34 @@ function do_time_queries($start_ts,$end_ts) {
        where event in ('COMPLETEAGENT','COMPLETECALLER') AND UNIX_TIMESTAMP(time) > $start_ts AND UNIX_TIMESTAMP(time) < $end_ts";
 
     $sqls[] = "INSERT INTO report_queue_agents ( id,timestamp_out,timestamp_in,qname,action,position,duration,hold,agent,qdescr)
-       select id,UNIX_TIMESTAMP(time) as timestamp_out, callid as timestamp_in, queuename as qname,
-         event as action,
-         cast(data3 as UNSIGNED) as position,
-         cast(data2 as UNSIGNED) as duration,
-         round(cast(data1 as UNSIGNED) / 1000) as hold,
-         agent,qc.descr as qdescr
-       from queue_log_history a inner join asterisk.queues_config qc on queuename=qc.extension
-       where event in ('RINGNOANSWER') AND UNIX_TIMESTAMP(time) > $start_ts AND UNIX_TIMESTAMP(time) < $end_ts
+       SELECT id,UNIX_TIMESTAMP(time) AS timestamp_out, callid AS timestamp_in, queuename AS qname,
+         event AS action,
+         CAST(data3 AS UNSIGNED) AS position,
+         CAST(data2 AS UNSIGNED) AS duration,
+         ROUND(cast(data1 as UNSIGNED) / 1000) AS hold,
+         agent,qc.descr AS qdescr
+       FROM queue_log_history a INNER JOIN asterisk.queues_config qc ON queuename=qc.extension
+       WHERE event IN ('RINGNOANSWER') AND UNIX_TIMESTAMP(time) > $start_ts AND UNIX_TIMESTAMP(time) < $end_ts
        UNION ALL
-       select id,UNIX_TIMESTAMP(time) as timestamp_out, callid as timestamp_in, queuename as qname,
-         if( if(agent_extensions.name != '',agent_extensions.name,dst_cnam) = agent, 'ANSWER', 'TRANSFER') as action,
-         cast(data3 as UNSIGNED) as position,
-         cast(c.billsec as UNSIGNED) as duration,
-         cast(data1 as UNSIGNED) as hold,
-         if(agent_extensions.name != '',agent_extensions.name,dst_cnam) as agent,
-         qc.descr as qdescr
+       SELECT id,UNIX_TIMESTAMP(time) AS timestamp_out, callid AS timestamp_in, queuename AS qname,
+         IF( IF(agent_extensions.name != '',agent_extensions.name,dst_cnam) = agent, 'ANSWER', 'TRANSFER') AS action,
+         CAST(data3 AS UNSIGNED) AS position,
+         CAST(c.billsec AS UNSIGNED) AS duration,
+         CAST(data1 as UNSIGNED) AS hold,
+         IF(agent_extensions.name != '',agent_extensions.name,dst_cnam) AS agent,
+         qc.descr AS qdescr
        FROM
            queue_log_history a
-           inner join asterisk.queues_config qc on queuename=qc.extension
-           inner join ( select * from tmp_cdr where linkedid != uniqueid and billsec > 0 and dstchannel not like 'Local%' AND UNIX_TIMESTAMP(calldate) > $start_ts AND UNIX_TIMESTAMP(calldate) < $end_ts
-           order by calldate asc) c ON linkedid = callid
-           LEFT JOIN agent_extensions on SUBSTRING(REPLACE(dstchannel,'PJSIP/',''),1,POSITION('-' IN REPLACE(dstchannel,'PJSIP/',''))-1) = agent_extensions.extension
-       where event in ('COMPLETEAGENT','COMPLETECALLER') AND UNIX_TIMESTAMP(time) > $start_ts AND UNIX_TIMESTAMP(time) < $end_ts
+           INNER JOIN asterisk.queues_config qc ON queuename=qc.extension
+	   INNER JOIN (
+		SELECT dst_cnam,billsec,dstchannel, zid FROM (
+			SELECT dst_cnam,billsec,dstchannel, linkedid AS zid FROM tmp_cdr WHERE linkedid != uniqueid AND billsec > 0 AND dstchannel NOT LIKE 'Local%' AND UNIX_TIMESTAMP(calldate) > $start_ts AND UNIX_TIMESTAMP(calldate) < $end_ts
+                UNION ALL
+		SELECT dst_cnam,billsec,dstchannel, uniqueid AS zid FROM tmp_cdr WHERE linkedid != uniqueid AND billsec > 0 AND dstchannel NOT LIKE 'Local%' AND UNIX_TIMESTAMP(calldate) > $start_ts AND UNIX_TIMESTAMP(calldate) < $end_ts
+		) temp GROUP BY zid
+           ) c ON zid = callid
+           LEFT JOIN agent_extensions ON SUBSTRING(REPLACE(dstchannel,'PJSIP/',''),1,POSITION('-' IN REPLACE(dstchannel,'PJSIP/',''))-1) = agent_extensions.extension
+       WHERE event IN ('COMPLETEAGENT','COMPLETECALLER') AND UNIX_TIMESTAMP(time) > $start_ts AND UNIX_TIMESTAMP(time) < $end_ts
        ";
 
     $sqls[] = "INSERT INTO report_queue_callers ( id,timestamp_out,timestamp_in,qname,cid,action,position,qdescr,prefisso,comune,siglaprov,provincia,regione)
