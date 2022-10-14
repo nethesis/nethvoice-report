@@ -83,6 +83,7 @@ func GetDefaultFilter(c *gin.Context) {
 	auths, _ := GetUserAuthorizations(user)
 
 	// assign default filter intersection
+	defaultFilter.Agents = valuesFilter.Agents
 	defaultFilter.IVRs = valuesFilter.IVRs
 	defaultFilter.Phones = valuesFilter.Phones
 	defaultFilter.Reasons = valuesFilter.Reasons
@@ -98,12 +99,10 @@ func GetDefaultFilter(c *gin.Context) {
 	if user == "X" || user == "admin" {
 		defaultFilter.Queues = valuesFilter.Queues
 		defaultFilter.Groups = valuesFilter.Groups
-		defaultFilter.Agents = valuesFilter.Agents
 		defaultFilter.Users = valuesFilter.Users
 	} else {
 		defaultFilter.Queues = utils.Intersect(valuesFilter.Queues, auths.Queues, "queues")
 		defaultFilter.Groups = utils.Intersect(valuesFilter.Groups, auths.Groups, "groups")
-		defaultFilter.Agents = utils.Intersect(valuesFilter.Agents, auths.Agents, "agents")
 		defaultFilter.Users = utils.Intersect(valuesFilter.Users, auths.Users, "extensions")
 	}
 
