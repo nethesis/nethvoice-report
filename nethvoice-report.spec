@@ -1,5 +1,5 @@
 Name:		nethvoice-report
-Version: 1.2.3
+Version: 1.2.4
 Release: 1%{?dist}
 Summary:	Queue and CDR/Costs reports
 
@@ -80,6 +80,10 @@ cat %{name}-%{version}-filelist
 %doc COPYING
 
 %changelog
+* Fri Nov 25 2022 Stefano Fancello <stefano.fancello@nethesis.it> - 1.2.4-1
+- Queue report: the total number of calls answered in the queue views does not match the total of the agent ones - Bug nethesis/dev#6182
+- Queue Report: the agents displayed in the search bar and those actually used to filter calls are different - Bug nethesis/dev#6181
+
 * Fri Sep 02 2022 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.2.3-1
 - rsync disaster recovery introduces permissions issue - Bug NethServer/dev#6691
 
