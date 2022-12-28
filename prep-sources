@@ -24,9 +24,10 @@ rm -rf dist/tasks
 # Build UI
 #
 pushd ui
-rm -rf dist/
-npm install
-NODE_ENV=production npm run build
+buildah build --rm --layers --jobs "$(nproc)" --tag nethesis/nethvoice-report-ui
+dist_container="$(podman run --rm -d nethesis/nethvoice-report-ui:latest tail -f /dev/null)"
+podman cp "$dist_container":/app/dist dist
+podman stop -t 0 "$dist_container"
 tar cvzf ui.tar.gz -C dist .
 cp ui.tar.gz ../dist/
 popd
