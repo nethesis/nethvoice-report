@@ -1,0 +1,20 @@
+FROM node:10 as base
+WORKDIR /app
+
+FROM base as node_modules
+COPY package.json .
+COPY package-lock.json .
+RUN npm i
+
+FROM base as build
+COPY public public
+COPY src src
+COPY .browserslistrc .
+COPY .eslintrc.js .
+COPY babel.config.js .
+COPY vue.config.js .
+COPY package.json .
+COPY package-lock.json .
+COPY --from=node_modules /app/node_modules node_modules
+ENV NODE_ENV=production
+RUN npm run build
