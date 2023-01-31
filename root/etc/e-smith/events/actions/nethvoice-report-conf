@@ -93,6 +93,16 @@ if [[ ! -z $TABLE_EXISTS ]]; then
     if [[ $EXISTS == "" ]]; then
         /usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "ALTER TABLE data_call ADD COLUMN recall_time decimal(23,0) DEFAULT NULL"
     fi
+    EXISTS=$(/usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "SHOW COLUMNS FROM data_call LIKE 'recallTime'")
+    if [[ ! -z $EXISTS ]]; then
+        # Drop table if recallTime column exists
+        /usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e "DROP TABLE data_call"
+        # Recreate data_call
+        FILE=/opt/nethvoice-report/api/views/data_call.sql
+        if [[ -f $FILE ]]; then
+            /usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb < $FILE
+        fi
+    fi
 fi
 
 # Recreate data_call table over night if agents field is missing or is in the wrong order

@@ -47,7 +47,7 @@ SELECT
     duration AS duration,
     ACTION AS result,
     IF(data4 > 0, 'YES', 'NO') AS recalled,
-    data4 AS recallTime
+    data4 AS recall_time
 FROM
     report_queue
 GROUP BY period, report_queue.cid, qname
