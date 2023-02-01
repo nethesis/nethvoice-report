@@ -33,12 +33,6 @@ jobs:
             AUTOBUILD_SECRET=${{ secrets.autobuild_secret }}
             AUTOBUILD_SECRET_URL=${{ secrets.autobuild_secret_url }}
           EOF
-      - name: Install additional software
-        run: |
-          sudo apt-get update
-          sudo apt-get install \
-            librrd-dev \
-            libpam0g-dev
       - name: Run prep-sources.
         run: bash prep-sources
       - name: Build RPM and publish
