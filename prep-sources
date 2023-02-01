@@ -24,10 +24,10 @@ rm -rf dist/tasks
 # Build UI
 #
 pushd ui
-buildah build --rm --layers --jobs "$(nproc)" --tag nethesis/nethvoice-report-ui
-dist_container="$(podman run --rm -d nethesis/nethvoice-report-ui:latest tail -f /dev/null)"
-podman cp "$dist_container":/app/dist dist
-podman stop -t 0 "$dist_container"
+buildah build --force-rm --layers --jobs "$(nproc)" --tag nethesis/nethvoice-report-ui
+ui_container="$(podman run --rm -d nethesis/nethvoice-report-ui:latest tail -f /dev/null)"
+podman cp "$ui_container":/app/dist dist
+podman stop -t 0 "$ui_container"
 tar cvzf ui.tar.gz -C dist .
 cp ui.tar.gz ../dist/
 popd
@@ -36,9 +36,10 @@ popd
 # Build API
 #
 pushd api
-unset GOPATH
-GO111MODULE=on
-go build
+buildah build --force-rm --layers --jobs "$(nproc)" --tag nethesis/nethvoice-report-api
+api_container="$(podman run --rm -d nethesis/nethvoice-report-api:latest tail -f /dev/null)"
+podman cp "$api_container":/app/api api
+podman stop -t 0 "$api_container"
 cp api ../dist/
 popd
 
@@ -46,8 +47,9 @@ popd
 # Build Tasks
 #
 pushd tasks
-unset GOPATH
-GO111MODULE=on
-go build
+buildah build --force-rm --layers --jobs "$(nproc)" --tag nethesis/nethvoice-report-tasks
+tasks_container="$(podman run --rm -d nethesis/nethvoice-report-tasks:latest tail -f /dev/null)"
+podman cp "$tasks_container":/app/tasks tasks
+podman stop -t 0 "$tasks_container"
 cp tasks ../dist/
 popd
