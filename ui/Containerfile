@@ -1,10 +1,10 @@
-FROM node:10 as base
+FROM docker.io/library/node:14.21.2-alpine as base
 WORKDIR /app
 
 FROM base as node_modules
 COPY package.json .
 COPY package-lock.json .
-RUN npm i
+RUN npm ci
 
 FROM base as build
 COPY public public
