@@ -183,8 +183,8 @@ export default {
 }
 
 .fixedWeight {
-  font-weight: 100 !important;
-  color: #059669 !important;
+  font-weight: 400 !important;
+  color: #f9fafb !important;
 }
 .relative {
   position: relative;
@@ -207,7 +207,7 @@ export default {
 }
 
 .max-w-md {
-  max-width: 512px;
+  max-width: 580px;
 }
 
 .absolute {
