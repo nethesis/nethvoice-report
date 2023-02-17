@@ -4,16 +4,14 @@
       class="mx-auto w-full max-w-md flex flex-col items-center justify-center background"
     >
       <div class="flex flex-col items-center justify-center">
-        <img
-          src="../../public/login_logo.png"
-          alt="logo"
-        />
+        <img src="../../public/login_logo.png" alt="logo" />
+
         <div class="items-center brandColor">
-          <i class="bar chart icon "></i> 
+          <i class="bar chart icon h-5 w-5"></i>
           Report
         </div>
       </div>
-      <div class="flex justify-center py-3">
+      <div class="flex justify-center py-7">
         <sui-form
           v-on:submit.prevent="doLogin()"
           :error="error"
@@ -21,31 +19,32 @@
         >
           <sui-form-field class="block w-full relative">
             <label
-              class="text-gray-700 font-bold mb-2 align-left"
+              class="text-gray-700 font-bold mb-2 align-left fixedWeight"
               for="username"
             >
-            {{ $t("login.user") }}
+              {{ $t("login.user") }}
             </label>
             <sui-input
               id="username"
               type="text"
               placeholder=""
               v-model="username"
+              class="inputSize"
             />
           </sui-form-field>
           <sui-form-field class="block w-full relative">
             <label
-              class="text-gray-700 font-bold mb-2 align-left"
+              class="text-gray-700 font-bold mb-2 align-left fixedWeight"
               for="password"
             >
-            {{ $t("login.password") }}
+              {{ $t("login.password") }}
             </label>
             <sui-input
               id="password"
               type="password"
               placeholder=""
               v-model="password"
-              size="big"
+              class="inputSize"
             />
           </sui-form-field>
           <sui-message error>
@@ -62,7 +61,7 @@
             </sui-message-header>
             <p>{{ $t("login.login_again") }}.</p>
           </sui-message>
-          <sui-button size="large" color="green" fluid>
+          <sui-button size="large" class="buttonLogin" fluid>
             {{ $t("menu.login") }}
             <sui-loader
               :active="loading"
@@ -152,17 +151,28 @@ export default {
 
 <style lang="css" scoped>
 .background {
-  background-color: #f3f4f6;
-}
-.grid {
-  height: 100%;
+  background-color: #1b1c1d;
 }
 
-.ui.stacked.segment:after {
-  display: none;
+.inputSize {
+  width: 350px !important;
 }
 
-.brandColor{
+.buttonLogin {
+  background: #059669 !important;
+  color: white !important;
+  margin-top: 30px !important;
+}
+
+.h-5 {
+  height: 20px;
+}
+
+.w-5 {
+  width: 20px;
+}
+
+.brandColor {
   color: #059669 !important;
   padding-top: 10px;
   font-size: 16px;
@@ -172,6 +182,10 @@ export default {
   display: flex;
 }
 
+.fixedWeight {
+  font-weight: 100 !important;
+  color: #059669 !important;
+}
 .relative {
   position: relative;
 }
@@ -179,15 +193,6 @@ export default {
 .block {
   display: block;
 }
-
-.min-h-full {
-  min-height: 100%;
-}
-
-.flex-1 {
-  flex: 1 1 0%;
-}
-
 .flex-col {
   flex-direction: column;
 }
@@ -196,17 +201,9 @@ export default {
   justify-content: center;
 }
 
-.w-0 {
-  width: 0px;
-}
-
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
-}
-
-.max-w-sm {
-  max-width: 384px; /* 384px */
 }
 
 .max-w-md {
@@ -229,10 +226,6 @@ export default {
   object-fit: cover;
 }
 
-.align-middle {
-  vertical-align: middle;
-}
-
 .items-center {
   align-items: center;
 }
@@ -241,17 +234,8 @@ export default {
   height: 100vh;
 }
 
-.px-4 {
-  padding-left: 16px; /* 16px */
-  padding-right: 16px; /* 16px */
-}
-
-.py-3 {
-  padding-top: 12px; /* 12px */
-  padding-bottom: 12px; /* 12px */
-}
-
-.sui-button {
-  background-color: #059669;
+.py-7 {
+  padding-top: 28px; /* 28px */
+  padding-bottom: 28px; /* 28px */
 }
 </style>
