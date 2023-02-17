@@ -1,8 +1,18 @@
 <template lang="html">
-  <div class="flex h-screen justify-center">
+  <div class="flex h-screen justify-center background">
     <div
       class="mx-auto w-full max-w-md flex flex-col items-center justify-center background"
     >
+      <div class="flex flex-col items-center justify-center">
+        <img
+          src="../../public/login_logo.png"
+          alt="logo"
+        />
+        <div class="items-center brandColor">
+          <i class="bar chart icon "></i> 
+          Report
+        </div>
+      </div>
       <div class="flex justify-center py-3">
         <sui-form
           v-on:submit.prevent="doLogin()"
@@ -150,6 +160,12 @@ export default {
 
 .ui.stacked.segment:after {
   display: none;
+}
+
+.brandColor{
+  color: #059669 !important;
+  padding-top: 10px;
+  font-size: 16px;
 }
 
 .flex {
