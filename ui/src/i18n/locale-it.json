@@ -163,7 +163,9 @@
       "invalid_credentials": "Credenziali non valide",
       "invalid_user_pass_try": "Nome utente o password errati",
       "session_expired": "La tua sessione è scaduta",
-      "login_again": "Per favore, accedere nuovamente"
+      "login_again": "Per favore, accedere nuovamente",
+      "user": "Utente",
+      "password": "Password"
     },
     "caption": {
       "recallTime": "Tempo di Richiamata",

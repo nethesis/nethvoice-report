@@ -24,7 +24,7 @@
               class="text-gray-700 font-bold mb-2 align-left"
               for="username"
             >
-              User
+            {{ $t("login.user") }}
             </label>
             <sui-input
               id="username"
@@ -38,7 +38,7 @@
               class="text-gray-700 font-bold mb-2 align-left"
               for="password"
             >
-              Password
+            {{ $t("login.password") }}
             </label>
             <sui-input
               id="password"
