@@ -1,7 +1,7 @@
 <template lang="html">
-  <div class="flex h-screen justify-center background">
+  <div class="flex h-screen background">
     <div
-      class="mx-auto w-full max-w-md flex flex-col items-center justify-center background"
+      class="w-full max-w-md flex flex-col items-center justify-center background"
     >
       <div class="flex flex-col items-center justify-center">
         <img src="../../public/login_logo.png" alt="logo" />
@@ -17,9 +17,9 @@
           :error="error"
           :warning="sessionExpired"
         >
-          <sui-form-field class="block w-full relative">
+          <sui-form-field class="block w-full relative text-left">
             <label
-              class="text-gray-700 font-bold mb-2 align-left fixedWeight"
+              class="fixedWeight"
               for="username"
             >
               {{ $t("login.user") }}
@@ -32,9 +32,9 @@
               class="inputSize"
             />
           </sui-form-field>
-          <sui-form-field class="block w-full relative">
+          <sui-form-field class="block w-full relative text-left">
             <label
-              class="text-gray-700 font-bold mb-2 align-left fixedWeight"
+              class="fixedWeight"
               for="password"
             >
               {{ $t("login.password") }}
@@ -77,7 +77,7 @@
     <div class="">
       <sui-image
         src="LoginBackground.png"
-        class="absolute inset-0 h-full w-full object-cover"
+        class="absolute h-full w-full object-cover"
       />
     </div>
   </div>
@@ -152,6 +152,10 @@ export default {
 <style lang="css" scoped>
 .background {
   background-color: #1b1c1d;
+}
+
+.text-left {
+  text-align: left;
 }
 
 .inputSize {
