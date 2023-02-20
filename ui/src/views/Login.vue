@@ -1,43 +1,75 @@
 <template lang="html">
-  <div class="background">
-    <sui-grid centered vertical-align="middle">
-      <sui-grid-column>
-        <sui-image size="huge" src="logo.png" />
-        <sui-divider hidden />
-        <sui-form v-on:submit.prevent="doLogin()" :error="error" :warning="sessionExpired">
-          <sui-segment stacked>
-            <sui-form-field>
-              <sui-input type="text" placeholder="Username" icon="user" icon-position="left" v-model="username" />
-            </sui-form-field>
-            <sui-form-field>
-              <sui-input type="password" placeholder="Password" icon="lock" icon-position="left" v-model="password" />
-            </sui-form-field>
-            <sui-message error>
-              <sui-message-header>
-                <i class="exclamation triangle icon"></i>
-                {{$t('login.invalid_credentials')}}
-              </sui-message-header>
-              <p>
-                {{$t('login.invalid_user_pass_try')}}.
-              </p>
-            </sui-message>
-            <sui-message warning>
-              <sui-message-header>
-                <i class="exclamation triangle icon"></i>
-                {{$t('login.session_expired')}}
-              </sui-message-header>
-              <p>
-                {{$t('login.login_again')}}.
-              </p>
-            </sui-message>
-            <sui-button size="large" color="green" fluid>
-              {{$t('menu.login')}}
-              <sui-loader :active="loading" class="mg-left-20" inline inverted size="tiny" />
-            </sui-button>
-          </sui-segment>
-        </sui-form>
-      </sui-grid-column>
-    </sui-grid>
+  <div class="flex min-h-full background">
+    <div
+      class="flex flex-1 flex-col justify-center py-12 px-4 background sm-px-6 lg-flex-none lg-px-20 xl-px-24"
+    >
+      <div class="mx-auto w-full max-w-sm lg-w-96">
+        <div class="flex flex-col items-center justify-center">
+          <img src="../../public/login_logo.png" alt="logo" />
+          <div class="items-center brandColor">
+            <i class="bar chart icon h-5 w-5"></i>
+            Report
+          </div>
+        </div>
+        <div class="mt-8">
+          <div class="mt-6">
+            <sui-form
+              v-on:submit.prevent="doLogin()"
+              :error="error"
+              :warning="sessionExpired"
+              class="space-y-6"
+            >
+              <sui-form-field>
+                <label class="fixedWeight block text-left" for="username">
+                  {{ $t("login.user") }}
+                </label>
+                <sui-input
+                  id="username"
+                  type="text"
+                  placeholder=""
+                  v-model="username"
+                />
+              </sui-form-field>
+              <sui-form-field class="fixedWeight block text-left">
+                <label class="fixedWeight" for="password">
+                  {{ $t("login.password") }}
+                </label>
+                <sui-input
+                  id="password"
+                  type="password"
+                  placeholder=""
+                  v-model="password"
+                />
+              </sui-form-field>
+              <sui-message error>
+                <sui-message-header>
+                  <i class="exclamation triangle icon"></i>
+                  {{ $t("login.invalid_credentials") }}
+                </sui-message-header>
+                <p>{{ $t("login.invalid_user_pass_try") }}.</p>
+              </sui-message>
+              <sui-message warning>
+                <sui-message-header>
+                  <i class="exclamation triangle icon"></i>
+                  {{ $t("login.session_expired") }}
+                </sui-message-header>
+                <p>{{ $t("login.login_again") }}.</p>
+              </sui-message>
+              <sui-button class="buttonLogin" fluid>
+                {{ $t("menu.login") }}
+                <sui-loader :active="loading" inline inverted size="tiny" />
+              </sui-button>
+            </sui-form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="relative hidden w-0 flex-1 lg-block">
+      <sui-image
+        src="LoginBackground.png"
+        class="absolute inset-0 h-full w-full object-cover"
+      />
+    </div>
   </div>
 </template>
 
@@ -59,11 +91,6 @@ export default {
   mixins: [LoginService, StorageService],
   mounted() {
     this.$root.$on("logout", this.onLogout);
-
-    this.$nextTick(() => {
-      // set random background
-      document.querySelector('.background').style.background = `linear-gradient( rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.95) ), url(${this.getImgUrl()}) no-repeat center center fixed`
-   })
   },
   methods: {
     onLogout() {
@@ -108,38 +135,177 @@ export default {
         }
       );
     },
-    getImgUrl() {
-      let n = Math.floor(Math.random() * (6 - 1) + 1),
-          images = require.context('../images/', false, /\.jpg$/)
-      return images('./' + n + ".jpg")
-    }
   },
 };
 </script>
 
 <style lang="css" scoped>
 .background {
-  background-color: #3f9c35 !important;
-  height: 100vh;
-  position: absolute;
-  width: 100%;
-  background-size: cover !important;
+  background-color: #1b1c1d;
 }
 
-.grid {
+.text-left {
+  text-align: left;
+}
+
+.buttonLogin {
+  background: #059669 !important;
+  color: white !important;
+  margin-top: 30px !important;
+  padding-left: 14px !important; /* 16px */
+  padding-right: 14px !important; /* 16px */
+  padding-top: 9.5px !important; /* 8px */
+  padding-bottom: 9.5px !important; /* 8px */
+}
+
+.w-0 {
+  width: 0px;
+}
+.inset-0 {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+.h-5 {
+  height: 20px;
+}
+
+.flex-1 {
+  flex: 1 1 0%;
+}
+
+.py-12 {
+  padding-top: 48px;
+  padding-bottom: 48px;
+}
+
+.px-4 {
+  padding-left: 16px; /* 16px */
+  padding-right: 16px; /* 16px */
+}
+.w-5 {
+  width: 20px;
+}
+
+.brandColor {
+  color: #059669 !important;
+  padding-top: 10px;
+  font-size: 16px;
+}
+
+.flex {
+  display: flex;
+}
+
+.fixedWeight {
+  font-weight: 400 !important;
+  color: #f9fafb !important;
+}
+.relative {
+  position: relative;
+}
+
+.block {
+  display: block;
+}
+.flex-col {
+  flex-direction: column;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.space-y-6 {
+  margin-top: 24px;
+}
+.mt-6 {
+  margin-top: 24px; /* 24px */
+}
+.mt-8 {
+  margin-top: 32px; /* 32px */
+}
+.max-w-sm {
+  max-width: 384px;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.min-h-full {
+  height: 100vh;
+}
+.h-full {
   height: 100%;
 }
 
-.column {
-  max-width: 450px;
-  text-align: center !important;
+.w-full {
+  width: 100%;
 }
 
-.ui.stacked.segment:after {
+.object-cover {
+  object-fit: cover;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.hidden {
   display: none;
 }
 
-.mg-left-20 {
-  margin-left: 10px !important;
+@media (max-width: 420px) {
+  .min-h-full {
+    height: 120vh;
+  }
+}
+/* sm */
+@media (min-width: 640px) {
+  .sm-px-6 {
+    padding-left: 24px; /* 24px */
+    padding-right: 24px; /* 24px */
+  }
+}
+
+/* md */
+@media (min-width: 768px) {
+}
+
+/* lg */
+@media (min-width: 1024px) {
+  .w-lg {
+    width: 384px;
+  }
+
+  .lg-block {
+    display: block;
+  }
+
+  .lg-px-20 {
+    padding-left: 80px /* 80px */;
+    padding-right: 80px /* 80px */;
+  }
+  .lg-flex-none {
+    flex: none;
+  }
+  .lg-w-96 {
+    width: 384px;
+  }
+}
+
+/* xl */
+@media (min-width: 1280px) {
+  .xl-px-24 {
+    padding-left: 96px; /* 96px */
+    padding-right: 96px; /* 96px */
+  }
 }
 </style>
