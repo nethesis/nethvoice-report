@@ -1,5 +1,5 @@
 Name:		nethvoice-report
-Version: 1.2.4
+Version: 1.2.5
 Release: 1%{?dist}
 Summary:	Queue and CDR/Costs reports
 
@@ -80,6 +80,9 @@ cat %{name}-%{version}-filelist
 %doc COPYING
 
 %changelog
+* Tue Mar 07 2023 Stefano Fancello <stefano.fancello@nethesis.it> - 1.2.5-1
+- NethVoice Report: CREATE TABLE field name doesn't match INSERT  field name - Bug Nethesis/dev#6195
+
 * Fri Nov 25 2022 Stefano Fancello <stefano.fancello@nethesis.it> - 1.2.4-1
 - Queue report: the total number of calls answered in the queue views does not match the total of the agent ones - Bug nethesis/dev#6182
 - Queue Report: the agents displayed in the search bar and those actually used to filter calls are different - Bug nethesis/dev#6181
