@@ -73,9 +73,9 @@ SELECT
     Min(duration) AS `min_duration`,
     Avg(duration) AS `avg_duration`,
     Max(duration) AS `max_duration`,
-    Min(position) AS `min_position`,
-    Avg(position) AS `avg_position`,
-    Max(position) AS `max_position`
+    Min(CASE WHEN ACTION NOT IN ('FULL','JOINEMPTY', 'JOINUNAVAIL') THEN position END) AS `min_position`,
+    Avg(CASE WHEN ACTION NOT IN ('FULL','JOINEMPTY', 'JOINUNAVAIL') THEN position END) AS `avg_position`,
+    Max(CASE WHEN ACTION NOT IN ('FULL','JOINEMPTY', 'JOINUNAVAIL') THEN position END) AS `max_position`
 FROM
     report_queue
 WHERE
@@ -126,9 +126,9 @@ SELECT
     Min(duration) AS `min_duration`,
     Avg(duration) AS `avg_duration`,
     Max(duration) AS `max_duration`,
-    Min(position) AS `min_position`,
-    Avg(position) AS `avg_position`,
-    Max(position) AS `max_position`
+    Min(CASE WHEN ACTION NOT IN ('FULL','JOINEMPTY', 'JOINUNAVAIL') THEN position END) AS `min_position`,
+    Avg(CASE WHEN ACTION NOT IN ('FULL','JOINEMPTY', 'JOINUNAVAIL') THEN position END) AS `avg_position`,
+    Max(CASE WHEN ACTION NOT IN ('FULL','JOINEMPTY', 'JOINUNAVAIL') THEN position END) AS `max_position`
 FROM
     report_queue
 WHERE
@@ -179,9 +179,9 @@ SELECT
     Min(duration) AS `min_duration`,
     Avg(duration) AS `avg_duration`,
     Max(duration) AS `max_duration`,
-    Min(position) AS `min_position`,
-    Avg(position) AS `avg_position`,
-    Max(position) AS `max_position`
+    Min(CASE WHEN ACTION NOT IN ('FULL','JOINEMPTY', 'JOINUNAVAIL') THEN position END) AS `min_position`,
+    Avg(CASE WHEN ACTION NOT IN ('FULL','JOINEMPTY', 'JOINUNAVAIL') THEN position END) AS `avg_position`,
+    Max(CASE WHEN ACTION NOT IN ('FULL','JOINEMPTY', 'JOINUNAVAIL') THEN position END) AS `max_position`
 FROM
     report_queue
 WHERE
@@ -233,9 +233,9 @@ SELECT
     Min(duration) AS `min_duration`,
     Avg(duration) AS `avg_duration`,
     Max(duration) AS `max_duration`,
-    Min(position) AS `min_position`,
-    Avg(position) AS `avg_position`,
-    Max(position) AS `max_position`
+    Min(CASE WHEN ACTION NOT IN ('FULL','JOINEMPTY', 'JOINUNAVAIL') THEN position END) AS `min_position`,
+    Avg(CASE WHEN ACTION NOT IN ('FULL','JOINEMPTY', 'JOINUNAVAIL') THEN position END) AS `avg_position`,
+    Max(CASE WHEN ACTION NOT IN ('FULL','JOINEMPTY', 'JOINUNAVAIL') THEN position END) AS `max_position`
 FROM
     report_queue
 WHERE
@@ -286,9 +286,9 @@ SELECT
     Min(duration) AS `min_duration`,
     Avg(duration) AS `avg_duration`,
     Max(duration) AS `max_duration`,
-    Min(position) AS `min_position`,
-    Avg(position) AS `avg_position`,
-    Max(position) AS `max_position`
+    Min(CASE WHEN ACTION NOT IN ('FULL','JOINEMPTY', 'JOINUNAVAIL') THEN position END) AS `min_position`,
+    Avg(CASE WHEN ACTION NOT IN ('FULL','JOINEMPTY', 'JOINUNAVAIL') THEN position END) AS `avg_position`,
+    Max(CASE WHEN ACTION NOT IN ('FULL','JOINEMPTY', 'JOINUNAVAIL') THEN position END) AS `max_position`
 FROM
     report_queue
 WHERE
