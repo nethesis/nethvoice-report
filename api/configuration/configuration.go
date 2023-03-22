@@ -54,6 +54,7 @@ type Configuration struct {
 		Password string `json:"password"`
 	} `json:"freepbx_database"`
 	ListenAddress          string          `json:"listen_address"`
+	RedisNetworkType       string          `json:"redis_network_type"`
 	RedisAddress           string          `json:"redis_address"`
 	TTLCache               int             `json:"ttl_cache"`
 	Secret                 string          `json:"secret"`

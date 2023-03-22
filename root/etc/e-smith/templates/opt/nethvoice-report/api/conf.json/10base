@@ -6,6 +6,7 @@
     $OUT = '';
 }\{
         "listen_address": "0.0.0.0:8585",
+        "redis_network_type": "unix",
         "redis_address": "/var/run/redis-nethvoice-report/nethvoice-report.sock",
         "ttl_cache": 480,
         "cdr_database": \{
