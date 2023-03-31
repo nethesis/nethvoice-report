@@ -24,7 +24,6 @@ package main
 
 import (
 	"flag"
-	"io/ioutil"
 	"net/http"
 	"os"
 
@@ -43,11 +42,6 @@ func main() {
 	flag.Parse()
 	configuration.Init(ConfigFilePtr)
 
-	// disable log to stdout when running in release mode
-	if gin.Mode() == gin.ReleaseMode {
-		gin.DefaultWriter = ioutil.Discard
-	}
-
 	// init routers
 	router := gin.Default()
 
@@ -63,7 +57,7 @@ func main() {
 	}
 
 	// define API
-	api := router.Group("/api")
+	api := router
 
 	// define login endpoint
 	api.POST("/login", middleware.InstanceJWT().LoginHandler)
