@@ -25,8 +25,9 @@ package methods
 import (
 	"encoding/json"
 	"io/ioutil"
-	"os"
 	"net/http"
+	"os"
+	"os/exec"
 	"time"
 
 	"github.com/pkg/errors"
@@ -34,7 +35,6 @@ import (
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 
-	"github.com/msteinert/pam"
 	"github.com/nethesis/nethvoice-report/api/configuration"
 	"github.com/nethesis/nethvoice-report/api/models"
 	"github.com/nethesis/nethvoice-report/api/source"
@@ -42,33 +42,9 @@ import (
 )
 
 func PamAuth(username string, password string) error {
-	// init PAM authentication
-	t, errInit := pam.StartFunc("system-auth", username, func(s pam.Style, msg string) (string, error) {
-		switch s {
-		case pam.PromptEchoOff:
-			return password, nil
-		case pam.PromptEchoOn:
-			return username, nil
-		default:
-			return "", errors.New("error during PAM authentication")
-		}
-	})
-
-	// check error
-	if errInit != nil {
-		return errInit
-	}
-
-	// check authentication
-	errAuth := t.Authenticate(0)
-	if errAuth != nil {
-		return errAuth
-	}
-	errAuth = t.AcctMgmt(0)
-	if errAuth != nil {
-		return errAuth
-	}
-	return nil
+	// execute pam login
+	cmd := exec.Command("ldap-authenticate", username, password)
+	return cmd.Run()
 }
 
 func ParseUserAuthorizationsFile() ([]models.UserAuthorizations, error) {
@@ -100,8 +76,8 @@ func GetUserAuthorizations(username string) (models.UserAuthorizations, error) {
 			userAuthorizations.Queues = ua.Queues
 			userAuthorizations.Groups = ua.Groups
 			userAuthorizations.Agents = ua.Agents
-			userAuthorizations.Users  = ua.Users
-			userAuthorizations.Cdr  = ua.Cdr
+			userAuthorizations.Users = ua.Users
+			userAuthorizations.Cdr = ua.Cdr
 			return userAuthorizations, nil
 		}
 	}
@@ -142,7 +118,7 @@ func ParseAuthFileStats() (models.AuthStats, error) {
 	}
 	authStats := models.AuthStats{
 		FileName: fileInfo.Name(),
-		ModTime: fileInfo.ModTime().Unix(),
+		ModTime:  fileInfo.ModTime().Unix(),
 	}
 	// return authorization file stats
 	return authStats, nil
@@ -206,7 +182,7 @@ func ParseAuthMap(c *gin.Context, username string) (models.AuthMap, error) {
 func GetAuthMap(c *gin.Context) {
 	// parse authorizations map
 	authMap, err := ParseAuthMap(c, "")
-	if err != nil  {
+	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"message": "error parsing user authorizations file"})
 		return
 	}
@@ -215,11 +191,11 @@ func GetAuthMap(c *gin.Context) {
 	return
 }
 
-func CacheHasValidAuth(ttl time.Duration, modTime int64) (bool) {
+func CacheHasValidAuth(ttl time.Duration, modTime int64) bool {
 	// check if cached data has valid authorizations
 	now := time.Now().Unix()
 	ttlTime := int64(ttl.Seconds())
-	ttlCache := int64((time.Duration(configuration.Config.TTLCache)*time.Minute).Seconds())
+	ttlCache := int64((time.Duration(configuration.Config.TTLCache) * time.Minute).Seconds())
 	// return true when time passed from the data insert in chache
 	// is lower than time passed from the authorizations modify time
 	if (ttlCache - ttlTime) < (now - modTime) {
