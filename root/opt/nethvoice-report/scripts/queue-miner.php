@@ -1,4 +1,4 @@
-#!/usr/bin/php
+#!/usr/bin/env php
 <?php
 /*
  * This scripts consolidates queue statistics
@@ -34,7 +34,7 @@ if (!$conf) {
 $conf = $conf['cdr_database'];
 
 try {
-    $cdrdb = new PDO("mysql:dbname={$conf['name']};host={$conf['host']}", $conf['user'], $conf['password']);
+    $cdrdb = new PDO("mysql:dbname={$conf['name']};host={$conf['host']};port={$conf['port']}", $conf['user'], $conf['password']);
 } catch  (PDOException $e) {
     fputs(STDERR, 'Connection failed: ' . $e->getMessage());
     exit(1);
@@ -428,4 +428,3 @@ $sqls[] = "UPDATE agentsessions a SET timestamp_out = (select UNIX_TIMESTAMP(tim
     }
 
 }
-
