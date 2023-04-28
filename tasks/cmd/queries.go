@@ -23,6 +23,7 @@
 package cmd
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -241,6 +242,7 @@ func login() (string, error) {
 	loginURL := configuration.Config.APIEndpoint + "/login"
 
 	// login request
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	resp, err := http.PostForm(loginURL, url.Values{"username": {username}, "password": {password}})
 	if err != nil {
 		return "", errors.Wrap(err, "Login error")
