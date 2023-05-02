@@ -26,7 +26,7 @@ $now = time();
 
 
 # Connect to db
-$conf = json_decode(file_get_contents("/opt/nethvoice-report.json"), true);
+$conf = json_decode(file_get_contents("/opt/nethvoice-report/api/conf.json"), true);
 if (!$conf) {
     fputs(STDERR, "Can't read configuration file");
     exit(1);
