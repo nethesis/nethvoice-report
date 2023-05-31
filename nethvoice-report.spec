@@ -1,5 +1,5 @@
 Name:		nethvoice-report
-Version: 1.2.5
+Version: 1.2.6
 Release: 1%{?dist}
 Summary:	Queue and CDR/Costs reports
 
@@ -80,6 +80,9 @@ cat %{name}-%{version}-filelist
 %doc COPYING
 
 %changelog
+* Wed May 31 2023 Stefano Fancello <stefano.fancello@nethesis.it> - 1.2.6-1
+- NethVoice report: caller min,avg, max position is wrong - Bug nethesis/dev#6203
+
 * Tue Mar 07 2023 Stefano Fancello <stefano.fancello@nethesis.it> - 1.2.5-1
 - NethVoice Report: CREATE TABLE field name doesn't match INSERT  field name - Bug Nethesis/dev#6195
 
