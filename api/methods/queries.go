@@ -337,6 +337,12 @@ func executeSqlQuery(filter models.Filter, report string, section string, view s
 		return "", errors.Wrap(errTpl, "invalid query template compiling")
 	}
 
+	// print executed sql query
+	// ...it can be useful for debug
+	if gin.Mode() == gin.DebugMode {
+		utils.LogInfo(queryFile + " | " + utils.InlineQuery(queryString.String()))
+	}
+
 	// execute query
 	db := source.CDRInstance()
 	results, errQuery := db.Query(queryString.String())
@@ -526,7 +532,7 @@ func buildCdrQuery(queryFile string, filter models.Filter) (string, error) {
 	}
 
 	// append limit to query
-
+	
 	queryBuilder.WriteString(" LIMIT " + queryLimit)
 
 	return queryBuilder.String(), nil
