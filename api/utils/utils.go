@@ -119,6 +119,22 @@ func LogError(err error) {
 	os.Stderr.WriteString(err.Error() + "\n")
 }
 
+func LogInfo(message string) {
+	currentTime := time.Now().Format("2006/01/02 - 15:04:05")
+	_, _ = os.Stderr.WriteString("[INFO] " + currentTime + " | " + message + "\n")
+}
+
+func InlineQuery(query string) string {
+	// Remove SQL comments (lines starting with --)
+	commentPattern := regexp.MustCompile(`--.*$`)
+	query = commentPattern.ReplaceAllString(query, "")
+
+	// Remove line breaks and extra spaces
+	query = strings.ReplaceAll(query, "\n", " ")
+	query = strings.Join(strings.Fields(query), " ")
+	return query
+}
+
 func Contains(a string, values []string) bool {
 	for _, b := range values {
 		if b == a {
