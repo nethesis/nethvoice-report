@@ -153,7 +153,7 @@ function do_time_queries($start_ts,$end_ts) {
     $sqls[] = "INSERT IGNORE INTO report_queue ( id,timestamp_out,timestamp_in,qname,action,position,duration,hold,data4,agent,qdescr,agents)
     select id,UNIX_TIMESTAMP(time) as timestamp_out, callid as timestamp_in, queuename as qname,
          event as action,
-         cast(data1 as UNSIGNED) as position,
+         if (event in ('ABANDON','EXITWITHTIMEOUT','EXITEMPTY'), cast(data1 as UNSIGNED), '')  as position,
          cast(data2 as UNSIGNED) as duration,
          cast(data3 as UNSIGNED) as hold,
          cast(data4 as UNSIGNED) as data4,
