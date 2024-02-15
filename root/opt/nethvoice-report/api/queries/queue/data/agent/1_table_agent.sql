@@ -13,7 +13,7 @@ SELECT
     unanswered as `load$unAnswered£num#`,
     transfered as `load$transfered£num#`,
     IF((login - pause)>=0,round(answered / ((login - pause) / 3600), 2), NULL) as `load$callOnHour£num#`,
-    IF((login - pause)>=0,round(totcall / (login - pause), 2), NULL) as `load$occupation£percent#`,
+    IF((login - pause)>=0,round((totcall / (login - pause)*100), 2), NULL) as `load$occupation£percent#`,
     total_recall as `load$totalRecall£num#`,
     avg_recall as `load$avgRecall£seconds#`,
     min_duration as `duration$min_duration£seconds`,
