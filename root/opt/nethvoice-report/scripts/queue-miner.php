@@ -180,7 +180,7 @@ function do_time_queries($start_ts,$end_ts) {
          cast(data1 as UNSIGNED) as hold,
          cast(data4 as UNSIGNED) as data4,
          agent,qc.descr as qdescr,
-         (SELECT GROUP_CONCAT(DISTINCT name SEPARATOR ',') from tmp_cdr LEFT JOIN agent_extensions on SUBSTRING(REPLACE(dstchannel,'PJSIP/',''),1,POSITION('-' IN REPLACE(dstchannel,'PJSIP/',''))-1) = agent_extensions.extension where linkedid != uniqueid and billsec > 0 and dstchannel not like 'Local%' AND UNIX_TIMESTAMP(calldate) >  $start_ts AND UNIX_TIMESTAMP(calldate) < $end_ts AND linkedid = callid) as agents
+         (SELECT GROUP_CONCAT(DISTINCT name SEPARATOR ',') from tmp_cdr LEFT JOIN agent_extensions on SUBSTRING(REPLACE(dstchannel,'PJSIP/',''),1,POSITION('-' IN REPLACE(dstchannel,'PJSIP/',''))-1) = agent_extensions.extension where linkedid != uniqueid and disposition ='ANSWERED' and dstchannel not like 'Local%' AND UNIX_TIMESTAMP(calldate) >  $start_ts AND UNIX_TIMESTAMP(calldate) < $end_ts AND linkedid = callid) as agents
        from queue_log_history a inner join asterisk.queues_config qc on queuename=qc.extension
        where event in ('COMPLETEAGENT','COMPLETECALLER') AND UNIX_TIMESTAMP(time) > $start_ts AND UNIX_TIMESTAMP(time) < $end_ts";
 
@@ -206,9 +206,9 @@ function do_time_queries($start_ts,$end_ts) {
            INNER JOIN asterisk.queues_config qc ON queuename=qc.extension
 	   INNER JOIN (
 		SELECT dst_cnam,billsec,dstchannel, zid FROM (
-			SELECT dst_cnam,billsec,dstchannel, linkedid AS zid FROM tmp_cdr WHERE linkedid != uniqueid AND billsec > 0 AND dstchannel NOT LIKE 'Local%' AND UNIX_TIMESTAMP(calldate) > $start_ts AND UNIX_TIMESTAMP(calldate) < $end_ts
+			SELECT dst_cnam,billsec,dstchannel, linkedid AS zid FROM tmp_cdr WHERE linkedid != uniqueid AND disposition ='ANSWERED' AND dstchannel NOT LIKE 'Local%' AND UNIX_TIMESTAMP(calldate) > $start_ts AND UNIX_TIMESTAMP(calldate) < $end_ts
                 UNION ALL
-		SELECT dst_cnam,billsec,dstchannel, uniqueid AS zid FROM tmp_cdr WHERE linkedid != uniqueid AND billsec > 0 AND dstchannel NOT LIKE 'Local%' AND UNIX_TIMESTAMP(calldate) > $start_ts AND UNIX_TIMESTAMP(calldate) < $end_ts
+		SELECT dst_cnam,billsec,dstchannel, uniqueid AS zid FROM tmp_cdr WHERE linkedid != uniqueid AND disposition ='ANSWERED' AND dstchannel NOT LIKE 'Local%' AND UNIX_TIMESTAMP(calldate) > $start_ts AND UNIX_TIMESTAMP(calldate) < $end_ts
 		) temp GROUP BY zid
            ) c ON zid = callid
            LEFT JOIN agent_extensions ON SUBSTRING(REPLACE(dstchannel,'PJSIP/',''),1,POSITION('-' IN REPLACE(dstchannel,'PJSIP/',''))-1) = agent_extensions.extension
