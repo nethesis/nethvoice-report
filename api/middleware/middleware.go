@@ -82,7 +82,7 @@ func InitJWT() *jwt.GinJWTMiddleware {
 			subscription_secret := os.Getenv("SUBSCRIPTION_SECRET")
 			if subscription_systemid == "" || subscription_secret == "" {
 				utils.LogError(errors.New("Error! Reports available only on Enterprise version."))
-				return nil, jwt.ErrFailedAuthentication
+				return nil, errors.New("Reports available only on Enterprise version")
 			}
 
 			// check if login is with API key or User and Password
