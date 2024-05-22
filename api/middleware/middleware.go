@@ -38,6 +38,8 @@ import (
 	"github.com/nethesis/nethvoice-report/api/methods"
 	"github.com/nethesis/nethvoice-report/api/models"
 	"github.com/nethesis/nethvoice-report/api/utils"
+
+	"os"
 )
 
 type login struct {
@@ -74,6 +76,14 @@ func InitJWT() *jwt.GinJWTMiddleware {
 			// set login credentials
 			username := loginVals.Username
 			password := loginVals.Password
+
+			// check subscription
+			subscription_systemid := os.Getenv("SUBSCRIPTION_SYSTEMID")
+			subscription_secret := os.Getenv("SUBSCRIPTION_SECRET")
+			if subscription_systemid == "" || subscription_secret == "" {
+				utils.LogError(errors.New("Error! Reports available only on Enterprise version."))
+				return nil, jwt.ErrFailedAuthentication
+			}
 
 			// check if login is with API key or User and Password
 			if username == "X" {
