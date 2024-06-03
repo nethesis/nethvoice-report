@@ -41,12 +41,19 @@
                   v-model="password"
                 />
               </sui-form-field>
-              <sui-message error>
+              <sui-message v-if="error === 'invalid_credentials'" error>
                 <sui-message-header>
                   <i class="exclamation triangle icon"></i>
                   {{ $t("login.invalid_credentials") }}
                 </sui-message-header>
                 <p>{{ $t("login.invalid_user_pass_try") }}.</p>
+              </sui-message>
+              <sui-message v-if="error === 'enterprise_version'" error>
+                <sui-message-header>
+                  <i class="exclamation triangle icon"></i>
+                  {{ $t("login.enterprise_version_title") }}
+                </sui-message-header>
+                <p>{{ $t("login.enterprise_version_message") }}.</p>
               </sui-message>
               <sui-message warning>
                 <sui-message-header>
@@ -128,7 +135,14 @@ export default {
           this.loading = false;
 
           // show errors
-          this.error = true;
+          if (
+            error.body.message ===
+            "Reports available only on Enterprise version"
+          ) {
+            this.error = "enterprise_version";
+          } else {
+            this.error = "invalid_credentials";
+          }
 
           // print error
           console.error(error.body);
