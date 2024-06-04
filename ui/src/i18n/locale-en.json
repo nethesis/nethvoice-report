@@ -166,7 +166,7 @@
       "login_again": "Please login again",
       "user": "User",
       "password": "Password",
-      "enterprise_version_title": "Functionality not active",
+      "enterprise_version_title": "Feature disabled",
       "enterprise_version_message": "Reports available only on Enterprise version"
     },
     "caption": {
