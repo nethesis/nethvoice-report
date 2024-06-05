@@ -165,7 +165,9 @@
       "session_expired": "La tua sessione è scaduta",
       "login_again": "Per favore, accedere nuovamente",
       "user": "Utente",
-      "password": "Password"
+      "password": "Password",
+      "enterprise_version_title": "Funzionalità non attiva",
+      "enterprise_version_message": "Report disponibili solo sulla versione Enterprise"
     },
     "caption": {
       "recallTime": "Tempo di Richiamata",
