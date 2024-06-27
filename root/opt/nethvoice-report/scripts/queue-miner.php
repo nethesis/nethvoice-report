@@ -43,6 +43,10 @@ try {
 
 # Copy queue_log content into queue_log_history
 $sqls = array();
+
+# Delete RINGNOANSWER rows where duration is <= 1000 ms, they are fake calls caused by incorrect queues configuration
+$sqls[] = "DELETE FROM queue_log WHERE event='RINGNOANSWER' and data1 in ('0','1000')";
+
 $sqls[] = "INSERT IGNORE INTO queue_log_history (time,callid,queuename,agent,event,data,data1,data2,data3,data4,data5) SELECT time,callid,queuename,agent,event,data,data1,data2,data3,data4,data5 FROM queue_log WHERE UNIX_TIMESTAMP(time) < ?";
 
 # Delete queue_log
@@ -206,9 +210,9 @@ function do_time_queries($start_ts,$end_ts) {
            INNER JOIN asterisk.queues_config qc ON queuename=qc.extension
 	   INNER JOIN (
 		SELECT dst_cnam,billsec,dstchannel, zid FROM (
-			SELECT dst_cnam,billsec,dstchannel, linkedid AS zid FROM tmp_cdr WHERE linkedid != uniqueid AND disposition ='ANSWERED' AND dstchannel NOT LIKE 'Local%' AND UNIX_TIMESTAMP(calldate) > $start_ts AND UNIX_TIMESTAMP(calldate) < $end_ts
-                UNION ALL
 		SELECT dst_cnam,billsec,dstchannel, uniqueid AS zid FROM tmp_cdr WHERE linkedid != uniqueid AND disposition ='ANSWERED' AND dstchannel NOT LIKE 'Local%' AND UNIX_TIMESTAMP(calldate) > $start_ts AND UNIX_TIMESTAMP(calldate) < $end_ts
+                UNION ALL
+		SELECT dst_cnam,billsec,dstchannel, linkedid AS zid FROM tmp_cdr WHERE linkedid != uniqueid AND disposition ='ANSWERED' AND dstchannel NOT LIKE 'Local%' AND UNIX_TIMESTAMP(calldate) > $start_ts AND UNIX_TIMESTAMP(calldate) < $end_ts order by calldate
 		) temp GROUP BY zid
            ) c ON zid = callid
            LEFT JOIN agent_extensions ON SUBSTRING(REPLACE(dstchannel,'PJSIP/',''),1,POSITION('-' IN REPLACE(dstchannel,'PJSIP/',''))-1) = agent_extensions.extension
