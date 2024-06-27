@@ -1,5 +1,9 @@
 # NethVoice Report UI
 
+## Node Version
+
+Due to compatibility issues with `node-sass` and node >= `14`, please use only node `14.x` and npm `6.x`. You can use [nvm](https://github.com/nvm-sh/nvm) to get a node `14` up and running.
+
 ## Project setup
 ```
 npm install
