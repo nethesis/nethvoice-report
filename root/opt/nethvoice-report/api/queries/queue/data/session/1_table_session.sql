@@ -4,7 +4,9 @@ SELECT
     IF(
         locate('@', agent) > 0,
         substring_index(substring_index(agent, '/', -2), '@', 1),
-        substring_index(substring_index(agent, '/', -1), '-', 1)
+	IF(locate('/', agent) > 0,
+                        substring_index(substring_index(agent, '/', -1), '-', 1),
+                        agent)
     ) AS agent,
     action AS action£label,
     Date_format(From_unixtime(timestamp_in), "%Y-%m-%d %H:%i:%s") AS start£hourDate,
@@ -25,7 +27,9 @@ WHERE TRUE
         AND IF(
             locate('@', agent) > 0,
             substring_index(substring_index(agent, '/', -2), '@', 1),
-            substring_index(substring_index(agent, '/', -1), '-', 1)
+	    IF(locate('/', agent) > 0,
+                        substring_index(substring_index(agent, '/', -1), '-', 1),
+                        agent)
         ) in ({{ ExtractStrings .Agents }})
     {{ end }}
     {{ if gt (len .Reasons) 0 }}

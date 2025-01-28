@@ -12,7 +12,10 @@ SELECT
     IF(
         locate('@', agent) > 0,
         substring_index(substring_index(agent, '/', -2), '@', 1),
-        substring_index(substring_index(agent, '/', -1), '-', 1)
+	IF(
+           locate('/', agent) > 0,
+           substring_index(substring_index(agent, '/', -1), '-', 1),
+           agent)
     ) AS agent,
     count(id) AS total
 FROM
@@ -35,7 +38,10 @@ SELECT
     IF(
         locate('@', agent) > 0,
         substring_index(substring_index(agent, '/', -2), '@', 1),
-        substring_index(substring_index(agent, '/', -1), '-', 1)
+	IF(
+           locate('/', agent) > 0,
+           substring_index(substring_index(agent, '/', -1), '-', 1),
+           agent)
     ) AS agent,
     count(id) AS total
 FROM
@@ -58,7 +64,10 @@ SELECT
     IF(
         locate('@', agent) > 0,
         substring_index(substring_index(agent, '/', -2), '@', 1),
-        substring_index(substring_index(agent, '/', -1), '-', 1)
+	IF(
+           locate('/', agent) > 0,
+           substring_index(substring_index(agent, '/', -1), '-', 1),
+           agent)
     ) AS agent,
     count(id) AS total
 FROM
@@ -81,7 +90,10 @@ SELECT
     IF(
         locate('@', agent) > 0,
         substring_index(substring_index(agent, '/', -2), '@', 1),
-        substring_index(substring_index(agent, '/', -1), '-', 1)
+	IF(
+           locate('/', agent) > 0,
+           substring_index(substring_index(agent, '/', -1), '-', 1),
+           agent)
     ) AS agent,
     count(id) AS total
 FROM
