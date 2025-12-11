@@ -622,7 +622,8 @@
       "webrtc": "WebRTC",
       "ringgroups": "Gruppo di chiamata",
       "meetme": "Conferenza",
-      "queue": "Coda"
+      "queue": "Coda",
+      "nethlink": "NethLink"
     }
   }
 }

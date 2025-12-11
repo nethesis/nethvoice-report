@@ -618,7 +618,8 @@
       "webrtc": "WebRTC",
       "ringgroups": "Call group",
       "meetme": "Meeting",
-      "queue": "Queue"
+      "queue": "Queue",
+      "nethlink": "NethLink"
     }
   }
 }
