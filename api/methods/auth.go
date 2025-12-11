@@ -78,6 +78,7 @@ func GetUserAuthorizations(username string) (models.UserAuthorizations, error) {
 			userAuthorizations.Agents = ua.Agents
 			userAuthorizations.Users = ua.Users
 			userAuthorizations.Cdr = ua.Cdr
+			userAuthorizations.Privacy = ua.Privacy
 			return userAuthorizations, nil
 		}
 	}

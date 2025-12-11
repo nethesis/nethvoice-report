@@ -29,6 +29,7 @@ type UserAuthorizations struct {
 	Agents   []string `json:"agents"`
 	Users    []string `json:"users"`
 	Cdr      string   `json:"cdr"`
+	Privacy  bool     `json:"privacy"`
 }
 
 type AuthStats struct {

@@ -24,6 +24,7 @@ package cmd
 
 import (
 	"bytes"
+	"database/sql"
 	"fmt"
 	"path"
 	"text/template"
@@ -180,14 +181,25 @@ func executeReportCDR(flags bool) {
 		templateY := configuration.Config.TemplatePath + "/cdr_year.sql"
 		templateM := configuration.Config.TemplatePath + "/cdr_month.sql"
 
-		// get min year and min month
+		// get min year and min month using sql.NullInt64 to handle NULL values
+		var nullableYear sql.NullInt64
+		var nullableMonth sql.NullInt64
 		rowMin := db.QueryRow("SELECT year(min(calldate)), month(min(calldate)) FROM cdr")
-		errQueryMin := rowMin.Scan(&minYear, &minMonth)
+		errQueryMin := rowMin.Scan(&nullableYear, &nullableMonth)
 
 		// check errors
 		if errQueryMin != nil {
 			helper.FatalError(errors.Wrap(errQueryMin, "error getting min year and min month"))
 		}
+
+		// check if cdr table has data (NULL means empty table)
+		if !nullableYear.Valid || !nullableMonth.Valid {
+			helper.LogDebug("CDR table is empty or has no valid calldate, skipping processing")
+			return
+		}
+
+		minYear = int(nullableYear.Int64)
+		minMonth = int(nullableMonth.Int64)
 
 		// save minYear and minMonth in cache
 		cacheConnection := cache.Instance()

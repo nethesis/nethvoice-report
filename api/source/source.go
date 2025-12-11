@@ -24,6 +24,7 @@ package source
 
 import (
 	"database/sql"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 
@@ -51,23 +52,33 @@ func PhonebookInstance() *sql.DB {
 }
 
 func FreePBXInstance() *sql.DB {
-        if dbF == nil {
-                dbF = FreePBXInit()
-        }
-        return dbF
+	if dbF == nil {
+		dbF = FreePBXInit()
+	}
+	return dbF
 }
 
 func CDRInit() *sql.DB {
 	// define uri connection string
 	uri := configuration.Config.CDRDatabase.User + ":" + configuration.Config.CDRDatabase.Password + "@tcp(" + configuration.Config.CDRDatabase.Host + ":" + configuration.Config.CDRDatabase.Port + ")/" + configuration.Config.CDRDatabase.Name
 
-	// connect to database
-	db, err := sql.Open("mysql", uri+"?charset=utf8&parseTime=True&multiStatements=true")
+	// connect to database with timeout and connection settings
+	db, err := sql.Open("mysql", uri+"?charset=utf8&parseTime=True&multiStatements=true&timeout=30s&readTimeout=30s&writeTimeout=30s")
 
 	// handle error
 	if err != nil {
 		utils.LogError(errors.Wrap(err, "error connecting to database"))
 	}
+
+	// test the connection
+	if err := db.Ping(); err != nil {
+		utils.LogError(errors.Wrap(err, "error pinging database"))
+	}
+
+	// set connection pool settings
+	db.SetMaxOpenConns(25)
+	db.SetMaxIdleConns(5)
+	db.SetConnMaxLifetime(5 * time.Minute)
 
 	// return db object
 	return db
@@ -90,17 +101,17 @@ func PhonebookInit() *sql.DB {
 }
 
 func FreePBXInit() *sql.DB {
-        // define uri connection string
-        uri := configuration.Config.FreePBXDatabase.User + ":" + configuration.Config.FreePBXDatabase.Password + "@tcp(" + configuration.Config.FreePBXDatabase.Host + ":" + configuration.Config.FreePBXDatabase.Port + ")/" + configuration.Config.FreePBXDatabase.Name
+	// define uri connection string
+	uri := configuration.Config.FreePBXDatabase.User + ":" + configuration.Config.FreePBXDatabase.Password + "@tcp(" + configuration.Config.FreePBXDatabase.Host + ":" + configuration.Config.FreePBXDatabase.Port + ")/" + configuration.Config.FreePBXDatabase.Name
 
-        // connect to database
-        db, err := sql.Open("mysql", uri+"?charset=utf8&parseTime=True")
+	// connect to database
+	db, err := sql.Open("mysql", uri+"?charset=utf8&parseTime=True")
 
-        // handle error
-        if err != nil {
-                utils.LogError(errors.Wrap(err, "error connecting to database"))
-        }
+	// handle error
+	if err != nil {
+		utils.LogError(errors.Wrap(err, "error connecting to database"))
+	}
 
-        // return db object
-        return db
+	// return db object
+	return db
 }

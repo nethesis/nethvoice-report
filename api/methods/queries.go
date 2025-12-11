@@ -127,6 +127,26 @@ func GetGraphData(c *gin.Context) {
 	user := GetClaims(c)["id"].(string)
 	filter.CurrentUser = user
 
+	// check authorizations for not admin users and set privacy settings
+	if user != "admin" && user != "X" {
+		// initialize authorizations
+		auths, err := GetUserAuthorizations(user)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"message": "error executing SQL query", "status": "cannot retrieve user's authorizations"})
+			return
+		}
+
+		// set privacy and user extensions in filter for CDR outbound queries
+		if report == "cdr" && auths.Privacy {
+			filter.Privacy = true
+			// get user extensions to exclude from masking
+			extensionsString := utils.ExtractUserExtensions(user)
+			if extensionsString != "" {
+				filter.UserExtensions = strings.Split(extensionsString, ",")
+			}
+		}
+	}
+
 	// convert struct to json to preserve item orders
 	filterString, errConvert := json.Marshal(filter)
 	if errConvert != nil {
@@ -160,10 +180,10 @@ func GetGraphData(c *gin.Context) {
 	}
 
 	// query result is not cached, execute query
-	// check authorizations for not admin users
+	// check additional authorizations for not admin users
 	if user != "admin" && user != "X" {
 
-		// initialize authorizations
+		// initialize authorizations (already retrieved above, but we need them again for queue/cdr checks)
 		auths, err := GetUserAuthorizations(user)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"message": "error executing SQL query", "status": "cannot retrieve user's authorizations"})
@@ -283,7 +303,7 @@ func executeSqlQuery(filter models.Filter, report string, section string, view s
 	}
 
 	// create template
-	q := template.New(path.Base(queryFile)).Funcs(template.FuncMap{"ExtractStrings": utils.ExtractStrings}).Funcs(template.FuncMap{"ExtractPhones": utils.ExtractPhones}).Funcs(template.FuncMap{"ExtractOrigins": utils.ExtractOrigins}).Funcs(template.FuncMap{"ExtractSettings": utils.ExtractSettings}).Funcs(template.FuncMap{"PivotGroup": utils.PivotGroup}).Funcs(template.FuncMap{"ExtractUserExtensions": utils.ExtractUserExtensions}).Funcs(template.FuncMap{"ExtractPatterns": utils.ExtractPatterns}).Funcs(template.FuncMap{"ExtractCallDestinations": utils.ExtractCallDestinations}).Funcs(template.FuncMap{"ExtractDispositions": utils.ExtractDispositions}).Funcs(template.FuncMap{"ExtractRegexpStrings": utils.ExtractRegexpStrings}).Funcs(template.FuncMap{"ExtractRegexpSrcOrDst": utils.ExtractRegexpSrcOrDst}).Funcs(template.FuncMap{"ExtractRegexpTrunks": utils.ExtractRegexpTrunks})
+	q := template.New(path.Base(queryFile)).Funcs(template.FuncMap{"ExtractStrings": utils.ExtractStrings}).Funcs(template.FuncMap{"ExtractPhones": utils.ExtractPhones}).Funcs(template.FuncMap{"ExtractOrigins": utils.ExtractOrigins}).Funcs(template.FuncMap{"ExtractSettings": utils.ExtractSettings}).Funcs(template.FuncMap{"PivotGroup": utils.PivotGroup}).Funcs(template.FuncMap{"ExtractUserExtensions": utils.ExtractUserExtensions}).Funcs(template.FuncMap{"ExtractPatterns": utils.ExtractPatterns}).Funcs(template.FuncMap{"ExtractCallDestinations": utils.ExtractCallDestinations}).Funcs(template.FuncMap{"ExtractDispositions": utils.ExtractDispositions}).Funcs(template.FuncMap{"ExtractRegexpStrings": utils.ExtractRegexpStrings}).Funcs(template.FuncMap{"ExtractRegexpSrcOrDst": utils.ExtractRegexpSrcOrDst}).Funcs(template.FuncMap{"ExtractRegexpTrunks": utils.ExtractRegexpTrunks}).Funcs(template.FuncMap{"MaskDstSQL": utils.MaskDstSQL}).Funcs(template.FuncMap{"MaskSrcSQL": utils.MaskSrcSQL}).Funcs(template.FuncMap{"MaskSrcLocalSQL": utils.MaskSrcLocalSQL}).Funcs(template.FuncMap{"MaskDstLocalSQL": utils.MaskDstLocalSQL})
 
 	// parse template
 
