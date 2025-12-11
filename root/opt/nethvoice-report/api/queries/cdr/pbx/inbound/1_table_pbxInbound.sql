@@ -4,7 +4,7 @@ SELECT
 	peeraccount,
     DATE_FORMAT(calldate, '%Y-%m-%d %H:%i:%s') AS time£hourDate,
     {{ MaskSrcSQL .Privacy .UserExtensions }} AS src£phoneNumber,
-    dst AS dst£phoneNumber,
+    {{ MaskDstSQL .Privacy .UserExtensions }} AS dst£phoneNumber,
     type AS call_type£label,
     IF(dispositions REGEXP 'ANSWERED', 'ANSWERED', SUBSTRING_INDEX(dispositions, ',',- 1)) AS result£label, -- get last disposition
     duration AS totalDuration£seconds,
