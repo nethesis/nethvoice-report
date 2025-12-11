@@ -529,7 +529,7 @@ export default {
         : null;
     },
     isNumber(value) {
-      return !Number.isNaN(Number(value)) ? true : false;
+      return value.includes('X') ? true: !Number.isNaN(Number(value)) ? true : false;
     },
     onApplyFilters() {
       this.sortedBy = "period";

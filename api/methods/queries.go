@@ -53,11 +53,30 @@ func GetCallDetails(c *gin.Context) {
 	// extract info
 	linkedid := c.Param("linkedid")
 
+	// get user and check privacy settings
+	user := GetClaims(c)["id"].(string)
+	var privacy bool
+	var userExtensions []string
+
+	if user != "admin" && user != "X" {
+		auths, err := GetUserAuthorizations(user)
+		if err == nil && auths.Privacy {
+			privacy = true
+			extensionsString := utils.ExtractUserExtensions(user)
+			if extensionsString != "" {
+				userExtensions = strings.Split(extensionsString, ",")
+			}
+		}
+	}
+
+	// build cache key including privacy settings
+	cacheKey := fmt.Sprintf("call_details_%s_%s_%v", linkedid, user, privacy)
+
 	// init cache connection
 	cacheConnection := cache.Instance()
 
 	// check if call detail is locally cached
-	data, errCache := cacheConnection.Get("call_details_" + linkedid).Result()
+	data, errCache := cacheConnection.Get(cacheKey).Result()
 
 	// data is cached, return immediately
 	if errCache == nil {
@@ -66,13 +85,15 @@ func GetCallDetails(c *gin.Context) {
 	}
 
 	// call detail is not cached, execute query
+	// build src and dst expressions based on privacy settings
+	srcExpr := utils.MaskSrcSQL(privacy, userExtensions)
+	dstExpr := utils.MaskDstSQL(privacy, userExtensions)
 
-	db := source.CDRInstance()
-	results, errQuery := db.Query(`
+	query := fmt.Sprintf(`
 	select
-		DATE_FORMAT(calldate, '%Y-%m-%d %H:%i:%s') AS time£hourDate,
-		IF(cnum IS NULL OR cnum = "", src, cnum) AS src£phoneNumber,
-		dst AS dst£phoneNumber,
+		DATE_FORMAT(calldate, '%%Y-%%m-%%d %%H:%%i:%%s') AS time£hourDate,
+		%s AS src£phoneNumber,
+		%s AS dst£phoneNumber,
 		disposition AS result£label,
 		duration AS totalDuration£seconds,
 		billsec AS billsec£seconds,
@@ -81,7 +102,10 @@ func GetCallDetails(c *gin.Context) {
 	FROM cdr
 	WHERE linkedid = ?
 	ORDER BY calldate
-	`, linkedid)
+	`, srcExpr, dstExpr)
+
+	db := source.CDRInstance()
+	results, errQuery := db.Query(query, linkedid)
 	if errQuery != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "error executing SQL query", "status": errQuery.Error()})
 		return
@@ -94,7 +118,7 @@ func GetCallDetails(c *gin.Context) {
 	callDetails := utils.ParseSqlResults(results)
 
 	// save call details to cache
-	errCache = cacheConnection.Set("call_details_"+linkedid, callDetails, 0).Err()
+	errCache = cacheConnection.Set(cacheKey, callDetails, 0).Err()
 	if errCache != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "cannot save call details to cache", "status": errCache.Error()})
 		return

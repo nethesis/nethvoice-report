@@ -1,12 +1,12 @@
-SELECT
+SELECT	
     linkedid,
     accountcode,
     peeraccount,
     DATE_FORMAT(calldate, '%Y-%m-%d %H:%i:%s') AS time£hourDate,
-    {{ MaskSrcSQL .Privacy .UserExtensions }} AS src£phoneNumber,
+    IF(cnum IS NULL OR cnum = "", src, cnum) AS src£phoneNumber,
     dst AS dst£phoneNumber,
     type AS call_type£label,
-    IF(dispositions REGEXP 'ANSWERED', 'ANSWERED', SUBSTRING_INDEX(dispositions, ',',- 1)) AS result£label, -- get last disposition
+    IF(dispositions REGEXP 'ANSWERED', 'ANSWERED', SUBSTRING_INDEX(dispositions, ',',- 1)) AS result£label, -- get last disposition 
     duration AS totalDuration£seconds,
     billsec AS billsec£seconds,
 	  did
