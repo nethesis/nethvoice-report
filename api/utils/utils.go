@@ -610,3 +610,110 @@ func DatesTimeInterval(intervalStart string, intervalEnd string, timeGroup strin
 
 	return start.ToTime(), end.ToTime(), nil
 }
+
+// MaskPhoneNumber masks the last 3 digits of a phone number with "XXX"
+// Example: "1234567890" -> "1234567XXX"
+func MaskPhoneNumber(phoneNumber string) string {
+	if len(phoneNumber) <= 3 {
+		return "XXX"
+	}
+	return phoneNumber[:len(phoneNumber)-3] + "XXX"
+}
+
+// MaskDstSQL generates SQL expression to mask destination number based on privacy settings.
+// If privacy is false, returns plain dst column.
+// If privacy is true, returns CASE expression that masks dst unless src is in user's extensions.
+func MaskDstSQL(privacy bool, userExtensions []string) string {
+	if !privacy {
+		return "dst"
+	}
+
+	// Build the condition to check if call is from user's own extensions
+	if len(userExtensions) == 0 {
+		// No extensions, mask all destinations
+		return "CONCAT(LEFT(dst, GREATEST(LENGTH(dst)-3, 0)), 'XXX')"
+	}
+
+	// Build list of extensions for SQL IN clause
+	quotedExtensions := make([]string, len(userExtensions))
+	for i, ext := range userExtensions {
+		quotedExtensions[i] = "'" + ext + "'"
+	}
+	extensionsList := strings.Join(quotedExtensions, ",")
+
+	// Return CASE expression: if source is user's extension, show full dst; otherwise mask it
+	return fmt.Sprintf("CASE WHEN IF(cnum IS NULL OR cnum = '', src, cnum) IN (%s) THEN dst ELSE CONCAT(LEFT(dst, GREATEST(LENGTH(dst)-3, 0)), 'XXX') END", extensionsList)
+}
+
+// MaskSrcSQL generates SQL expression to mask source number based on privacy settings.
+// If privacy is false, returns plain src/cnum column expression.
+// If privacy is true, returns CASE expression that masks src unless dst is in user's extensions.
+func MaskSrcSQL(privacy bool, userExtensions []string) string {
+	srcExpr := "IF(cnum IS NULL OR cnum = '', src, cnum)"
+
+	if !privacy {
+		return srcExpr
+	}
+
+	// Build the condition to check if call is to user's own extensions
+	if len(userExtensions) == 0 {
+		// No extensions, mask all sources
+		return fmt.Sprintf("CONCAT(LEFT(%s, GREATEST(LENGTH(%s)-3, 0)), 'XXX')", srcExpr, srcExpr)
+	}
+
+	// Build list of extensions for SQL IN clause
+	quotedExtensions := make([]string, len(userExtensions))
+	for i, ext := range userExtensions {
+		quotedExtensions[i] = "'" + ext + "'"
+	}
+	extensionsList := strings.Join(quotedExtensions, ",")
+
+	// Return CASE expression: if destination is user's extension, show full src; otherwise mask it
+	return fmt.Sprintf("CASE WHEN dst IN (%s) THEN %s ELSE CONCAT(LEFT(%s, GREATEST(LENGTH(%s)-3, 0)), 'XXX') END", extensionsList, srcExpr, srcExpr, srcExpr)
+}
+
+// MaskSrcLocalSQL generates SQL expression to mask source number for local calls.
+// For local calls, show src if either src or dst is user's extension.
+func MaskSrcLocalSQL(privacy bool, userExtensions []string) string {
+	srcExpr := "IF(cnum IS NULL OR cnum = '', src, cnum)"
+
+	if !privacy {
+		return srcExpr
+	}
+
+	if len(userExtensions) == 0 {
+		return fmt.Sprintf("CONCAT(LEFT(%s, GREATEST(LENGTH(%s)-3, 0)), 'XXX')", srcExpr, srcExpr)
+	}
+
+	quotedExtensions := make([]string, len(userExtensions))
+	for i, ext := range userExtensions {
+		quotedExtensions[i] = "'" + ext + "'"
+	}
+	extensionsList := strings.Join(quotedExtensions, ",")
+
+	// Show full src if either src or dst is user's extension
+	return fmt.Sprintf("CASE WHEN %s IN (%s) OR dst IN (%s) THEN %s ELSE CONCAT(LEFT(%s, GREATEST(LENGTH(%s)-3, 0)), 'XXX') END", srcExpr, extensionsList, extensionsList, srcExpr, srcExpr, srcExpr)
+}
+
+// MaskDstLocalSQL generates SQL expression to mask destination number for local calls.
+// For local calls, show dst if either src or dst is user's extension.
+func MaskDstLocalSQL(privacy bool, userExtensions []string) string {
+	srcExpr := "IF(cnum IS NULL OR cnum = '', src, cnum)"
+
+	if !privacy {
+		return "dst"
+	}
+
+	if len(userExtensions) == 0 {
+		return "CONCAT(LEFT(dst, GREATEST(LENGTH(dst)-3, 0)), 'XXX')"
+	}
+
+	quotedExtensions := make([]string, len(userExtensions))
+	for i, ext := range userExtensions {
+		quotedExtensions[i] = "'" + ext + "'"
+	}
+	extensionsList := strings.Join(quotedExtensions, ",")
+
+	// Show full dst if either src or dst is user's extension
+	return fmt.Sprintf("CASE WHEN %s IN (%s) OR dst IN (%s) THEN dst ELSE CONCAT(LEFT(dst, GREATEST(LENGTH(dst)-3, 0)), 'XXX') END", srcExpr, extensionsList, extensionsList)
+}

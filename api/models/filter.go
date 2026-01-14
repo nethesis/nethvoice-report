@@ -72,7 +72,9 @@ type Filter struct {
 		} `json:"interval"`
 	} `json:"time"`
 
-	CurrentUser string `json:"currentUser"`
+	CurrentUser    string   `json:"currentUser"`
+	Privacy        bool     `json:"privacy"`
+	UserExtensions []string `json:"userExtensions"`
 
 	Caller      string   `json:"caller"`
 	Name        string   `json:"contactName"`
