@@ -63,7 +63,7 @@ func CDRInit() *sql.DB {
 	uri := configuration.Config.CDRDatabase.User + ":" + configuration.Config.CDRDatabase.Password + "@tcp(" + configuration.Config.CDRDatabase.Host + ":" + configuration.Config.CDRDatabase.Port + ")/" + configuration.Config.CDRDatabase.Name
 
 	// connect to database with timeout and connection settings
-	db, err := sql.Open("mysql", uri+"?charset=utf8&parseTime=True&multiStatements=true&timeout=30s&readTimeout=30s&writeTimeout=30s")
+	db, err := sql.Open("mysql", uri+"?charset=utf8&parseTime=True&multiStatements=true&timeout=300s&readTimeout=300s&writeTimeout=300s")
 
 	// handle error
 	if err != nil {

@@ -89,11 +89,11 @@ func executeReportViews() {
 			return errors.Wrap(errQuery, "Error in query execution: "+viewsPath+"/"+value)
 		}
 
+		// close results immediately after use
+		rows.Close()
+
 		duration := time.Since(start)
 		helper.LogDebug("%s completed in %s", value, duration)
-
-		// close results
-		defer rows.Close()
 
 		return nil
 	})
