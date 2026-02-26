@@ -105,6 +105,46 @@ func monthMap(month int) string {
 	return fmt.Sprintf("%02d", month)
 }
 
+// ensureCDRSourceIndexes adds indexes on the source cdr table if they don't exist.
+// This covers the case where schema.sql.tmpl hasn't been re-executed after an update.
+func ensureCDRSourceIndexes(db *sql.DB) {
+	indexes := []struct{ name, columns string }{
+		{"idx_cdr_calldate", "calldate"},
+		{"idx_cdr_linkedid", "linkedid"},
+	}
+	for _, idx := range indexes {
+		var count int
+		db.QueryRow("SELECT COUNT(*) FROM information_schema.STATISTICS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'cdr' AND INDEX_NAME = ?", idx.name).Scan(&count)
+		if count == 0 {
+			_, err := db.Exec("ALTER TABLE cdr ADD INDEX " + idx.name + " (" + idx.columns + ")")
+			if err != nil {
+				helper.LogDebug("Warning: could not add index %s on cdr: %s", idx.name, err.Error())
+			}
+		}
+	}
+}
+
+// ensureTableIndexes adds indexes on generated cdr_YYYY / cdr_YYYY-MM tables if missing.
+// After the first migration this becomes a no-op (only SELECT on metadata).
+func ensureTableIndexes(db *sql.DB, table string) {
+	indexes := []struct{ name, columns string }{
+		{"idx_type_calldate", "type, calldate"},
+		{"idx_type", "type"},
+		{"idx_cnum", "cnum"},
+		{"idx_dst", "dst"},
+	}
+	for _, idx := range indexes {
+		var count int
+		db.QueryRow("SELECT COUNT(*) FROM information_schema.STATISTICS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND INDEX_NAME = ?", table, idx.name).Scan(&count)
+		if count == 0 {
+			_, err := db.Exec("ALTER TABLE `" + table + "` ADD INDEX `" + idx.name + "` (" + idx.columns + ")")
+			if err != nil {
+				helper.LogDebug("Warning: could not add index %s on %s: %s", idx.name, table, err.Error())
+			}
+		}
+	}
+}
+
 // Entry point for "cdr" command
 func executeReportCDR(flags bool) {
 	// define db instance
@@ -172,6 +212,9 @@ func executeReportCDR(flags bool) {
 			rows.Close()
 		}
 	} else {
+		// ensure indexes on source cdr table
+		ensureCDRSourceIndexes(db)
+
 		// define vars
 		var minYear int
 		var minMonth int
@@ -241,6 +284,9 @@ func executeReportCDR(flags bool) {
 
 				// close results
 				rowsY.Close()
+
+				// ensure indexes on year table (migration for existing tables)
+				ensureTableIndexes(db, fmt.Sprintf("cdr_%d", y))
 			}
 
 			var queryM bytes.Buffer
@@ -263,6 +309,9 @@ func executeReportCDR(flags bool) {
 
 			// close results
 			rowsM.Close()
+
+			// ensure indexes on month table (migration for existing tables)
+			ensureTableIndexes(db, fmt.Sprintf("cdr_%d-%02d", y, m))
 
 			// go to next month for loop iteration
 			cdrTime = cdrTime.AddDate(0, 1, 0)
