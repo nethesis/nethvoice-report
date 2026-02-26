@@ -6,7 +6,7 @@ SELECT
     {{ MaskSrcSQL .Privacy .UserExtensions }} AS src£phoneNumber,
     {{ MaskDstSQL .Privacy .UserExtensions }} AS dst£phoneNumber,
     type AS call_type£label,
-    IF(dispositions REGEXP 'ANSWERED', 'ANSWERED', SUBSTRING_INDEX(dispositions, ',',- 1)) AS result£label, -- get last disposition
+    IF(dispositions LIKE '%ANSWERED%', 'ANSWERED', SUBSTRING_INDEX(dispositions, ',',- 1)) AS result£label, -- get last disposition
     duration AS totalDuration£seconds,
     billsec AS billsec£seconds,
 	did

@@ -1,3 +1,8 @@
+-- Pre-compute trunk list to avoid correlated subqueries (executed once, not per-row)
+DROP TEMPORARY TABLE IF EXISTS _trunk_list;
+CREATE TEMPORARY TABLE _trunk_list AS SELECT DISTINCT channelid FROM asterisk.trunks;
+ALTER TABLE _trunk_list ADD PRIMARY KEY (channelid);
+
 CREATE TABLE IF NOT EXISTS `cdr_{{ YearMap .Year }}`
 (
 	`call_type` TEXT DEFAULT '',
@@ -32,20 +37,16 @@ SELECT `calldate`,
        `sequence`,
        `ccompany`,
        `dst_ccompany`,
-       IF(get_trunk_name(channel) IN
-             (SELECT channelid
-                                                                         FROM
-             asterisk.trunks), "IN", IF(get_trunk_name(dstchannel) IN (
-                                        SELECT
-                                                                      channelid
-                                        FROM
-       asterisk.trunks), "OUT", "LOCAL"))  AS type,
+       IF(t_in.channelid IS NOT NULL, "IN",
+          IF(t_out.channelid IS NOT NULL, "OUT", "LOCAL")) AS type,
        Group_concat(disposition, "")       AS dispositions,
        Group_concat(lastapp, "")           AS lastapps,
        Group_concat(dcontext, "")          AS dcontexts,
        {{ ExtractPatterns }}               AS call_type,
        NULL                                AS cost
 FROM   cdr c
+LEFT JOIN _trunk_list t_in ON t_in.channelid = get_trunk_name(c.channel)
+LEFT JOIN _trunk_list t_out ON t_out.channelid = get_trunk_name(c.dstchannel)
 WHERE  uniqueid = linkedid
        AND calldate >= '{{ YearMap .Year }}-01-01'
        AND calldate < '{{ YearMap .Year }}-01-01' + INTERVAL 1 YEAR
@@ -82,26 +83,24 @@ SELECT `calldate`,
        `sequence`,
        `ccompany`,
        `dst_ccompany`,
-       IF(get_trunk_name(channel) IN
-             (SELECT channelid
-                                                                         FROM
-             asterisk.trunks), "IN", IF(get_trunk_name(dstchannel) IN (
-                                        SELECT
-                                                                      channelid
-                                        FROM
-       asterisk.trunks), "OUT", "LOCAL"))  AS type,
+       IF(t_in.channelid IS NOT NULL, "IN",
+          IF(t_out.channelid IS NOT NULL, "OUT", "LOCAL")) AS type,
        Group_concat(disposition, "")       AS dispositions,
        Group_concat(lastapp, "")           AS lastapps,
        Group_concat(dcontext, "")          AS dcontexts,
        {{ ExtractPatterns }}               AS call_type,
        NULL                                AS cost
 FROM   cdr c
+LEFT JOIN _trunk_list t_in ON t_in.channelid = get_trunk_name(c.channel)
+LEFT JOIN _trunk_list t_out ON t_out.channelid = get_trunk_name(c.dstchannel)
 WHERE  uniqueid = linkedid
        AND calldate >= DATE(NOW() - INTERVAL 1 DAY)
        AND calldate < DATE(NOW())
 GROUP  BY linkedid,
           peeraccount
 ORDER  BY calldate;
+
+DROP TEMPORARY TABLE IF EXISTS _trunk_list;
 
 UPDATE `cdr_{{ YearMap .Year }}` SET call_type = "" WHERE type = "IN";
 UPDATE `cdr_{{ YearMap .Year }}` SET call_type = "" WHERE type = "LOCAL";

@@ -354,14 +354,14 @@ func ExtractDispositions(d []string) string {
 	// declare numbers array
 	var dispositions []string
 
-	// loop dispositions: dispositions REGEXP <d1> OR dispositions = <d2> OR ...
+	// loop dispositions: dispositions LIKE <d1> OR dispositions LIKE <d2> OR ...
 	for _, disposition := range d {
 		if disposition == "ANSWERED" {
-			dispositions = append(dispositions, "dispositions REGEXP 'ANSWERED'")
+			dispositions = append(dispositions, "dispositions LIKE '%ANSWERED%'")
 		} else if disposition == "FAILED" {
-			dispositions = append(dispositions, "dispositions NOT REGEXP 'ANSWERED' AND (dispositions REGEXP 'FAILED$' OR dispositions REGEXP 'CONGESTION$')")
+			dispositions = append(dispositions, "dispositions NOT LIKE '%ANSWERED%' AND (dispositions LIKE '%FAILED' OR dispositions LIKE '%CONGESTION')")
 		} else {
-			dispositions = append(dispositions, "dispositions NOT REGEXP 'ANSWERED' AND dispositions REGEXP '"+disposition+"$'")
+			dispositions = append(dispositions, "dispositions NOT LIKE '%ANSWERED%' AND dispositions LIKE '%"+disposition+"'")
 		}
 	}
 	return strings.Join(dispositions[:], " OR ")

@@ -27,6 +27,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"sync"
 	"text/template"
 	"time"
 
@@ -59,47 +60,74 @@ func executeReportViews() {
 	// define views path
 	viewsPath := configuration.Config.ViewsPath
 
-	// get all .sql files inside views path
+	// collect all .sql files
+	var viewFiles []string
 	errWalk := filepath.Walk(viewsPath, func(pathS string, info os.FileInfo, err error) error {
-		// handle file different from sql
-		if filepath.Ext(pathS) != ".sql" {
-			return nil
+		if filepath.Ext(pathS) == ".sql" {
+			viewFiles = append(viewFiles, pathS)
 		}
-		helper.LogDebug("\nExecuting query %s", pathS)
-
-		// get value name
-		value := filepath.Base(pathS)
-
-		// parse template
-		queryFile := viewsPath + "/" + value
-		q := template.Must(template.New(path.Base(queryFile)).Funcs(template.FuncMap{"ExtractSettings": utils.ExtractSettings}).ParseFiles(queryFile))
-
-		// compile query with filter object
-		var queryString bytes.Buffer
-		errTpl := q.Execute(&queryString, nil)
-		if errTpl != nil {
-			return errors.Wrap(errTpl, "Error in query template compiling")
-		}
-
-		// execute query
-		db := source.CDRInstance()
-		start := time.Now()
-		rows, errQuery := db.Query(queryString.String())
-		if errQuery != nil {
-			return errors.Wrap(errQuery, "Error in query execution: "+viewsPath+"/"+value)
-		}
-
-		// close results immediately after use
-		rows.Close()
-
-		duration := time.Since(start)
-		helper.LogDebug("%s completed in %s", value, duration)
-
 		return nil
 	})
-
-	// handle read errors
 	if errWalk != nil {
 		helper.FatalError(errors.Wrap(errWalk, "Error reading views directory"))
+	}
+
+	// execute views in parallel with bounded concurrency
+	var wg sync.WaitGroup
+	sem := make(chan struct{}, 4)
+	var mu sync.Mutex
+	var firstErr error
+
+	for _, viewFile := range viewFiles {
+		wg.Add(1)
+		sem <- struct{}{}
+		go func(pathS string) {
+			defer wg.Done()
+			defer func() { <-sem }()
+
+			value := filepath.Base(pathS)
+			helper.LogDebug("\nExecuting query %s", pathS)
+
+			// parse template
+			queryFile := viewsPath + "/" + value
+			q := template.Must(template.New(path.Base(queryFile)).Funcs(template.FuncMap{"ExtractSettings": utils.ExtractSettings}).ParseFiles(queryFile))
+
+			// compile query with filter object
+			var queryString bytes.Buffer
+			errTpl := q.Execute(&queryString, nil)
+			if errTpl != nil {
+				mu.Lock()
+				if firstErr == nil {
+					firstErr = errors.Wrap(errTpl, "Error in query template compiling")
+				}
+				mu.Unlock()
+				return
+			}
+
+			// execute query
+			db := source.CDRInstance()
+			start := time.Now()
+			rows, errQuery := db.Query(queryString.String())
+			if errQuery != nil {
+				mu.Lock()
+				if firstErr == nil {
+					firstErr = errors.Wrap(errQuery, "Error in query execution: "+viewsPath+"/"+value)
+				}
+				mu.Unlock()
+				return
+			}
+
+			// close results immediately after use
+			rows.Close()
+
+			duration := time.Since(start)
+			helper.LogDebug("%s completed in %s", value, duration)
+		}(viewFile)
+	}
+
+	wg.Wait()
+
+	if firstErr != nil {
+		helper.FatalError(firstErr)
 	}
 }
