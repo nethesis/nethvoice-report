@@ -10,10 +10,3 @@ SELECT *
 FROM `cdr_{{ YearMap .Year }}`
 WHERE calldate >= DATE(NOW() - INTERVAL 1 DAY)
       AND calldate < DATE(NOW());
-
--- Indexes for query performance
-ALTER TABLE `cdr_{{ YearMap .Year }}-{{ MonthMap .Month }}` ADD INDEX IF NOT EXISTS idx_type_calldate (type, calldate);
-ALTER TABLE `cdr_{{ YearMap .Year }}-{{ MonthMap .Month }}` ADD INDEX IF NOT EXISTS idx_type (type);
-ALTER TABLE `cdr_{{ YearMap .Year }}-{{ MonthMap .Month }}` ADD INDEX IF NOT EXISTS idx_cnum (cnum);
-ALTER TABLE `cdr_{{ YearMap .Year }}-{{ MonthMap .Month }}` ADD INDEX IF NOT EXISTS idx_dst (dst);
-ALTER TABLE `cdr_{{ YearMap .Year }}-{{ MonthMap .Month }}` ADD INDEX IF NOT EXISTS idx_calldate (calldate);

@@ -13,23 +13,3 @@ CREATE FUNCTION clean_prefix (s VARCHAR(255))
   RETURN REPLACE(Substring_index(s,"@international_prefix",-1),"+","00");
 
 COMMIT;
-
--- Indexes for query performance (idempotent)
-SET @db = '@database_name';
-SET @tbl = 'cdr';
-
--- Index on calldate for range scans
-SET @idx_exists = (SELECT COUNT(*) FROM information_schema.STATISTICS
-    WHERE TABLE_SCHEMA = @db AND TABLE_NAME = @tbl AND INDEX_NAME = 'idx_cdr_calldate');
-SET @sql = IF(@idx_exists = 0,
-    CONCAT('ALTER TABLE `', @db, '`.`', @tbl, '` ADD INDEX idx_cdr_calldate (calldate)'),
-    'SELECT 1');
-PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
-
--- Index on linkedid for GROUP BY in cdr_year creation
-SET @idx_exists = (SELECT COUNT(*) FROM information_schema.STATISTICS
-    WHERE TABLE_SCHEMA = @db AND TABLE_NAME = @tbl AND INDEX_NAME = 'idx_cdr_linkedid');
-SET @sql = IF(@idx_exists = 0,
-    CONCAT('ALTER TABLE `', @db, '`.`', @tbl, '` ADD INDEX idx_cdr_linkedid (linkedid)'),
-    'SELECT 1');
-PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
