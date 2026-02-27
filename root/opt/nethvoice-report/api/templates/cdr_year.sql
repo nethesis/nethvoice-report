@@ -7,7 +7,11 @@ CREATE TABLE IF NOT EXISTS `cdr_{{ YearMap .Year }}`
 (
 	`call_type` TEXT DEFAULT '',
 	`cost` DOUBLE DEFAULT NULL, UNIQUE KEY uniq (calldate,uniqueid,dstchannel,duration),
-	`dispositions` LONGTEXT DEFAULT ''
+	`dispositions` LONGTEXT DEFAULT '',
+	`src_region` VARCHAR(100) DEFAULT NULL,
+	`src_province` VARCHAR(100) DEFAULT NULL,
+	`dst_region` VARCHAR(100) DEFAULT NULL,
+	`dst_province` VARCHAR(100) DEFAULT NULL
 )
 SELECT `calldate`,
        `clid`,
@@ -43,7 +47,11 @@ SELECT `calldate`,
        Group_concat(lastapp, "")           AS lastapps,
        Group_concat(dcontext, "")          AS dcontexts,
        {{ ExtractPatterns }}               AS call_type,
-       NULL                                AS cost
+       NULL                                AS cost,
+       NULL                                AS src_region,
+       NULL                                AS src_province,
+       NULL                                AS dst_region,
+       NULL                                AS dst_province
 FROM   cdr c
 LEFT JOIN _trunk_list t_in ON t_in.channelid = get_trunk_name(c.channel)
 LEFT JOIN _trunk_list t_out ON t_out.channelid = get_trunk_name(c.dstchannel)
@@ -89,7 +97,11 @@ SELECT `calldate`,
        Group_concat(lastapp, "")           AS lastapps,
        Group_concat(dcontext, "")          AS dcontexts,
        {{ ExtractPatterns }}               AS call_type,
-       NULL                                AS cost
+       NULL                                AS cost,
+       NULL                                AS src_region,
+       NULL                                AS src_province,
+       NULL                                AS dst_region,
+       NULL                                AS dst_province
 FROM   cdr c
 LEFT JOIN _trunk_list t_in ON t_in.channelid = get_trunk_name(c.channel)
 LEFT JOIN _trunk_list t_out ON t_out.channelid = get_trunk_name(c.dstchannel)

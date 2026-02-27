@@ -461,6 +461,10 @@ func executeReportCDR(flags bool) {
 
 			// create year table on minYear-minMonth and on every January
 			if m == 1 || (y == minYear && m == minMonth) {
+				// ensure geo columns on year table before template runs,
+				// so INSERT IGNORE ... SELECT with geo NULLs doesn't fail on column mismatch
+				ensureGeoColumns(migDB, fmt.Sprintf("cdr_%d", y))
+
 				// create query for year
 				var queryY bytes.Buffer
 				objTemplate.Year = y
