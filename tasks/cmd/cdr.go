@@ -182,6 +182,15 @@ func ensureMonthTableIndexes(db *sql.DB, table string) {
 	}
 }
 
+// ensureGeoColumns adds geo columns to a table without populating them.
+// Used on month tables so that INSERT ... SELECT * from year table doesn't fail
+// when the year table already has the geo columns but the month table doesn't.
+func ensureGeoColumns(db *sql.DB, table string) {
+	for _, col := range []string{"src_region", "src_province", "dst_region", "dst_province"} {
+		db.Exec("ALTER TABLE `" + table + "` ADD COLUMN IF NOT EXISTS " + col + " VARCHAR(100) DEFAULT NULL")
+	}
+}
+
 // migrateGeoColumns adds geo columns and populates them on a year table.
 // Uses a dedicated sql.Conn to keep temporary tables alive across statements.
 // UPDATEs are batched (100K rows at a time) to keep each operation short.
@@ -479,6 +488,10 @@ func executeReportCDR(flags bool) {
 				ensureYearTableIndexes(migDB, yearTable)
 				migrateGeoColumns(migDB, yearTable)
 			}
+
+			// ensure geo columns on month table before template runs,
+			// so INSERT ... SELECT * from year table doesn't fail on column mismatch
+			ensureGeoColumns(migDB, fmt.Sprintf("cdr_%d-%02d", y, m))
 
 			var queryM bytes.Buffer
 			objTemplate.Year = y
