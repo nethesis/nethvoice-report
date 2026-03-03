@@ -40,30 +40,6 @@ try {
     exit(1);
 }
 
-$ensureIndex = function ($schema, $table, $index, $columns) use ($cdrdb) {
-	$sql = 'SELECT COUNT(*) FROM information_schema.STATISTICS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? AND INDEX_NAME = ?';
-	$stmt = $cdrdb->prepare($sql);
-	$stmt->execute([$schema, $table, $index]);
-	if ((int) $stmt->fetchColumn() === 0) {
-		$cdrdb->query('ALTER TABLE `'.$schema.'`.`'.$table.'` ADD INDEX `'.$index.'` ('.$columns.')');
-	}
-};
-
-$ensureIndex('asteriskcdrdb', 'queue_log', 'idx_queue_log_time', '`time`');
-
-$ensureIndex('asteriskcdrdb', 'queue_log_history', 'idx_qlh_event_time_queue_callid', '`event`,`time`,`queuename`,`callid`');
-$ensureIndex('asteriskcdrdb', 'queue_log_history', 'idx_qlh_agent_queue_time_event', '`agent`,`queuename`,`time`,`event`');
-$ensureIndex('asteriskcdrdb', 'queue_log_history', 'idx_qlh_event_data1_queue_agent_time', '`event`,`data1`,`queuename`,`agent`,`time`');
-
-$ensureIndex('asteriskcdrdb', 'report_queue', 'idx_rq_action_timestampin_qname', '`action`,`timestamp_in`,`qname`');
-$ensureIndex('asteriskcdrdb', 'report_queue', 'idx_rq_timestamp_in', '`timestamp_in`');
-$ensureIndex('asteriskcdrdb', 'report_queue', 'idx_rq_timestamp_out', '`timestamp_out`');
-$ensureIndex('asteriskcdrdb', 'report_queue', 'idx_rq_cid_timestampin', '`cid`,`timestamp_in`');
-
-$ensureIndex('asteriskcdrdb', 'cdr', 'idx_cdr_linkedid', '`linkedid`');
-$ensureIndex('asteriskcdrdb', 'cdr', 'idx_cdr_dst_disp_uid_cnam', '`dst`,`disposition`,`uniqueid`,`cnam`');
-$ensureIndex('asteriskcdrdb', 'cdr', 'idx_cdr_linkedid_disp_calldate', '`linkedid`,`disposition`,`calldate`');
-$ensureIndex('asteriskcdrdb', 'cdr', 'idx_cdr_src', '`src`');
 
 # Copy queue_log content into queue_log_history
 $sqls = array();
