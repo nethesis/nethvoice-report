@@ -34,6 +34,7 @@ import (
 )
 
 var dbQ *sql.DB
+var dbMig *sql.DB
 var dbP *sql.DB
 var dbF *sql.DB
 
@@ -42,6 +43,15 @@ func CDRInstance() *sql.DB {
 		dbQ = CDRInit()
 	}
 	return dbQ
+}
+
+// CDRMigrationInstance returns a DB pool without read/write timeouts,
+// suitable for long-running DDL operations (ALTER TABLE ADD INDEX, bulk UPDATEs).
+func CDRMigrationInstance() *sql.DB {
+	if dbMig == nil {
+		dbMig = CDRMigrationInit()
+	}
+	return dbMig
 }
 
 func PhonebookInstance() *sql.DB {
@@ -79,6 +89,32 @@ func CDRInit() *sql.DB {
 	db.SetMaxOpenConns(25)
 	db.SetMaxIdleConns(5)
 	db.SetConnMaxLifetime(5 * time.Minute)
+
+	// return db object
+	return db
+}
+
+func CDRMigrationInit() *sql.DB {
+	// define uri connection string
+	uri := configuration.Config.CDRDatabase.User + ":" + configuration.Config.CDRDatabase.Password + "@tcp(" + configuration.Config.CDRDatabase.Host + ":" + configuration.Config.CDRDatabase.Port + ")/" + configuration.Config.CDRDatabase.Name
+
+	// No read/write timeout for long-running migration operations (DDL, bulk updates)
+	db, err := sql.Open("mysql", uri+"?charset=utf8&parseTime=True&multiStatements=true&timeout=300s")
+
+	// handle error
+	if err != nil {
+		utils.LogError(errors.Wrap(err, "error connecting to migration database"))
+	}
+
+	// test the connection
+	if err := db.Ping(); err != nil {
+		utils.LogError(errors.Wrap(err, "error pinging migration database"))
+	}
+
+	// limited pool for migration operations
+	db.SetMaxOpenConns(2)
+	db.SetMaxIdleConns(1)
+	db.SetConnMaxLifetime(30 * time.Minute)
 
 	// return db object
 	return db

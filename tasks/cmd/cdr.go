@@ -24,6 +24,7 @@ package cmd
 
 import (
 	"bytes"
+	"context"
 	"database/sql"
 	"fmt"
 	"path"
@@ -105,6 +106,240 @@ func monthMap(month int) string {
 	return fmt.Sprintf("%02d", month)
 }
 
+// ensureCDRSourceIndexes adds indexes on the source cdr table if they don't exist.
+// Uses the migration pool (no read/write timeout) since ALTER TABLE on large tables can take minutes.
+func ensureCDRSourceIndexes(db *sql.DB) {
+	indexes := []struct{ name, columns string }{
+		{"idx_cdr_calldate", "calldate"},
+		{"idx_cdr_linkedid", "linkedid"},
+	}
+	for _, idx := range indexes {
+		var count int
+		db.QueryRow("SELECT COUNT(*) FROM information_schema.STATISTICS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'cdr' AND INDEX_NAME = ?", idx.name).Scan(&count)
+		if count == 0 {
+			start := time.Now()
+			helper.LogDebug("Adding index %s on cdr...", idx.name)
+			_, err := db.Exec("ALTER TABLE cdr ADD INDEX " + idx.name + " (" + idx.columns + ")")
+			if err != nil {
+				helper.LogDebug("Warning: could not add index %s on cdr: %s", idx.name, err.Error())
+			} else {
+				helper.LogDebug("Index %s on cdr created in %s", idx.name, time.Since(start))
+			}
+		}
+	}
+}
+
+// ensureYearTableIndexes adds indexes on cdr_YYYY tables.
+// Each ALTER TABLE is a separate db.Exec() to avoid single-operation timeout issues.
+func ensureYearTableIndexes(db *sql.DB, table string) {
+	indexes := []struct{ name, columns string }{
+		{"idx_type_calldate", "type, calldate"},
+		{"idx_type", "type"},
+		{"idx_cnum", "cnum"},
+		{"idx_dst", "dst"},
+		{"idx_channel", "channel"},
+		{"idx_dstchannel", "dstchannel"},
+		{"idx_type_cnum_calldate", "type, cnum, calldate"},
+	}
+	for _, idx := range indexes {
+		var count int
+		db.QueryRow("SELECT COUNT(*) FROM information_schema.STATISTICS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND INDEX_NAME = ?", table, idx.name).Scan(&count)
+		if count == 0 {
+			start := time.Now()
+			helper.LogDebug("Adding index %s on %s...", idx.name, table)
+			_, err := db.Exec("ALTER TABLE `" + table + "` ADD INDEX `" + idx.name + "` (" + idx.columns + ")")
+			if err != nil {
+				helper.LogDebug("Warning: could not add index %s on %s: %s", idx.name, table, err.Error())
+			} else {
+				helper.LogDebug("Index %s on %s created in %s", idx.name, table, time.Since(start))
+			}
+		}
+	}
+}
+
+// ensureMonthTableIndexes adds indexes on cdr_YYYY-MM tables.
+func ensureMonthTableIndexes(db *sql.DB, table string) {
+	indexes := []struct{ name, columns string }{
+		{"idx_type_calldate", "type, calldate"},
+		{"idx_type", "type"},
+		{"idx_cnum", "cnum"},
+		{"idx_dst", "dst"},
+		{"idx_calldate", "calldate"},
+	}
+	for _, idx := range indexes {
+		var count int
+		db.QueryRow("SELECT COUNT(*) FROM information_schema.STATISTICS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND INDEX_NAME = ?", table, idx.name).Scan(&count)
+		if count == 0 {
+			start := time.Now()
+			helper.LogDebug("Adding index %s on %s...", idx.name, table)
+			_, err := db.Exec("ALTER TABLE `" + table + "` ADD INDEX `" + idx.name + "` (" + idx.columns + ")")
+			if err != nil {
+				helper.LogDebug("Warning: could not add index %s on %s: %s", idx.name, table, err.Error())
+			} else {
+				helper.LogDebug("Index %s on %s created in %s", idx.name, table, time.Since(start))
+			}
+		}
+	}
+}
+
+// ensureGeoColumns adds geo columns to a table without populating them.
+// Used on month tables so that INSERT ... SELECT * from year table doesn't fail
+// when the year table already has the geo columns but the month table doesn't.
+func ensureGeoColumns(db *sql.DB, table string) {
+	for _, col := range []string{"src_region", "src_province", "dst_region", "dst_province"} {
+		db.Exec("ALTER TABLE `" + table + "` ADD COLUMN IF NOT EXISTS " + col + " VARCHAR(100) DEFAULT NULL")
+	}
+}
+
+// migrateGeoColumns adds geo columns and populates them on a year table.
+// Uses a dedicated sql.Conn to keep temporary tables alive across statements.
+// UPDATEs are batched (100K rows at a time) to keep each operation short.
+func migrateGeoColumns(db *sql.DB, table string) {
+	ctx := context.Background()
+
+	// use a dedicated connection for temp table operations
+	conn, err := db.Conn(ctx)
+	if err != nil {
+		helper.LogDebug("Warning: could not get connection for geo migration on %s: %s", table, err.Error())
+		return
+	}
+	defer conn.Close()
+
+	// add columns if not present
+	for _, col := range []string{"src_region", "src_province", "dst_region", "dst_province"} {
+		_, err := conn.ExecContext(ctx, "ALTER TABLE `"+table+"` ADD COLUMN IF NOT EXISTS "+col+" VARCHAR(100) DEFAULT NULL")
+		if err != nil {
+			helper.LogDebug("Warning: could not add column %s on %s: %s", col, table, err.Error())
+			return
+		}
+	}
+
+	// check if there are NULL geo records to populate
+	var srcNullCount, dstNullCount int
+	conn.QueryRowContext(ctx, "SELECT COUNT(*) FROM `"+table+"` WHERE type = 'IN' AND src_region IS NULL").Scan(&srcNullCount)
+	conn.QueryRowContext(ctx, "SELECT COUNT(*) FROM `"+table+"` WHERE type = 'OUT' AND dst_region IS NULL").Scan(&dstNullCount)
+
+	if srcNullCount == 0 && dstNullCount == 0 {
+		helper.LogDebug("Geo columns on %s already populated, skipping", table)
+		return
+	}
+
+	// migrate inbound geo
+	if srcNullCount > 0 {
+		start := time.Now()
+		helper.LogDebug("Populating inbound geo columns on %s (%d rows)...", table, srcNullCount)
+
+		// build lookup + resolve as multi-statement (stays on same connection)
+		_, err := conn.ExecContext(ctx, ""+
+			"DROP TEMPORARY TABLE IF EXISTS _geo_src_lookup;"+
+			"CREATE TEMPORARY TABLE _geo_src_lookup AS "+
+			"SELECT DISTINCT clean_prefix(IF(cnum IS NULL OR cnum = '', src, cnum)) AS clean_phone "+
+			"FROM `"+table+"` "+
+			"WHERE type = 'IN' AND src_region IS NULL;"+
+			"ALTER TABLE _geo_src_lookup ADD INDEX idx_phone (clean_phone);"+
+			"DROP TEMPORARY TABLE IF EXISTS _geo_src_resolved;"+
+			"CREATE TEMPORARY TABLE _geo_src_resolved AS "+
+			"SELECT gsl.clean_phone, "+
+			"(SELECT z.regione FROM zone z WHERE gsl.clean_phone LIKE CONCAT(z.prefisso, '%') "+
+			"ORDER BY LENGTH(z.prefisso) DESC LIMIT 1) AS region, "+
+			"(SELECT z.provincia FROM zone z WHERE gsl.clean_phone LIKE CONCAT(z.prefisso, '%') "+
+			"ORDER BY LENGTH(z.prefisso) DESC LIMIT 1) AS province "+
+			"FROM _geo_src_lookup gsl;"+
+			"ALTER TABLE _geo_src_resolved ADD INDEX idx_phone (clean_phone)")
+		if err != nil {
+			helper.LogDebug("Warning: could not build inbound geo lookup on %s: %s", table, err.Error())
+		} else {
+			// batch update to keep each operation within timeout
+			totalUpdated := int64(0)
+			for {
+				result, err := conn.ExecContext(ctx,
+					"UPDATE `"+table+"` c "+
+						"JOIN _geo_src_resolved gsr ON clean_prefix(IF(c.cnum IS NULL OR c.cnum = '', c.src, c.cnum)) = gsr.clean_phone "+
+						"SET c.src_region = gsr.region, c.src_province = gsr.province "+
+						"WHERE c.type = 'IN' AND c.src_region IS NULL LIMIT 100000")
+				if err != nil {
+					helper.LogDebug("Warning: geo inbound update failed on %s: %s", table, err.Error())
+					break
+				}
+				affected, _ := result.RowsAffected()
+				totalUpdated += affected
+				if affected == 0 {
+					break
+				}
+				helper.LogDebug("  Updated %d inbound rows so far on %s...", totalUpdated, table)
+			}
+			helper.LogDebug("Inbound geo on %s: %d rows in %s", table, totalUpdated, time.Since(start))
+		}
+		conn.ExecContext(ctx, "DROP TEMPORARY TABLE IF EXISTS _geo_src_lookup; DROP TEMPORARY TABLE IF EXISTS _geo_src_resolved")
+	}
+
+	// migrate outbound geo
+	if dstNullCount > 0 {
+		start := time.Now()
+		helper.LogDebug("Populating outbound geo columns on %s (%d rows)...", table, dstNullCount)
+
+		_, err := conn.ExecContext(ctx, ""+
+			"DROP TEMPORARY TABLE IF EXISTS _geo_dst_lookup;"+
+			"CREATE TEMPORARY TABLE _geo_dst_lookup AS "+
+			"SELECT DISTINCT clean_prefix(dst) AS clean_phone "+
+			"FROM `"+table+"` "+
+			"WHERE type = 'OUT' AND dst_region IS NULL;"+
+			"ALTER TABLE _geo_dst_lookup ADD INDEX idx_phone (clean_phone);"+
+			"DROP TEMPORARY TABLE IF EXISTS _geo_dst_resolved;"+
+			"CREATE TEMPORARY TABLE _geo_dst_resolved AS "+
+			"SELECT gdl.clean_phone, "+
+			"(SELECT z.regione FROM zone z WHERE gdl.clean_phone LIKE CONCAT(z.prefisso, '%') "+
+			"ORDER BY LENGTH(z.prefisso) DESC LIMIT 1) AS region, "+
+			"(SELECT z.provincia FROM zone z WHERE gdl.clean_phone LIKE CONCAT(z.prefisso, '%') "+
+			"ORDER BY LENGTH(z.prefisso) DESC LIMIT 1) AS province "+
+			"FROM _geo_dst_lookup gdl;"+
+			"ALTER TABLE _geo_dst_resolved ADD INDEX idx_phone (clean_phone)")
+		if err != nil {
+			helper.LogDebug("Warning: could not build outbound geo lookup on %s: %s", table, err.Error())
+		} else {
+			totalUpdated := int64(0)
+			for {
+				result, err := conn.ExecContext(ctx,
+					"UPDATE `"+table+"` c "+
+						"JOIN _geo_dst_resolved gdr ON clean_prefix(c.dst) = gdr.clean_phone "+
+						"SET c.dst_region = gdr.region, c.dst_province = gdr.province "+
+						"WHERE c.type = 'OUT' AND c.dst_region IS NULL LIMIT 100000")
+				if err != nil {
+					helper.LogDebug("Warning: geo outbound update failed on %s: %s", table, err.Error())
+					break
+				}
+				affected, _ := result.RowsAffected()
+				totalUpdated += affected
+				if affected == 0 {
+					break
+				}
+				helper.LogDebug("  Updated %d outbound rows so far on %s...", totalUpdated, table)
+			}
+			helper.LogDebug("Outbound geo on %s: %d rows in %s", table, totalUpdated, time.Since(start))
+		}
+		conn.ExecContext(ctx, "DROP TEMPORARY TABLE IF EXISTS _geo_dst_lookup; DROP TEMPORARY TABLE IF EXISTS _geo_dst_resolved")
+	}
+
+	// add geo indexes
+	for _, idx := range []struct{ name, columns string }{
+		{"idx_src_region", "type, src_region"},
+		{"idx_dst_region", "type, dst_region"},
+	} {
+		var count int
+		conn.QueryRowContext(ctx, "SELECT COUNT(*) FROM information_schema.STATISTICS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND INDEX_NAME = ?", table, idx.name).Scan(&count)
+		if count == 0 {
+			start := time.Now()
+			helper.LogDebug("Adding index %s on %s...", idx.name, table)
+			_, err := conn.ExecContext(ctx, "ALTER TABLE `"+table+"` ADD INDEX `"+idx.name+"` ("+idx.columns+")")
+			if err != nil {
+				helper.LogDebug("Warning: could not add index %s on %s: %s", idx.name, table, err.Error())
+			} else {
+				helper.LogDebug("Index %s on %s created in %s", idx.name, table, time.Since(start))
+			}
+		}
+	}
+}
+
 // Entry point for "cdr" command
 func executeReportCDR(flags bool) {
 	// define db instance
@@ -172,6 +407,12 @@ func executeReportCDR(flags bool) {
 			rows.Close()
 		}
 	} else {
+		// migration pool: no read/write timeout for DDL and bulk updates
+		migDB := source.CDRMigrationInstance()
+
+		// ensure indexes on source cdr table
+		ensureCDRSourceIndexes(migDB)
+
 		// define vars
 		var minYear int
 		var minMonth int
@@ -220,6 +461,10 @@ func executeReportCDR(flags bool) {
 
 			// create year table on minYear-minMonth and on every January
 			if m == 1 || (y == minYear && m == minMonth) {
+				// ensure geo columns on year table before template runs,
+				// so INSERT IGNORE ... SELECT with geo NULLs doesn't fail on column mismatch
+				ensureGeoColumns(migDB, fmt.Sprintf("cdr_%d", y))
+
 				// create query for year
 				var queryY bytes.Buffer
 				objTemplate.Year = y
@@ -241,7 +486,16 @@ func executeReportCDR(flags bool) {
 
 				// close results
 				rowsY.Close()
+
+				// run migration on year table using dedicated pool (no timeout)
+				yearTable := fmt.Sprintf("cdr_%d", y)
+				ensureYearTableIndexes(migDB, yearTable)
+				migrateGeoColumns(migDB, yearTable)
 			}
+
+			// ensure geo columns on month table before template runs,
+			// so INSERT ... SELECT * from year table doesn't fail on column mismatch
+			ensureGeoColumns(migDB, fmt.Sprintf("cdr_%d-%02d", y, m))
 
 			var queryM bytes.Buffer
 			objTemplate.Year = y
@@ -263,6 +517,9 @@ func executeReportCDR(flags bool) {
 
 			// close results
 			rowsM.Close()
+
+			// ensure indexes on month table using dedicated pool (no timeout)
+			ensureMonthTableIndexes(migDB, fmt.Sprintf("cdr_%d-%02d", y, m))
 
 			// go to next month for loop iteration
 			cdrTime = cdrTime.AddDate(0, 1, 0)

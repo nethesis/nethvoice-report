@@ -20,235 +20,187 @@ DROP TABLE IF EXISTS dashboard_cdr_18_current_year;
 /* QUERIES */
 SET @q_past_year = CONCAT('
 CREATE TABLE dashboard_cdr_18_past_year AS
-SELECT province, 
-       Sum(total) AS total 
-FROM   (SELECT (SELECT GROUP_CONCAT(provincia) 
-                     FROM zone 
-                     WHERE INSTR(clean_prefix(dst), prefisso) = 1
-               ) AS province,
-               COUNT(*) AS total 
-       FROM   ',@from,' 
-       WHERE  type = "OUT" 
-              AND calldate >= (SELECT MAKEDATE(YEAR(NOW()-INTERVAL 1 YEAR),1)) 
-              AND calldate <= (SELECT DATE_FORMAT(NOW()-INTERVAL 1 YEAR, "%Y-12-31"))
-       GROUP  BY province
-       UNION ALL
-       SELECT (SELECT GROUP_CONCAT(provincia) 
-                     FROM zone 
-                     WHERE INSTR(clean_prefix(dst), prefisso) = 1
-               ) AS province,
-               COUNT(*) AS total 
-       FROM   ',@to,'
-       WHERE  type = "OUT" 
+SELECT dst_province AS province,
+       SUM(total) AS total
+FROM   (
+       SELECT dst_province, COUNT(*) AS total
+       FROM   ',@from,'
+       WHERE  type = "OUT"
+              AND dst_province IS NOT NULL
               AND calldate >= (SELECT MAKEDATE(YEAR(NOW()-INTERVAL 1 YEAR),1))
               AND calldate <= (SELECT DATE_FORMAT(NOW()-INTERVAL 1 YEAR, "%Y-12-31"))
-       GROUP  BY province
+       GROUP  BY dst_province
+       UNION ALL
+       SELECT dst_province, COUNT(*) AS total
+       FROM   ',@to,'
+       WHERE  type = "OUT"
+              AND dst_province IS NOT NULL
+              AND calldate >= (SELECT MAKEDATE(YEAR(NOW()-INTERVAL 1 YEAR),1))
+              AND calldate <= (SELECT DATE_FORMAT(NOW()-INTERVAL 1 YEAR, "%Y-12-31"))
+       GROUP  BY dst_province
        ) t
-WHERE  province IS NOT NULL 
-GROUP  BY province 
+GROUP  BY province
 ORDER  BY total DESC;');
 SET @q_current_year = CONCAT('
 CREATE TABLE dashboard_cdr_18_current_year AS
-SELECT province, 
-       Sum(total) AS total 
-FROM   (SELECT (SELECT GROUP_CONCAT(provincia) 
-                     FROM zone 
-                     WHERE INSTR(clean_prefix(dst), prefisso) = 1
-               ) AS province,
-               COUNT(*) AS total 
-       FROM   ',@from,' 
-       WHERE  type = "OUT" 
+SELECT dst_province AS province,
+       SUM(total) AS total
+FROM   (
+       SELECT dst_province, COUNT(*) AS total
+       FROM   ',@from,'
+       WHERE  type = "OUT"
+              AND dst_province IS NOT NULL
               AND calldate >= (SELECT MAKEDATE(YEAR(NOW()),1))
               AND calldate <= (SELECT DATE_FORMAT(NOW(), "%Y-12-31"))
-       GROUP  BY province
+       GROUP  BY dst_province
        UNION ALL
-       SELECT (SELECT GROUP_CONCAT(provincia) 
-                     FROM zone 
-                     WHERE INSTR(clean_prefix(dst), prefisso) = 1
-               ) AS province,
-               COUNT(*) AS total 
+       SELECT dst_province, COUNT(*) AS total
        FROM   ',@to,'
-       WHERE  type = "OUT" 
+       WHERE  type = "OUT"
+              AND dst_province IS NOT NULL
               AND calldate >= (SELECT MAKEDATE(YEAR(NOW()),1))
               AND calldate <= (SELECT DATE_FORMAT(NOW(), "%Y-12-31"))
-       GROUP  BY province
+       GROUP  BY dst_province
        ) t
-WHERE  province IS NOT NULL 
-GROUP  BY province 
+GROUP  BY province
 ORDER  BY total DESC;');
 SET @q_past_semester = CONCAT('
 CREATE TABLE dashboard_cdr_18_past_semester AS
-SELECT province, 
-       Sum(total) AS total 
-FROM   (SELECT (SELECT GROUP_CONCAT(provincia) 
-                     FROM zone 
-                     WHERE INSTR(clean_prefix(dst), prefisso) = 1
-               ) AS province,
-               COUNT(*) AS total 
-       FROM   ',@from,' 
-       WHERE  type = "OUT" 
+SELECT dst_province AS province,
+       SUM(total) AS total
+FROM   (
+       SELECT dst_province, COUNT(*) AS total
+       FROM   ',@from,'
+       WHERE  type = "OUT"
+              AND dst_province IS NOT NULL
               AND calldate >= (SELECT IF(MONTH(NOW()) < 7, DATE_FORMAT(NOW() - INTERVAL 1 YEAR, "%Y-07-01"), DATE_FORMAT(NOW(), "%Y-01-01")))
               AND calldate <= (SELECT IF(MONTH(NOW()) < 7, DATE_FORMAT(NOW() - INTERVAL 1 YEAR, "%Y-12-31"), DATE_FORMAT(NOW(), "%Y-06-30")))
-       GROUP  BY province
+       GROUP  BY dst_province
        UNION ALL
-       SELECT (SELECT GROUP_CONCAT(provincia) 
-                     FROM zone 
-                     WHERE INSTR(clean_prefix(dst), prefisso) = 1
-               ) AS province,
-               COUNT(*) AS total 
+       SELECT dst_province, COUNT(*) AS total
        FROM   ',@to,'
-       WHERE  type = "OUT" 
+       WHERE  type = "OUT"
+              AND dst_province IS NOT NULL
               AND calldate >= (SELECT IF(MONTH(NOW()) < 7, DATE_FORMAT(NOW() - INTERVAL 1 YEAR, "%Y-07-01"), DATE_FORMAT(NOW(), "%Y-01-01")))
               AND calldate <= (SELECT IF(MONTH(NOW()) < 7, DATE_FORMAT(NOW() - INTERVAL 1 YEAR, "%Y-12-31"), DATE_FORMAT(NOW(), "%Y-06-30")))
-       GROUP  BY province
+       GROUP  BY dst_province
        ) t
-WHERE  province IS NOT NULL 
-GROUP  BY province 
+GROUP  BY province
 ORDER  BY total DESC;');
 SET @q_past_quarter = CONCAT('
 CREATE TABLE dashboard_cdr_18_past_quarter AS
-SELECT province, 
-       Sum(total) AS total 
-FROM   (SELECT (SELECT GROUP_CONCAT(provincia) 
-                     FROM zone 
-                     WHERE INSTR(clean_prefix(dst), prefisso) = 1
-               ) AS province,
-               COUNT(*) AS total 
-       FROM   ',@from,' 
-       WHERE  type = "OUT" 
+SELECT dst_province AS province,
+       SUM(total) AS total
+FROM   (
+       SELECT dst_province, COUNT(*) AS total
+       FROM   ',@from,'
+       WHERE  type = "OUT"
+              AND dst_province IS NOT NULL
               AND calldate >= (select if(quarter(NOW()) > 1, date_format(NOW(), "%Y-01-01") + INTERVAL (quarter(NOW()) - 2) QUARTER, date_format(NOW() - INTERVAL 1 YEAR, "%Y-10-01")))
               AND calldate <= (select if(quarter(NOW()) > 1, date_format(NOW(), "%Y-01-01") + INTERVAL (quarter(NOW()) - 1) QUARTER - INTERVAL 1 DAY, date_format(NOW() - INTERVAL 1 YEAR, "%Y-12-31")))
-       GROUP  BY province
+       GROUP  BY dst_province
        UNION ALL
-       SELECT (SELECT GROUP_CONCAT(provincia) 
-                     FROM zone 
-                     WHERE INSTR(clean_prefix(dst), prefisso) = 1
-               ) AS province,
-               COUNT(*) AS total 
+       SELECT dst_province, COUNT(*) AS total
        FROM   ',@to,'
-       WHERE  type = "OUT" 
+       WHERE  type = "OUT"
+              AND dst_province IS NOT NULL
               AND calldate >= (select if(quarter(NOW()) > 1, date_format(NOW(), "%Y-01-01") + INTERVAL (quarter(NOW()) - 2) QUARTER, date_format(NOW() - INTERVAL 1 YEAR, "%Y-10-01")))
               AND calldate <= (select if(quarter(NOW()) > 1, date_format(NOW(), "%Y-01-01") + INTERVAL (quarter(NOW()) - 1) QUARTER - INTERVAL 1 DAY, date_format(NOW() - INTERVAL 1 YEAR, "%Y-12-31")))
-       GROUP  BY province
+       GROUP  BY dst_province
        ) t
-WHERE  province IS NOT NULL 
-GROUP  BY province 
+GROUP  BY province
 ORDER  BY total DESC;');
 SET @q_past_month = CONCAT('
 CREATE TABLE dashboard_cdr_18_past_month AS
-SELECT province, 
-       Sum(total) AS total 
-FROM   (SELECT (SELECT GROUP_CONCAT(provincia) 
-                     FROM zone 
-                     WHERE INSTR(clean_prefix(dst), prefisso) = 1
-               ) AS province,
-               COUNT(*) AS total 
-       FROM   ',@from,' 
-       WHERE  type = "OUT" 
+SELECT dst_province AS province,
+       SUM(total) AS total
+FROM   (
+       SELECT dst_province, COUNT(*) AS total
+       FROM   ',@from,'
+       WHERE  type = "OUT"
+              AND dst_province IS NOT NULL
               AND calldate >= (SELECT DATE_FORMAT(NOW()-INTERVAL 1 MONTH, "%Y-%m-01"))
               AND calldate <= (SELECT LAST_DAY(NOW()-INTERVAL 1 MONTH))
-       GROUP  BY province
+       GROUP  BY dst_province
        UNION ALL
-       SELECT (SELECT GROUP_CONCAT(provincia) 
-                     FROM zone 
-                     WHERE INSTR(clean_prefix(dst), prefisso) = 1
-               ) AS province,
-               COUNT(*) AS total 
+       SELECT dst_province, COUNT(*) AS total
        FROM   ',@to,'
-       WHERE  type = "OUT" 
+       WHERE  type = "OUT"
+              AND dst_province IS NOT NULL
               AND calldate >= (SELECT DATE_FORMAT(NOW()-INTERVAL 1 MONTH, "%Y-%m-01"))
               AND calldate <= (SELECT LAST_DAY(NOW()-INTERVAL 1 MONTH))
-       GROUP  BY province
+       GROUP  BY dst_province
        ) t
-WHERE  province IS NOT NULL 
-GROUP  BY province 
+GROUP  BY province
 ORDER  BY total DESC;');
 SET @q_current_month = CONCAT('
 CREATE TABLE dashboard_cdr_18_current_month AS
-SELECT province, 
-       Sum(total) AS total 
-FROM   (SELECT (SELECT GROUP_CONCAT(provincia) 
-                     FROM zone 
-                     WHERE INSTR(clean_prefix(dst), prefisso) = 1
-               ) AS province,
-               COUNT(*) AS total 
-       FROM   ',@from,' 
-       WHERE  type = "OUT" 
+SELECT dst_province AS province,
+       SUM(total) AS total
+FROM   (
+       SELECT dst_province, COUNT(*) AS total
+       FROM   ',@from,'
+       WHERE  type = "OUT"
+              AND dst_province IS NOT NULL
               AND calldate >= (SELECT DATE_FORMAT(NOW(), "%Y-%m-01"))
               AND calldate <= (SELECT LAST_DAY(NOW()))
-       GROUP  BY province
+       GROUP  BY dst_province
        UNION ALL
-       SELECT (SELECT GROUP_CONCAT(provincia) 
-                     FROM zone 
-                     WHERE INSTR(clean_prefix(dst), prefisso) = 1
-               ) AS province,
-               COUNT(*) AS total 
+       SELECT dst_province, COUNT(*) AS total
        FROM   ',@to,'
-       WHERE  type = "OUT" 
+       WHERE  type = "OUT"
+              AND dst_province IS NOT NULL
               AND calldate >= (SELECT DATE_FORMAT(NOW(), "%Y-%m-01"))
               AND calldate <= (SELECT LAST_DAY(NOW()))
-       GROUP  BY province
+       GROUP  BY dst_province
        ) t
-WHERE  province IS NOT NULL 
-GROUP  BY province 
+GROUP  BY province
 ORDER  BY total DESC;');
 SET @q_past_week = CONCAT('
 CREATE TABLE dashboard_cdr_18_past_week AS
-SELECT province, 
-       Sum(total) AS total 
-FROM   (SELECT (SELECT GROUP_CONCAT(provincia) 
-                     FROM zone 
-                     WHERE INSTR(clean_prefix(dst), prefisso) = 1
-               ) AS province,
-               COUNT(*) AS total 
-       FROM   ',@from,' 
-       WHERE  type = "OUT" 
+SELECT dst_province AS province,
+       SUM(total) AS total
+FROM   (
+       SELECT dst_province, COUNT(*) AS total
+       FROM   ',@from,'
+       WHERE  type = "OUT"
+              AND dst_province IS NOT NULL
               AND calldate >= (SELECT DATE_FORMAT(DATE_ADD(NOW()-INTERVAL 1 WEEK, INTERVAL(-WEEKDAY(NOW()-INTERVAL 1 WEEK)) DAY), "%Y-%m-%d"))
               AND calldate <= (SELECT DATE_FORMAT(DATE_ADD(DATE_ADD(NOW()-INTERVAL 1 WEEK, INTERVAL(-WEEKDAY(NOW()-INTERVAL 1 WEEK)) DAY), INTERVAL 6 DAY), "%Y-%m-%d"))
-       GROUP  BY province
+       GROUP  BY dst_province
        UNION ALL
-       SELECT (SELECT GROUP_CONCAT(provincia) 
-                     FROM zone 
-                     WHERE INSTR(clean_prefix(dst), prefisso) = 1
-               ) AS province,
-               COUNT(*) AS total 
+       SELECT dst_province, COUNT(*) AS total
        FROM   ',@to,'
-       WHERE  type = "OUT" 
+       WHERE  type = "OUT"
+              AND dst_province IS NOT NULL
               AND calldate >= (SELECT DATE_FORMAT(DATE_ADD(NOW()-INTERVAL 1 WEEK, INTERVAL(-WEEKDAY(NOW()-INTERVAL 1 WEEK)) DAY), "%Y-%m-%d"))
               AND calldate <= (SELECT DATE_FORMAT(DATE_ADD(DATE_ADD(NOW()-INTERVAL 1 WEEK, INTERVAL(-WEEKDAY(NOW()-INTERVAL 1 WEEK)) DAY), INTERVAL 6 DAY), "%Y-%m-%d"))
-       GROUP  BY province
+       GROUP  BY dst_province
        ) t
-WHERE  province IS NOT NULL 
-GROUP  BY province 
+GROUP  BY province
 ORDER  BY total DESC;');
 SET @q_current_week = CONCAT('
 CREATE TABLE dashboard_cdr_18_current_week AS
-SELECT province, 
-       Sum(total) AS total 
-FROM   (SELECT (SELECT GROUP_CONCAT(provincia) 
-                     FROM zone 
-                     WHERE INSTR(clean_prefix(dst), prefisso) = 1
-               ) AS province,
-               COUNT(*) AS total 
-       FROM   ',@from,' 
-       WHERE  type = "OUT" 
+SELECT dst_province AS province,
+       SUM(total) AS total
+FROM   (
+       SELECT dst_province, COUNT(*) AS total
+       FROM   ',@from,'
+       WHERE  type = "OUT"
+              AND dst_province IS NOT NULL
               AND calldate >= (SELECT DATE_FORMAT(DATE_ADD(NOW(), INTERVAL(-WEEKDAY(NOW())) DAY), "%Y-%m-%d"))
               AND calldate <= (SELECT DATE_FORMAT(DATE_ADD(DATE_ADD(NOW(), INTERVAL(-WEEKDAY(NOW())) DAY), INTERVAL 6 DAY), "%Y-%m-%d"))
-       GROUP  BY province
+       GROUP  BY dst_province
        UNION ALL
-       SELECT (SELECT GROUP_CONCAT(provincia) 
-                     FROM zone 
-                     WHERE INSTR(clean_prefix(dst), prefisso) = 1
-               ) AS province,
-               COUNT(*) AS total 
+       SELECT dst_province, COUNT(*) AS total
        FROM   ',@to,'
-       WHERE  type = "OUT" 
+       WHERE  type = "OUT"
+              AND dst_province IS NOT NULL
               AND calldate >= (SELECT DATE_FORMAT(DATE_ADD(NOW(), INTERVAL(-WEEKDAY(NOW())) DAY), "%Y-%m-%d"))
               AND calldate <= (SELECT DATE_FORMAT(DATE_ADD(DATE_ADD(NOW(), INTERVAL(-WEEKDAY(NOW())) DAY), INTERVAL 6 DAY), "%Y-%m-%d"))
-       GROUP  BY province
+       GROUP  BY dst_province
        ) t
-WHERE  province IS NOT NULL 
-GROUP  BY province 
+GROUP  BY province
 ORDER  BY total DESC;');
 
 /* STATMENTS */

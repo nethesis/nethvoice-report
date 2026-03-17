@@ -2,10 +2,11 @@ CREATE TABLE IF NOT EXISTS `cdr_{{ YearMap .Year }}-{{ MonthMap .Month }}`
 (UNIQUE KEY uniq (calldate,uniqueid,dstchannel,duration))
 SELECT *
 FROM `cdr_{{ YearMap .Year }}`
-WHERE date_format(calldate, "%Y-%m") = "{{ .Year }}-{{ MonthMap .Month }}";
+WHERE calldate >= '{{ YearMap .Year }}-{{ MonthMap .Month }}-01'
+      AND calldate < '{{ YearMap .Year }}-{{ MonthMap .Month }}-01' + INTERVAL 1 MONTH;
 
 INSERT IGNORE INTO `cdr_{{ YearMap .Year }}-{{ MonthMap .Month }}`
 SELECT *
 FROM `cdr_{{ YearMap .Year }}`
-WHERE  date_format(calldate, "%Y-%m") = "{{ .Year }}-{{ MonthMap .Month }}"
-       AND date_format(calldate, "%Y-%m-%d") = date_format(NOW() - INTERVAL 1 DAY, "%Y-%m-%d");
+WHERE calldate >= DATE(NOW() - INTERVAL 1 DAY)
+      AND calldate < DATE(NOW());
