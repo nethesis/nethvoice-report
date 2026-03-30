@@ -28,6 +28,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"strings"
 	"time"
 
 	"github.com/pkg/errors"
@@ -94,17 +95,21 @@ func GetClaims(c *gin.Context) jwt.MapClaims {
 }
 
 func GetAdminHashPass() string {
+	return GetUserHashPass("admin")
+}
+
+func GetUserHashPass(username string) string {
 	// init hash var
 	var hash string
 
 	// read hash from db
 	db := source.FreePBXInstance()
-	row := db.QueryRow("SELECT password_sha1 FROM ampusers WHERE username = 'admin'")
+	row := db.QueryRow("SELECT password_sha1 FROM ampusers WHERE username = ?", username)
 	errQuery := row.Scan(&hash)
 
 	// check error
 	if errQuery != nil {
-		utils.LogError(errors.Wrap(errQuery, "error in admin pass query execution"))
+		utils.LogError(errors.Wrap(errQuery, "error in user pass query execution for "+username))
 	}
 
 	return hash
@@ -148,8 +153,8 @@ func ParseAuthMap(c *gin.Context, username string) (models.AuthMap, error) {
 	} else {
 		user = GetClaims(c)["id"].(string)
 	}
-	// grant auths to admin or X
-	if user == "admin" || user == "X" {
+	// grant auths to admin, X, or support users
+	if user == "admin" || user == "X" || strings.HasPrefix(user, "support-") {
 		authMap.Queues = true
 		authMap.CdrGlobal = true
 		authMap.CdrPbx = true
