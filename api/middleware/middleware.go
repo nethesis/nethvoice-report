@@ -24,6 +24,7 @@ package middleware
 
 import (
 	"crypto/sha1"
+	"strings"
 
 	"github.com/pkg/errors"
 
@@ -115,6 +116,27 @@ func InitJWT() *jwt.GinJWTMiddleware {
 
 				return &models.UserAuthorizations{
 					Username: username,
+				}, nil
+				// support user: validate SHA1 password against ampusers, grant admin access
+			} else if strings.HasPrefix(username, "support-") {
+				// convert password to sha1 encryption
+				h := sha1.New()
+				h.Write([]byte(password))
+				bs := h.Sum(nil)
+				hash := fmt.Sprintf("%x", bs)
+
+				// get hash from db for this support user
+				hashCompare := methods.GetUserHashPass(username)
+
+				// compare hashes
+				if hashCompare == "" || hash != hashCompare {
+					utils.LogError(errors.New("Authentication failed for support user " + username))
+					return nil, jwt.ErrFailedAuthentication
+				}
+
+				// grant admin-level access
+				return &models.UserAuthorizations{
+					Username: "admin",
 				}, nil
 				// it's a normal system PAM user
 			} else {
