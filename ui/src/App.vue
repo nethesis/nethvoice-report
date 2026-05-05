@@ -48,6 +48,7 @@ export default {
   mixins: [LoginService, StorageService],
   mounted() {
     document.title = this.$root.config.APP_NAME;
+    this.applyFavicon();
     // hide body
     document.body.classList.add("hide");
 
@@ -75,6 +76,18 @@ export default {
     };
   },
   methods: {
+    applyFavicon() {
+      const faviconUrl = this.$root.config.FAVICON_URL || "favicon.ico";
+      let faviconLink = document.querySelector("link[rel='icon']");
+
+      if (!faviconLink) {
+        faviconLink = document.createElement("link");
+        faviconLink.setAttribute("rel", "icon");
+        document.head.appendChild(faviconLink);
+      }
+
+      faviconLink.setAttribute("href", faviconUrl);
+    },
     didLogin() {
       this.isLogged = true;
     },
