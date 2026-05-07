@@ -7,7 +7,7 @@
         <div class="flex flex-col items-center justify-center">
           <img :src="loginLogoSrc" alt="logo" />
           <div class="items-center brandColor">
-            {{ reportBrandName }}
+            {{ reportSubtitle }}
           </div>
         </div>
         <div class="mt-8">
@@ -97,13 +97,18 @@ export default {
   mixins: [LoginService, StorageService],
   computed: {
     loginLogoSrc() {
-      return this.$root.config.LOGIN_LOGO_URL || "login_logo.png";
+      return this.$root.config.LOGIN_LOGO_URL || "login_logo_dark.svg";
     },
     loginBackgroundSrc() {
       return this.$root.config.LOGIN_BACKGROUND_URL || "LoginBackground.png";
     },
-    reportBrandName() {
-      return this.$root.config.BRAND_NAME || this.$root.config.APP_NAME || "Report";
+    reportSubtitle() {
+      const configuredBrand =
+        this.$root.config.BRAND_NAME || this.$root.config.APP_NAME || "";
+
+      return configuredBrand && configuredBrand !== "NethVoice Reports"
+        ? configuredBrand
+        : "Report";
     },
   },
   mounted() {
@@ -153,6 +158,9 @@ export default {
           } else {
             this.error = "invalid_credentials";
           }
+
+          // print error
+          console.error(error.body);
         }
       );
     },
