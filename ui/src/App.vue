@@ -47,7 +47,7 @@ export default {
   },
   mixins: [LoginService, StorageService],
   mounted() {
-    document.title = this.$root.config.APP_NAME;
+    document.title = this.reportPageTitle();
     this.applyFavicon();
     // hide body
     document.body.classList.add("hide");
@@ -76,6 +76,19 @@ export default {
     };
   },
   methods: {
+    reportPageTitle() {
+      const configuredBrand = (this.$root.config.BRAND_NAME || "").trim();
+
+      if (
+        !configuredBrand ||
+        configuredBrand === "NethVoice" ||
+        configuredBrand === "NethVoice Reports"
+      ) {
+        return "Report";
+      }
+
+      return `${configuredBrand} | Report`;
+    },
     applyFavicon() {
       const faviconUrl = this.$root.config.FAVICON_URL || "favicon.ico";
       let faviconLink = document.querySelector("link[rel='icon']");

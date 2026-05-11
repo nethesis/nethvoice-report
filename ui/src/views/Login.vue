@@ -5,7 +5,7 @@
     >
       <div class="mx-auto w-full max-w-sm lg-w-96">
         <div class="flex flex-col items-center justify-center">
-          <img :src="loginLogoSrc" alt="logo" />
+          <img :src="loginLogoSrc" alt="logo" class="login-logo" />
           <div class="items-center brandColor">
             {{ reportSubtitle }}
           </div>
@@ -103,12 +103,7 @@ export default {
       return this.$root.config.LOGIN_BACKGROUND_URL || "LoginBackground.png";
     },
     reportSubtitle() {
-      const configuredBrand =
-        this.$root.config.BRAND_NAME || this.$root.config.APP_NAME || "";
-
-      return configuredBrand && configuredBrand !== "NethVoice Reports"
-        ? configuredBrand
-        : "Report";
+      return "Report";
     },
   },
   mounted() {
@@ -221,6 +216,12 @@ export default {
   color: #059669 !important;
   padding-top: 10px;
   font-size: 16px;
+}
+
+.login-logo {
+  max-height: 70px;
+  width: auto;
+  object-fit: contain;
 }
 
 .flex {
