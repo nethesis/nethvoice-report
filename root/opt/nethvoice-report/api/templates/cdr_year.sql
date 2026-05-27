@@ -108,6 +108,8 @@ LEFT JOIN _trunk_list t_out ON t_out.channelid = get_trunk_name(c.dstchannel)
 WHERE  uniqueid = linkedid
        AND calldate >= DATE(NOW() - INTERVAL 1 DAY)
        AND calldate < DATE(NOW())
+       AND calldate >= '{{ YearMap .Year }}-01-01'
+       AND calldate < '{{ YearMap .Year }}-01-01' + INTERVAL 1 YEAR
 GROUP  BY linkedid,
           peeraccount
 ORDER  BY calldate;
