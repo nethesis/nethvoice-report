@@ -5,10 +5,9 @@
     >
       <div class="mx-auto w-full max-w-sm lg-w-96">
         <div class="flex flex-col items-center justify-center">
-          <img src="../../public/login_logo.png" alt="logo" />
+          <img :src="loginLogoSrc" alt="logo" class="login-logo" />
           <div class="items-center brandColor">
-            <i class="bar chart icon h-5 w-5"></i>
-            Report
+            {{ reportSubtitle }}
           </div>
         </div>
         <div class="mt-8">
@@ -73,7 +72,7 @@
     </div>
     <div class="relative hidden w-0 flex-1 lg-block">
       <sui-image
-        src="LoginBackground.png"
+        :src="loginBackgroundSrc"
         class="absolute inset-0 h-full w-full object-cover"
       />
     </div>
@@ -96,6 +95,17 @@ export default {
     };
   },
   mixins: [LoginService, StorageService],
+  computed: {
+    loginLogoSrc() {
+      return this.$root.config.LOGIN_LOGO_URL || "login_logo_dark.svg";
+    },
+    loginBackgroundSrc() {
+      return this.$root.config.LOGIN_BACKGROUND_URL || "LoginBackground.png";
+    },
+    reportSubtitle() {
+      return "Report";
+    },
+  },
   mounted() {
     this.$root.$on("logout", this.onLogout);
   },
@@ -206,6 +216,12 @@ export default {
   color: #059669 !important;
   padding-top: 10px;
   font-size: 16px;
+}
+
+.login-logo {
+  max-height: 70px;
+  width: auto;
+  object-fit: contain;
 }
 
 .flex {
