@@ -117,7 +117,12 @@ func executeReportViews() {
 				return
 			}
 
-			// close results immediately after use
+			// drain remaining result sets so the connection returns to the pool
+			// in a clean state. Without this, the next goroutine that reuses the
+			// connection sees pending result-sets from the previous multi-statement
+			// query and the driver fails with "invalid connection".
+			for rows.NextResultSet() {
+			}
 			rows.Close()
 
 			duration := time.Since(start)
