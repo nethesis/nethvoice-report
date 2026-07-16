@@ -6,6 +6,8 @@
     $OUT = '';
 }\{
         "listen_address": "0.0.0.0:8585",
+        "global_rate_limit_average": 25,
+        "global_rate_limit_burst": 100,
         "redis_network_type": "unix",
         "redis_address": "/var/run/redis-nethvoice-report/nethvoice-report.sock",
         "ttl_cache": 480,
