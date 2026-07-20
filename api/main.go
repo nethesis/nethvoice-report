@@ -30,6 +30,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/time/rate"
 
 	"github.com/nethesis/nethvoice-report/api/configuration"
 	"github.com/nethesis/nethvoice-report/api/methods"
@@ -45,6 +46,18 @@ func main() {
 	// init routers
 	router := gin.Default()
 
+	// the app is only ever reached via the local Apache reverse proxy on
+	// loopback: trust only that hop's X-Forwarded-For so ClientIP() resolves
+	// the real client IP for RateLimiter instead of bucketing all traffic
+	// under 127.0.0.1
+	router.SetTrustedProxies([]string{"127.0.0.1", "::1"})
+
+	// Generous global per-IP rate limit as a coarse safety net across all routes
+	router.Use(middleware.RateLimiter(
+		rate.Limit(configuration.Config.GlobalRateLimitAverage),
+		configuration.Config.GlobalRateLimitBurst,
+	))
+
 	// add default compression
 	router.Use(gzip.Gzip(gzip.DefaultCompression))
 
@@ -59,9 +72,11 @@ func main() {
 	// define API
 	api := router
 
-	// define login endpoint
-	api.POST("/login", middleware.InstanceJWT().LoginHandler)
-	api.POST("/logout", middleware.InstanceJWT().LogoutHandler)
+	// define login endpoint. BodyLimit caps each request's size; the global
+	// per-IP rate limiter (see above) bounds request frequency across every
+	// route, including these pre-authentication ones.
+	api.POST("/login", middleware.BodyLimit(8<<10), middleware.InstanceJWT().LoginHandler)
+	api.POST("/logout", middleware.BodyLimit(1<<10), middleware.InstanceJWT().LogoutHandler)
 
 	// define refresh endpoint
 	api.GET("/refresh_token", middleware.InstanceJWT().RefreshHandler)

@@ -53,7 +53,11 @@ type Configuration struct {
 		Name     string `json:"name"`
 		Password string `json:"password"`
 	} `json:"freepbx_database"`
-	ListenAddress          string          `json:"listen_address"`
+	ListenAddress string `json:"listen_address"`
+	// Generous global per-IP rate limit applied to every API route as a coarse
+	// safety net; if unset (0), sensible defaults are applied in Init()
+	GlobalRateLimitAverage int             `json:"global_rate_limit_average"`
+	GlobalRateLimitBurst   int             `json:"global_rate_limit_burst"`
 	RedisNetworkType       string          `json:"redis_network_type"`
 	RedisAddress           string          `json:"redis_address"`
 	TTLCache               int             `json:"ttl_cache"`
@@ -83,5 +87,12 @@ func Init(ConfigFilePtr *string) {
 		if err != nil {
 			os.Stderr.WriteString(errors.Wrap(err, "error decoding configuration file").Error() + "\n")
 		}
+	}
+
+	if Config.GlobalRateLimitAverage == 0 {
+		Config.GlobalRateLimitAverage = 25
+	}
+	if Config.GlobalRateLimitBurst == 0 {
+		Config.GlobalRateLimitBurst = 100
 	}
 }

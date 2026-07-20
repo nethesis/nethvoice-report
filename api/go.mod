@@ -17,4 +17,5 @@ require (
 	github.com/onsi/gomega v1.14.0 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/ziutek/rrd v0.0.3
+	golang.org/x/time v0.15.0
 )
