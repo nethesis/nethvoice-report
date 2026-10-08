@@ -1,25 +1,53 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "schedule": [
-    "before 6am on monday"
+  "description": [
+    "Issues are disabled on this repository, so the Dependency Dashboard cannot be used.",
+    "CI builds api, tasks and ui on every PR: patch updates are automerged once it passes.",
+    "The frontend is Vue 2 on vue-cli 4: major updates of the Vue toolchain need a migration and are handled by hand."
   ],
-  "ignoreTests": false,
+  "extends": ["config:recommended"],
+  "dependencyDashboard": false,
+  "timezone": "Europe/Rome",
+  "schedule": ["* 0-7 * * 1"],
+  "prConcurrentLimit": 5,
+  "labels": ["dependencies"],
+  "postUpdateOptions": ["gomodTidy"],
+  "npm": {
+    "lockFileMaintenance": {
+      "enabled": true,
+      "schedule": ["* 0-7 1 * *"]
+    }
+  },
+  "vulnerabilityAlerts": {
+    "labels": ["dependencies", "security"],
+    "prConcurrentLimit": 5
+  },
   "packageRules": [
     {
-      "description": "Automerge patch updates",
+      "description": "Automerge patch updates once CI passes",
       "matchUpdateTypes": ["patch"],
+      "minimumReleaseAge": "3 days",
       "automerge": true,
       "automergeType": "pr"
     },
     {
-      "description": "Automerge minor updates only if tests pass",
-      "matchUpdateTypes": ["minor"],
-      "automerge": false
-    },
-    {
-      "description": "Do not automerge major updates",
+      "description": "Vue 2 toolchain: no major updates without a migration (Vue 3, webpack 5, ESLint 9)",
+      "matchManagers": ["npm"],
+      "matchPackageNames": [
+        "vue",
+        "vue-*",
+        "@vue/**",
+        "chart.js",
+        "portal-vue",
+        "node-sass",
+        "sass-loader",
+        "eslint",
+        "eslint-plugin-vue",
+        "babel-eslint",
+        "chai"
+      ],
       "matchUpdateTypes": ["major"],
-      "automerge": false
+      "enabled": false
     }
   ]
 }
