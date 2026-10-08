@@ -1,0 +1,51 @@
+name: Build Go
+
+on:
+  push:
+    branches:
+      - ns8
+    paths:
+      - 'api/**'
+      - 'tasks/**'
+      - '.github/workflows/build-go.yml'
+  pull_request:
+    paths:
+      - 'api/**'
+      - 'tasks/**'
+      - '.github/workflows/build-go.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build-go:
+    runs-on: ubuntu-24.04
+    env:
+      # ziutek/rrd's cgo bindings predate rrd.h's const-correct signatures;
+      # newer GCC defaults make that a hard error instead of a warning.
+      # Same flag as the gobuilder stage of ns8-nethvoice/reports/Containerfile.
+      CGO_CFLAGS: -Wno-error=incompatible-pointer-types
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install PAM and RRDtool development headers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libpam0g-dev librrd-dev
+
+      # Keep the Go version in sync with the gobuilder stage of
+      # ns8-nethvoice/reports/Containerfile, which is what ships to NS8.
+      - uses: actions/setup-go@v7
+        with:
+          go-version: '1.27.1'
+          cache-dependency-path: |
+            api/go.sum
+            tasks/go.sum
+
+      - name: Build api
+        working-directory: api
+        run: go build ./...
+
+      - name: Build tasks
+        working-directory: tasks
+        run: go build ./...
