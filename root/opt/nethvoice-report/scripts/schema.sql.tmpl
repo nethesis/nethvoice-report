@@ -7,11 +7,11 @@ CREATE FUNCTION get_trunk_name (s VARCHAR(255))
   RETURNS VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_bin' DETERMINISTIC
   RETURN Substring_index(SUBSTRING(s,1,LENGTH(s)-LOCATE('-',REVERSE(s))), '/', -1);
 
+-- strip the configured international prefix, whether written as +CC or 00CC
 DROP FUNCTION IF EXISTS clean_prefix;
 CREATE FUNCTION clean_prefix (s VARCHAR(255))
   RETURNS VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_bin' DETERMINISTIC
-  -- strip the international prefix written as +39 or 0039
-  RETURN IF(LOCATE(REPLACE("@international_prefix","+","00"), REPLACE(s,"+","00")) = 1,
+  RETURN IF(LEFT(REPLACE(s,"+","00"), LENGTH(REPLACE("@international_prefix","+","00"))) = REPLACE("@international_prefix","+","00"),
     SUBSTRING(REPLACE(s,"+","00"), LENGTH(REPLACE("@international_prefix","+","00")) + 1),
     REPLACE(s,"+","00"));
 
