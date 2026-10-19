@@ -246,12 +246,13 @@ CREATE TABLE graph_hour_ivr AS
 SELECT
        Date_format(time, "%Y-%m-%d") AS period,
        data3 AS ivr_id,
-       data4 AS ivr_name,
+       COALESCE(NULLIF(i.name, ''), NULLIF(data4, ''), data3) AS ivr_name,
        data2 AS choice,
        Date_format(time, "%H:00") AS HOUR,
-       Count(id) AS num
+       Count(queue_log_history.id) AS num
 FROM
        queue_log_history
+       LEFT JOIN asterisk.ivr_details i ON CONCAT('ivr-', i.id) = data3
 WHERE
        queuename = 'NONE'
        AND agent = 'NONE'
