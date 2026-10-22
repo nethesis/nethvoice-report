@@ -16,11 +16,12 @@ SELECT
               "%H:%i"
        ) AS time_10,
        data3 AS ivr_id,
-       data4 AS ivr_name,
+       COALESCE(NULLIF(i.name, ''), NULLIF(data4, ''), data3) AS ivr_name,
        data2 AS choice,
        Count(*) AS tot
 FROM
        queue_log_history
+       LEFT JOIN asterisk.ivr_details i ON CONCAT('ivr-', i.id) = data3
 WHERE
        queuename = 'NONE'
        AND agent = 'NONE'
@@ -45,11 +46,12 @@ SELECT
               "%H:%i"
        ) AS time_15,
        data3 AS ivr_id,
-       data4 AS ivr_name,
+       COALESCE(NULLIF(i.name, ''), NULLIF(data4, ''), data3) AS ivr_name,
        data2 AS choice,
        Count(*) AS tot
 FROM
        queue_log_history
+       LEFT JOIN asterisk.ivr_details i ON CONCAT('ivr-', i.id) = data3
 WHERE
        queuename = 'NONE'
        AND agent = 'NONE'
@@ -74,11 +76,12 @@ SELECT
               "%H:%i"
        ) AS time_30,
        data3 AS ivr_id,
-       data4 AS ivr_name,
+       COALESCE(NULLIF(i.name, ''), NULLIF(data4, ''), data3) AS ivr_name,
        data2 AS choice,
        Count(*) AS tot
 FROM
        queue_log_history
+       LEFT JOIN asterisk.ivr_details i ON CONCAT('ivr-', i.id) = data3
 WHERE
        queuename = 'NONE'
        AND agent = 'NONE'
@@ -103,11 +106,12 @@ SELECT
               "%H:%i"
        ) AS time_60,
        data3 AS ivr_id,
-       data4 AS ivr_name,
+       COALESCE(NULLIF(i.name, ''), NULLIF(data4, ''), data3) AS ivr_name,
        data2 AS choice,
        Count(*) AS tot
 FROM
        queue_log_history
+       LEFT JOIN asterisk.ivr_details i ON CONCAT('ivr-', i.id) = data3
 WHERE
        queuename = 'NONE'
        AND agent = 'NONE'
@@ -140,11 +144,12 @@ SELECT
               "%H:%i"
        ) AS time_10,
        data3 AS ivr_id,
-       data4 AS ivr_name,
+       COALESCE(NULLIF(i.name, ''), NULLIF(data4, ''), data3) AS ivr_name,
        data2 AS choice,
        Count(*) AS tot
 FROM
        queue_log_history
+       LEFT JOIN asterisk.ivr_details i ON CONCAT('ivr-', i.id) = data3
 WHERE
        queuename = 'NONE'
        AND agent = 'NONE'
@@ -169,11 +174,12 @@ SELECT
               "%H:%i"
        ) AS time_15,
        data3 AS ivr_id,
-       data4 AS ivr_name,
+       COALESCE(NULLIF(i.name, ''), NULLIF(data4, ''), data3) AS ivr_name,
        data2 AS choice,
        Count(*) AS tot
 FROM
        queue_log_history
+       LEFT JOIN asterisk.ivr_details i ON CONCAT('ivr-', i.id) = data3
 WHERE
        queuename = 'NONE'
        AND agent = 'NONE'
@@ -198,11 +204,12 @@ SELECT
               "%H:%i"
        ) AS time_30,
        data3 AS ivr_id,
-       data4 AS ivr_name,
+       COALESCE(NULLIF(i.name, ''), NULLIF(data4, ''), data3) AS ivr_name,
        data2 AS choice,
        Count(*) AS tot
 FROM
        queue_log_history
+       LEFT JOIN asterisk.ivr_details i ON CONCAT('ivr-', i.id) = data3
 WHERE
        queuename = 'NONE'
        AND agent = 'NONE'
@@ -227,11 +234,12 @@ SELECT
               "%H:%i"
        ) AS time_60,
        data3 AS ivr_id,
-       data4 AS ivr_name,
+       COALESCE(NULLIF(i.name, ''), NULLIF(data4, ''), data3) AS ivr_name,
        data2 AS choice,
        Count(*) AS tot
 FROM
        queue_log_history
+       LEFT JOIN asterisk.ivr_details i ON CONCAT('ivr-', i.id) = data3
 WHERE
        queuename = 'NONE'
        AND agent = 'NONE'
@@ -264,11 +272,12 @@ SELECT
               "%H:%i"
        ) AS time_10,
        data3 AS ivr_id,
-       data4 AS ivr_name,
+       COALESCE(NULLIF(i.name, ''), NULLIF(data4, ''), data3) AS ivr_name,
        data2 AS choice,
        Count(*) AS tot
 FROM
        queue_log_history
+       LEFT JOIN asterisk.ivr_details i ON CONCAT('ivr-', i.id) = data3
 WHERE
        queuename = 'NONE'
        AND agent = 'NONE'
@@ -293,11 +302,12 @@ SELECT
               "%H:%i"
        ) AS time_15,
        data3 AS ivr_id,
-       data4 AS ivr_name,
+       COALESCE(NULLIF(i.name, ''), NULLIF(data4, ''), data3) AS ivr_name,
        data2 AS choice,
        Count(*) AS tot
 FROM
        queue_log_history
+       LEFT JOIN asterisk.ivr_details i ON CONCAT('ivr-', i.id) = data3
 WHERE
        queuename = 'NONE'
        AND agent = 'NONE'
@@ -322,11 +332,12 @@ SELECT
               "%H:%i"
        ) AS time_30,
        data3 AS ivr_id,
-       data4 AS ivr_name,
+       COALESCE(NULLIF(i.name, ''), NULLIF(data4, ''), data3) AS ivr_name,
        data2 AS choice,
        Count(*) AS tot
 FROM
        queue_log_history
+       LEFT JOIN asterisk.ivr_details i ON CONCAT('ivr-', i.id) = data3
 WHERE
        queuename = 'NONE'
        AND agent = 'NONE'
@@ -351,11 +362,12 @@ SELECT
               "%H:%i"
        ) AS time_60,
        data3 AS ivr_id,
-       data4 AS ivr_name,
+       COALESCE(NULLIF(i.name, ''), NULLIF(data4, ''), data3) AS ivr_name,
        data2 AS choice,
        Count(*) AS tot
 FROM
        queue_log_history
+       LEFT JOIN asterisk.ivr_details i ON CONCAT('ivr-', i.id) = data3
 WHERE
        queuename = 'NONE'
        AND agent = 'NONE'
@@ -388,11 +400,12 @@ SELECT
               "%H:%i"
        ) AS time_10,
        data3 AS ivr_id,
-       data4 AS ivr_name,
+       COALESCE(NULLIF(i.name, ''), NULLIF(data4, ''), data3) AS ivr_name,
        data2 AS choice,
        Count(*) AS tot
 FROM
        queue_log_history
+       LEFT JOIN asterisk.ivr_details i ON CONCAT('ivr-', i.id) = data3
 WHERE
        queuename = 'NONE'
        AND agent = 'NONE'
@@ -417,11 +430,12 @@ SELECT
               "%H:%i"
        ) AS time_15,
        data3 AS ivr_id,
-       data4 AS ivr_name,
+       COALESCE(NULLIF(i.name, ''), NULLIF(data4, ''), data3) AS ivr_name,
        data2 AS choice,
        Count(*) AS tot
 FROM
        queue_log_history
+       LEFT JOIN asterisk.ivr_details i ON CONCAT('ivr-', i.id) = data3
 WHERE
        queuename = 'NONE'
        AND agent = 'NONE'
@@ -446,11 +460,12 @@ SELECT
               "%H:%i"
        ) AS time_30,
        data3 AS ivr_id,
-       data4 AS ivr_name,
+       COALESCE(NULLIF(i.name, ''), NULLIF(data4, ''), data3) AS ivr_name,
        data2 AS choice,
        Count(*) AS tot
 FROM
        queue_log_history
+       LEFT JOIN asterisk.ivr_details i ON CONCAT('ivr-', i.id) = data3
 WHERE
        queuename = 'NONE'
        AND agent = 'NONE'
@@ -475,11 +490,12 @@ SELECT
               "%H:%i"
        ) AS time_60,
        data3 AS ivr_id,
-       data4 AS ivr_name,
+       COALESCE(NULLIF(i.name, ''), NULLIF(data4, ''), data3) AS ivr_name,
        data2 AS choice,
        Count(*) AS tot
 FROM
        queue_log_history
+       LEFT JOIN asterisk.ivr_details i ON CONCAT('ivr-', i.id) = data3
 WHERE
        queuename = 'NONE'
        AND agent = 'NONE'
