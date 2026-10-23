@@ -1272,15 +1272,27 @@ export default {
             this.filterValues.queueAgentsMap = queueAgentsMap;
           }
 
-          // ivr
+          // ivr: one entry per name, the same name can belong to more IVR ids
           if (this.defaultFilter.ivrs) {
-            let ivrs = this.defaultFilter.ivrs.map((ivr) => {
-              const tokens = ivr.split(",");
-              const idIvr = tokens[0];
-              const ivrName = tokens[1];
-              return { value: ivrName, text: ivrName, id: idIvr };
+            let ivrMap = {};
+            this.defaultFilter.ivrs.forEach((ivr) => {
+              const separatorIndex = ivr.indexOf(",");
+              const idIvr = ivr.substring(0, separatorIndex);
+              const ivrName = ivr.substring(separatorIndex + 1);
+
+              if (ivrMap[ivrName]) {
+                ivrMap[ivrName].ids.push(idIvr);
+              } else {
+                ivrMap[ivrName] = {
+                  value: ivrName,
+                  text: ivrName,
+                  ids: [idIvr],
+                };
+              }
             });
-            this.filterValues.ivrs = ivrs.sort(this.sortByProperty("text"));
+            this.filterValues.ivrs = Object.values(ivrMap).sort(
+              this.sortByProperty("text")
+            );
           }
 
           // choices: hide duplicates
@@ -2091,9 +2103,13 @@ export default {
           return i.value == selectedIvr;
         });
 
+        if (!ivr) {
+          return;
+        }
+
         // find related IVR choices
         let relatedChoices = this.filterValues.allChoices.filter((choice) => {
-          return choice.idIvr == ivr.id;
+          return ivr.ids.includes(choice.idIvr);
         });
 
         // add to set to avoid duplicates in choices dropdown

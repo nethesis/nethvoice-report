@@ -6,5 +6,6 @@ FROM
 WHERE
     data1 LIKE 'IVRAPPEND%'
     AND event = "INFO"
+    AND data3 != ''
 ORDER BY
     CONCAT(data3, ",", COALESCE(NULLIF(i.name, ''), NULLIF(data4, ''), data3));
