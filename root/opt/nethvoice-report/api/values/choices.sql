@@ -5,5 +5,6 @@ FROM
 WHERE
     data1 LIKE 'IVRAPPEND%'
     AND event = "INFO"
+    AND data3 != ''
 ORDER BY
     CONCAT(data3, ",", data2);
