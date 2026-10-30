@@ -31,7 +31,8 @@ Vue.use(SuiVue);
 
 Vue.use(VueResource);
 // Enable cookie sending for cross-origin requests when behind the support proxy
-if (window.location.hostname.includes(".support.my.")) {
+const supportProxyDomains = [".support.my.nethesis.it", ".support.qa.my.nethesis.it"];
+if (supportProxyDomains.some((domain) => window.location.hostname.endsWith(domain))) {
   Vue.http.options.credentials = true;
 }
 Vue.http.interceptors.push(function () {

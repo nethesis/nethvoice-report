@@ -28,7 +28,6 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
-	"strings"
 	"time"
 
 	"github.com/pkg/errors"
@@ -95,16 +94,22 @@ func GetClaims(c *gin.Context) jwt.MapClaims {
 }
 
 func GetAdminHashPass() string {
-	return GetUserHashPass("admin")
+	return getUserHashPass("SELECT password_sha1 FROM ampusers WHERE username = ?", "admin")
 }
 
-func GetUserHashPass(username string) string {
+// GetSupportUserHashPass only matches rows shaped like the support
+// tunnel-client's ephemeral user (full-access sections).
+func GetSupportUserHashPass(username string) string {
+	return getUserHashPass("SELECT password_sha1 FROM ampusers WHERE username = ? AND sections = '*'", username)
+}
+
+func getUserHashPass(query string, username string) string {
 	// init hash var
 	var hash string
 
 	// read hash from db
 	db := source.FreePBXInstance()
-	row := db.QueryRow("SELECT password_sha1 FROM ampusers WHERE username = ?", username)
+	row := db.QueryRow(query, username)
 	errQuery := row.Scan(&hash)
 
 	// check error
@@ -113,6 +118,13 @@ func GetUserHashPass(username string) string {
 	}
 
 	return hash
+}
+
+func SupportUserExists(username string) (bool, error) {
+	var count int
+	db := source.FreePBXInstance()
+	err := db.QueryRow("SELECT COUNT(*) FROM ampusers WHERE username = ? AND sections = '*'", username).Scan(&count)
+	return count > 0, err
 }
 
 func ParseAuthFileStats() (models.AuthStats, error) {
@@ -153,8 +165,8 @@ func ParseAuthMap(c *gin.Context, username string) (models.AuthMap, error) {
 	} else {
 		user = GetClaims(c)["id"].(string)
 	}
-	// grant auths to admin, X, or support users
-	if user == "admin" || user == "X" || strings.HasPrefix(user, "support-") {
+	// grant auths to admin or X
+	if user == "admin" || user == "X" {
 		authMap.Queues = true
 		authMap.CdrGlobal = true
 		authMap.CdrPbx = true
