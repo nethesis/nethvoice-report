@@ -21,8 +21,11 @@
 package middleware
 
 import (
+	"crypto/hmac"
 	"crypto/sha1"
+	"crypto/sha256"
 	"crypto/subtle"
+	"encoding/hex"
 	"fmt"
 	"net/http"
 	"regexp"
@@ -31,15 +34,15 @@ import (
 
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
-	"github.com/pkg/errors"
 
+	"github.com/nethesis/nethvoice-report/api/configuration"
 	"github.com/nethesis/nethvoice-report/api/methods"
-	"github.com/nethesis/nethvoice-report/api/utils"
 )
 
 const (
 	supportUserKey      = "support_user"
 	supportExpKey       = "support_exp"
+	supportBindKey      = "support_bind"
 	supportExpireCtxKey = "support_expire"
 	supportTokenTimeout = time.Hour
 	supportCheckTTL     = time.Minute
@@ -54,12 +57,13 @@ var supportUsernameRe = regexp.MustCompile(`^support-[a-z0-9-]{1,64}$`)
 // supportLogin is the identity of a support session: it is authorized as
 // admin, but the token keeps the real user and a short expiration.
 type supportLogin struct {
-	User   string
-	Expire time.Time
+	User    string
+	Expire  time.Time
+	Binding string
 }
 
 // Replaced in tests.
-var supportUserExists = methods.SupportUserExists
+var supportUserHash = methods.GetSupportUserHashPass
 
 var (
 	supportSeenMu sync.Mutex
@@ -71,34 +75,41 @@ func sha1Matches(password string, storedHash string) bool {
 	return storedHash != "" && subtle.ConstantTimeCompare([]byte(hash), []byte(storedHash)) == 1
 }
 
-func markSupportUserSeen(user string) {
+// supportBinding ties a support token to the ampusers row it was issued for:
+// every session regenerates the password, so a token from an earlier session
+// stays dead even when the same username is created again.
+func supportBinding(storedHash string) string {
+	mac := hmac.New(sha256.New, []byte(configuration.Config.Secret))
+	mac.Write([]byte(storedHash))
+	return hex.EncodeToString(mac.Sum(nil))[:32]
+}
+
+func markSupportUserSeen(user, binding string) {
 	supportSeenMu.Lock()
-	supportSeen[user] = time.Now()
+	supportSeen[user+"|"+binding] = time.Now()
 	supportSeenMu.Unlock()
 }
 
-// supportUserStillExists checks that the ampusers row was not removed at the
-// end of the support session, caching positive answers for supportCheckTTL.
-func supportUserStillExists(user string) bool {
+// supportUserStillValid checks that the ampusers row the token was issued for
+// still exists, unchanged, caching positive answers for supportCheckTTL.
+func supportUserStillValid(user, binding string) bool {
+	key := user + "|" + binding
 	supportSeenMu.Lock()
-	seen, ok := supportSeen[user]
+	seen, ok := supportSeen[key]
 	supportSeenMu.Unlock()
 	if ok && time.Since(seen) < supportCheckTTL {
 		return true
 	}
 
-	exists, err := supportUserExists(user)
-	if err != nil {
-		utils.LogError(errors.Wrap(err, "error checking support user "+user))
-	}
-	if err != nil || !exists {
+	hash := supportUserHash(user)
+	if hash == "" || subtle.ConstantTimeCompare([]byte(supportBinding(hash)), []byte(binding)) != 1 {
 		supportSeenMu.Lock()
-		delete(supportSeen, user)
+		delete(supportSeen, key)
 		supportSeenMu.Unlock()
 		return false
 	}
 
-	markSupportUserSeen(user)
+	markSupportUserSeen(user, binding)
 	return true
 }
 
@@ -122,8 +133,12 @@ func validSupportClaims(claims map[string]interface{}) (expire time.Time, isSupp
 	if !time.Now().Before(expire) {
 		return expire, true, false
 	}
+	binding, ok := claims[supportBindKey].(string)
+	if !ok || binding == "" {
+		return expire, true, false
+	}
 
-	return expire, true, supportUserStillExists(user)
+	return expire, true, supportUserStillValid(user, binding)
 }
 
 // SupportSession rejects support tokens once expired or once the support

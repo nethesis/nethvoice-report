@@ -120,13 +120,6 @@ func getUserHashPass(query string, username string) string {
 	return hash
 }
 
-func SupportUserExists(username string) (bool, error) {
-	var count int
-	db := source.FreePBXInstance()
-	err := db.QueryRow("SELECT COUNT(*) FROM ampusers WHERE username = ? AND sections = '*'", username).Scan(&count)
-	return count > 0, err
-}
-
 func ParseAuthFileStats() (models.AuthStats, error) {
 	// get authorizations file stats
 	fileInfo, err := os.Stat(configuration.Config.UserAuthorizationsFile)

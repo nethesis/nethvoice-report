@@ -17,18 +17,30 @@ import (
 	"github.com/nethesis/nethvoice-report/api/models"
 )
 
+func testSupportHash(user string) string {
+	return fmt.Sprintf("%x", sha1.Sum([]byte("pw-"+user)))
+}
+
+func testSupportLogin(user string, expire time.Time) *supportLogin {
+	return &supportLogin{User: user, Expire: expire, Binding: supportBinding(testSupportHash(user))}
+}
+
 func stubSupportUsers(t *testing.T, users map[string]bool) *int {
 	t.Helper()
 	calls := 0
-	orig := supportUserExists
-	supportUserExists = func(user string) (bool, error) {
+	configuration.Config.Secret = "test-secret"
+	orig := supportUserHash
+	supportUserHash = func(user string) string {
 		calls++
-		return users[user], nil
+		if users[user] {
+			return testSupportHash(user)
+		}
+		return ""
 	}
 	supportSeenMu.Lock()
 	supportSeen = make(map[string]time.Time)
 	supportSeenMu.Unlock()
-	t.Cleanup(func() { supportUserExists = orig })
+	t.Cleanup(func() { supportUserHash = orig })
 	return &calls
 }
 
@@ -70,6 +82,7 @@ func supportClaims(user string, expire time.Time) map[string]interface{} {
 		identityKey:    "admin",
 		supportUserKey: user,
 		supportExpKey:  float64(expire.Unix()),
+		supportBindKey: supportBinding(testSupportHash(user)),
 	}
 }
 
@@ -91,6 +104,16 @@ func TestValidSupportClaims(t *testing.T) {
 	if _, _, valid := validSupportClaims(map[string]interface{}{supportUserKey: "support-a"}); valid {
 		t.Error("expected support token without expiration to be invalid")
 	}
+	unbound := supportClaims("support-a", time.Now().Add(time.Hour))
+	delete(unbound, supportBindKey)
+	if _, _, valid := validSupportClaims(unbound); valid {
+		t.Error("expected support token without row binding to be invalid")
+	}
+	stale := supportClaims("support-a", time.Now().Add(time.Hour))
+	stale[supportBindKey] = supportBinding(fmt.Sprintf("%x", sha1.Sum([]byte("previous-session"))))
+	if _, _, valid := validSupportClaims(stale); valid {
+		t.Error("expected token of an earlier session to stay invalid once the row is recreated")
+	}
 
 	*calls = 0
 	validSupportClaims(supportClaims("support-a", time.Now().Add(time.Hour)))
@@ -98,7 +121,7 @@ func TestValidSupportClaims(t *testing.T) {
 		t.Error("expected cached positive lookup")
 	}
 	supportSeenMu.Lock()
-	supportSeen["support-a"] = time.Now().Add(-supportCheckTTL - time.Second)
+	supportSeen["support-a|"+supportBinding(testSupportHash("support-a"))] = time.Now().Add(-supportCheckTTL - time.Second)
 	supportSeenMu.Unlock()
 	validSupportClaims(supportClaims("support-a", time.Now().Add(time.Hour)))
 	if *calls != 1 {
@@ -110,8 +133,9 @@ func TestSupportPayloadAndLifetime(t *testing.T) {
 	mw := newTestJWT(t)
 	expire := time.Now().Add(supportTokenTimeout)
 
-	claims := mw.PayloadFunc(&supportLogin{User: "support-a", Expire: expire})
-	if claims[identityKey] != "admin" || claims[supportUserKey] != "support-a" || claims[supportExpKey] != expire.Unix() {
+	claims := mw.PayloadFunc(testSupportLogin("support-a", expire))
+	if claims[identityKey] != "admin" || claims[supportUserKey] != "support-a" || claims[supportExpKey] != expire.Unix() ||
+		claims[supportBindKey] != supportBinding(testSupportHash("support-a")) {
 		t.Errorf("unexpected support claims: %v", claims)
 	}
 	if supportTokenTimeout > time.Hour {
@@ -137,7 +161,7 @@ func TestRefreshDoesNotExtendSupportToken(t *testing.T) {
 	mw := newTestJWT(t)
 
 	expire := time.Now().Add(30 * time.Minute)
-	token, _, err := mw.TokenGenerator(&supportLogin{User: "support-a", Expire: expire})
+	token, _, err := mw.TokenGenerator(testSupportLogin("support-a", expire))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -160,12 +184,12 @@ func TestRefreshDoesNotExtendSupportToken(t *testing.T) {
 		t.Errorf("unexpected expire %s", body.Expire)
 	}
 
-	expired, _, _ := mw.TokenGenerator(&supportLogin{User: "support-a", Expire: time.Now().Add(-time.Second)})
+	expired, _, _ := mw.TokenGenerator(testSupportLogin("support-a", time.Now().Add(-time.Second)))
 	if w := refresh(mw, expired); w.Code != http.StatusUnauthorized {
 		t.Errorf("expected 401 for expired support token, got %d", w.Code)
 	}
 
-	gone, _, _ := mw.TokenGenerator(&supportLogin{User: "support-gone", Expire: expire})
+	gone, _, _ := mw.TokenGenerator(testSupportLogin("support-gone", expire))
 	if w := refresh(mw, gone); w.Code != http.StatusUnauthorized {
 		t.Errorf("expected 401 for removed support user, got %d", w.Code)
 	}
@@ -192,15 +216,15 @@ func TestSupportSession(t *testing.T) {
 		return w.Code
 	}
 
-	live, _, _ := mw.TokenGenerator(&supportLogin{User: "support-a", Expire: time.Now().Add(time.Hour)})
+	live, _, _ := mw.TokenGenerator(testSupportLogin("support-a", time.Now().Add(time.Hour)))
 	if code := get(live); code != http.StatusOK {
 		t.Errorf("expected 200 for live support token, got %d", code)
 	}
-	expired, _, _ := mw.TokenGenerator(&supportLogin{User: "support-a", Expire: time.Now().Add(-time.Second)})
+	expired, _, _ := mw.TokenGenerator(testSupportLogin("support-a", time.Now().Add(-time.Second)))
 	if code := get(expired); code != http.StatusUnauthorized {
 		t.Errorf("expected 401 for expired support token, got %d", code)
 	}
-	gone, _, _ := mw.TokenGenerator(&supportLogin{User: "support-gone", Expire: time.Now().Add(time.Hour)})
+	gone, _, _ := mw.TokenGenerator(testSupportLogin("support-gone", time.Now().Add(time.Hour)))
 	if code := get(gone); code != http.StatusUnauthorized {
 		t.Errorf("expected 401 for removed support user, got %d", code)
 	}

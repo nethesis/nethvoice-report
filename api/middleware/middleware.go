@@ -116,16 +116,18 @@ func InitJWT() *jwt.GinJWTMiddleware {
 					return nil, jwt.ErrFailedAuthentication
 				}
 
-				if !sha1Matches(password, methods.GetSupportUserHashPass(username)) {
+				storedHash := supportUserHash(username)
+				if !sha1Matches(password, storedHash) {
 					utils.LogError(errors.New("Authentication failed for support user " + username))
 					return nil, jwt.ErrFailedAuthentication
 				}
 
-				markSupportUserSeen(username)
+				binding := supportBinding(storedHash)
+				markSupportUserSeen(username, binding)
 				expire := time.Now().Add(supportTokenTimeout)
 				c.Set(supportExpireCtxKey, expire)
 
-				return &supportLogin{User: username, Expire: expire}, nil
+				return &supportLogin{User: username, Expire: expire, Binding: binding}, nil
 				// it's a normal system PAM user
 			} else {
 				// check authorizations
@@ -157,6 +159,7 @@ func InitJWT() *jwt.GinJWTMiddleware {
 					identityKey:    "admin",
 					supportUserKey: support.User,
 					supportExpKey:  support.Expire.Unix(),
+					supportBindKey: support.Binding,
 				}
 			}
 
