@@ -43,7 +43,7 @@
         "sass-loader",
         "eslint",
         "eslint-plugin-vue",
-        "babel-eslint",
+        "@babel/eslint-parser",
         "chai"
       ],
       "matchUpdateTypes": ["major"],
