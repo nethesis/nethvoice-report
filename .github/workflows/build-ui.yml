@@ -28,7 +28,7 @@ jobs:
       # ns8-nethvoice/reports/Containerfile, which is what ships to NS8.
       - uses: actions/setup-node@v7
         with:
-          node-version: '14.21.2'
+          node-version: '14.21.3'
           cache: npm
           cache-dependency-path: ui/package-lock.json
 
