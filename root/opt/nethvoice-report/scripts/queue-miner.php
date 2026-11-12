@@ -56,8 +56,7 @@ if (!empty($sqls)) {
     foreach ($sqls as $sql) {
         try {
            $stmt = $cdrdb->prepare($sql);
-           $stmt->execute([$now]);
-           $cdrdb->query($sql);
+           $stmt->execute(strpos($sql, '?') !== false ? [$now] : []);
         } catch (Exception $e) {
             error_log($e->getMessage());
         }
