@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> This repository is archived. The source code now lives in [nethesis/ns8-nethvoice](https://github.com/nethesis/ns8-nethvoice/tree/main/reports) and is built and released with the NethVoice module. Open issues and pull requests there.
+
 # nethvoice-report
 This repo contains Queue and CDR/Costs reports
 
